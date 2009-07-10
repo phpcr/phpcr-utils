@@ -1,0 +1,48 @@
+Usage:
+Run phpunit inside of the root directory.
+
+For usage with Zend you probably have to execute it manually like
+this: 
+
+/usr/local/zend/bin/php-cli /usr/local/zend/bin/phpunit tests/level1/ReadTest.php
+
+Dependencies:
+java in PATH
+PHPUnit in PATH
+PHPUnit in include_path
+
+How to test your own code:
+You need to change the phpunit.xml and write your own bootstrap file. The file
+needs to provide the following:
+function getRepository(config) which returns the repository
+function getJCRSession(config) which returns the session
+function getSimpleCredentials(user, password) which returns simpleCredentials
+constants necessary to the JCR 1.0/JSR-170 specs
+
+Installing PHPUnit:
+Make sure you use the pear from Zend.
+See http://www.phpunit.de/manual/current/en/installation.html
+$  /usr/local/zend/bin/pear install phpunit
+
+Setting up Jackrabbit:
+- Create tests workspace which is different from your default workspace.
+See http://jackrabbit.apache.org/jackrabbit-configuration.html#JackrabbitConfiguration-Workspaceconfiguration
+Or:
+- Go to the directory you started jackrabbit-standalone (eg. /opt/svn/jackrabbit/jackrabbit-standalone/target)
+- cd jackrabbit
+- cd workspaces
+- cp -r default tests
+- cd tests
+- change <Workspace name="default"> to <Workspace name="tests">
+- start jackrabbit again
+
+
+
+
+Setting up submodules:
+
+After the first clone, don't forget to
+
+git submodule init
+git submodule update
+
