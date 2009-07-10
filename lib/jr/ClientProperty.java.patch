@@ -1,0 +1,40 @@
+Index: src/main/java/org/apache/jackrabbit/rmi/client/ClientProperty.java
+===================================================================
+--- src/main/java/org/apache/jackrabbit/rmi/client/ClientProperty.java  (revision 725275)
++++ src/main/java/org/apache/jackrabbit/rmi/client/ClientProperty.java  (working copy)
+@@ -17,6 +17,12 @@
+ package org.apache.jackrabbit.rmi.client;
+ 
+ import java.io.InputStream;
++import java.io.OutputStream;
++import java.io.Serializable;
++import java.io.FileOutputStream; 
++import java.io.FileNotFoundException;
++import java.io.IOException;
++
+ import java.rmi.RemoteException;
+ import java.util.Calendar;
+ 
+@@ -120,6 +126,22 @@
+         return getValue().getStream();
+     }
+ 
++       public String copyToFile() {
++               return "Foo";
++       }
++           public void copyToFile(String dst) throws  FileNotFoundException, IOException, RepositoryException{
++
++         OutputStream out = new FileOutputStream(dst);
++                InputStream in = getValue().getStream();
++        // Transfer bytes from in to out
++        byte[] buf = new byte[1024];
++        int len;
++        while ((len = in.read(buf)) > 0) {
++            out.write(buf, 0, len);
++        }
++        out.close();
++               }
++
+     /**
+      * Returns the string value of this property. Implemented as
+      * getValue().getString().
