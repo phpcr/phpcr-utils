@@ -51,7 +51,7 @@ class jackalope_tests_level1_ReadTest_SessionReadMethods extends jackalope_baseC
      * @expectedException PHPCR_RepositoryException
      */
     public function testGetRootNodeRepositoryException() {
-        $this->markTestSkipped('TODO: Figure out how to test this');
+        $this->markTestIncomplete('TODO: Figure out how to test this');
     }
     
     public function testGetItem() {

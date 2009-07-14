@@ -33,7 +33,7 @@ class jackalope_tests_level1_ReadTest_PropertyReadMethods extends jackalope_base
      * @expectedException PHPCR_RepostioryException
      */
     public function testGetValueRepositoryException() {
-        $this->markTestSkipped('TODO: Figure out how to provoke this error.');
+        $this->markTestIncomplete('TODO: Figure out how to provoke this error.');
     }
     
     public function testGetValues() {
@@ -55,7 +55,7 @@ class jackalope_tests_level1_ReadTest_PropertyReadMethods extends jackalope_base
      * @expectedException PHPCR_RepostioryException
      */
     public function testGetValuesRepositoryException() {
-        $this->markTestSkipped('TODO: Figure out how to provoke this error.');
+        $this->markTestIncomplete('TODO: Figure out how to provoke this error.');
     }
     
     public function testGetString() {
@@ -83,7 +83,7 @@ class jackalope_tests_level1_ReadTest_PropertyReadMethods extends jackalope_base
      * @expectedException PHPCR_RepositoryException
      */
     public function testGetLongRepositoryException() {
-        $this->markTestSkipped('TODO: Figure out how to provoke this error.');
+        $this->markTestIncomplete('TODO: Figure out how to provoke this error.');
     }
     
     /**
@@ -115,7 +115,7 @@ class jackalope_tests_level1_ReadTest_PropertyReadMethods extends jackalope_base
      * @expectedException PHPCR_RepositoryException
      */
     public function testGetDoubleRepositoryException() {
-        $this->markTestSkipped('TODO: Figure out how to provoke this error.');
+        $this->markTestIncomplete('TODO: Figure out how to provoke this error.');
     }
     
     /**
@@ -154,7 +154,7 @@ class jackalope_tests_level1_ReadTest_PropertyReadMethods extends jackalope_base
      * @expectedException PHPCR_RepositoryException
      */
     public function testGetDateRepositoryException() {
-        $this->markTestSkipped('TODO: Figure out how to provoke this error.');
+        $this->markTestIncomplete('TODO: Figure out how to provoke this error.');
     }
     
     public function testGetBool() {
@@ -181,7 +181,7 @@ class jackalope_tests_level1_ReadTest_PropertyReadMethods extends jackalope_base
      * @expectedException PHPCR_RepositoryException
      */
     public function testGetBoolRepositoryException() {
-        $this->markTestSkipped('TODO: Figure out how to provoke this error.');
+        $this->markTestIncomplete('TODO: Figure out how to provoke this error.');
     }
     
     public function testGetNode() {
@@ -202,7 +202,7 @@ class jackalope_tests_level1_ReadTest_PropertyReadMethods extends jackalope_base
     }
     
     public function testGetLengthUnsuccessfull() {
-        $this->markTestSkipped('TODO: This should return -1 but how can I reproduce?');
+        $this->markTestIncomplete('TODO: This should return -1 but how can I reproduce?');
     }
     
     /**
@@ -217,11 +217,11 @@ class jackalope_tests_level1_ReadTest_PropertyReadMethods extends jackalope_base
     }
     
     public function testGetLengthsBinary() {
-        $this->markTestSkipped('TODO: Figure how multivalue binary properties can be set');
+        $this->markTestIncomplete('TODO: Figure how multivalue binary properties can be set');
     }
     
     public function testGetLengthsUnsuccessfull() {
-        $this->markTestSkipped('TODO: This should return -1 but how can I reproduce?');
+        $this->markTestIncomplete('TODO: This should return -1 but how can I reproduce?');
     }
     
     /**

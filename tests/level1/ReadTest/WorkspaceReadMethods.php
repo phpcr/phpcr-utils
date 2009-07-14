@@ -30,7 +30,7 @@ class jackalope_tests_level1_ReadTest_WorkspaceReadMethods extends jackalope_bas
      * @expectedException PHPCR_RepositoryException
      */
     public function testGetQueryManagerRepositoryException() {
-        $this->markTestSkipped('TODO: Figure how to produce this exception.');
+        $this->markTestIncomplete('TODO: Figure how to produce this exception.');
     }
     
     public function testGetNamespaceRegistry() {
@@ -43,7 +43,7 @@ class jackalope_tests_level1_ReadTest_WorkspaceReadMethods extends jackalope_bas
      * @expectedException PHPCR_RepositoryException
      */
     public function testGetNamespaceRegistryRepositoryException() {
-        $this->markTestSkipped('TODO: Figure how to produce this exception.');
+        $this->markTestIncomplete('TODO: Figure how to produce this exception.');
     }
     
     public function testGetNodeTypeManager() {
@@ -56,7 +56,7 @@ class jackalope_tests_level1_ReadTest_WorkspaceReadMethods extends jackalope_bas
      * @expectedException PHPCR_RepositoryException
      */
     public function testGetNodeTypeManagerRepositoryException() {
-        $this->markTestSkipped('TODO: Figure how to produce this exception.');
+        $this->markTestIncomplete('TODO: Figure how to produce this exception.');
     }
     
     public function testGetAccessibleWorkspaceNames() {
@@ -69,6 +69,6 @@ class jackalope_tests_level1_ReadTest_WorkspaceReadMethods extends jackalope_bas
      * @expectedException PHPCR_RepositoryException
      */
     public function testGetAccessibleWorkspaceNamesRepositoryException() {
-        $this->markTestSkipped('TODO: Figure how to produce this exception.');
+        $this->markTestIncomplete('TODO: Figure how to produce this exception.');
     }
 }

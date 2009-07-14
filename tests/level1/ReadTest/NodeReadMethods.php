@@ -52,7 +52,7 @@ class jackalope_tests_level1_ReadTest_NodeReadMethods extends jackalope_baseCase
      * @expectedException PHPCR_RepositoryException
      */
     public function testGetNodesRepositoryException() {
-        $this->markTestSkipped('TODO: Figure how to produce this exception');
+        $this->markTestIncomplete('TODO: Figure how to produce this exception');
     }
     
     public function testGetNodesPattern() {
@@ -125,7 +125,7 @@ class jackalope_tests_level1_ReadTest_NodeReadMethods extends jackalope_baseCase
      * @expectedException PHPCR_RepositoryError
      */
     public function testGetPropertiesRepositoryError() {
-        $this->markTestSkipped('TODO: Figure how to produce this error');
+        $this->markTestIncomplete('TODO: Figure how to produce this error');
     }
     
     public function testGetPrimaryItem() {
@@ -146,7 +146,7 @@ class jackalope_tests_level1_ReadTest_NodeReadMethods extends jackalope_baseCase
      * @expectedException PHPCR_RepositoryException
      */
     public function testGetPrimaryItemRepositoryException() {
-        $this->markTestSkipped('TODO: Figure how to produce this error');
+        $this->markTestIncomplete('TODO: Figure how to produce this error');
     }
     
     public function testGetUUID() {
@@ -172,7 +172,7 @@ class jackalope_tests_level1_ReadTest_NodeReadMethods extends jackalope_baseCase
      * @expectedException PHPCR_RepositoryException
      */
     public function testGetIndexRepositoryException() {
-        $this->markTestSkipped('TODO: Figure how to produce this error');
+        $this->markTestIncomplete('TODO: Figure how to produce this error');
     }
     
     public function testGetReferences() {
@@ -185,7 +185,7 @@ class jackalope_tests_level1_ReadTest_NodeReadMethods extends jackalope_baseCase
      * @expectedException PHPCR_RepositoryException
      */
     public function testGetReferencesRepositoryException() {
-        $this->markTestSkipped('TODO: Figure how to produce this error');
+        $this->markTestIncomplete('TODO: Figure how to produce this error');
     }
     
     public function testHasNodeTrue() {
@@ -225,6 +225,6 @@ class jackalope_tests_level1_ReadTest_NodeReadMethods extends jackalope_baseCase
     }
     
     public function testHasPropertiesFalse() {
-        $this->markTestSkipped('TODO: Figure how to create a node even without jcr:primaryType');
+        $this->markTestIncomplete('TODO: Figure how to create a node even without jcr:primaryType');
     }
 }
