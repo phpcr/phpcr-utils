@@ -40,7 +40,6 @@ class jr_cr_repository implements PHPCR_RepositoryInterface {
 	 *    A descriptor string or null if unavailable
 	 */
 	public function getDescriptor($key) {
-	    $key = preg_replace('/^PHPCR\./', 'jcr.', $key);
         return $this->JRrepository->getDescriptor($key);
 	}
 
@@ -56,11 +55,7 @@ class jr_cr_repository implements PHPCR_RepositoryInterface {
 	 * @return array
 	 */
 	public function getDescriptorKeys() {
-	    $keys = $this->JRrepository->getDescriptorKeys();
-	    for ($x=0, $count = count($keys); $x < $count ;$x++) {
-            $keys[$x] = preg_replace('/^jcr\./', 'PHPCR.', $keys[$x]);
-	    }
-	    return $keys;
+	    return $this->JRrepository->getDescriptorKeys();
 	}
 	   /**
      * Authenticates the user using the supplied <i>credentials</i>.

@@ -8,7 +8,7 @@ class jackalope_tests_level1_AccessTest_Repository extends jackalope_baseCase {
     public function testRepository() {
         $rep = getRepository($this->sharedFixture['config']);
         $this->assertTrue(is_object($rep));
-        $this->assertTrue($rep instanceOf phpCR_Repository);
+        $this->assertTrue($rep instanceOf PHPCR_RepositoryInterface);
     }
     
     public function testLoginSession() {

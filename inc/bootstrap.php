@@ -53,12 +53,12 @@ function getJCRSession($config, $credentials = null) {
         return $repository->login(null, null);
     }
 }
-define('SPEC_VERSION_DESC', 'phpcr.specification.version');
-define('SPEC_NAME_DESC', 'phpcr.specification.name');
-define('REP_VENDOR_DESC', 'phpcr.repository.vendor');
-define('REP_VENDOR_URL_DESC', 'phpcr.repository.vendor.url');
-define('REP_NAME_DESC', 'phpcr.repository.name');
-define('REP_VERSION_DESC', 'phpcr.repository.version');
+define('SPEC_VERSION_DESC', 'jcr.specification.version');
+define('SPEC_NAME_DESC', 'jcr.specification.name');
+define('REP_VENDOR_DESC', 'jcr.repository.vendor');
+define('REP_VENDOR_URL_DESC', 'jcr.repository.vendor.url');
+define('REP_NAME_DESC', 'jcr.repository.name');
+define('REP_VERSION_DESC', 'jcr.repository.version');
 define('LEVEL_1_SUPPORTED', 'level.1.supported');
 define('LEVEL_2_SUPPORTED', 'level.2.supported');
 define('OPTION_TRANSACTIONS_SUPPORTED', 'option.transactions.supported');
