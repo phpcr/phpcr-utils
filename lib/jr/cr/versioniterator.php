@@ -51,7 +51,7 @@ class jr_cr_versioniterator extends jr_cr_rangeiterator implements PHPCR_Version
         if ($this->valid()) {
             return $this->current();
         } else {
-            throw new PHPCR_NoSuchElementException('nextVersion called after end of iterator');
+            throw new OutOfBoundsException('nextVersion called after end of iterator');
         }
     }
 }

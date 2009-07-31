@@ -7,7 +7,7 @@ class jackalope_tests_level1_SearchTest_QueryManager extends jackalope_baseCase 
     public function testCreateQuery() {
         $ret = $this->sharedFixture['qm']->createQuery('/jcr:root', 'xpath');
         $this->assertTrue(is_object($ret));
-        $this->assertTrue($ret instanceof phpCR_Query);
+        $this->assertTrue($ret instanceof PHPCR_Query_QueryInterface);
     }
 
     public function testGetQuery() {
@@ -18,7 +18,7 @@ class jackalope_tests_level1_SearchTest_QueryManager extends jackalope_baseCase 
 */
     }
     /**
-     * @expectedException phpCR_InvalidQueryException
+     * @expectedException PHPCR_Query_InvalidQueryException
      */
     public function testGetQueryInvalid() {
         $this->sharedFixture['qm']->getQuery($this->sharedFixture['session']->getRootNode());

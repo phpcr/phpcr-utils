@@ -53,7 +53,7 @@ class jr_cr_querymanager implements PHPCR_Query_QueryManagerInterface {
         } catch(JavaException $e) {
             $str = split("\n", $e->getMessage(), 1);
             if (strstr($str[0], 'InvalidQueryException')) {
-                throw new PHPCR_InvalidQueryException($e->getMessage());
+                throw new PHPCR_Query_InvalidQueryException($e->getMessage());
             } elseif (strstr($str[0], 'RepositoryException')) {
                 throw new PHPCR_RepositoryException($e->getMessage());
             } else {

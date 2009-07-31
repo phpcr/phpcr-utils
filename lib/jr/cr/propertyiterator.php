@@ -28,7 +28,7 @@ class jr_cr_propertyiterator extends jr_cr_rangeiterator implements PHPCR_Proper
         if ($this->valid()) {
             return $this->current();
         } else {
-            throw new PHPCR_NoSuchElementException('nextVersion called after end of iterator');
+            throw new OutOfBoundsException('nextVersion called after end of iterator');
         }
     }
     

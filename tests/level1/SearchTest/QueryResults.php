@@ -10,7 +10,7 @@ class jackalope_tests_level1_SearchTest_QueryResults extends jackalope_baseCase 
         $this->qr = $query->execute();
         //sanity check
         $this->assertTrue(is_object($this->qr));
-        $this->assertTrue($this->qr instanceof phpCR_QueryResult);
+        $this->assertTrue($this->qr instanceof PHPCR_Query_QueryResultInterface);
     }
 
     public function testGetColumnNames() {
@@ -26,20 +26,20 @@ class jackalope_tests_level1_SearchTest_QueryResults extends jackalope_baseCase 
         $ret = $this->qr->getRows();
 
         $this->assertTrue(is_object($ret));
-        $this->assertTrue($ret instanceof phpCR_RowIterator);
+        $this->assertTrue($ret instanceof PHPCR_Query_RowIteratorInterface);
 
         $exptsize = $ret->getSize();
         $num = 0;
         foreach($ret as $row) {
             $num++;
-            $this->assertTrue($row instanceof phpCR_Row);
+            $this->assertTrue($row instanceof PHPCR_Query_RowInterface);
         }
 
         $this->assertEquals($exptsize, $num);
         //further tests in Row.php
     }
     /**
-     * @expectedException phpCR_NoSuchElementException
+     * @expectedException OutOfBoundsException
      */
     public function testGetRowsNoSuchElement() {
         $ret = $this->qr->getRows();
@@ -50,18 +50,18 @@ class jackalope_tests_level1_SearchTest_QueryResults extends jackalope_baseCase 
         $ret = $this->qr->getNodes();
 
         $this->assertTrue(is_object($ret));
-        $this->assertTrue($ret instanceof phpCR_NodeIterator);
+        $this->assertTrue($ret instanceof PHPCR_NodeIteratorInterface);
         $exptsize = $ret->getSize();
         $num = 0;
         foreach($ret as $node) {
             $num++;
-            $this->assertTrue($node instanceof phpCR_Node);
+            $this->assertTrue($node instanceof PHPCR_NodeInterface);
         }
         $this->assertEquals($exptsize, $num);
     }
 
     /**
-     * @expectedException phpCR_NoSuchElementException
+     * @expectedException OutOfBoundsException
      */
     public function testGetNodesNoSuchElement() {
         $ret = $this->qr->getNodes();

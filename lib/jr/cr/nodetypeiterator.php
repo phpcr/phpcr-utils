@@ -45,7 +45,7 @@ class jr_cr_nodetypeiterator extends jr_cr_rangeiterator implements PHPCR_NodeTy
         if ($this->valid()) {
             return $this->current();
         } else {
-            throw new PHPCR_NoSuchElementException('nextNodeType called after end of iterator');
+            throw new OutOfBoundsException('nextNodeType called after end of iterator');
         }
     }
 }

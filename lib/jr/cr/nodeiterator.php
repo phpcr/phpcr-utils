@@ -22,7 +22,7 @@ class jr_cr_nodeiterator extends jr_cr_rangeiterator implements PHPCR_NodeIterat
         if ($this->valid()) {
             return $this->current();
         } else {
-            throw new PHPCR_NoSuchElementException('nextNode called after end of iterator');
+            throw new OutOfBoundsException('nextNode called after end of iterator');
         }
     }
     

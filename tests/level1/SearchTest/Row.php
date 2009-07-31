@@ -10,12 +10,12 @@ class jackalope_tests_level1_SearchTest_Row extends jackalope_baseCase {
         $qr = $query->execute();
         //sanity check
         $this->assertTrue(is_object($qr));
-        $this->assertTrue($qr instanceof phpCR_QueryResult);
+        $this->assertTrue($qr instanceof PHPCR_Query_QueryResultInterface);
 
         $this->row = $qr->getRows()->nextRow();
 
         $this->assertTrue(is_object($this->row));
-        $this->assertTrue($this->row instanceof phpCR_Row);
+        $this->assertTrue($this->row instanceof PHPCR_Query_RowInterface);
     }
 
     public function testRowGetValues() {
@@ -23,7 +23,7 @@ class jackalope_tests_level1_SearchTest_Row extends jackalope_baseCase {
         $this->assertType('array', $ret);
 
         foreach($ret as $value) {
-            $this->assertTrue($value instanceof phpCR_Value);
+            $this->assertTrue($value instanceof PHPCR_ValueInterface);
         }
     }
 
@@ -31,7 +31,7 @@ class jackalope_tests_level1_SearchTest_Row extends jackalope_baseCase {
         foreach(jackalope_tests_level1_SearchTest_QueryResults::$expect as $propName) {
             $val = $this->row->getValue($propName);
             $this->assertTrue(is_object($val));
-            $this->assertTrue($val instanceof phpCR_Value);
+            $this->assertTrue($val instanceof PHPCR_ValueInterface);
 
             switch($propName) {
                 case 'jcr:created':

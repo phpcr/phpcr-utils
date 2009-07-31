@@ -42,12 +42,12 @@ abstract class jr_cr_rangeiterator extends jr_cr_wrapiterator implements PHPCR_R
                 $this->Jiterator->skip($skipNum-1);
                 $this->pos += $skipNum-1;
                 $this->next(); //load the element we landed at
-                if(!$this->valid()) throw new PHPCR_NoSuchElementException('skipped beyond last element');
+                if(!$this->valid()) throw new OutOfBoundsException('skipped beyond last element');
             } catch(JavaException $e) {
                 $str = split("\n", $e->getMessage(), 1);
                 $str = $str[0];
                 if (strstr($str, 'NoSuchElementException')) {
-                    throw new PHPCR_NoSuchElementException($e->getMessage());
+                    throw new OutOfBoundsException($e->getMessage());
                 } else {
                     throw $e;
                 }

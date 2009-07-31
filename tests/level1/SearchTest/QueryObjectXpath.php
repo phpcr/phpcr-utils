@@ -12,12 +12,12 @@ class jackalope_tests_level1_SearchTest_QueryObjectXpath extends jackalope_baseC
         $query = $this->sharedFixture['qm']->createQuery('//idExample[jcr:mimeType="text/plain"]', 'xpath');
         $qr = $query->execute();
         $this->assertTrue(is_object($qr));
-        $this->assertTrue($qr instanceof phpCR_QueryResult);
+        $this->assertTrue($qr instanceof PHPCR_Query_QueryResultInterface);
         //content of result is tested in QueryResults
     }
 
     /**
-     * @expectedException phpCR_InvalidQueryException
+     * @expectedException PHPCR_Query_InvalidQueryException
      *
      * the doc claims there would just be a phpCR_RepositoryException
      * it makes sense that there is a InvalidQueryException
