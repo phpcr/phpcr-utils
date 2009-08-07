@@ -38,14 +38,14 @@ class jackalope_tests_level1_NamespacesTest_NamespaceRegistry extends jackalope_
     }
 
     /**
-     * @expectedException phpCR_NamespaceException
+     * @expectedException PHPCR_NamespaceException
      */
     public function testGetURINamespaceException() {
         $this->nr->getURI('thisshouldnotexist');
     }
 
     /**
-     * @expectedException phpCR_RepositoryException
+     * @expectedException PHPCR_RepositoryException
      */
     public function testGetURIRepositoryException() {
         $this->nr->getURI('in:valid');
@@ -59,7 +59,7 @@ class jackalope_tests_level1_NamespacesTest_NamespaceRegistry extends jackalope_
     }
 
     /**
-     * @expectedException phpCR_NamespaceException
+     * @expectedException PHPCR_NamespaceException
      */
     public function testGetPrefixNamespaceException() {
         $this->nr->getPrefix('http://thisshouldnotexist.org/0.0');
