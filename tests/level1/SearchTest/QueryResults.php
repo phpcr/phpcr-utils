@@ -3,7 +3,7 @@ require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
 
 //6.6.8 Query API
 class jackalope_tests_level1_SearchTest_QueryResults extends jackalope_baseCase {
-    public static $expect = array("jcr:created","jcr:primaryType","jcr:path","jcr:score");
+    public static $expect = array("jcr:createdBy","jcr:created","jcr:primaryType","jcr:path","jcr:score");
 
     public function setUp() {
         $query = $this->sharedFixture['qm']->createQuery('//element(*, nt:folder)', 'xpath');

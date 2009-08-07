@@ -2,9 +2,8 @@
 require_once(dirname(__FILE__) . '/../../../inc/baseCase.php');
 
 /**
- * 6.6.8 Query API
+ * 6.6.10 Query Object
  *
- * Test XPATH queries
  */
 class jackalope_tests_level1_SearchTest_QueryObjectXpath extends jackalope_baseCase {
 
@@ -26,15 +25,60 @@ class jackalope_tests_level1_SearchTest_QueryObjectXpath extends jackalope_baseC
         $query = $this->sharedFixture['qm']->createQuery('this is no xpath statement', 'xpath');
         $qr = $query->execute();
     }
+
+    public function testGetStatement() {
+        $qstr = '//idExample[jcr:mimeType="text/plain"]';
+        $query = $this->sharedFixture['qm']->createQuery($qstr, 'xpath');
+        $this->assertEquals($qstr, $query->getStatement());
+    }
+    public function testGetLanguage() {
+        $qstr = '//idExample[jcr:mimeType="text/plain"]';
+        $query = $this->sharedFixture['qm']->createQuery($qstr, 'xpath');
+        $this->assertEquals('xpath', $query->getLanguage());
+    }
+    /**
+     * a transient query has no stored query path
+     * @expectedException PHPCR_ItemNotFoundException
+     */
+    public function testGetStoredQueryPathItemNotFound() {
+        $qstr = '//idExample[jcr:mimeType="text/plain"]';
+        $query = $this->sharedFixture['qm']->createQuery($qstr, 'xpath');
+        $query->getStoredQueryPath();
+    }
+    /* this is level 2 only */
     /*
-    testGetStatement()
-    testGetLanguage()
-    testGetStoredQueryPath()
-    testGetStoredQueryPathItemNotFound()
-    //not yet stored
-    testStoreAsNode()
-    +diverse exceptions
-    testXPATH
-    testSQL
+    public function testStoreAsNode() {
+        $qstr = '//idExample[jcr:mimeType="text/plain"]';
+        $query = $this->sharedFixture['qm']->createQuery($qstr, 'xpath');
+        $query->storeAsNode('/queryNode');
+        $this->sharedFixture['session']->save();
+    }
     */
+    /*
+    +diverse exceptions
+    */
+
+    /** changes repository state */
+    public function testGetStoredQueryPath() {
+        $this->sharedFixture['ie']->import('query.xml');
+        try {
+            $qnode = $this->sharedFixture['session']->getRootNode()->getNode('queryNode');
+            $this->assertTrue(is_object($qnode));
+            $this->assertTrue($qnode instanceof PHPCR_NodeInterface);
+
+            $query = $this->sharedFixture['qm']->getQuery($qnode);
+            $this->assertTrue(is_object($qnode));
+            $this->assertTrue($query instanceof PHPCR_Query_QueryInterface);
+            //same as QueryManager::testGetQuery
+
+            $p = $query->getStoredQueryPath();
+            $this->assertEquals('/queryNode', $p);
+        } catch(exception $e) {
+            //FIXME: finally?
+            $this->sharedFixture['ie']->import('base.xml');
+            throw $e;
+        }
+        $this->sharedFixture['ie']->import('base.xml');
+    }
+
 }
