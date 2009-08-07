@@ -4,6 +4,7 @@ require_once(dirname(__FILE__) . '/ReadTest/SessionReadMethods.php');
 require_once(dirname(__FILE__) . '/ReadTest/WorkspaceReadMethods.php');
 require_once(dirname(__FILE__) . '/ReadTest/NodeReadMethods.php');
 require_once(dirname(__FILE__) . '/ReadTest/PropertyReadMethods.php');
+require_once(dirname(__FILE__) . '/ReadTest/PropertyTypes.php');
 
 class jackalope_tests_level1_ReadTest extends jackalope_baseSuite {
     protected $path = 'level1/read';
@@ -26,6 +27,7 @@ class jackalope_tests_level1_ReadTest extends jackalope_baseSuite {
         $suite->addTestSuite('jackalope_tests_level1_ReadTest_WorkspaceReadMethods');
         $suite->addTestSuite('jackalope_tests_level1_ReadTest_NodeReadMethods');
         $suite->addTestSuite('jackalope_tests_level1_ReadTest_PropertyReadMethods');
+        $suite->addTestSuite('jackalope_tests_level1_ReadTest_PropertyTypes');
         return $suite;
     }
 }
