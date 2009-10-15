@@ -22,26 +22,36 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Query
- * @version $Id: QueryInterface.php 2191 2009-05-07 19:49:06Z k-fish $
- */
-
-/**
  * A Query object.
  *
- * @package PHPCR
- * @subpackage Query
- * @version $Id: QueryInterface.php 2191 2009-05-07 19:49:06Z k-fish $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Query_QueryInterface {
 
 	/**
-	 * Flags determining the language of the query
+	 * A string constant representing the JCR-JQOM query language.
+	 * @api
 	 */
 	const JCR_JQOM = 'JCR-JQOM';
+
+	/**
+	 * A string constant representing the JCR-SQL2 query language.
+	 * @api
+	 */
 	const JCR_SQL2 = 'JCR-SQL2';
+
+	/**
+	 * Binds the given value to the variable named $varName.
+	 *
+	 * @param string $varName name of variable in query
+	 * @param PHPCR_ValueInterface $value value to bind
+	 * @return void
+	 * @throws InvalidArgumentException if $varName is not a valid variable in this query.
+	 * @throws RepositoryException if an error occurs.
+	 * @api
+	 */
+	public function bindValue($varName, PHPCR_ValueInterface $value);
 
 	/**
 	 * Executes this query and returns a QueryResult object.
@@ -49,14 +59,26 @@ interface PHPCR_Query_QueryInterface {
 	 * @return PHPCR_Query_QueryInterface a QueryResult object
 	 * @throws PHPCR_Query_InvalidQueryException if the query contains an unbound variable.
 	 * @throws PHPCR_RepositoryException if an error occurs
+	 * @api
 	 */
 	public function execute();
+
+	/**
+	 * Returns the names of the bind variables in this query. If this query
+	 * does not contains any bind variables then an empty array is returned.
+	 *
+	 * @return array the names of the bind variables in this query.
+	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
+	 */
+	public function getBindVariableNames();
 
 	/**
 	 * Sets the maximum size of the result set to limit.
 	 *
 	 * @param integer $limit
 	 * @return void
+	 * @api
 	 */
 	public function setLimit($limit);
 
@@ -65,6 +87,7 @@ interface PHPCR_Query_QueryInterface {
 	 *
 	 * @param integer $offset
 	 * @return void
+	 * @api
 	 */
 	public function setOffset($offset);
 
@@ -80,6 +103,7 @@ interface PHPCR_Query_QueryInterface {
 	 * in the jcr:statement property if the query is persisted. See storeAsNode($absPath).
 	 *
 	 * @return string the query statement.
+	 * @api
 	 */
 	public function getStatement();
 
@@ -88,6 +112,7 @@ interface PHPCR_Query_QueryInterface {
 	 * constants returned by QueryManager.getSupportedQueryLanguages().
 	 *
 	 * @return string the query language.
+	 * @api
 	 */
 	public function getLanguage();
 
@@ -100,6 +125,7 @@ interface PHPCR_Query_QueryInterface {
 	 * @return string path of the node representing this query.
 	 * @throws PHPCR_ItemNotFoundException if this query is not a stored query.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function getStoredQueryPath();
 
@@ -123,6 +149,7 @@ interface PHPCR_Query_QueryInterface {
 	 * @throws PHPCR_Lock_LockException if a lock prevents the addition of the node and this implementation performs this validation immediately instead of waiting until save.
 	 * @throws PHPCR_UnsupportedRepositoryOperationException in a level 1 implementation.
 	 * @throws PHPCR_RepositoryException if another error occurs or if the absPath provided has an index on its final element.
+	 * @api
 	 */
 	public function storeAsNode($absPath);
 

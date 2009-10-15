@@ -22,17 +22,9 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Retention
- * @version $Id: RetentionManagerInterface.php 2191 2009-05-07 19:49:06Z k-fish $
- */
-
-/**
  * The RetentionManager object is accessed via Session.getRetentionManager().
  *
- * @package PHPCR
- * @subpackage Retention
- * @version $Id: RetentionManagerInterface.php 2191 2009-05-07 19:49:06Z k-fish $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Retention_RetentionManagerInterface {
@@ -47,6 +39,7 @@ interface PHPCR_Retention_RetentionManagerInterface {
 	 * @throws PHPCR_PathNotFoundException if no node at absPath exists or the session does not have sufficient access to retrieve the node.
 	 * @throws PHPCR_AccessDeniedException if the current session does not have sufficient access to retrieve the holds.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function getHolds($absPath);
 
@@ -66,6 +59,7 @@ interface PHPCR_Retention_RetentionManagerInterface {
 	 * @throws PHPCR_Lock_LockException if a lock applies at the node at $absPath and this implementation performs this validation immediately.
 	 * @throws PHPCR_Version_VersionException if the node at $absPath is read-only due to a checked-in node and this implementation performs this validation immediately.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function addHold($absPath, $name, $isDeep);
 
@@ -81,6 +75,7 @@ interface PHPCR_Retention_RetentionManagerInterface {
 	 * @throws PHPCR_Lock_LockException if a lock applies at the node at $absPath and this implementation performs this validation immediately.
 	 * @throws PHPCR_Version_VersionException if the node at $absPath is read-only due to a checked-in node and this implementation performs this validation immediately.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function removeHold($absPath, PHPCR_Retention_HoldInterface $hold);
 
@@ -93,6 +88,7 @@ interface PHPCR_Retention_RetentionManagerInterface {
 	 * @throws PHPCR_PathNotFoundException if no node at $absPath exists or the session does not have sufficient access to retrieve the node.
 	 * @throws PHPCR_AccessDeniedException if the current session does not have sufficient access to retrieve the policy.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function getRetentionPolicy($absPath);
 
@@ -110,6 +106,7 @@ interface PHPCR_Retention_RetentionManagerInterface {
 	 * @throws PHPCR_Lock_LockException if a lock applies at the node at $absPath and this implementation performs this validation immediately.
 	 * @throws PHPCR_Version_VersionException if the node at $absPath is read-only due to a checked-in node and this implementation performs this validation immediately.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function setRetentionPolicy($absPath, PHPCR_Retention_RetentionPolicyInterface $retentionPolicy);
 
@@ -124,6 +121,7 @@ interface PHPCR_Retention_RetentionManagerInterface {
 	 * @throws PHPCR_Lock_LockException if a lock applies at the node at $absPath and this implementation performs this validation immediately.
 	 * @throws PHPCR_Version_VersionException if the node at $absPath is read-only due to a checked-in node and this implementation performs this validation immediately.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function removeRetentionPolicy($absPath);
 

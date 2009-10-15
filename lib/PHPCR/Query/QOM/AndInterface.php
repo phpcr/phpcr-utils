@@ -22,20 +22,12 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Query
- * @version $Id: AndInterface.php 1811 2009-01-28 12:04:49Z robert $
- */
-
-/**
  * Performs a logical conjunction of two other constraints.
  *
  * To satisfy the And constraint, a node-tuple must satisfy both constraint1 and
  * constraint2.
  *
- * @package PHPCR
- * @subpackage Query
- * @version $Id: AndInterface.php 1811 2009-01-28 12:04:49Z robert $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Query_QOM_AndInterface extends PHPCR_Query_QOM_ConstraintInterface {
@@ -44,6 +36,7 @@ interface PHPCR_Query_QOM_AndInterface extends PHPCR_Query_QOM_ConstraintInterfa
 	 * Gets the first constraint.
 	 *
 	 * @return PHPCR_Query_QOM_ConstraintInterface the constraint; non-null
+	 * @api
 	 */
 	public function getConstraint1();
 
@@ -51,6 +44,7 @@ interface PHPCR_Query_QOM_AndInterface extends PHPCR_Query_QOM_ConstraintInterfa
 	 * Gets the second constraint.
 	 *
 	 * @return PHPCR_Query_QOM_ConstraintInterface the constraint; non-null
+	 * @api
 	 */
 	public function getConstraint2();
 

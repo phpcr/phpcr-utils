@@ -22,12 +22,6 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Query
- * @version $Id: DescendantNodeJoinConditionInterface.php 1979 2009-03-09 15:44:15Z k-fish $
- */
-
-/**
  * Tests whether the descendantSelector node is a descendant of the
  * ancestorSelector node. A node-tuple satisfies the constraint only if:
  *   descendantSelectorNode.getAncestor(n).isSame(ancestorSelectorNode) &&
@@ -36,9 +30,7 @@ declare(ENCODING = 'utf-8');
  * is the node for descendantSelector and ancestorSelectorNode is the node for
  * ancestorSelector.
  *
- * @package PHPCR
- * @subpackage Query
- * @version $Id: DescendantNodeJoinConditionInterface.php 1979 2009-03-09 15:44:15Z k-fish $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Query_QOM_DescendantNodeJoinConditionInterface extends PHPCR_Query_QOM_JoinConditionInterface {
@@ -47,6 +39,7 @@ interface PHPCR_Query_QOM_DescendantNodeJoinConditionInterface extends PHPCR_Que
 	 * Gets the name of the descendant selector.
 	 *
 	 * @return string the selector name; non-null
+	 * @api
 	 */
 	public function getDescendantSelectorName();
 
@@ -54,6 +47,7 @@ interface PHPCR_Query_QOM_DescendantNodeJoinConditionInterface extends PHPCR_Que
 	 * Gets the name of the ancestor selector.
 	 *
 	 * @return string the selector name; non-null
+	 * @api
 	 */
 	public function getAncestorSelectorName();
 

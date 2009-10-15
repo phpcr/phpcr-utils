@@ -22,20 +22,12 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Query
- * @version $Id: PropertyExistenceInterface.php 1979 2009-03-09 15:44:15Z k-fish $
- */
-
-/**
  * Tests the existence of a property.
  *
  * A node-tuple satisfies the constraint if the selector node has a property
  * named property.
  *
- * @package PHPCR
- * @subpackage Query
- * @version $Id: PropertyExistenceInterface.php 1979 2009-03-09 15:44:15Z k-fish $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Query_QOM_PropertyExistenceInterface extends PHPCR_Query_QOM_ConstraintInterface {
@@ -44,6 +36,7 @@ interface PHPCR_Query_QOM_PropertyExistenceInterface extends PHPCR_Query_QOM_Con
 	 * Gets the name of the selector against which to apply this constraint.
 	 *
 	 * @return string the selector name; non-null
+	 * @api
 	 */
 	public function getSelectorName();
 
@@ -51,6 +44,7 @@ interface PHPCR_Query_QOM_PropertyExistenceInterface extends PHPCR_Query_QOM_Con
 	 * Gets the name of the property.
 	 *
 	 * @return string the property name; non-null
+	 * @api
 	 */
 	public function getPropertyName();
 

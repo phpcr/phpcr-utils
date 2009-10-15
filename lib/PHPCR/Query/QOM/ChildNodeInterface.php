@@ -22,12 +22,6 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Query
- * @version $Id: ChildNodeInterface.php 1979 2009-03-09 15:44:15Z k-fish $
- */
-
-/**
  * Tests whether the selector node is a child of a node reachable by absolute
  * path path.
  *
@@ -35,9 +29,7 @@ declare(ENCODING = 'utf-8');
  *  selectorNode.getParent().isSame(session.getNode(path))
  * would return true, where selectorNode is the node for the specified selector.
  *
- * @package PHPCR
- * @subpackage Query
- * @version $Id: ChildNodeInterface.php 1979 2009-03-09 15:44:15Z k-fish $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Query_QOM_ChildNodeInterface extends PHPCR_Query_QOM_ConstraintInterface {
@@ -46,6 +38,7 @@ interface PHPCR_Query_QOM_ChildNodeInterface extends PHPCR_Query_QOM_ConstraintI
 	 * Gets the name of the selector against which to apply this constraint.
 	 *
 	 * @return string the selector name; non-null
+	 * @api
 	 */
 	public function getSelectorName();
 
@@ -53,6 +46,7 @@ interface PHPCR_Query_QOM_ChildNodeInterface extends PHPCR_Query_QOM_ConstraintI
 	 * Gets the absolute path.
 	 *
 	 * @return string the path; non-null
+	 * @api
 	 */
 	public function getParentPath();
 

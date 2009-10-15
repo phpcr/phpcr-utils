@@ -22,18 +22,10 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Observation
- * @version $Id: EventIteratorInterface.php 2636 2009-06-23 09:10:29Z k-fish $
- */
-
-/**
  * Allows easy iteration through a list of Events with nextEvent as well as a
  * skip method inherited from RangeIterator.
  *
- * @package PHPCR
- * @subpackage Observation
- * @version $Id: EventIteratorInterface.php 2636 2009-06-23 09:10:29Z k-fish $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Observation_EventIteratorInterface extends PHPCR_RangeIteratorInterface {
@@ -43,6 +35,7 @@ interface PHPCR_Observation_EventIteratorInterface extends PHPCR_RangeIteratorIn
 	 *
 	 * @return PHPCR_Observation_EventInterface the next Event in the iteration
 	 * @throws OutOfBoundsException if iteration has no more Events
+	 * @api
 	 */
 	public function nextEvent();
 

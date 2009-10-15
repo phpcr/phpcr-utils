@@ -22,12 +22,6 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Security
- * @version $Id: PrivilegeInterface.php 1811 2009-01-28 12:04:49Z robert $
- */
-
-/**
  * A privilege represents the capability of performing a particular set of
  * operations on items in the JCR repository. Each privilege is identified by a
  * JCR name. JCR defines a set of standard privileges in the jcr namespace.
@@ -45,9 +39,7 @@ declare(ENCODING = 'utf-8');
  *
  * A privilege can be both aggregate and abstract.
  *
- * @package PHPCR
- * @subpackage Security
- * @version $Id: PrivilegeInterface.php 1811 2009-01-28 12:04:49Z robert $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Security_PrivilegeInterface {
@@ -55,18 +47,21 @@ interface PHPCR_Security_PrivilegeInterface {
 	/**
 	 * A constant representing jcr:read (in extended form), the privilege to retrieve
 	 * a node and get its properties and their values.
+	 * @api
 	 */
 	const JCR_READ = "{http://www.jcp.org/jcr/1.0}read";
 
 	/**
 	 * A constant representing jcr:modifyProperties (in extended form), the privilege
 	 * to create, modify and remove the properties of a node.
+	 * @api
 	 */
 	const JCR_MODIFY_PROPERTIES = "{http://www.jcp.org/jcr/1.0}modifyProperties";
 
 	/**
 	 * A constant representing jcr:addChildNodes (in extended form), the privilege
 	 * to create child nodes of a node.
+	 * @api
 	 */
 	const JCR_ADD_CHILD_NODES = "{http://www.jcp.org/jcr/1.0}addChildNodes";
 
@@ -81,6 +76,7 @@ interface PHPCR_Security_PrivilegeInterface {
 	 * as a "delete" instead of a "unlink". A repository that uses the "delete" model
 	 * can have jcr:removeChildNodes in every access control policy, so that removal
 	 * is effectively controlled by jcr:removeNode.
+	 * @api
 	 */
 	const JCR_REMOVE_NODE = "{http://www.jcp.org/jcr/1.0}removeNode";
 
@@ -93,6 +89,7 @@ interface PHPCR_Security_PrivilegeInterface {
 	 * as a "unlink" instead of a "delete". A repository that uses the "unlink" model
 	 * can have jcr:removeNode in every access control policy, so that removal
 	 * is effectively controlled by jcr:removeChildNodes.
+	 * @api
 	 */
 	const JCR_REMOVE_CHILD_NODES = "{http://www.jcp.org/jcr/1.0}removeChildNodes";
 
@@ -102,30 +99,35 @@ interface PHPCR_Security_PrivilegeInterface {
 	 *  jcr:addChildNodes
 	 *  jcr:removeNode
 	 *  jcr:removeChildNodes
+	 * @api
 	 */
 	const JCR_WRITE = "{http://www.jcp.org/jcr/1.0}write";
 
 	/**
 	 * A constant representing jcr:readAccessControl (in extended form), the privilege
 	 * to get the access control policy of a node.
+	 * @api
 	 */
 	const JCR_READ_ACCESS_CONTROL = "{http://www.jcp.org/jcr/1.0}readAccessControl";
 
 	/**
 	 * A constant representing jcr:modifyAccessControl (in extended form), the privilege
 	 * to modify the access control policies of a node.
+	 * @api
 	 */
 	const JCR_MODIFY_ACCESS_CONTROL = "{http://www.jcp.org/jcr/1.0}modifyAccessControl";
 
 	/**
 	 * A constant representing jcr:lockManagement (in extended form), the
 	 * privilege to lock and unlock a node.
+	 * @api
 	 */
 	const JCR_LOCK_MANAGEMENT = "{http://www.jcp.org/jcr/1.0}lockManagement";
 
 	/**
 	 * A constant representing jcr:versionManagment (in extended form), the
 	 * privilege to perform versioning operations on a node.
+	 * @api
 	 */
 	const JCR_VERSION_MANAGEMENT = "{http://www.jcp.org/jcr/1.0}versionManagement";
 
@@ -133,18 +135,21 @@ interface PHPCR_Security_PrivilegeInterface {
 	 * A constant representing jcr:nodeTypeManagement (in extended form), the
 	 * privilege to add and remove mixin node types and change the primary node
 	 * type of a node.
+	 * @api
 	 */
 	const JCR_NODE_TYPE_MANAGEMENT = "{http://www.jcp.org/jcr/1.0}nodeTypeManagement";
 
 	/**
 	 * A constant representing jcr:retentionManagement (in extended form), the
 	 * privilege to perform retention management operations on a node.
+	 * @api
 	 */
 	const JCR_RETENTION_MANAGEMENT = "{http://www.jcp.org/jcr/1.0}retentionManagement";
 
 	/**
 	 * A constant representing jcr:lifecycleManagement (in extended form), the
 	 * privilege to perform lifecycle operations on a node.
+	 * @api
 	 */
 	const JCR_LIFECYCLE_MANAGEMENT = "{http://www.jcp.org/jcr/1.0}lifecycleManagement";
 
@@ -162,6 +167,7 @@ interface PHPCR_Security_PrivilegeInterface {
 	 *   jcr:lifecycleManagement
 	 *
 	 * It should, in addition, include all implementation-defined privileges.
+	 * @api
 	 */
 	const JCR_ALL = "{http://www.jcp.org/jcr/1.0}all";
 
@@ -169,6 +175,7 @@ interface PHPCR_Security_PrivilegeInterface {
 	 * Returns the name of this privilege.
 	 *
 	 * @return string the name of this privilege.
+	 * @api
 	 */
 	public function getName();
 
@@ -176,6 +183,7 @@ interface PHPCR_Security_PrivilegeInterface {
 	 * Returns whether this privilege is an abstract privilege.
 	 *
 	 * @return boolean true if this privilege is an abstract privilege; false otherwise.
+	 * @api
 	 */
 	public function isAbstract();
 
@@ -183,6 +191,7 @@ interface PHPCR_Security_PrivilegeInterface {
 	 * Returns whether this privilege is an aggregate privilege.
 	 *
 	 * @return boolean true if this privilege is an aggregate privilege; false otherwise.
+	 * @api
 	 */
 	public function isAggregate();
 
@@ -192,6 +201,7 @@ interface PHPCR_Security_PrivilegeInterface {
 	 * array.
 	 *
 	 * @return array an array of Privileges
+	 * @api
 	 */
 	public function getDeclaredAggregatePrivileges();
 
@@ -202,6 +212,7 @@ interface PHPCR_Security_PrivilegeInterface {
 	 * privilege). Otherwise returns an empty array.
 	 *
 	 * @return array an array of Privileges
+	 * @api
 	 */
 	public function getAggregatePrivileges();
 

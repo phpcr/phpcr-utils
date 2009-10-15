@@ -22,17 +22,9 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Query
- * @version $Id: NodeNameInterface.php 1979 2009-03-09 15:44:15Z k-fish $
- */
-
-/**
  * Evaluates to a NAME value equal to the namespace-qualified name of a node.
  *
- * @package PHPCR
- * @subpackage Query
- * @version $Id: NodeNameInterface.php 1979 2009-03-09 15:44:15Z k-fish $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Query_QOM_NodeNameInterface extends PHPCR_Query_QOM_DynamicOperandInterface {
@@ -41,6 +33,7 @@ interface PHPCR_Query_QOM_NodeNameInterface extends PHPCR_Query_QOM_DynamicOpera
 	 * Gets the name of the selector against which to evaluate this operand.
 	 *
 	 * @return string the selector name; non-null
+	 * @api
 	 */
 	public function getSelectorName();
 

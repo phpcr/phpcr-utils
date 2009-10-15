@@ -22,18 +22,10 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Version
- * @version $Id: VersionHistoryInterface.php 2191 2009-05-07 19:49:06Z k-fish $
- */
-
-/**
  * A VersionHistory object wraps an nt:versionHistory node. It provides
  * convenient access to version history information.
  *
- * @package PHPCR
- * @subpackage Version
- * @version $Id: VersionHistoryInterface.php 2191 2009-05-07 19:49:06Z k-fish $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Version_VersionHistoryInterface extends PHPCR_NodeInterface {
@@ -44,6 +36,7 @@ interface PHPCR_Version_VersionHistoryInterface extends PHPCR_NodeInterface {
 	 *
 	 * @return string the identifier of the versionable node for which this is the version history.
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function getVersionableIdentifier();
 
@@ -52,6 +45,7 @@ interface PHPCR_Version_VersionHistoryInterface extends PHPCR_NodeInterface {
 	 *
 	 * @return PHPCR_Version_VersionInterface a Version object.
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function getRootVersion();
 
@@ -77,6 +71,7 @@ interface PHPCR_Version_VersionHistoryInterface extends PHPCR_NodeInterface {
 	 *
 	 * @return PHPCR_Version_VersionIteratorInterface a VersionIterator object.
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function getAllLinearVersions();
 
@@ -88,6 +83,7 @@ interface PHPCR_Version_VersionHistoryInterface extends PHPCR_NodeInterface {
 	 *
 	 * @return PHPCR_Version_VersionIteratorInterface a VersionIterator object.
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function getAllVersions();
 
@@ -97,6 +93,7 @@ interface PHPCR_Version_VersionHistoryInterface extends PHPCR_NodeInterface {
 	 *
 	 * @return PHPCR_NodeIteratorInterface a NodeIterator object.
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function getAllLinearFrozenNodes();
 
@@ -108,6 +105,7 @@ interface PHPCR_Version_VersionHistoryInterface extends PHPCR_NodeInterface {
 	 *
 	 * @return PHPCR_NodeIteratorInterface a NodeIterator object.
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function getAllFrozenNodes();
 
@@ -118,6 +116,7 @@ interface PHPCR_Version_VersionHistoryInterface extends PHPCR_NodeInterface {
 	 * @return PHPCR_Version_VersionInterface a Version object.
 	 * @throws PHPCR_Version_VersionException if the specified version is not in this version history.
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function getVersion($versionName);
 
@@ -128,6 +127,7 @@ interface PHPCR_Version_VersionHistoryInterface extends PHPCR_NodeInterface {
 	 * @return PHPCR_Version_VersionInterface a Version object.
 	 * @throws PHPCR_Version_VersionException if the specified label is not in this version history.
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function getVersionByLabel($label);
 
@@ -165,6 +165,7 @@ interface PHPCR_Version_VersionHistoryInterface extends PHPCR_NodeInterface {
 	 * @throws PHPCR_Version_LabelExistsVersionException if moveLabel is false, and an attempt is made to add a label that already exists in this version history
 	 * @throws PHPCR_Version_VersionException if the specified version does not exist in this version history or if the specified version is the root version (jcr:rootVersion).
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function addVersionLabel($versionName, $label, $moveLabel);
 
@@ -181,6 +182,7 @@ interface PHPCR_Version_VersionHistoryInterface extends PHPCR_NodeInterface {
 	 * @return void
 	 * @throws PHPCR_Version_VersionException if the name label does not exist in this version history.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function removeVersionLabel($label);
 
@@ -189,11 +191,14 @@ interface PHPCR_Version_VersionHistoryInterface extends PHPCR_NodeInterface {
 	 * returns true if any version in the history has the given label.
 	 * The label must be a JCR name in either qualified or extended form.
 	 *
+	 * Note: The Java API defines this with multiple differing signatures.
+	 *
 	 * @param string $label a version label. A JCR name in either extended or qualified form.
 	 * @param PHPCR_Version_VersionInterface $version a Version object
 	 * @return boolean a boolean.
 	 * @throws PHPCR_Version_VersionException if the specified version is not of this version history.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function hasVersionLabel($label, $version = NULL);
 
@@ -202,10 +207,13 @@ interface PHPCR_Version_VersionHistoryInterface extends PHPCR_NodeInterface {
 	 * If a $version is given returns all version labels of the history or an empty
 	 * array if there are none.
 	 *
+	 * Note: The Java API defines this with multiple differing signatures.
+	 *
 	 * @param VersionInterface $version a Version object
 	 * @return array a string array containing all the labels of the (given) version (history)
 	 * @throws PHPCR_Version_VersionException if the specified version is not in this version history.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function getVersionLabels($version = NULL);
 
@@ -230,6 +238,7 @@ interface PHPCR_Version_VersionHistoryInterface extends PHPCR_NodeInterface {
 	 * @throws PHPCR_UnsupportedRepositoryOperationException if this operation is not supported by the implementation.
 	 * @throws PHPCR_Version_VersionException if the named version is not in this version history.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function removeVersion($versionName);
 }

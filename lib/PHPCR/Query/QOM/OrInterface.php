@@ -22,12 +22,6 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Query
- * @version $Id: OrInterface.php 1811 2009-01-28 12:04:49Z robert $
- */
-
-/**
  * Performs a logical disjunction of two other constraints.
  *
  * To satisfy the Or constraint, the node-tuple must either:
@@ -35,9 +29,7 @@ declare(ENCODING = 'utf-8');
  *  satisfy constraint2 but not constraint1, or
  *  satisfy both constraint1 and constraint2.
  *
- * @package PHPCR
- * @subpackage Query
- * @version $Id: OrInterface.php 1811 2009-01-28 12:04:49Z robert $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Query_QOM_OrInterface extends PHPCR_Query_QOM_ConstraintInterface {
@@ -46,6 +38,7 @@ interface PHPCR_Query_QOM_OrInterface extends PHPCR_Query_QOM_ConstraintInterfac
 	 * Gets the first constraint.
 	 *
 	 * @return PHPCR_Query_QOM_ConstraintInterface the constraint; non-null
+	 * @api
 	 */
 	public function getConstraint1();
 
@@ -53,6 +46,7 @@ interface PHPCR_Query_QOM_OrInterface extends PHPCR_Query_QOM_ConstraintInterfac
 	 * Gets the second constraint.
 	 *
 	 * @return PHPCR_Query_QOM_ConstraintInterface the constraint; non-null
+	 * @api
 	 */
 	public function getConstraint2();
 

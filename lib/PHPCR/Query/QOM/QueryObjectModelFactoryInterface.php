@@ -22,19 +22,11 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Query
- * @version $Id: QueryObjectModelFactoryInterface.php 2191 2009-05-07 19:49:06Z k-fish $
- */
-
-/**
  * A QueryObjectModelFactory creates instances of the JCR query object model.
  *
  * Refer to QueryObjectModelInterface for a description of the query object model.
  *
- * @package PHPCR
- * @subpackage Query
- * @version $Id: QueryObjectModelFactoryInterface.php 2191 2009-05-07 19:49:06Z k-fish $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Query_QOM_QueryObjectModelFactoryInterface extends PHPCR_Query_QOM_QueryObjectModelConstantsInterface {
@@ -55,6 +47,7 @@ interface PHPCR_Query_QOM_QueryObjectModelFactoryInterface extends PHPCR_Query_Q
 	 * @return PHPCR_Query_QOM_QueryObjectModelInterface the query; non-null
 	 * @throws PHPCR_Query_InvalidQueryException if a particular validity test is possible on this method, the implemention chooses to perform that test and the parameters given fail that test. See the individual QOM factory methods for the validity criteria of each query element.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function createQuery(PHPCR_Query_QOM_SourceInterface $selectorOrSource, $constraint, array $orderings, array $columns);
 
@@ -76,6 +69,7 @@ interface PHPCR_Query_QOM_QueryObjectModelFactoryInterface extends PHPCR_Query_Q
 	 * @return PHPCR_Query_QOM_SelectorInterface the selector; non-null
 	 * @throws PHPCR_Query_InvalidQueryException if a particular validity test is possible on this method, the implemention chooses to perform that test (and not leave it until later) on createQuery, and the parameters given fail that test
 	 * @throws PHPCR_RepositoryException if the operation otherwise fails
+	 * @api
 	 */
 	public function selector($nodeTypeName, $selectorName = NULL);
 
@@ -91,6 +85,7 @@ interface PHPCR_Query_QOM_QueryObjectModelFactoryInterface extends PHPCR_Query_Q
 	 * @return PHPCR_Query_QOM_JoinInterface the join; non-null
 	 * @throws PHPCR_Query_InvalidQueryException if a particular validity test is possible on this method, the implemention chooses to perform that test (and not leave it until later) on createQuery, and the parameters given fail that test
 	 * @throws PHPCR_RepositoryException if the operation otherwise fails
+	 * @api
 	 */
 	public function join(PHPCR_Query_QOM_SourceInterface $left, PHPCR_Query_QOM_SourceInterface $right, $joinType, PHPCR_Query_QOM_JoinConditionInterface $joinCondition);
 
@@ -118,6 +113,7 @@ interface PHPCR_Query_QOM_QueryObjectModelFactoryInterface extends PHPCR_Query_Q
 	 * @return PHPCR_Query_QOM_EquiJoinConditionInterface the constraint; non-null
 	 * @throws PHPCR_Query_InvalidQueryException if a particular validity test is possible on this method, the implemention chooses to perform that test (and not leave it until later) on createQuery, and the parameters given fail that test
 	 * @throws PHPCR_RepositoryException if the operation otherwise fails
+	 * @api
 	 */
 	public function equiJoinCondition($selector1Name, $property1Name, $selector2Name, $property2Name);
 
@@ -140,6 +136,7 @@ interface PHPCR_Query_QOM_QueryObjectModelFactoryInterface extends PHPCR_Query_Q
 	 * @return PHPCR_Query_QOM_SameNodeJoinConditionInterface the constraint; non-null
 	 * @throws PHPCR_Query_InvalidQueryException if a particular validity test is possible on this method, the implemention chooses to perform that test (and not leave it until later) on createQuery, and the parameters given fail that test
 	 * @throws PHPCR_RepositoryException if the operation otherwise fails
+	 * @api
 	 */
 	public function sameNodeJoinCondition($selector1Name, $selector2Name, $selector2Path = NULL);
 
@@ -156,6 +153,7 @@ interface PHPCR_Query_QOM_QueryObjectModelFactoryInterface extends PHPCR_Query_Q
 	 * @return PHPCR_Query_QOM_ChildNodeJoinConditionInterface the constraint; non-null
 	 * @throws PHPCR_Query_InvalidQueryException if a particular validity test is possible on this method, the implemention chooses to perform that test (and not leave it until later) on createQuery, and the parameters given fail that test
 	 * @throws PHPCR_RepositoryException if the operation otherwise fails
+	 * @api
 	 */
 	public function childNodeJoinCondition($childSelectorName, $parentSelectorName);
 
@@ -172,6 +170,7 @@ interface PHPCR_Query_QOM_QueryObjectModelFactoryInterface extends PHPCR_Query_Q
 	 * @return PHPCR_Query_QOM_DescendantNodeJoinConditionInterface the constraint; non-null
 	 * @throws PHPCR_Query_InvalidQueryException if a particular validity test is possible on this method, the implemention chooses to perform that test (and not leave it until later) on createQuery, and the parameters given fail that test
 	 * @throws PHPCR_RepositoryException if the operation otherwise fails
+	 * @api
 	 */
 	public function descendantNodeJoinCondition($descendantSelectorName, $ancestorSelectorName);
 
@@ -183,6 +182,7 @@ interface PHPCR_Query_QOM_QueryObjectModelFactoryInterface extends PHPCR_Query_Q
 	 * @return PHPCR_Query_QOM_AndInterface the And constraint; non-null
 	 * @throws PHPCR_Query_InvalidQueryException if a particular validity test is possible on this method, the implemention chooses to perform that test (and not leave it until later) on createQuery, and the parameters given fail that test
 	 * @throws PHPCR_RepositoryException if the operation otherwise fails
+	 * @api
 	 */
 	public function _and(PHPCR_Query_QOM_ConstraintInterface $constraint1, PHPCR_Query_QOM_ConstraintInterface $constraint2);
 
@@ -194,6 +194,7 @@ interface PHPCR_Query_QOM_QueryObjectModelFactoryInterface extends PHPCR_Query_Q
 	 * @return PHPCR_Query_QOM_OrInterface the Or constraint; non-null
 	 * @throws PHPCR_Query_InvalidQueryException if a particular validity test is possible on this method, the implemention chooses to perform that test (and not leave it until later) on createQuery, and the parameters given fail that test
 	 * @throws PHPCR_RepositoryException if the operation otherwise fails
+	 * @api
 	 */
 	public function _or(PHPCR_Query_QOM_ConstraintInterface $constraint1, PHPCR_Query_QOM_ConstraintInterface $constraint2);
 
@@ -204,6 +205,7 @@ interface PHPCR_Query_QOM_QueryObjectModelFactoryInterface extends PHPCR_Query_Q
 	 * @return PHPCR_Query_QOM_NotInterface the Not constraint; non-null
 	 * @throws PHPCR_Query_InvalidQueryException if a particular validity test is possible on this method, the implemention chooses to perform that test (and not leave it until later) on createQuery, and the parameters given fail that test
 	 * @throws PHPCR_RepositoryException if the operation otherwise fails
+	 * @api
 	 */
 	public function not(PHPCR_Query_QOM_ConstraintInterface $constraint);
 
@@ -216,6 +218,7 @@ interface PHPCR_Query_QOM_QueryObjectModelFactoryInterface extends PHPCR_Query_Q
 	 * @return PHPCR_Query_QOM_ComparisonInterface the constraint; non-null
 	 * @throws PHPCR_Query_InvalidQueryException if a particular validity test is possible on this method, the implemention chooses to perform that test (and not leave it until later) on createQuery, and the parameters given fail that test
 	 * @throws PHPCR_RepositoryException if the operation otherwise fails
+	 * @api
 	 */
 	public function comparison(PHPCR_Query_QOM_DynamicOperandInterface $operand1, $operator, PHPCR_Query_QOM_StaticOperandInterface $operand2);
 
@@ -232,6 +235,7 @@ interface PHPCR_Query_QOM_QueryObjectModelFactoryInterface extends PHPCR_Query_Q
 	 * @return PHPCR_Query_QOM_PropertyExistenceInterface the constraint; non-null
 	 * @throws PHPCR_Query_InvalidQueryException if a particular validity test is possible on this method, the implemention chooses to perform that test (and not leave it until later) on createQuery, and the parameters given fail that test
 	 * @throws PHPCR_RepositoryException if the operation otherwise fails
+	 * @api
 	 */
 	public function propertyExistence($propertyName, $selectorName = NULL);
 
@@ -253,6 +257,7 @@ interface PHPCR_Query_QOM_QueryObjectModelFactoryInterface extends PHPCR_Query_Q
 	 * @return PHPCR_Query_QOM_FullTextSearchInterface the constraint; non-null
 	 * @throws PHPCR_Query_InvalidQueryException if a particular validity test is possible on this method, the implemention chooses to perform that test (and not leave it until later) on createQuery, and the parameters given fail that test
 	 * @throws PHPCR_RepositoryException if the operation otherwise fails
+	 * @api
 	 */
 	public function fullTextSearch($propertyName, $fullTextSearchExpression, $selectorName = NULL);
 
@@ -273,6 +278,7 @@ interface PHPCR_Query_QOM_QueryObjectModelFactoryInterface extends PHPCR_Query_Q
 	 * @return PHPCR_Query_QOM_SameNodeInterface the constraint; non-null
 	 * @throws PHPCR_Query_InvalidQueryException if the query is invalid
 	 * @throws PHPCR_RepositoryException if the operation otherwise fails
+	 * @api
 	 */
 	public function sameNode($path, $selectorName = NULL);
 
@@ -293,6 +299,7 @@ interface PHPCR_Query_QOM_QueryObjectModelFactoryInterface extends PHPCR_Query_Q
 	 * @return PHPCR_Query_QOM_ChildNodeInterface the constraint; non-null
 	 * @throws PHPCR_Query_InvalidQueryException if a particular validity test is possible on this method, the implemention chooses to perform that test (and not leave it until later) on createQuery, and the parameters given fail that test
 	 * @throws PHPCR_RepositoryException if the operation otherwise fails
+	 * @api
 	 */
 	public function childNode($path, $selectorName = NULL);
 
@@ -313,6 +320,7 @@ interface PHPCR_Query_QOM_QueryObjectModelFactoryInterface extends PHPCR_Query_Q
 	 * @return PHPCR_Query_QOM_DescendantNodeInterface the constraint; non-null
 	 * @throws PHPCR_Query_InvalidQueryException if a particular validity test is possible on this method, the implemention chooses to perform that test (and not leave it until later) on createQuery, and the parameters given fail that test
 	 * @throws PHPCR_RepositoryException if the operation otherwise fails
+	 * @api
 	 */
 	public function descendantNode($path, $selectorName = NULL);
 
@@ -329,6 +337,7 @@ interface PHPCR_Query_QOM_QueryObjectModelFactoryInterface extends PHPCR_Query_Q
 	 * @return PHPCR_Query_QOM_PropertyValueInterface the operand; non-null
 	 * @throws PHPCR_Query_InvalidQueryException if the query is invalid
 	 * @throws PHPCR_RepositoryException if the operation otherwise fails
+	 * @api
 	 */
 	public function propertyValue($propertyName, $selectorName = NULL);
 
@@ -339,6 +348,7 @@ interface PHPCR_Query_QOM_QueryObjectModelFactoryInterface extends PHPCR_Query_Q
 	 * @return PHPCR_Query_QOM_LengthInterface the operand; non-null
 	 * @throws PHPCR_Query_InvalidQueryException if a particular validity test is possible on this method, the implemention chooses to perform that test (and not leave it until later) on createQuery, and the parameters given fail that test
 	 * @throws PHPCR_RepositoryException if the operation otherwise fails
+	 * @api
 	 */
 	public function length(PHPCR_Query_QOM_PropertyValueInterface $propertyValue);
 
@@ -353,6 +363,7 @@ interface PHPCR_Query_QOM_QueryObjectModelFactoryInterface extends PHPCR_Query_Q
 	 * @return PHPCR_Query_QOM_NodeNameInterface the operand; non-null
 	 * @throws PHPCR_Query_InvalidQueryException if a particular validity test is possible on this method, the implemention chooses to perform that test (and not leave it until later) on createQuery, and the parameters given fail that test
 	 * @throws PHPCR_RepositoryException if the operation otherwise fails
+	 * @api
 	 */
 	public function nodeName($selectorName = NULL);
 
@@ -366,6 +377,7 @@ interface PHPCR_Query_QOM_QueryObjectModelFactoryInterface extends PHPCR_Query_Q
 	 * @return PHPCR_Query_QOM_NodeLocalNameInterface the operand; non-null
 	 * @throws PHPCR_Query_InvalidQueryException if the query is invalid
 	 * @throws PHPCR_RepositoryException if the operation otherwise fails
+	 * @api
 	 */
 	public function nodeLocalName($selectorName = NULL);
 
@@ -379,6 +391,7 @@ interface PHPCR_Query_QOM_QueryObjectModelFactoryInterface extends PHPCR_Query_Q
 	 * @return PHPCR_Query_QOM_FullTextSearchScoreInterface the operand; non-null
 	 * @throws PHPCR_Query_InvalidQueryException if a particular validity test is possible on this method, the implemention chooses to perform that test (and not leave it until later) on createQuery, and the parameters given fail that test
 	 * @throws PHPCR_RepositoryException if the operation otherwise fails
+	 * @api
 	 */
 	public function fullTextSearchScore($selectorName = NULL);
 
@@ -389,6 +402,7 @@ interface PHPCR_Query_QOM_QueryObjectModelFactoryInterface extends PHPCR_Query_Q
 	 * @return PHPCR_Query_QOM_LowerCaseInterface the operand; non-null
 	 * @throws PHPCR_Query_InvalidQueryException if a particular validity test is possible on this method, the implemention chooses to perform that test (and not leave it until later) on createQuery, and the parameters given fail that test
 	 * @throws PHPCR_RepositoryException if the operation otherwise fails
+	 * @api
 	 */
 	public function lowerCase(PHPCR_Query_QOM_DynamicOperandInterface $operand);
 
@@ -399,6 +413,7 @@ interface PHPCR_Query_QOM_QueryObjectModelFactoryInterface extends PHPCR_Query_Q
 	 * @return PHPCR_Query_QOM_UpperCaseInterface the operand; non-null
 	 * @throws PHPCR_Query_InvalidQueryException if a particular validity test is possible on this method, the implemention chooses to perform that test (and not leave it until later) on createQuery, and the parameters given fail that test
 	 * @throws PHPCR_RepositoryException if the operation otherwise fails
+	 * @api
 	 */
 	public function upperCase(PHPCR_Query_QOM_DynamicOperandInterface $operand);
 
@@ -411,6 +426,7 @@ interface PHPCR_Query_QOM_QueryObjectModelFactoryInterface extends PHPCR_Query_Q
 	 * @return PHPCR_Query_QOM_BindVariableValueInterface the operand; non-null
 	 * @throws PHPCR_Query_InvalidQueryException if a particular validity test is possible on this method, the implemention chooses to perform that test (and not leave it until later) on createQuery, and the parameters given fail that test
 	 * @throws PHPCR_RepositoryException if the operation otherwise fails
+	 * @api
 	 */
 	public function bindVariable($bindVariableName);
 
@@ -423,6 +439,7 @@ interface PHPCR_Query_QOM_QueryObjectModelFactoryInterface extends PHPCR_Query_Q
 	 * @return PHPCR_ValueInterface the operand; non-null
 	 * @throws PHPCR_Query_InvalidQueryException if a particular validity test is possible on this method, the implemention chooses to perform that test (and not leave it until later) on createQuery, and the parameters given fail that test
 	 * @throws PHPCR_RepositoryException if the operation otherwise fails
+	 * @api
 	 */
 	public function literal(PHPCR_ValueInterface $literalValue);
 
@@ -435,6 +452,7 @@ interface PHPCR_Query_QOM_QueryObjectModelFactoryInterface extends PHPCR_Query_Q
 	 * @return PHPCR_Query_QOM_OrderingInterface the ordering
 	 * @throws PHPCR_Query_InvalidQueryException if the query is invalid
 	 * @throws PHPCR_RepositoryException if the operation otherwise fails
+	 * @api
 	 */
 	public function ascending(PHPCR_Query_QOM_DynamicOperandInterface $operand);
 
@@ -447,6 +465,7 @@ interface PHPCR_Query_QOM_QueryObjectModelFactoryInterface extends PHPCR_Query_Q
 	 * @return PHPCR_Query_QOM_OrderingInterface the ordering
 	 * @throws PHPCR_Query_InvalidQueryException if the query is invalid
 	 * @throws PHPCR_RepositoryException if the operation otherwise fails
+	 * @api
 	 */
 	public function descending(PHPCR_Query_QOM_DynamicOperandInterface $operand);
 
@@ -475,6 +494,7 @@ interface PHPCR_Query_QOM_QueryObjectModelFactoryInterface extends PHPCR_Query_Q
 	 * @return PHPCR_Query_QOM_ColumnInterface the column; non-null
 	 * @throws PHPCR_Query_InvalidQueryException if the query has no default selector or is otherwise invalid
 	 * @throws PHPCR_RepositoryException if the operation otherwise fails
+	 * @api
 	 */
 	public function column($propertyName, $columnName = NULL, $selectorName = NULL);
 

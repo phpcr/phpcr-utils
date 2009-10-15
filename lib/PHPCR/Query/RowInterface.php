@@ -22,17 +22,9 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Query
- * @version $Id: RowInterface.php 1811 2009-01-28 12:04:49Z robert $
- */
-
-/**
  * A row in the query result table.
  *
- * @package PHPCR
- * @subpackage Query
- * @version $Id: RowInterface.php 1811 2009-01-28 12:04:49Z robert $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Query_RowInterface {
@@ -43,6 +35,7 @@ interface PHPCR_Query_RowInterface {
 	 *
 	 * @return array a Value array.
 	 * @throws PHPCR_RepositoryException if an error occurs
+	 * @api
 	 */
 	public function getValues();
 
@@ -53,6 +46,7 @@ interface PHPCR_Query_RowInterface {
 	 * @return PHPCR_ValueInterface a Value
 	 * @throws PHPCR_ItemNotFoundException if columnName s not among the column names of the query result table.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function getValue($columnName);
 
@@ -63,6 +57,7 @@ interface PHPCR_Query_RowInterface {
 	 * @param string $selectorName
 	 * @return PHPCR_NodeInterface a Node
 	 * @throws PHPCR_RepositoryException if selectorName is not the alias of a selector in this query or if another error occurs.
+	 * @api
 	 */
 	public function getNode($selectorName = NULL);
 
@@ -73,6 +68,7 @@ interface PHPCR_Query_RowInterface {
 	 * @param string $selectorName
 	 * @return string
 	 * @throws PHPCR_RepositoryException if selectorName is not the alias of a selector in this query or if another error occurs.
+	 * @api
 	 */
 	public function getPath($selectorName = NULL);
 
@@ -93,6 +89,7 @@ interface PHPCR_Query_RowInterface {
 	 * @param string $selectorName
 	 * @return float
 	 * @throws PHPCR_RepositoryException if selectorName is not the alias of a selector in this query or (in case of no given selectorName) if this query has more than one selector (and therefore, this Row corresponds to more than one Node) or if another error occurs.
+	 * @api
 	 */
 	public function getScore($selectorName = NULL);
 

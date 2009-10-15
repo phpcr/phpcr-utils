@@ -22,12 +22,6 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage NodeType
- * @version $Id: NodeTypeDefinitionInterface.php 2191 2009-05-07 19:49:06Z k-fish $
- */
-
-/**
  * The NodeTypeDefinition interface provides methods for discovering the
  * static definition of a node type. These are accessible both before and
  * after the node type is registered. Its subclass NodeType adds methods
@@ -39,9 +33,7 @@ declare(ENCODING = 'utf-8');
  * registration, only objects implementing the subinterface NodeType will
  * be encountered.
  *
- * @package PHPCR
- * @subpackage NodeType
- * @version $Id: NodeTypeDefinitionInterface.php 2191 2009-05-07 19:49:06Z k-fish $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_NodeType_NodeTypeDefinitionInterface {
@@ -53,6 +45,7 @@ interface PHPCR_NodeType_NodeTypeDefinitionInterface {
 	 * NodeTypeTemplate, then this method will return null.
 	 *
 	 * @return string a String
+	 * @api
 	 */
 	public function getName();
 
@@ -64,6 +57,7 @@ interface PHPCR_NodeType_NodeTypeDefinitionInterface {
 	 * single string indicating the node type nt:base.
 	 *
 	 * @return array an array of Strings
+	 * @api
 	 */
 	public function getDeclaredSupertypeNames();
 
@@ -78,6 +72,7 @@ interface PHPCR_NodeType_NodeTypeDefinitionInterface {
 	 * NodeTypeTemplate, then this method will return false.
 	 *
 	 * @return boolean a boolean
+	 * @api
 	 */
 	public function isAbstract();
 
@@ -88,6 +83,7 @@ interface PHPCR_NodeType_NodeTypeDefinitionInterface {
 	 * NodeTypeTemplate, then this method will return false.
 	 *
 	 * @return boolean a boolean
+	 * @api
 	 */
 	public function isMixin();
 
@@ -104,6 +100,7 @@ interface PHPCR_NodeType_NodeTypeDefinitionInterface {
 	 * NodeTypeTemplate, then this method will return false.
 	 *
 	 * @return boolean a boolean
+	 * @api
 	 */
 	public function hasOrderableChildNodes();
 
@@ -119,6 +116,7 @@ interface PHPCR_NodeType_NodeTypeDefinitionInterface {
 	 * property definitions have no effect.
 	 *
 	 * @return boolean a boolean
+	 * @api
 	 */
 	public function isQueryable();
 
@@ -131,6 +129,7 @@ interface PHPCR_NodeType_NodeTypeDefinitionInterface {
 	 * NodeTypeTemplate, then this method will return null.
 	 *
 	 * @return string a String
+	 * @api
 	 */
 	public function getPrimaryItemName();
 
@@ -142,6 +141,7 @@ interface PHPCR_NodeType_NodeTypeDefinitionInterface {
 	 * NodeTypeTemplate, then this method will return null.
 	 *
 	 * @return array an array of PropertyDefinitions
+	 * @api
 	 */
 	public function getDeclaredPropertyDefinitions();
 
@@ -153,6 +153,7 @@ interface PHPCR_NodeType_NodeTypeDefinitionInterface {
 	 * NodeTypeTemplate, then this method will return null.
 	 *
 	 * @return array an array of NodeDefinitions
+	 * @api
 	 */
 	public function getDeclaredChildNodeDefinitions();
 }

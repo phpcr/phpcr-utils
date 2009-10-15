@@ -22,12 +22,6 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Query
- * @version $Id: OrderingInterface.php 2191 2009-05-07 19:49:06Z k-fish $
- */
-
-/**
  * Determines the relative order of two node-tuples by evaluating operand for
  * each.
  *
@@ -48,9 +42,7 @@ declare(ENCODING = 'utf-8');
  *  if v1 is ordered after v2, then nt1 precedes nt2, otherwise
  *  the relative order of nt1 and nt2 is implementation determined and may be arbitrary.
  *
- * @package PHPCR
- * @subpackage Query
- * @version $Id: OrderingInterface.php 2191 2009-05-07 19:49:06Z k-fish $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Query_QOM_OrderingInterface {
@@ -59,6 +51,7 @@ interface PHPCR_Query_QOM_OrderingInterface {
 	 * The operand by which to order.
 	 *
 	 * @return PHPCR_Query_QOM_DynamicOperandInterface the operand; non-null
+	 * @api
 	 */
 	public function getOperand();
 
@@ -66,6 +59,7 @@ interface PHPCR_Query_QOM_OrderingInterface {
 	 * Gets the order.
 	 *
 	 * @return string either QueryObjectModelConstants.JCR_ORDER_ASCENDING or QueryObjectModelConstants.JCR_ORDER_DESCENDING
+	 * @api
 	 */
 	public function getOrder();
 

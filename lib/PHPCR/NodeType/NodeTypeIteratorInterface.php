@@ -22,17 +22,9 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage NodeType
- * @version $Id: NodeTypeIteratorInterface.php 1811 2009-01-28 12:04:49Z robert $
- */
-
-/**
  * An iterator for NodeType objects.
  *
- * @package PHPCR
- * @subpackage NodeType
- * @version $Id: NodeTypeIteratorInterface.php 1811 2009-01-28 12:04:49Z robert $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_NodeType_NodeTypeIteratorInterface extends PHPCR_RangeIteratorInterface {
@@ -42,6 +34,7 @@ interface PHPCR_NodeType_NodeTypeIteratorInterface extends PHPCR_RangeIteratorIn
 	 *
 	 * @return PHPCR_NodeTypeInterface the next NodeType in the iteration
 	 * @throws OutOfBoundsException if iteration has no more NodeTypes
+	 * @api
 	 */
 	public function nextNodeType();
 

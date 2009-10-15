@@ -22,19 +22,13 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @version $Id: InvalidItemStateException.php 2191 2009-05-07 19:49:06Z k-fish $
- */
-
-/**
  * Exception thrown by the write methods of Node and Property and by
  * Session#save and Session#refresh if an attempted change would conflict with a
  * change to the persistent workspace made through another Session. Also thrown
  * by methods of Node and Property if that object represents an item that has
  * been removed from the workspace.
  *
- * @package PHPCR
- * @version $Id: InvalidItemStateException.php 2191 2009-05-07 19:49:06Z k-fish $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 class PHPCR_InvalidItemStateException extends PHPCR_RepositoryException {

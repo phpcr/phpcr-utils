@@ -22,18 +22,10 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Query
- * @version $Id: QueryManagerInterface.php 2191 2009-05-07 19:49:06Z k-fish $
- */
-
-/**
  * This interface encapsulates methods for the management of search queries.
  * Provides methods for the creation and retrieval of search queries.
  *
- * @package PHPCR
- * @subpackage Query
- * @version $Id: QueryManagerInterface.php 2191 2009-05-07 19:49:06Z k-fish $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Query_QueryManagerInterface {
@@ -48,26 +40,16 @@ interface PHPCR_Query_QueryManagerInterface {
 	 * @return PHPCR_Query_QueryInterface a Query object
 	 * @throws PHPCR_Query_InvalidQueryException if the query statement is syntactically invalid or the specified language is not supported
 	 * @throws PHPCR_RepositoryException if another error occurs
+	 * @api
 	 */
 	public function createQuery($statement, $language);
-
-	/**
-	 * Creates a new prepared query by specifying the query statement itself and the language
-	 * in which the query is stated.
-	 *
-	 * @param string $statement
-	 * @param string $language
-	 * @return PHPCR_Query_PreparedQueryInterface a PreparedQuery object
-	 * @throws PHPCR_Query_InvalidQueryException if the query statement is syntactically invalid or the specified language is not supported
-	 * @throws PHPCR_RepositoryException if another error occurs
-	 */
-	public function createPreparedQuery($statement, $language);
 
 	/**
 	 * Returns a QueryObjectModelFactory with which a JCR-JQOM query can be built
 	 * programmatically.
 	 *
 	 * @return PHPCR_Query_QOM_QueryObjectModelFactoryInterface a QueryObjectModelFactory object
+	 * @api
 	 */
 	public function getQOMFactory();
 
@@ -82,6 +64,7 @@ interface PHPCR_Query_QueryManagerInterface {
 	 * @return PHPCR_Query_QueryInterface a Query object.
 	 * @throws PHPCR_Query_InvalidQueryException If node is not a valid persisted query (that is, a node of type nt:query).
 	 * @throws PHPCR_RepositoryException if another error occurs
+	 * @api
 	 */
 	public function getQuery($node);
 
@@ -93,6 +76,7 @@ interface PHPCR_Query_QueryManagerInterface {
 	 *
 	 * @return array A string array.
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function getSupportedQueryLanguages();
 

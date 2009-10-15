@@ -22,11 +22,6 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @version $Id: ValueInterface.php 2636 2009-06-23 09:10:29Z k-fish $
- */
-
-/**
  * A generic holder for the value of a property. A Value object can be used
  * without knowing the actual property type (STRING, DOUBLE, BINARY etc.).
  *
@@ -50,8 +45,7 @@ declare(ENCODING = 'utf-8');
  * The deprecated getStream() method and it's related exceptions and rules have been
  * omitted in this PHP port of the API.
  *
- * @package PHPCR
- * @version  $Id: ValueInterface.php 2636 2009-06-23 09:10:29Z k-fish $
+ * @version  $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_ValueInterface {
@@ -62,6 +56,7 @@ interface PHPCR_ValueInterface {
 	 * @return string A string representation of the value of this property.
 	 * @throws PHPCR_ValueFormatException if conversion to a String is not possible.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function getString();
 
@@ -72,6 +67,7 @@ interface PHPCR_ValueInterface {
 	 *
 	 * @return PHPCR_BinaryInterface A Binary representation of this value.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function getBinary();
 
@@ -81,6 +77,7 @@ interface PHPCR_ValueInterface {
 	 * @return string A long representation of the value of this property.
 	 * @throws PHPCR_ValueFormatException if conversion to a long is not possible.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function getLong();
 
@@ -90,6 +87,7 @@ interface PHPCR_ValueInterface {
 	 * @return string A double representation of the value of this property.
 	 * @throws PHPCR_ValueFormatException if conversion is not possible.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function getDecimal();
 
@@ -99,6 +97,7 @@ interface PHPCR_ValueInterface {
 	 * @return string A double representation of the value of this property.
 	 * @throws PHPCR_ValueFormatException if conversion to a double is not possible.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function getDouble();
 
@@ -111,6 +110,7 @@ interface PHPCR_ValueInterface {
 	 * @return DateTime A DateTime representation of the value of this property.
 	 * @throws PHPCR_ValueFormatException if conversion to a DateTime is not possible.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function getDate();
 
@@ -120,6 +120,7 @@ interface PHPCR_ValueInterface {
 	 * @return string A boolean representation of the value of this property.
 	 * @throws PHPCR_ValueFormatException if conversion to a boolean is not possible.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function getBoolean();
 
@@ -139,7 +140,9 @@ interface PHPCR_ValueInterface {
 	 * * PropertyType.URI
 	 *
 	 * The type returned is that which was set at property creation.
+	 *
 	 * @return integer The type of the value
+	 * @api
 	 */
 	public function getType();
 }

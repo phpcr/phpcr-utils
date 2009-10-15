@@ -22,15 +22,9 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @version $Id: NodeInterface.php 2636 2009-06-23 09:10:29Z k-fish $
- */
-
-/**
  * The Node interface represents a node in a workspace.
  *
- * @package PHPCR
- * @version $Id: NodeInterface.php 2636 2009-06-23 09:10:29Z k-fish $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_NodeInterface extends PHPCR_ItemInterface {
@@ -39,31 +33,37 @@ interface PHPCR_NodeInterface extends PHPCR_ItemInterface {
 	 * A constant for the JCR name jcr:content. This is the name of
 	 * a child node declared in NodeType nt:file and a property declared in
 	 * nt:linkedFile.
+	 * @api
 	 */
 	const JCR_CONTENT = "{http://www.jcp.org/jcr/1.0}content";
 
 	/**
 	 * A constant for the node name jcr:propertyDefinition declared in nt:nodeType.
+	 * @api
 	 */
 	const JCR_PROPERTY_DEFINITION = "{http://www.jcp.org/jcr/1.0}propertyDefinition";
 
 	/**
 	 * A constant for the node name jcr:childNodeDefinition declared in nt:nodeType.
+	 * @api
 	 */
 	const JCR_CHILD_NODE_DEFINITION = "{http://www.jcp.org/jcr/1.0}childNodeDefinition";
 
 	/**
 	 * A constant for the node name jcr:rootVersion declared in nt:versionHistory.
+	 * @api
 	 */
 	const JCR_ROOT_VERSION = "{http://www.jcp.org/jcr/1.0}rootVersion";
 
 	/**
 	 * A constant for the node name jcr:versionLabels declared in nt:versionHistory.
+	 * @api
 	 */
 	const JCR_VERSION_LABELS = "{http://www.jcp.org/jcr/1.0}versionLabels";
 
 	/**
 	 * A constant for the node name jcr:frozenNode declared in nt:version.
+	 * @api
 	 */
 	const JCR_FROZEN_NODE = "{http://www.jcp.org/jcr/1.0}frozenNode";
 
@@ -99,6 +99,7 @@ interface PHPCR_NodeInterface extends PHPCR_ItemInterface {
 	 * @throws PHPCR_Version_VersionException if the node to which the new child is being added is read-only due to a checked-in node and this implementation performs this validation immediately.
 	 * @throws PHPCR_Lock_LockException if a lock prevents the addition of the node and this implementation performs this validation immediately instead of waiting until save.
 	 * @throws PHPCR_RepositoryException If the last element of relPath has an index or if another error occurs.
+	 * @api
 	 */
 	public function addNode($relPath, $primaryNodeTypeName = NULL, $identifier = NULL);
 
@@ -129,6 +130,7 @@ interface PHPCR_NodeInterface extends PHPCR_ItemInterface {
 	 * @throws PHPCR_Version_VersionException if this node is read-only due to a checked-in node and this implementation performs this validation immediately.
 	 * @throws PHPCR_Lock_LockException if a lock prevents the re-ordering and this implementation performs this validation immediately.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function orderBefore($srcChildRelPath, $destChildRelPath);
 
@@ -180,6 +182,7 @@ interface PHPCR_NodeInterface extends PHPCR_ItemInterface {
 	 * @throws PHPCR_Lock_LockException  if a lock prevents the setting of the property and this implementation performs this validation immediately instead of waiting until save.
 	 * @throws PHPCR_ConstraintViolationException if the change would violate a node-type or other constraint and this implementation performs this validation immediately instead of waiting until save.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function setProperty($name, $value, $type = NULL);
 
@@ -200,6 +203,7 @@ interface PHPCR_NodeInterface extends PHPCR_ItemInterface {
 	 * @return PHPCR_NodeInterface The node at relPath.
 	 * @throws PHPCR_PathNotFoundException If no node exists at the specified path or the current Session does not read access to the node at the specified path.
 	 * @throws PHPCR_RepositoryException If another error occurs.
+	 * @api
 	 */
 	public function getNode($relPath);
 
@@ -249,6 +253,7 @@ interface PHPCR_NodeInterface extends PHPCR_ItemInterface {
 	 * @param string|array $filter a name pattern or an array of globbing strings.
 	 * @return PHPCR_NodeIteratorInterface a NodeIterator over all (matching) child Nodes
 	 * @throws PHPCR_RepositoryException If an unexpected error occurs.
+	 * @api
 	 */
 	public function getNodes($filter = NULL);
 
@@ -260,6 +265,7 @@ interface PHPCR_NodeInterface extends PHPCR_ItemInterface {
 	 * @return PHPCR_PropertyInterface The property at relPath.
 	 * @throws PHPCR_PathNotFoundException if no property exists at the specified path or if the current Session does not have read access to the specified property.
 	 * @throws PHPCR_RepositoryException If another error occurs.
+	 * @api
 	 */
 	public function getProperty($relPath);
 
@@ -308,6 +314,7 @@ interface PHPCR_NodeInterface extends PHPCR_ItemInterface {
 	 * @param string|array $filter a name pattern
 	 * @return PHPCR_PropertyIteratorInterface a PropertyIterator
 	 * @throws PHPCR_RepositoryException If an unexpected error occurs.
+	 * @api
 	 */
 	public function getProperties($filter = NULL);
 
@@ -325,6 +332,7 @@ interface PHPCR_NodeInterface extends PHPCR_ItemInterface {
 	 * @return PHPCR_ItemInterface the primary child item.
 	 * @throws PHPCR_ItemNotFoundException if this node does not have a primary child item, either because none is declared in the node type or because a declared primary item is not present on this node instance, or because none accessible through the current Session
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function getPrimaryItem();
 
@@ -334,6 +342,7 @@ interface PHPCR_NodeInterface extends PHPCR_ItemInterface {
 	 *
 	 * @return string the identifier of this node
 	 * @throws PHPCR_RepositoryException If an error occurs.
+	 * @api
 	 */
 	public function getIdentifier();
 
@@ -347,6 +356,7 @@ interface PHPCR_NodeInterface extends PHPCR_ItemInterface {
 	 *
 	 * @return integer The index of this node within the ordered set of its same-name sibling nodes.
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function getIndex();
 
@@ -372,6 +382,7 @@ interface PHPCR_NodeInterface extends PHPCR_ItemInterface {
 	 * @param string $name name of referring REFERENCE properties to be returned; if null then all referring REFERENCEs are returned
 	 * @return PHPCR_PropertyIteratorInterface A PropertyIterator.
 	 * @throws PHPCR_RepositoryException if an error occurs
+	 * @api
 	 */
 	public function getReferences($name = NULL);
 
@@ -397,6 +408,7 @@ interface PHPCR_NodeInterface extends PHPCR_ItemInterface {
 	 * @param string $name name of referring WEAKREFERENCE properties to be returned; if null then all referring WEAKREFERENCEs are returned
 	 * @return PHPCR_PropertyIteratorInterface A PropertyIterator.
 	 * @throws PHPCR_RepositoryException if an error occurs
+	 * @api
 	 */
 	public function getWeakReferences($name = NULL);
 
@@ -407,6 +419,7 @@ interface PHPCR_NodeInterface extends PHPCR_ItemInterface {
 	 * @param string $relPath The path of a (possible) node.
 	 * @return boolean true if a node exists at relPath; false otherwise.
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function hasNode($relPath);
 
@@ -417,6 +430,7 @@ interface PHPCR_NodeInterface extends PHPCR_ItemInterface {
 	 * @param string $relPath The path of a (possible) property.
 	 * @return boolean true if a property exists at relPath; false otherwise.
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function hasProperty($relPath);
 
@@ -426,6 +440,7 @@ interface PHPCR_NodeInterface extends PHPCR_ItemInterface {
 	 *
 	 * @return boolean true if this node has one or more child nodes; false otherwise.
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function hasNodes();
 
@@ -435,6 +450,7 @@ interface PHPCR_NodeInterface extends PHPCR_ItemInterface {
 	 *
 	 * @return boolean true if this node has one or more properties; false otherwise.
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function hasProperties();
 
@@ -445,6 +461,7 @@ interface PHPCR_NodeInterface extends PHPCR_ItemInterface {
 	 *
 	 * @return PHPCR_NodeType_NodeTypeInterface a NodeType object.
 	 * @throws PHPCR_RepositoryException if an error occurs
+	 * @api
 	 */
 	public function getPrimaryNodeType();
 
@@ -458,6 +475,7 @@ interface PHPCR_NodeInterface extends PHPCR_ItemInterface {
 	 *
 	 * @return array of PHPCR_NodeType_NodeTypeInterface objects.
 	 * @throws PHPCR_RepositoryException if an error occurs
+	 * @api
 	 */
 	public function getMixinNodeTypes();
 
@@ -469,6 +487,7 @@ interface PHPCR_NodeInterface extends PHPCR_ItemInterface {
 	 * @param string $nodeTypeName the name of a node type.
 	 * @return boolean true if this node is of the specified primary node type or mixin type, or a subtype thereof. Returns false otherwise.
 	 * @throws PHPCR_RepositoryException If an error occurs.
+	 * @api
 	 */
 	public function isNodeType($nodeTypeName);
 
@@ -488,6 +507,7 @@ interface PHPCR_NodeInterface extends PHPCR_ItemInterface {
 	 * @throws PHPCR_Version_VersionException if this node is read-only due to a checked-in node and this implementation performs this validation immediately.
 	 * @throws PHPCR_Lock_LockException if a lock prevents the change of the primary node type and this implementation performs this validation immediately.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function setPrimaryType($nodeTypeName);
 
@@ -519,6 +539,7 @@ interface PHPCR_NodeInterface extends PHPCR_ItemInterface {
 	 * @throws PHPCR_Version_VersionException if this node is versionable and checked-in or is non-versionable but its nearest versionable ancestor is checked-in and this implementation performs this validation immediately instead of waiting until save..
 	 * @throws PHPCR_Lock_LockException if a lock prevents the addition of the mixin and this implementation performs this validation immediately instead of waiting until save.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function addMixin($mixinName);
 
@@ -535,6 +556,7 @@ interface PHPCR_NodeInterface extends PHPCR_ItemInterface {
 	 * @throws PHPCR_Version_VersionException if this node is read-only due to a checked-in node and this implementation performs this validation immediately.
 	 * @throws PHPCR_Lock_LockException if a lock prevents the removal of the mixin and this implementation performs this validation immediately.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function removeMixin($mixinName);
 
@@ -556,6 +578,7 @@ interface PHPCR_NodeInterface extends PHPCR_ItemInterface {
 	 * @return boolean true if the specified mixin node type, mixinName, can be added to this node; false otherwise.
 	 * @throws PHPCR_NodeType_NoSuchNodeTypeException if the specified mixin node type name is not recognized.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function canAddMixin($mixinName);
 
@@ -572,6 +595,7 @@ interface PHPCR_NodeInterface extends PHPCR_ItemInterface {
 	 *
 	 * @return PHPCR_NodeType_NodeDefinitionInterface a NodeDefinition object.
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function getDefinition();
 
@@ -596,6 +620,7 @@ interface PHPCR_NodeInterface extends PHPCR_ItemInterface {
 	 * @throws PHPCR_AccessDeniedException if the current session does not have sufficient access to perform the operation.
 	 * @throws PHPCR_Lock_LockException if a lock prevents the update.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function update($srcWorkspace);
 
@@ -609,6 +634,7 @@ interface PHPCR_NodeInterface extends PHPCR_ItemInterface {
 	 * @throws PHPCR_NoSuchWorkspaceException if the workspace is unknown.
 	 * @throws PHPCR_AccessDeniedException if the current session has insufficient access capabilities to perform this operation.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function getCorrespondingNodePath($workspaceName);
 
@@ -618,6 +644,7 @@ interface PHPCR_NodeInterface extends PHPCR_ItemInterface {
 	 *
 	 * @return PHPCR_NodeIteratorInterface a NodeIterator
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function getSharedSet();
 
@@ -638,6 +665,7 @@ interface PHPCR_NodeInterface extends PHPCR_ItemInterface {
 	 * @see removeShare()
 	 * @see Item::remove()
 	 * @see SessionInterface::removeItem
+	 * @api
 	 */
 	public function removeSharedSet();
 
@@ -653,6 +681,7 @@ interface PHPCR_NodeInterface extends PHPCR_ItemInterface {
 	 * @see removeSharedSet()
 	 * @see Item::remove()
 	 * @see SessionInterface::removeItem
+	 * @api
 	 */
 	public function removeShare();
 
@@ -666,6 +695,7 @@ interface PHPCR_NodeInterface extends PHPCR_ItemInterface {
 	 *
 	 * @return a boolean
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function isCheckedOut();
 
@@ -677,6 +707,7 @@ interface PHPCR_NodeInterface extends PHPCR_ItemInterface {
 	 *
 	 * @return a boolean.
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function isLocked();
 
@@ -694,6 +725,7 @@ interface PHPCR_NodeInterface extends PHPCR_ItemInterface {
 	 * @throws PHPCR_UnsupportedRepositoryOperationException  if this implementation does not support lifecycle actions or if this node does not have the mix:lifecycle mixin.
 	 * @throws PHPCR_InvalidLifecycleTransitionException if the lifecycle transition is not successful.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function followLifecycleTransition($transition);
 
@@ -703,6 +735,7 @@ interface PHPCR_NodeInterface extends PHPCR_ItemInterface {
 	 * @return array a string array.
 	 * @throws PHPCR_UnsupportedRepositoryOperationException  if this implementation does not support lifecycle actions or if this node does not have the mix:lifecycle mixin.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function getAllowedLifecycleTransitions();
 }

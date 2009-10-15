@@ -22,11 +22,6 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @version $Id: SessionInterface.php 2191 2009-05-07 19:49:06Z k-fish $
- */
-
-/**
  * The Session object provides read and (in level 2) write access to the
  * content of a particular workspace in the repository.
  *
@@ -39,8 +34,7 @@ declare(ENCODING = 'utf-8');
  * Workspace object represents a "view" of an actual repository workspace
  * entity as seen through the authorization settings of its associated Session.
  *
- * @package PHPCR
- * @version $Id: SessionInterface.php 2191 2009-05-07 19:49:06Z k-fish $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_SessionInterface {
@@ -48,6 +42,7 @@ interface PHPCR_SessionInterface {
 	/**
 	 * A constant representing the add_node action string, used to determine if
 	 * this Session has permission to add a new node.
+	 * @api
 	 */
 	const ACTION_ADD_NODE = 'add_node';
 
@@ -55,18 +50,21 @@ interface PHPCR_SessionInterface {
 	 * A constant representing the read action string, used to determine if this
 	 * Session has permission to retrieve an item (and read the value, in the case
 	 * of a property).
+	 * @api
 	 */
 	const ACTION_READ = 'read';
 
 	/**
 	 * A constant representing the remove action string, used to determine if this
 	 * Session has permission to remove an item.
+	 * @api
 	 */
 	const ACTION_REMOVE = 'remove';
 
 	/**
 	 * A constant representing the set_property action string, used to determine if
 	 * this Session has permission to set (add or modify) a property.
+	 * @api
 	 */
 	const ACTION_SET_PROPERTY = 'set_property';
 
@@ -74,6 +72,7 @@ interface PHPCR_SessionInterface {
 	 * Returns the Repository object through which this session was acquired.
 	 *
 	 * @return PHPCR_RepositoryInterface a Repository object.
+	 * @api
 	 */
 	public function getRepository();
 
@@ -84,6 +83,7 @@ interface PHPCR_SessionInterface {
 	 * is free to return an "anonymous user ID" or null.
 	 *
 	 * @return string The user id associated with this Session.
+	 * @api
 	 */
 	public function getUserID();
 
@@ -95,6 +95,7 @@ interface PHPCR_SessionInterface {
 	 * array if the Credentials instance did not provide attributes.
 	 *
 	 * @return array A string array containing the names of all attributes passed in the credentials used to acquire this session.
+	 * @api
 	 */
 	public function getAttributeNames();
 
@@ -104,6 +105,7 @@ interface PHPCR_SessionInterface {
 	 *
 	 * @param string $name The name of an attribute passed in the credentials used to acquire this session.
 	 * @return object The value of the attribute or null if no attribute of the given name exists.
+	 * @api
 	 */
 	public function getAttribute($name);
 
@@ -111,6 +113,7 @@ interface PHPCR_SessionInterface {
 	 * Returns the Workspace attached to this Session.
 	 *
 	 * @return PHPCR_WorkspaceInterface a Workspace object.
+	 * @api
 	 */
 	public function getWorkspace();
 
@@ -120,6 +123,7 @@ interface PHPCR_SessionInterface {
 	 *
 	 * @return PHPCR_NodeInterface The root node of the workspace: a Node object.
 	 * @throws RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function getRootNode();
 
@@ -137,6 +141,7 @@ interface PHPCR_SessionInterface {
 	 * @return PHPCR_SessionInterface a Session object
 	 * @throws PHPCR_LoginException if the current session does not have sufficient access to perform the operation.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function impersonate(PHPCR_CredentialsInterface $credentials);
 
@@ -148,6 +153,7 @@ interface PHPCR_SessionInterface {
 	 * @return PHPCR_NodeInterface A Node.
 	 * @throws PHPCR_ItemNotFoundException if no node with the specified identifier exists or if this Session does not have read access to the node with the specified identifier.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function getNodeByIdentifier($id);
 
@@ -166,6 +172,7 @@ interface PHPCR_SessionInterface {
 	 * @return PHPCR_ItemInterface
 	 * @throws PHPCR_PathNotFoundException if no accessible item is found at the specified path.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function getItem($absPath);
 
@@ -176,6 +183,7 @@ interface PHPCR_SessionInterface {
 	 * @return PHPCR_NodeInterface A node
 	 * @throws PHPCR_PathNotFoundException if no accessible node is found at the specified path.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function getNode($absPath);
 
@@ -186,6 +194,7 @@ interface PHPCR_SessionInterface {
 	 * @return PHPCR_PropertyInterface A property
 	 * @throws PHPCR_PathNotFoundException if no accessible property is found at the specified path.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function getProperty($absPath);
 
@@ -196,6 +205,7 @@ interface PHPCR_SessionInterface {
 	 * @param string $absPath An absolute path.
 	 * @return boolean a boolean
 	 * @throws PHPCR_RepositoryException if absPath is not a well-formed absolute path.
+	 * @api
 	 */
 	public function itemExists($absPath);
 
@@ -206,6 +216,7 @@ interface PHPCR_SessionInterface {
 	 * @param string $absPath An absolute path.
 	 * @return boolean a boolean
 	 * @throws PHPCR_RepositoryException if absPath is not a well-formed absolute path.
+	 * @api
 	 */
 	public function nodeExists($absPath);
 
@@ -216,6 +227,7 @@ interface PHPCR_SessionInterface {
 	 * @param string $absPath An absolute path.
 	 * @return boolean a boolean
 	 * @throws PHPCR_RepositoryException if absPath is not a well-formed absolute path.
+	 * @api
 	 */
 	public function propertyExists($absPath);
 
@@ -257,6 +269,7 @@ interface PHPCR_SessionInterface {
 	 * @throws PHPCR_ConstraintViolationException if a node-type or other constraint violation is detected immediately and this implementation performs this validation immediately.
 	 * @throws PHPCR_Lock_LockException if the move operation would violate a lock and this implementation performs this validation immediately.
 	 * @throws PHPCR_RepositoryException if the last element of destAbsPath has an index or if another error occurs.
+	 * @api
 	 */
 	public function move($srcAbsPath, $destAbsPath);
 
@@ -280,6 +293,7 @@ interface PHPCR_SessionInterface {
 	 * @throws PHPCR_PathNotFoundException if no accessible item is found at $absPath property or if the specified item or an item in its subgraph is currently the target of a REFERENCE property located in this workspace but outside the specified item's subgraph and the current Session does not have read access to that REFERENCE property.
 	 * @throws PHPCR_RepositoryException if another error occurs.
 	 * @see Item::remove()
+	 * @api
 	 */
 	public function removeItem($absPath);
 
@@ -308,6 +322,7 @@ interface PHPCR_SessionInterface {
 	 * @throws PHPCR_Lock_LockException if the save would result in a change to persistent storage that would violate a lock.
 	 * @throws PHPCR_NodeType_NoSuchNodeTypeException if the save would result in the addition of a node with an unrecognized node type.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function save();
 
@@ -324,6 +339,7 @@ interface PHPCR_SessionInterface {
 	 * @param boolean $keepChanges a boolean
 	 * @return void
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function refresh($keepChanges);
 
@@ -333,6 +349,7 @@ interface PHPCR_SessionInterface {
 	 *
 	 * @return boolean a boolean
 	 * @throws PHPCR_RepositoryException if an error occurs
+	 * @api
 	 */
 	public function hasPendingChanges();
 
@@ -343,6 +360,7 @@ interface PHPCR_SessionInterface {
 	 * @return PHPCR_ValueFactoryInterface
 	 * @throws PHPCR_UnsupportedRepositoryOperationException if writing to the repository is not supported.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function getValueFactory();
 
@@ -377,6 +395,7 @@ interface PHPCR_SessionInterface {
 	 * @param string $actions a comma separated list of action strings.
 	 * @return boolean true if this Session has permission to perform the specified actions at the specified absPath.
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function hasPermission($absPath, $actions);
 
@@ -414,6 +433,7 @@ interface PHPCR_SessionInterface {
 	 * @return void
 	 * @throws java.security.AccessControlException If permission is denied.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function checkPermission($absPath, $actions);
 
@@ -459,6 +479,7 @@ interface PHPCR_SessionInterface {
 	 * @param array $arguments the arguments of the operation.
 	 * @return boolean FALSE if the operation cannot be performed, TRUE if the operation can be performed or if the repository cannot determine whether the operation can be performed.
 	 * @throws PHPCR_RepositoryException if an error occurs
+	 * @api
 	 */
 	public function hasCapability($methodName, $target, array $arguments);
 
@@ -530,6 +551,7 @@ interface PHPCR_SessionInterface {
 	 * @throws PHPCR_Version_VersionException if the node at $parentAbsPath is read-only due to a checked-in node and this implementation performs this validation immediately.
 	 * @throws PHPCR_Lock_LockException if a lock prevents the addition of the subgraph and this implementation performs this validation immediately.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function getImportContentHandler($parentAbsPath, $uuidBehavior);
 
@@ -599,6 +621,7 @@ interface PHPCR_SessionInterface {
 	 * @throws PHPCR_InvalidSerializedDataException if incoming stream is not a valid XML document.
 	 * @throws PHPCR_Lock_LockException if a lock prevents the addition of the subgraph and this implementation performs this validation immediately.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function importXML($parentAbsPath, $in, $uuidBehavior);
 
@@ -640,6 +663,7 @@ interface PHPCR_SessionInterface {
 	 * @throws PHPCR_PathNotFoundException if no node exists at absPath.
 	 * @throws RuntimeException if an error during an I/O operation occurs.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function exportSystemView($absPath, XMLWriter $out, $skipBinary, $noRecurse);
 
@@ -677,6 +701,7 @@ interface PHPCR_SessionInterface {
 	 * @throws PHPCR_PathNotFoundException if no node exists at absPath.
 	 * @throws RuntimeException if an error during an I/O operation occurs.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function exportDocumentView($absPath, XMLWriter $out, $skipBinary, $noRecurse);
 
@@ -693,6 +718,7 @@ interface PHPCR_SessionInterface {
 	 * @return void
 	 * @throws PHPCR_NamespaceException if an attempt is made to map a namespace URI to a prefix beginning with the characters "xml" (in any combination of case) or if an attempt is made to map either the empty prefix or the empty namespace (i.e., if either $prefix or $uri are the empty string).
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function setNamespacePrefix($prefix, $uri);
 
@@ -701,6 +727,7 @@ interface PHPCR_SessionInterface {
 	 *
 	 * @return array a string array
 	 * @throws PHPCR_RepositoryException if an error occurs
+	 * @api
 	 */
 	public function getNamespacePrefixes();
 
@@ -712,6 +739,7 @@ interface PHPCR_SessionInterface {
 	 * @return string a string
 	 * @throws PHPCR_NamespaceException if the specified prefix is unknown.
 	 * @throws PHPCR_RepositoryException if another error occurs
+	 * @api
 	 */
 	public function getNamespaceURI($prefix);
 
@@ -723,6 +751,7 @@ interface PHPCR_SessionInterface {
 	 * @return string a string
 	 * @throws PHPCR_NamespaceException if the specified uri is unknown.
 	 * @throws PHPCR_RepositoryException - if another error occurs
+	 * @api
 	 */
 	public function getNamespacePrefix($uri);
 
@@ -731,6 +760,7 @@ interface PHPCR_SessionInterface {
 	 * be called when a Session is no longer needed.
 	 *
 	 * @return void
+	 * @api
 	 */
 	public function logout();
 
@@ -741,6 +771,7 @@ interface PHPCR_SessionInterface {
 	 * any other way disconnected from the repository.
 	 *
 	 * @return boolean true if this Session is usable, false otherwise.
+	 * @api
 	 */
 	public function isLive();
 
@@ -750,6 +781,7 @@ interface PHPCR_SessionInterface {
 	 * @return PHPCR_Security_AccessControlManager the access control manager for this Session
 	 * @throws PHPCR_UnsupportedRepositoryOperationException if access control is not supported.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function getAccessControlManager();
 
@@ -759,6 +791,7 @@ interface PHPCR_SessionInterface {
 	 * @return PHPCR_Retention_RetentionManagerInterface the retention manager for this Session.
 	 * @throws PHPCR_UnsupportedRepositoryOperationException if retention and hold are not supported.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function getRetentionManager();
 

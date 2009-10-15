@@ -22,17 +22,9 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Retention
- * @version $Id: RetentionPolicyInterface.php 1811 2009-01-28 12:04:49Z robert $
- */
-
-/**
  * A RetentionPolicy is an object with a name and an optional description.
  *
- * @package PHPCR
- * @subpackage Retention
- * @version $Id: RetentionPolicyInterface.php 1811 2009-01-28 12:04:49Z robert $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Retention_RetentionPolicyInterface {
@@ -42,6 +34,7 @@ interface PHPCR_Retention_RetentionPolicyInterface {
 	 *
 	 * @return string the name of the access control policy. A JCR name.
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function getName();
 

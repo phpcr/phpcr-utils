@@ -22,21 +22,13 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Query
- * @version $Id: ChildNodeJoinConditionInterface.php 1979 2009-03-09 15:44:15Z k-fish $
- */
-
-/**
  * Tests whether the childSelector node is a child of the parentSelector node. A
  * node-tuple satisfies the constraint only if:
  *  childSelectorNode.getParent().isSame(parentSelectorNode)
  * would return true, where childSelectorNode is the node for childSelector and
  * parentSelectorNode is the node for parentSelector.
  *
- * @package PHPCR
- * @subpackage Query
- * @version $Id: ChildNodeJoinConditionInterface.php 1979 2009-03-09 15:44:15Z k-fish $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Query_QOM_ChildNodeJoinConditionInterface extends PHPCR_Query_QOM_JoinConditionInterface {
@@ -45,6 +37,7 @@ interface PHPCR_Query_QOM_ChildNodeJoinConditionInterface extends PHPCR_Query_QO
 	 * Gets the name of the child selector.
 	 *
 	 * @return string the selector name; non-null
+	 * @api
 	 */
 	public function getChildSelectorName();
 
@@ -52,6 +45,7 @@ interface PHPCR_Query_QOM_ChildNodeJoinConditionInterface extends PHPCR_Query_QO
 	 * Gets the name of the parent selector.
 	 *
 	 * @return string the selector name; non-null
+	 * @api
 	 */
 	public function getParentSelectorName();
 

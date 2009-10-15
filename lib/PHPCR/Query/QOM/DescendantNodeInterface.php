@@ -22,12 +22,6 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Query
- * @version $Id: DescendantNodeInterface.php 1979 2009-03-09 15:44:15Z k-fish $
- */
-
-/**
  * Tests whether the selector node is a descendant of a node reachable by
  * absolute path path.
  *
@@ -37,9 +31,7 @@ declare(ENCODING = 'utf-8');
  * would return true for some non-negative integer n, where selectorNode is the
  * node for the specified selector.
  *
- * @package PHPCR
- * @subpackage Query
- * @version $Id: DescendantNodeInterface.php 1979 2009-03-09 15:44:15Z k-fish $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Query_QOM_DescendantNodeInterface extends PHPCR_Query_QOM_ConstraintInterface {
@@ -48,6 +40,7 @@ interface PHPCR_Query_QOM_DescendantNodeInterface extends PHPCR_Query_QOM_Constr
 	 * Gets the name of the selector against which to apply this constraint.
 	 *
 	 * @return string the selector name; non-null
+	 * @api
 	 */
 	public function getSelectorName();
 
@@ -55,6 +48,7 @@ interface PHPCR_Query_QOM_DescendantNodeInterface extends PHPCR_Query_QOM_Constr
 	 * Gets the absolute path.
 	 *
 	 * @return string the path; non-null
+	 * @api
 	 */
 	public function getAncestorPath();
 

@@ -22,11 +22,6 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @version $Id: NamespaceRegistryInterface.php 2191 2009-05-07 19:49:06Z k-fish $
- */
-
-/**
  * Each repository has a single, persistent namespace registry represented by
  * the NamespaceRegistry object, accessed via Workspace.getNamespaceRegistry().
  * The namespace registry contains the default prefixes of the registered
@@ -34,59 +29,68 @@ declare(ENCODING = 'utf-8');
  * in repository content, and there may be repository content with namespaces
  * that are not included n the registry.
  *
- * @package PHPCR
- * @version $Id: NamespaceRegistryInterface.php 2191 2009-05-07 19:49:06Z k-fish $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_NamespaceRegistryInterface {
 
 	/**
 	 * A constant for the predefined namespace prefix "jcr".
+	 * @api
 	 */
 	const PREFIX_JCR = "jcr";
 
 	/**
 	 * A constant for the predefined namespace prefix "nt".
+	 * @api
 	 */
 	const PREFIX_NT = "nt";
 
 	/**
 	 * A constant for the predefined namespace prefix "mix".
+	 * @api
 	 */
 	const PREFIX_MIX = "mix";
 
 	/**
 	 * A constant for the predefined namespace prefix "xml".
+	 * @api
 	 */
 	const PREFIX_XML = "xml";
 
 	/**
 	 * A constant for the predefined namespace prefix "" (the empty prefix).
+	 * @api
 	 */
 	const PREFIX_EMPTY = "";
 
 	/**
 	 * A constant for the predefined namespace mapped by default to the prefix "jcr"
+	 * @api
 	 */
 	const NAMESPACE_JCR = "http://www.jcp.org/jcr/1.0";
 
 	/**
 	 * A constant for the predefined namespace mapped by default to the prefix "nt"
+	 * @api
 	 */
 	const NAMESPACE_NT = "http://www.jcp.org/jcr/nt/1.0";
 
 	/**
 	 * A constant for the predefined namespace mapped by default to the prefix "mix"
+	 * @api
 	 */
 	const NAMESPACE_MIX = "http://www.jcp.org/jcr/mix/1.0";
 
 	/**
 	 * A constant for the predefined namespace mapped by default to the prefix "xml"
+	 * @api
 	 */
 	const NAMESPACE_XML = "http://www.w3.org/XML/1998/namespace";
 
 	/**
 	 * A constant for the predefined namespace mapped by default to the prefix "" (the empty prefix)
+	 * @api
 	 */
 	const NAMESPACE_EMPTY = "";
 
@@ -119,7 +123,8 @@ interface PHPCR_NamespaceRegistryInterface {
 	 * @throws PHPCR_UnsupportedRepositoryOperationException if this repository does not support namespace registry changes.
 	 * @throws PHPCR_AccessDeniedException if the current session does not have sufficient access to register the namespace.
 	 * @throws PHPCR_RepositoryException if another error occurs.
-	 * */
+	 * @api
+	 */
 	public function registerNamespace($prefix, $uri);
 
 
@@ -140,7 +145,8 @@ interface PHPCR_NamespaceRegistryInterface {
 	 * @throws PHPCR_UnsupportedRepositoryOperationException if this repository does not support namespace registry changes.
 	 * @throws PHPCR_AccessDeniedException if the current session does not have sufficient access to unregister the namespace.
 	 * @throws PHPCR_RepositoryException if another error occurs.
-	 * */
+	 * @api
+	 */
 	public function unregisterNamespace($prefix);
 
 	/**
@@ -148,7 +154,8 @@ interface PHPCR_NamespaceRegistryInterface {
 	 *
 	 * @return array a string array
 	 * @throws PHPCR_RepositoryException if an error occurs.
-	 * */
+	 * @api
+	 */
 	public function getPrefixes();
 
 	/**
@@ -156,7 +163,8 @@ interface PHPCR_NamespaceRegistryInterface {
 	 *
 	 * @return array a string array
 	 * @throws PHPCR_RepositoryException if an error occurs.
-	 * */
+	 * @api
+	 */
 	public function getURIs();
 
 	/**
@@ -166,7 +174,8 @@ interface PHPCR_NamespaceRegistryInterface {
 	 * @return string a string
 	 * @throws PHPCR_NamespaceException if a mapping with the specified prefix does not exist.
 	 * @throws PHPCR_RepositoryException if another error occurs
-	 * */
+	 * @api
+	 */
 	public function getURI($prefix);
 
 	/**
@@ -176,7 +185,8 @@ interface PHPCR_NamespaceRegistryInterface {
 	 * @return string a string
 	 * @throws PHPCR_NamespaceException if a mapping with the specified uri does not exist.
 	 * @throws PHPCR_RepositoryException if another error occurs
-	 * */
+	 * @api
+	 */
 	public function getPrefix($uri);
 
 }

@@ -22,12 +22,6 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Query
- * @version $Id: FullTextSearchScoreInterface.php 1979 2009-03-09 15:44:15Z k-fish $
- */
-
-/**
  * Evaluates to a DOUBLE value equal to the full-text search score of a node.
  *
  * Full-text search score ranks a selector's nodes by their relevance to the
@@ -37,9 +31,7 @@ declare(ENCODING = 'utf-8');
  * in a repository that does not support full-text search scoring or has no
  * full-text indexed properties.
  *
- * @package PHPCR
- * @subpackage Query
- * @version $Id: FullTextSearchScoreInterface.php 1979 2009-03-09 15:44:15Z k-fish $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Query_QOM_FullTextSearchScoreInterface extends PHPCR_Query_QOM_DynamicOperandInterface {
@@ -48,6 +40,7 @@ interface PHPCR_Query_QOM_FullTextSearchScoreInterface extends PHPCR_Query_QOM_D
 	 * Gets the name of the selector against which to evaluate this operand.
 	 *
 	 * @return string the selector name; non-null
+	 * @api
 	 */
 	public function getSelectorName();
 

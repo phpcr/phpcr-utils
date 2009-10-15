@@ -22,15 +22,10 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @version $Id: ItemNotFoundException.php 1811 2009-01-28 12:04:49Z robert $
- */
-
-/**
- * Exception thrown by methods of Item, Node and Workspace when an item is not found.
+ * Exception thrown by methods of Item, Node and Workspace when an item is not
+ * found.
  *
- * @package PHPCR
- * @version $Id: ItemNotFoundException.php 1811 2009-01-28 12:04:49Z robert $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 class PHPCR_ItemNotFoundException extends PHPCR_RepositoryException {

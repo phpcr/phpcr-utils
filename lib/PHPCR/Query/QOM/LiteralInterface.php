@@ -22,17 +22,9 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Query
- * @version $Id: LiteralInterface.php 1811 2009-01-28 12:04:49Z robert $
- */
-
-/**
  * Evaluates to a literal value.
  *
- * @package PHPCR
- * @subpackage Query
- * @version $Id: LiteralInterface.php 1811 2009-01-28 12:04:49Z robert $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Query_QOM_LiteralInterface extends PHPCR_Query_QOM_StaticOperandInterface {
@@ -41,6 +33,7 @@ interface PHPCR_Query_QOM_LiteralInterface extends PHPCR_Query_QOM_StaticOperand
 	 * Gets the value of the literal.
 	 *
 	 * @return string the literal value; non-null
+	 * @api
 	 */
 	public function getLiteralValue();
 

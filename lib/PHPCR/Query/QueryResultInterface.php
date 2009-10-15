@@ -22,17 +22,9 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Query
- * @version $Id: QueryResultInterface.php 1811 2009-01-28 12:04:49Z robert $
- */
-
-/**
  * A QueryResult object. Returned by Query->execute().
  *
- * @package PHPCR
- * @subpackage Query
- * @version $Id: QueryResultInterface.php 1811 2009-01-28 12:04:49Z robert $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Query_QueryResultInterface {
@@ -42,6 +34,7 @@ interface PHPCR_Query_QueryResultInterface {
 	 *
 	 * @return array array holding the column names.
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function getColumnNames();
 
@@ -51,6 +44,7 @@ interface PHPCR_Query_QueryResultInterface {
 	 *
 	 * @return PHPCR_Query_RowIteratorInterface a RowIterator
 	 * @throws PHPCR_RepositoryException if this call is the second time either getRows() or getNodes() has been called on the same QueryResult object or if another error occurs.
+	 * @api
 	*/
 	public function getRows();
 
@@ -60,8 +54,19 @@ interface PHPCR_Query_QueryResultInterface {
 	 *
 	 * @return PHPCR_NodeIteratorInterface a NodeIterator
 	 * @throws PHPCR_RepositoryException if the query contains more than one selector, if this call is the second time either getRows() or getNodes() has been called on the same QueryResult object or if another error occurs.
+	 * @api
 	 */
 	public function getNodes();
 
+	/**
+	 * Returns an array of all the selector names that were used in the query
+	 * that created this result. If the query did not have a selector name then
+	 * an empty array is returned.
+	 *
+	 * @return array a String array holding the selector names.
+	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
+	 */
+	public function getSelectorNames();
 }
 ?>

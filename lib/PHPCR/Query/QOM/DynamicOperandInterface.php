@@ -22,17 +22,9 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Query
- * @version $Id: DynamicOperandInterface.php 1811 2009-01-28 12:04:49Z robert $
- */
-
-/**
  * An operand whose value can only be determined in evaluating the query.
  *
- * @package PHPCR
- * @subpackage Query
- * @version $Id: DynamicOperandInterface.php 1811 2009-01-28 12:04:49Z robert $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Query_QOM_DynamicOperandInterface extends PHPCR_Query_QOM_OperandInterface {

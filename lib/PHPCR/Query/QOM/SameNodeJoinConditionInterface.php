@@ -22,12 +22,6 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Query
- * @version $Id: SameNodeJoinConditionInterface.php 1979 2009-03-09 15:44:15Z k-fish $
- */
-
-/**
  * Tests whether two nodes are "the same" according to the isSame method of
  * javax.jcr.Item.
  *
@@ -46,9 +40,7 @@ declare(ENCODING = 'utf-8');
  *  would return true, where selector1Node is the node for selector1 and
  *  selector2Node is the node for selector2.
  *
- * @package PHPCR
- * @subpackage Query
- * @version $Id: SameNodeJoinConditionInterface.php 1979 2009-03-09 15:44:15Z k-fish $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Query_QOM_SameNodeJoinConditionInterface extends PHPCR_Query_QOM_JoinConditionInterface {
@@ -57,6 +49,7 @@ interface PHPCR_Query_QOM_SameNodeJoinConditionInterface extends PHPCR_Query_QOM
 	 * Gets the name of the first selector.
 	 *
 	 * @return string the selector name; non-null
+	 * @api
 	 */
 	public function getSelector1Name();
 
@@ -64,6 +57,7 @@ interface PHPCR_Query_QOM_SameNodeJoinConditionInterface extends PHPCR_Query_QOM
 	 * Gets the name of the second selector.
 	 *
 	 * @return string the selector name; non-null
+	 * @api
 	 */
 	public function getSelector2Name();
 
@@ -71,6 +65,7 @@ interface PHPCR_Query_QOM_SameNodeJoinConditionInterface extends PHPCR_Query_QOM
 	 * Gets the path relative to the second selector.
 	 *
 	 * @return string the relative path, or null for none
+	 * @api
 	 */
 	public function getSelector2Path();
 

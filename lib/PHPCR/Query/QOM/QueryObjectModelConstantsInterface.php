@@ -22,79 +22,83 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Query
- * @version $Id: QueryObjectModelConstantsInterface.php 2191 2009-05-07 19:49:06Z k-fish $
- */
-
-/**
  * Defines constants used in the query object model.
  *
- * @package PHPCR
- * @subpackage Query
- * @version $Id: QueryObjectModelConstantsInterface.php 2191 2009-05-07 19:49:06Z k-fish $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Query_QOM_QueryObjectModelConstantsInterface {
 
 	/**
 	 * An inner join.
-	 */
+	 * @api
+	*/
 	const JCR_JOIN_TYPE_INNER = '{http://www.jcp.org/jcr/1.0}joinTypeInner';
 
 	/**
 	 * A left-outer join.
-	 */
+	 * @api
+	*/
 	const JCR_JOIN_TYPE_LEFT_OUTER = '{http://www.jcp.org/jcr/1.0}joinTypeLeftOuter';
 
 	/**
 	 * A right-outer join.
-	 */
+	 * @api
+	*/
 	const JCR_JOIN_TYPE_RIGHT_OUTER = '{http://www.jcp.org/jcr/1.0}joinTypeRightOuter';
 
 	/**
 	 * The '=' comparison operator.
-	 */
+	 * @api
+	*/
 	const JCR_OPERATOR_EQUAL_TO = '{http://www.jcp.org/jcr/1.0}operatorEqualTo';
 
 	/**
 	 * The '!=' comparison operator.
-	 */
+	 * @api
+	*/
 	const JCR_OPERATOR_NOT_EQUAL_TO = '{http://www.jcp.org/jcr/1.0}operatorNotEqualTo';
 
 	/**
 	 * The '<' comparison operator.
-	 */
+	 * @api
+	*/
 	const JCR_OPERATOR_LESS_THAN = '{http://www.jcp.org/jcr/1.0}operatorLessThan';
 
 	/**
 	 * The '<=' comparison operator.
-	 */
+	 * @api
+	*/
 	const JCR_OPERATOR_LESS_THAN_OR_EQUAL_TO = '{http://www.jcp.org/jcr/1.0}operatorLessThanOrEqualTo';
 
 	/**
 	 * The '>' comparison operator.
-	 */
+	 * @api
+	*/
 	const JCR_OPERATOR_GREATER_THAN = '{http://www.jcp.org/jcr/1.0}operatorGreaterThan';
 
 	/**
 	 * The '>=' comparison operator.
-	 */
+	 * @api
+	*/
 	const JCR_OPERATOR_GREATER_THAN_OR_EQUAL_TO = '{http://www.jcp.org/jcr/1.0}operatorGreaterThanOrEqualTo';
 
 	/**
 	 * The 'like' comparison operator.
-	 */
+	 * @api
+	*/
 	const JCR_OPERATOR_LIKE = '{http://www.jcp.org/jcr/1.0}operatorLike';
 
 	/**
 	 * Ascending order.
-	 */
+	 * @api
+	*/
 	const JCR_ORDER_ASCENDING = '{http://www.jcp.org/jcr/1.0}orderAscending';
 
 	/**
 	 * Descending order.
-	 */
+	 * @api
+	*/
 	const JCR_ORDER_DESCENDING = '{http://www.jcp.org/jcr/1.0}orderDescending';
 
 }

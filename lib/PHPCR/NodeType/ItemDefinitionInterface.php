@@ -22,17 +22,9 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage NodeType
- * @version $Id: ItemDefinitionInterface.php 1811 2009-01-28 12:04:49Z robert $
- */
-
-/**
  * Superclass of NodeDefinition and PropertyDefinition.
  *
- * @package PHPCR
- * @subpackage NodeType
- * @version $Id: ItemDefinitionInterface.php 1811 2009-01-28 12:04:49Z robert $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_NodeType_ItemDefinitionInterface {
@@ -45,6 +37,7 @@ interface PHPCR_NodeType_ItemDefinitionInterface {
 	 * such cases this method returns null.
 	 *
 	 * @return PHPCR_NodeType_NodeTypeInterface a NodeType object.
+	 * @api
 	 */
 	public function getDeclaringNodeType();
 
@@ -60,6 +53,7 @@ interface PHPCR_NodeType_ItemDefinitionInterface {
 	 * will return null.
 	 *
 	 * @return string a String denoting the name or "*".
+	 * @api
 	 */
 	public function getName();
 
@@ -84,6 +78,7 @@ interface PHPCR_NodeType_ItemDefinitionInterface {
 	 * will return false.
 	 *
 	 * @return boolean a boolean.
+	 * @api
 	 */
 	public function isAutoCreated();
 
@@ -106,6 +101,7 @@ interface PHPCR_NodeType_ItemDefinitionInterface {
 	 * An item definition cannot be both residual and mandatory.
 	 *
 	 * @return boolean a boolean
+	 * @api
 	 */
 	public function isMandatory();
 
@@ -126,6 +122,7 @@ interface PHPCR_NodeType_ItemDefinitionInterface {
 	 * will return OnParentVersionAction.COPY.
 	 *
 	 * @return integer a int constant member of OnParentVersionAction.
+	 * @api
 	 */
 	public function getOnParentVersion();
 
@@ -145,6 +142,7 @@ interface PHPCR_NodeType_ItemDefinitionInterface {
 	 * will return false.
 	 *
 	 * @return booleana boolean.
+	 * @api
 	 */
 	public function isProtected();
 

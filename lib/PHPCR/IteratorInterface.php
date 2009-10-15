@@ -22,18 +22,12 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @version $Id: IteratorInterface.php 1811 2009-01-28 12:04:49Z robert $
- */
-
-/**
  * An Iterator interface
  *
  * The methods next(), hasNext() and remove() as in java.util.Iterator
  * append() is something we thought would be nice...
  *
- * @package PHPCR
- * @version $Id: IteratorInterface.php 1811 2009-01-28 12:04:49Z robert $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_IteratorInterface extends Iterator {
@@ -52,6 +46,7 @@ interface PHPCR_IteratorInterface extends Iterator {
 	 * This is an alias of valid().
 	 *
 	 * @return boolean
+	 * @api
 	 */
 	public function hasNext();
 
@@ -63,6 +58,7 @@ interface PHPCR_IteratorInterface extends Iterator {
 	 *
 	 * @return void
 	 * @throws IllegalStateException if the next method has not yet been called, or the remove method has already been called after the last call to the next method.
+	 * @api
 	 */
 	public function remove();
 
@@ -71,6 +67,7 @@ interface PHPCR_IteratorInterface extends Iterator {
 	 *
 	 * @param mixed $element
 	 * @return void
+	 * @api
 	 */
 	public function append($element);
 }

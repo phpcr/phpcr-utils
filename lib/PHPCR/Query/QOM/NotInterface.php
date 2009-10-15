@@ -22,19 +22,11 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Query
- * @version $Id: NotInterface.php 1811 2009-01-28 12:04:49Z robert $
- */
-
-/**
  * Performs a logical negation of another constraint.
  *
  * To satisfy the Not constraint, the node-tuple must not satisfy constraint.
  *
- * @package PHPCR
- * @subpackage Query
- * @version $Id: NotInterface.php 1811 2009-01-28 12:04:49Z robert $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Query_QOM_NotInterface extends PHPCR_Query_QOM_ConstraintInterface {
@@ -43,6 +35,7 @@ interface PHPCR_Query_QOM_NotInterface extends PHPCR_Query_QOM_ConstraintInterfa
 	 * Gets the constraint negated by this Not constraint.
 	 *
 	 * @return PHPCR_Query_QOM_ConstraintInterface the constraint; non-null
+	 * @api
 	 */
 	public function getConstraint();
 

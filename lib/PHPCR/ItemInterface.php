@@ -22,15 +22,9 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @version $Id: ItemInterface.php 2191 2009-05-07 19:49:06Z k-fish $
- */
-
-/**
  * The Item is the base interface of Node and Property.
  *
- * @package PHPCR
- * @version $Id: ItemInterface.php 2191 2009-05-07 19:49:06Z k-fish $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_ItemInterface {
@@ -40,6 +34,7 @@ interface PHPCR_ItemInterface {
 	 *
 	 * @returns string the normalized absolute path of this Item.
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function getPath();
 
@@ -49,6 +44,7 @@ interface PHPCR_ItemInterface {
 	 *
 	 * @return string the name of this Item> in qualified form or an empty string if this Item is the root node of a workspace.
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function getName();
 
@@ -71,6 +67,7 @@ interface PHPCR_ItemInterface {
 	 * @throws PHPCR_ItemNotFoundException if depth &lt; 0 or depth &gt; n where n is the depth of this item.
 	 * @throws PHPCR_AccessDeniedException if the current session does not have sufficient access to retrieve the specified node.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function getAncestor($depth);
 
@@ -81,6 +78,7 @@ interface PHPCR_ItemInterface {
 	 * @throws PHPCR_ItemNotFoundException if this Item< is the root node of a workspace.
 	 * @throws PHPCR_AccessDeniedException if the current session does not have sufficent access to retrieve the parent of this item.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function getParent();
 
@@ -94,6 +92,7 @@ interface PHPCR_ItemInterface {
 	 *
 	 * @return integer The depth of this Item in the workspace item graph.
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function getDepth();
 
@@ -102,6 +101,7 @@ interface PHPCR_ItemInterface {
 	 *
 	 * @return PHPCR_SessionInterface the Session through which this Item was acquired.
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function getSession();
 
@@ -110,6 +110,7 @@ interface PHPCR_ItemInterface {
 	 * this Item is a Node; Returns false if this Item is a Property.
 	 *
 	 * @return boolean TRUE if this Item is a Node, FALSE if it is a Property.
+	 * @api
 	 */
 	public function isNode();
 
@@ -127,6 +128,7 @@ interface PHPCR_ItemInterface {
 	 * false.
 	 *
 	 * @return boolean TRUE if this item is new; FALSE otherwise.
+	 * @api
 	 */
 	public function isNew();
 
@@ -143,6 +145,7 @@ interface PHPCR_ItemInterface {
 	 * false.
 	 *
 	 * @return boolean TRUE if this item is modified; FALSE otherwise.
+	 * @api
 	 */
 	public function isModified();
 
@@ -174,6 +177,7 @@ interface PHPCR_ItemInterface {
 	 * @param PHPCR_ItemInterface $otherItem the Item object to be tested for identity with this Item.
 	 * @return boolean TRUE if this Item object and otherItem represent the same actual repository item; FALSE otherwise.
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function isSame(PHPCR_ItemInterface $otherItem);
 
@@ -183,6 +187,7 @@ interface PHPCR_ItemInterface {
 	 *
 	 * @param PHPCR_ItemVisitorInterface $visitor The ItemVisitor to be accepted.
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function accept(PHPCR_ItemVisitorInterface $visitor);
 
@@ -204,6 +209,7 @@ interface PHPCR_ItemInterface {
 	 * @return void
 	 * @throws PHPCR_InvalidItemStateException if this Item object represents a workspace item that has been removed (either by this session or another).
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function refresh($keepChanges);
 
@@ -226,6 +232,7 @@ interface PHPCR_ItemInterface {
 	 * @throws PHPCR_AccessDeniedException if this item or an item in its subgraph is currently the target of a REFERENCE property located in this workspace but outside this item's subgraph and the current Session does not have read access to that REFERENCE property or if the current Session does not have sufficent privileges to remove the item.
 	 * @throws PHPCR_RepositoryException if another error occurs.
 	 * @see SessionInterface::removeItem(String)
+	 * @api
 	 */
 	public function remove();
 }

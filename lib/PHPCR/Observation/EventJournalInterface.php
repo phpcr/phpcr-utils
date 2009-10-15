@@ -22,18 +22,10 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Observation
- * @version $Id: EventJournalInterface.php 1811 2009-01-28 12:04:49Z robert $
- */
-
-/**
  * An EventJournal is an extension of EventIterator that provides the additional
  * method skipTo().
  *
- * @package PHPCR
- * @subpackage Observation
- * @version $Id: EventJournalInterface.php 1811 2009-01-28 12:04:49Z robert $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Observation_EventJournalInterface extends PHPCR_Observation_EventIteratorInterface {
@@ -45,6 +37,7 @@ interface PHPCR_Observation_EventJournalInterface extends PHPCR_Observation_Even
 	 *
 	 * @param integer value that represents an offset in milliseconds from the epoch.
 	 * @return void
+	 * @api
 	 */
 	public function skipTo($date);
 

@@ -22,17 +22,9 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Security
- * @version $Id: AccessControlException.php 1811 2009-01-28 12:04:49Z robert $
- */
-
-/**
  * Exception thrown by access control related methods of AccessControlManager.
  *
- * @package PHPCR
- * @subpackage Security
- * @version $Id: AccessControlException.php 1811 2009-01-28 12:04:49Z robert $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 class PHPCR_Security_AccessControlException extends PHPCR_RepositoryException {

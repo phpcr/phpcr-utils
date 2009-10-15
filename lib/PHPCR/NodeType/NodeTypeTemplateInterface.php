@@ -22,12 +22,6 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage NodeType
- * @version $Id: NodeTypeTemplateInterface.php 1979 2009-03-09 15:44:15Z k-fish $
- */
-
-/**
  * The NodeTypeTemplate interface represents a simple container structure used
  * to define node types which are then registered through the
  * NodeTypeManager.registerNodeType method.
@@ -42,9 +36,7 @@ declare(ENCODING = 'utf-8');
  * for the default values assumed when a new empty NodeTypeTemplate is created
  * (as opposed to one extracted from an existing NodeType).
  *
- * @package PHPCR
- * @subpackage NodeType
- * @version $Id: NodeTypeTemplateInterface.php 1979 2009-03-09 15:44:15Z k-fish $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_NodeType_NodeTypeTemplateInterface extends PHPCR_NodeType_NodeTypeDefinitionInterface {
@@ -54,6 +46,7 @@ interface PHPCR_NodeType_NodeTypeTemplateInterface extends PHPCR_NodeType_NodeTy
 	 *
 	 * @param string $name a String.
 	 * @return void
+	 * @api
 	 */
 	public function setName($name);
 
@@ -62,6 +55,7 @@ interface PHPCR_NodeType_NodeTypeTemplateInterface extends PHPCR_NodeType_NodeTy
 	 *
 	 * @param array $names a String array.
 	 * @return void
+	 * @api
 	 */
 	public function setDeclaredSuperTypeNames(array $names);
 
@@ -70,6 +64,7 @@ interface PHPCR_NodeType_NodeTypeTemplateInterface extends PHPCR_NodeType_NodeTy
 	 *
 	 * @param boolean $abstractStatus a boolean.
 	 * @return void
+	 * @api
 	 */
 	public function setAbstract($abstractStatus);
 
@@ -78,6 +73,7 @@ interface PHPCR_NodeType_NodeTypeTemplateInterface extends PHPCR_NodeType_NodeTy
 	 *
 	 * @param boolean $mixin a boolean.
 	 * @return void
+	 * @api
 	 */
 	public function setMixin($mixin);
 
@@ -86,6 +82,7 @@ interface PHPCR_NodeType_NodeTypeTemplateInterface extends PHPCR_NodeType_NodeTy
 	 *
 	 * @param boolean $orderable a boolean.
 	 * @return void
+	 * @api
 	 */
 	public function setOrderableChildNodes($orderable);
 
@@ -94,6 +91,7 @@ interface PHPCR_NodeType_NodeTypeTemplateInterface extends PHPCR_NodeType_NodeTy
 	 *
 	 * @param string $name a String.
 	 * @return void
+	 * @api
 	 */
 	public function setPrimaryItemName($name);
 
@@ -102,6 +100,7 @@ interface PHPCR_NodeType_NodeTypeTemplateInterface extends PHPCR_NodeType_NodeTy
 	 *
 	 * @param booolean $queryable a boolean.
 	 * @return void
+	 * @api
 	 */
 	public function setQueryable($queryable);
 
@@ -111,6 +110,7 @@ interface PHPCR_NodeType_NodeTypeTemplateInterface extends PHPCR_NodeType_NodeTy
 	 * objects can be added to or removed from this List.
 	 *
 	 * @return array a mutable List of PropertyDefinitionTemplate objects.
+	 * @api
 	 */
 	public function getPropertyDefinitionTemplates();
 
@@ -120,6 +120,7 @@ interface PHPCR_NodeType_NodeTypeTemplateInterface extends PHPCR_NodeType_NodeTy
 	 * can be added to or removed from this List.
 	 *
 	 * @return array a mutable List of NodeDefinitionTemplate objects.
+	 * @api
 	 */
 	public function getNodeDefinitionTemplates();
 }

@@ -22,11 +22,6 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @version $Id: ItemVisitorInterface.php 1811 2009-01-28 12:04:49Z robert $
- */
-
-/**
  * This interface defines two signatures of the visit method; one taking a
  * Node, the other a Property. When an object implementing this interface is
  * passed to Item->accept(ItemVisitor) the appropriate visit method is
@@ -36,8 +31,7 @@ declare(ENCODING = 'utf-8');
  * method to call accept on the children of the passed node and thus recurse
  * through the tree performing some operation on each Item.
  *
- * @package PHPCR
- * @version $Id: ItemVisitorInterface.php 1811 2009-01-28 12:04:49Z robert $
+ * @version $Id$
  * @copyright Copyright belongs to the respective authors
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
@@ -48,8 +42,12 @@ interface PHPCR_ItemVisitorInterface {
 	 * of a Node or Property. If this method throws an exception the visiting
 	 * process is aborted.
 	 *
+	 * Note: you need to distinguish between Node and Property objects being
+	 *       visited in your implementation.
+	 *
 	 * @param PHPCR_NodeInterface|PHPCR_PropertyInterface $item a node or property accepting this visitor
 	 * @throws PHPCR_RepositoryException if an error occurs
+	 * @api
 	*/
 	public function visit(PHPCR_ItemInterface $item);
 

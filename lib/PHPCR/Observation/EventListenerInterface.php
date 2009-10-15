@@ -22,12 +22,6 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Observation
- * @version $Id: EventListenerInterface.php 1811 2009-01-28 12:04:49Z robert $
- */
-
-/**
  * An event listener.
  *
  * An EventListener can be registered via the ObservationManager object. Event
@@ -35,9 +29,7 @@ declare(ENCODING = 'utf-8');
  * the transaction is committed. An event listener only sees events for which
  * the session that registered it has sufficient access rights.
  *
- * @package PHPCR
- * @subpackage Observation
- * @version $Id: EventListenerInterface.php 1811 2009-01-28 12:04:49Z robert $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Observation_EventListenerInterface {
@@ -47,6 +39,7 @@ interface PHPCR_Observation_EventListenerInterface {
 	 *
 	 * @param PHPCR_Observation_EventIteratorInterface $events - The event set received.
 	 * @return void
+	 * @api
 	 */
 	public function onEvent(PHPCR_Observation_EventIteratorInterface $events);
 

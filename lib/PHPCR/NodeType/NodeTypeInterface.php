@@ -22,17 +22,9 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage NodeType
- * @version $Id: NodeTypeInterface.php 2636 2009-06-23 09:10:29Z k-fish $
- */
-
-/**
  * A NodeType object represents a "live" node type that is registered in the repository.
  *
- * @package PHPCR
- * @subpackage NodeType
- * @version $Id: NodeTypeInterface.php 2636 2009-06-23 09:10:29Z k-fish $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_NodeType_NodeTypeInterface extends PHPCR_NodeType_NodeTypeDefinitionInterface {
@@ -43,16 +35,19 @@ interface PHPCR_NodeType_NodeTypeInterface extends PHPCR_NodeType_NodeTypeDefini
 	 *
 	 * Property#JCR_PRIMARY_TYPE
 	 * Property#JCR_MIXIN_TYPES
+	 * @api
 	 */
 	const NT_BASE = "{http://www.jcp.org/jcr/nt/1.0}base";
 
 	/**
 	 * A constant for the node type name nt:hierarchyNode (in extended form).
+	 * @api
 	 */
 	const NT_HIERARCHY_NODE = "{http://www.jcp.org/jcr/nt/1.0}hierarchyNode";
 
 	/**
 	 * A constant for the node type name nt:folder (in extended form).
+	 * @api
 	 */
 	const NT_FOLDER = "{http://www.jcp.org/jcr/nt/1.0}folder";
 
@@ -61,6 +56,7 @@ interface PHPCR_NodeType_NodeTypeInterface extends PHPCR_NodeType_NodeTypeDefini
 	 * A constant for the name of the child node declared by nt:file is:
 	 *
 	 * Node#JCR_CONTENT
+	 * @api
 	 */
 	const NT_FILE = "{http://www.jcp.org/jcr/nt/1.0}file";
 
@@ -69,6 +65,7 @@ interface PHPCR_NodeType_NodeTypeInterface extends PHPCR_NodeType_NodeTypeDefini
 	 * A constant for the name of the property declared by nt:linkedFile is:
 	 *
 	 * Property#JCR_CONTENT
+	 * @api
 	 */
 	const NT_LINKED_FILE = "{http://www.jcp.org/jcr/nt/1.0}linkedFile";
 
@@ -77,11 +74,13 @@ interface PHPCR_NodeType_NodeTypeInterface extends PHPCR_NodeType_NodeTypeDefini
 	 * A constant for the name of the property declared by nt:resource is:
 	 *
 	 * Property#JCR_DATA
+	 * @api
 	 */
 	const NT_RESOURCE = "{http://www.jcp.org/jcr/nt/1.0}resource";
 
 	/**
 	 * A constant for the node type name nt:unstructured (in extended form).
+	 * @api
 	 */
 	const NT_UNSTRUCTURED = "{http://www.jcp.org/jcr/nt/1.0}unstructured";
 
@@ -96,6 +95,7 @@ interface PHPCR_NodeType_NodeTypeInterface extends PHPCR_NodeType_NodeTypeDefini
 	 * Property#JCR_WORKSPACE
 	 * Property#JCR_PATH
 	 * Property#JCR_ID
+	 * @api
 	 */
 	const NT_ADDRESS = "{http://www.jcp.org/jcr/nt/1.0}address";
 
@@ -104,6 +104,7 @@ interface PHPCR_NodeType_NodeTypeInterface extends PHPCR_NodeType_NodeTypeDefini
 	 * A constant for the name of the property declared by mix:referenceable is:
 	 *
 	 * Property#JCR_UUID
+	 * @api
 	 */
 	const MIX_REFERENCEABLE = "{http://www.jcp.org/mix/1.0}referenceable";
 
@@ -113,6 +114,7 @@ interface PHPCR_NodeType_NodeTypeInterface extends PHPCR_NodeType_NodeTypeDefini
 	 *
 	 * Property#JCR_TITLE
 	 * Property#JCR_DESCRIPTION
+	 * @api
 	 */
 	const MIX_TITLE = "{http://www.jcp.org/mix/1.0}title";
 
@@ -122,6 +124,7 @@ interface PHPCR_NodeType_NodeTypeInterface extends PHPCR_NodeType_NodeTypeDefini
 	 *
 	 * Property#JCR_CREATED
 	 * Property#JCR_CREATED_BY
+	 * @api
 	 */
 	const MIX_CREATED = "{http://www.jcp.org/mix/1.0}created";
 
@@ -131,6 +134,7 @@ interface PHPCR_NodeType_NodeTypeInterface extends PHPCR_NodeType_NodeTypeDefini
 	 *
 	 * Property#JCR_LAST_MODIFIED
 	 * Property#JCR_LAST_MODIFIED_BY
+	 * @api
 	 */
 	const MIX_LAST_MODIFIED = "{http://www.jcp.org/mix/1.0}lastModified";
 
@@ -139,17 +143,19 @@ interface PHPCR_NodeType_NodeTypeInterface extends PHPCR_NodeType_NodeTypeDefini
 	 * A constant for the name of the property declared by mix:language is:
 	 *
 	 * Property#JCR_LANGUAGE
+	 * @api
 	 */
 	const MIX_LANGUAGE = "{http://www.jcp.org/mix/1.0}language";
 
 	/**
-	 * A constant for the node type name mix:mimetype (in extended form).
-	 * Constants for the names of the properties declared by mix:mimetype are:
+	 * A constant for the node type name mix:mimeType (in extended form).
+	 * Constants for the names of the properties declared by mix:mimeType are:
 	 *
 	 * Property#JCR_MIMETYPE
 	 * Property#JCR_ENCODING
+	 * @api
 	 */
-	const MIX_MIMETYPE = "{http://www.jcp.org/mix/1.0}mimetype";
+	const MIX_MIMETYPE = "{http://www.jcp.org/mix/1.0}mimeType";
 
 	/**
 	 * A constant for the node type name nt:nodeType (in extended form).
@@ -163,6 +169,7 @@ interface PHPCR_NodeType_NodeTypeInterface extends PHPCR_NodeType_NodeTypeDefini
 	 * Property#JCR_PRIMARY_ITEM_NAME
 	 * Node#JCR_PROPERTY_DEFINITION
 	 * Node#JCR_CHILD_NODE_DEFINITION
+	 * @api
 	 */
 	const NT_NODE_TYPE = "{http://www.jcp.org/jcr/nt/1.0}nodeType";
 
@@ -179,6 +186,7 @@ interface PHPCR_NodeType_NodeTypeInterface extends PHPCR_NodeType_NodeTypeDefini
 	 * Property#JCR_VALUE_CONSTRAINTS
 	 * Property#JCR_DEFAULT_VALUES
 	 * Property#JCR_MULTIPLE
+	 * @api
 	 */
 	const NT_PROPERTY_DEFINITION = "{http://www.jcp.org/jcr/nt/1.0}propertyDefinition";
 
@@ -194,11 +202,13 @@ interface PHPCR_NodeType_NodeTypeInterface extends PHPCR_NodeType_NodeTypeDefini
 	 * Property#JCR_REQUIRED_PRIMARY_TYPES
 	 * Property#JCR_DEFAULT_PRIMARY_TYPE
 	 * Property#JCR_SAME_NAME_SIBLINGS
+	 * @api
 	 */
 	const NT_CHILD_NODE_DEFINITION = "{http://www.jcp.org/jcr/nt/1.0}childNodeDefinition";
 
 	/**
 	 * A constant for the node type name mix:shareable (in extended form).
+	 * @api
 	 */
 	const MIX_SHAREABLE = "{http://www.jcp.org/mix/1.0}shareable";
 
@@ -208,6 +218,7 @@ interface PHPCR_NodeType_NodeTypeInterface extends PHPCR_NodeType_NodeTypeDefini
 	 *
 	 * Property#JCR_LOCK_OWNER
 	 * Property#JCR_LOCK_IS_DEEP
+	 * @api
 	 */
 	const MIX_LOCKABLE = "{http://www.jcp.org/mix/1.0}lockable";
 
@@ -217,6 +228,7 @@ interface PHPCR_NodeType_NodeTypeInterface extends PHPCR_NodeType_NodeTypeDefini
 	 *
 	 * Property#JCR_LIFECYCLE_POLICY
 	 * Property#JCR_CURRENT_LIFECYCLE_STATE
+	 * @api
 	 */
 	const MIX_LIFECYCLE = "{http://www.jcp.org/mix/1.0}lifecycle";
 
@@ -225,6 +237,7 @@ interface PHPCR_NodeType_NodeTypeInterface extends PHPCR_NodeType_NodeTypeDefini
 	 * A constant for the name of the property declared by mix:simpleVersionable is:
 	 *
 	 * Property#JCR_IS_CHECKED_OUT
+	 * @api
 	 */
 	const MIX_SIMPLE_VERSIONABLE = "{http://www.jcp.org/mix/1.0}simpleVersionable";
 
@@ -238,6 +251,7 @@ interface PHPCR_NodeType_NodeTypeInterface extends PHPCR_NodeType_NodeTypeDefini
 	 * Property#JCR_MERGE_FAILED
 	 * Property#JCR_ACTIVITY
 	 * Property#JCR_CONFIGURATION
+	 * @api
 	 */
 	const MIX_VERSIONABLE = "{http://www.jcp.org/mix/1.0}versionable";
 
@@ -249,6 +263,7 @@ interface PHPCR_NodeType_NodeTypeInterface extends PHPCR_NodeType_NodeTypeDefini
 	 * Property#JCR_COPIED_FROM
 	 * Node#JCR_ROOT_VERSION
 	 * Node#JCR_VERSION_LABELS
+	 * @api
 	 */
 	const NT_VERSION_HISTORY = "{http://www.jcp.org/jcr/nt/1.0}versionHistory";
 
@@ -261,6 +276,7 @@ interface PHPCR_NodeType_NodeTypeInterface extends PHPCR_NodeType_NodeTypeDefini
 	 * Property#JCR_SUCCESSORS
 	 * Property#JCR_ACTIVITY
 	 * Node#JCR_FROZEN_NODE
+	 * @api
 	 */
 	const NT_VERSION = "{http://www.jcp.org/jcr/nt/1.0}version";
 
@@ -271,6 +287,7 @@ interface PHPCR_NodeType_NodeTypeInterface extends PHPCR_NodeType_NodeTypeDefini
 	 * Property#JCR_FROZEN_PRIMARY_TYPE
 	 * Property#JCR_FROZEN_MIXIN_TYPES
 	 * Property#JCR_FROZEN_UUID
+	 * @api
 	 */
 	const NT_FROZEN_NODE = "{http://www.jcp.org/jcr/nt/1.0}frozenNode";
 
@@ -279,6 +296,7 @@ interface PHPCR_NodeType_NodeTypeInterface extends PHPCR_NodeType_NodeTypeDefini
 	 * A constant for the name of the property declared by nt:versionedChild is:
 	 *
 	 * Property#JCR_CHILD_VERSION_HISTORY
+	 * @api
 	 */
 	const NT_VERSIONED_CHILD = "{http://www.jcp.org/jcr/nt/1.0}versionedChild";
 
@@ -287,6 +305,7 @@ interface PHPCR_NodeType_NodeTypeInterface extends PHPCR_NodeType_NodeTypeDefini
 	 * A constant for the name of the property declared by nt:activity is:
 	 *
 	 * Property#JCR_TITLE
+	 * @api
 	 */
 	const NT_ACTIVITY = "{http://www.jcp.org/jcr/nt/1.0}activity";
 
@@ -295,6 +314,7 @@ interface PHPCR_NodeType_NodeTypeInterface extends PHPCR_NodeType_NodeTypeDefini
 	 * A constant for the name of the property declared by nt:configuration are:
 	 *
 	 * Property#JCR_ROOT
+	 * @api
 	 */
 	const NT_CONFIGURATION = "{http://www.jcp.org/jcr/nt/1.0}configuration";
 
@@ -304,6 +324,7 @@ interface PHPCR_NodeType_NodeTypeInterface extends PHPCR_NodeType_NodeTypeDefini
 	 *
 	 * Property#JCR_STATEMENT
 	 * Property#JCR_LANGUAGE
+	 * @api
 	 */
 	const NT_QUERY = "{http://www.jcp.org/jcr/nt/1.0}query";
 
@@ -313,6 +334,7 @@ interface PHPCR_NodeType_NodeTypeInterface extends PHPCR_NodeType_NodeTypeDefini
 	 * include at least nt:base. For mixin types, there is no required supertype.
 	 *
 	 * @return array of PHPCR_NodeType_NodeType objects.
+	 * @api
 	 */
 	public function getSupertypes();
 
@@ -324,6 +346,7 @@ interface PHPCR_NodeType_NodeTypeInterface extends PHPCR_NodeType_NodeTypeDefini
 	 * types this array may be of size greater than 1.
 	 *
 	 * @return array of PHPCR_NodeType_NodeType objects.
+	 * @api
 	 */
 	public function getDeclaredSupertypes();
 
@@ -334,6 +357,7 @@ interface PHPCR_NodeType_NodeTypeInterface extends PHPCR_NodeType_NodeTypeDefini
 	 * @see getDeclaredSubtypes()
 	 *
 	 * @return PHPCR_NodeType_NodeTypeIteratorInterface a NodeTypeIterator.
+	 * @api
 	 */
 	public function getSubtypes();
 
@@ -345,6 +369,7 @@ interface PHPCR_NodeType_NodeTypeInterface extends PHPCR_NodeType_NodeTypeDefini
 	 * @see getSubtypes()
 	 *
 	 * @return PHPCR_NodeType_NodeTypeIteratorInterface a NodeTypeIterator.
+	 * @api
 	 */
 	public function getDeclaredSubtypes();
 
@@ -354,6 +379,7 @@ interface PHPCR_NodeType_NodeTypeInterface extends PHPCR_NodeType_NodeTypeDefini
 	 *
 	 * @param string $nodeTypeName the name of a node type.
 	 * @return boolean
+	 * @api
 	 */
 	public function isNodeType($nodeTypeName);
 
@@ -363,6 +389,7 @@ interface PHPCR_NodeType_NodeTypeInterface extends PHPCR_NodeType_NodeTypeDefini
 	 * in this node type and those inherited from the supertypes of this type.
 	 *
 	 * @return array an array of PHPCR_NodeType_PropertyDefinition containing the property definitions.
+	 * @api
 	 */
 	public function getPropertyDefinitions();
 
@@ -372,6 +399,7 @@ interface PHPCR_NodeType_NodeTypeInterface extends PHPCR_NodeType_NodeTypeDefini
 	 * node type and those inherited from the supertypes of this node type.
 	 *
 	 * @return array an array of PHPCR_NodeType_NodeDefinition containing the child node definitions.
+	 * @api
 	 */
 	public function getChildNodeDefinitions();
 
@@ -382,6 +410,7 @@ interface PHPCR_NodeType_NodeTypeInterface extends PHPCR_NodeType_NodeTypeDefini
 	 * @param string $propertyName The name of the property
 	 * @param PHPCR_ValueInterface|array $value A PHPCR_ValueInterface object or an array of PHPCR_ValueInterface objects.
 	 * @return boolean
+	 * @api
 	 */
 	public function canSetProperty($propertyName, $value);
 
@@ -397,6 +426,7 @@ interface PHPCR_NodeType_NodeTypeInterface extends PHPCR_NodeType_NodeTypeDefini
 	 * @param string $childNodeName The name of the child node.
 	 * @param string $nodeTypeName The name of the node type of the child node.
 	 * @return boolean
+	 * @api
 	 */
 	public function canAddChildNode($childNodeName, $nodeTypeName = NULL);
 
@@ -406,6 +436,7 @@ interface PHPCR_NodeType_NodeTypeInterface extends PHPCR_NodeType_NodeTypeDefini
 	 *
 	 * @param string $nodeName The name of the child node
 	 * @return boolean
+	 * @api
 	 */
 	public function canRemoveNode($nodeName);
 
@@ -415,6 +446,7 @@ interface PHPCR_NodeType_NodeTypeInterface extends PHPCR_NodeType_NodeTypeDefini
 	 *
 	 * @param string $propertyName The name of the property
 	 * @return boolean
+	 * @api
 	 */
 	public function canRemoveProperty($propertyName);
 }

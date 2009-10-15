@@ -22,18 +22,10 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Version
- * @version $Id: VersionIteratorInterface.php 1811 2009-01-28 12:04:49Z robert $
- */
-
-/**
  * Allows easy iteration through a list of Versions objects with nextVersion
  * as well as a skip method inherited from RangeIterator.
  *
- * @package PHPCR
- * @subpackage Version
- * @version $Id: VersionIteratorInterface.php 1811 2009-01-28 12:04:49Z robert $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Version_VersionIteratorInterface extends PHPCR_RangeIteratorInterface {
@@ -43,6 +35,7 @@ interface PHPCR_Version_VersionIteratorInterface extends PHPCR_RangeIteratorInte
 	 *
 	 * @return PHPCR_Version_VersionInterface the next Version in the iteration
 	 * @throws OutOfBoundsException if iteration has no more Versions.
+	 * @api
 	 */
 	public function nextVersion();
 

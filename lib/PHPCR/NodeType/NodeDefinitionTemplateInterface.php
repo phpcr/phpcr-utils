@@ -22,12 +22,6 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage NodeType
- * @version $Id: NodeDefinitionTemplateInterface.php 1811 2009-01-28 12:04:49Z robert $
- */
-
-/**
  * The NodeDefinitionTemplate interface extends NodeDefinition with the addition
  * of write methods, enabling the characteristics of a child node definition to
  * be set, after which the NodeDefinitionTemplate is added to a NodeTypeTemplate.
@@ -36,9 +30,7 @@ declare(ENCODING = 'utf-8');
  * default values assumed when a new empty NodeDefinitionTemplate is created (as
  * opposed to one extracted from an existing NodeType).
  *
- * @package PHPCR
- * @subpackage NodeType
- * @version $Id: NodeDefinitionTemplateInterface.php 1811 2009-01-28 12:04:49Z robert $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_NodeType_NodeDefinitionTemplateInterface extends PHPCR_NodeType_NodeDefinitionInterface {
@@ -48,6 +40,7 @@ interface PHPCR_NodeType_NodeDefinitionTemplateInterface extends PHPCR_NodeType_
 	 *
 	 * @param string $name a String.
 	 * @return void
+	 * @api
 	 */
 	public function setName($name);
 
@@ -56,6 +49,7 @@ interface PHPCR_NodeType_NodeDefinitionTemplateInterface extends PHPCR_NodeType_
 	 *
 	 * @param boolean $autoCreated a boolean.
 	 * @return void
+	 * @api
 	 */
 	public function setAutoCreated($autoCreated);
 
@@ -64,6 +58,7 @@ interface PHPCR_NodeType_NodeDefinitionTemplateInterface extends PHPCR_NodeType_
 	 *
 	 * @param boolean $mandatory a boolean.
 	 * @return void
+	 * @api
 	 */
 	public function setMandatory($mandatory);
 
@@ -72,6 +67,7 @@ interface PHPCR_NodeType_NodeDefinitionTemplateInterface extends PHPCR_NodeType_
 	 *
 	 * @param integer $opv an int constant member of OnParentVersionAction.
 	 * @return void
+	 * @api
 	 */
 	public function setOnParentVersion($opv);
 
@@ -80,6 +76,7 @@ interface PHPCR_NodeType_NodeDefinitionTemplateInterface extends PHPCR_NodeType_
 	 *
 	 * @param boolean $protectedStatus a boolean.
 	 * @return void
+	 * @api
 	 */
 	public function setProtected($protectedStatus);
 
@@ -88,6 +85,7 @@ interface PHPCR_NodeType_NodeDefinitionTemplateInterface extends PHPCR_NodeType_
 	 *
 	 * @param array $requiredPrimaryTypeNames a String array.
 	 * @return void
+	 * @api
 	 */
 	public function setRequiredPrimaryTypeNames(array $requiredPrimaryTypeNames);
 
@@ -96,6 +94,7 @@ interface PHPCR_NodeType_NodeDefinitionTemplateInterface extends PHPCR_NodeType_
 	 *
 	 * @param string $defaultPrimaryTypeName a String.
 	 * @return void
+	 * @api
 	 */
 	public function setDefaultPrimaryTypeName($defaultPrimaryTypeName);
 
@@ -104,6 +103,7 @@ interface PHPCR_NodeType_NodeDefinitionTemplateInterface extends PHPCR_NodeType_
 	 *
 	 * @param boolean $allowSameNameSiblings a boolean.
 	 * @return void
+	 * @api
 	 */
 	public function setSameNameSiblings($allowSameNameSiblings);
 

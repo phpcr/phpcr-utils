@@ -22,16 +22,10 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @version $Id: RangeIteratorInterface.php 1811 2009-01-28 12:04:49Z robert $
- */
-
-/**
  * Extends Iterator with the skip, getSize and getPosition methods. The base
  * interface of all type-specific iterators in the JCR and its sub packages.
  *
- * @package PHPCR
- * @version $Id: RangeIteratorInterface.php 1811 2009-01-28 12:04:49Z robert $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_RangeIteratorInterface extends PHPCR_IteratorInterface {
@@ -41,6 +35,7 @@ interface PHPCR_RangeIteratorInterface extends PHPCR_IteratorInterface {
 	 *
 	 * @param integer $skipNum the non-negative number of elements to skip
 	 * @throws OutOfBoundsException if skipped past the last element in the iterator.
+	 * @api
 	 */
 	public function skip($skipNum);
 
@@ -56,6 +51,7 @@ interface PHPCR_RangeIteratorInterface extends PHPCR_IteratorInterface {
 	 * estimate on the number of elements.
 	 *
 	 * @return integer
+	 * @api
 	 */
 	public function getSize();
 
@@ -68,6 +64,7 @@ interface PHPCR_RangeIteratorInterface extends PHPCR_IteratorInterface {
 	 * i.e. an empty iterator will always return 0.
 	 *
 	 * @return integer
+	 * @api
 	 */
 	public function getPosition();
 

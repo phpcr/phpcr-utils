@@ -22,15 +22,9 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @version $Id: ReferentialIntegrityException.php 1811 2009-01-28 12:04:49Z robert $
- */
-
-/**
  * Exception thrown on referential integrity violation.
  *
- * @package PHPCR
- * @version $Id: ReferentialIntegrityException.php 1811 2009-01-28 12:04:49Z robert $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 class PHPCR_ReferentialIntegrityException extends PHPCR_RepositoryException {

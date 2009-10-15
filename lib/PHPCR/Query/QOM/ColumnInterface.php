@@ -22,12 +22,6 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Query
- * @version $Id: ColumnInterface.php 1979 2009-03-09 15:44:15Z k-fish $
- */
-
-/**
  * Defines a column to include in the tabular view of query results.
  *
  * If property is not specified, a column is included for each single-valued
@@ -38,9 +32,7 @@ declare(ENCODING = 'utf-8');
  * in the tabular results. If property is not specified, columnName must not be
  * specified, and the included columns will be named "selector.propertyName".
  *
- * @package PHPCR
- * @subpackage Query
- * @version $Id: ColumnInterface.php 1979 2009-03-09 15:44:15Z k-fish $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Query_QOM_ColumnInterface {
@@ -49,6 +41,7 @@ interface PHPCR_Query_QOM_ColumnInterface {
 	 * Gets the name of the selector.
 	 *
 	 * @return string the selector name; non-null
+	 * @api
 	 */
 	public function getSelectorName();
 
@@ -56,6 +49,7 @@ interface PHPCR_Query_QOM_ColumnInterface {
 	 * Gets the name of the property.
 	 *
 	 * @return string the property name, or null to include a column for each single-value non-residual property of the selector's node type
+	 * @api
 	 */
 	public function getPropertyName();
 
@@ -63,6 +57,7 @@ interface PHPCR_Query_QOM_ColumnInterface {
 	 * Gets the column name.
 	 *
 	 * @return string the column name; must be null if getPropertyName is null and non-null otherwise
+	 * @api
 	 */
 	public function getColumnName();
 

@@ -22,17 +22,9 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage NodeType
- * @version $Id: NodeDefinitionInterface.php 1811 2009-01-28 12:04:49Z robert $
- */
-
-/**
  * A node definition. Used in node type definitions.
  *
- * @package PHPCR
- * @subpackage NodeType
- * @version $Id: NodeDefinitionInterface.php 1811 2009-01-28 12:04:49Z robert $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_NodeType_NodeDefinitionInterface extends PHPCR_NodeType_ItemDefinitionInterface {
@@ -54,6 +46,7 @@ interface PHPCR_NodeType_NodeDefinitionInterface extends PHPCR_NodeType_ItemDefi
 	 * not attached to a live NodeType. In such cases this method returns NULL.
 	 *
 	 * @return PHPCR_NodeType_NodeTypeInterface an array of NodeType objects.
+	 * @api
 	 */
 	public function getRequiredPrimaryTypes();
 
@@ -68,6 +61,7 @@ interface PHPCR_NodeType_NodeDefinitionInterface extends PHPCR_NodeType_ItemDefi
 	 * empty one, then this method will return NULL.
 	 *
 	 * @return array a String array
+	 * @api
 	 */
 	public function getRequiredPrimaryTypeNames();
 
@@ -84,6 +78,7 @@ interface PHPCR_NodeType_NodeDefinitionInterface extends PHPCR_NodeType_ItemDefi
 	 * not attached to a live NodeType. In such cases this method returns null.
 	 *
 	 * @return PHPCR_NodeType_NodeTypeInterface a NodeType.
+	 * @api
 	 */
 	public function getDefaultPrimaryType();
 
@@ -98,6 +93,7 @@ interface PHPCR_NodeType_NodeDefinitionInterface extends PHPCR_NodeType_ItemDefi
 	 * empty one, then this method will return null.
 	 *
 	 * @return string a String
+	 * @api
 	 */
 	public function getDefaultPrimaryTypeName();
 
@@ -110,6 +106,7 @@ interface PHPCR_NodeType_NodeDefinitionInterface extends PHPCR_NodeType_ItemDefi
 	 * newly-created empty one, then this method will return false.
 	 *
 	 * @return boolean a boolean.
+	 * @api
 	 */
 	public function allowsSameNameSiblings();
 

@@ -22,17 +22,9 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Observation
- * @version $Id: EventInterface.php 2191 2009-05-07 19:49:06Z k-fish $
- */
-
-/**
  * An event fired by the observation mechanism.
  *
- * @package PHPCR
- * @subpackage Observation
- * @version $Id: EventInterface.php 2191 2009-05-07 19:49:06Z k-fish $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Observation_EventInterface {
@@ -42,6 +34,7 @@ interface PHPCR_Observation_EventInterface {
 	 *  getPath() returns the absolute path of the node that was added.
 	 *  getIdentifier() returns the identifier of the node that was added.
 	 *  getInfo() returns an empty array
+	 * @api
 	 */
 	const NODE_ADDED = 0x1;
 
@@ -50,6 +43,7 @@ interface PHPCR_Observation_EventInterface {
 	 *  getPath() returns the absolute path of the node that was removed.
 	 *  getIdentifier() returns the identifier of the node that was removed.
 	 *  getInfo() returns an empty array
+	 * @api
 	 */
 	const NODE_REMOVED = 0x2;
 
@@ -58,6 +52,7 @@ interface PHPCR_Observation_EventInterface {
 	 *  getPath() returns the absolute path of the property that was added.
 	 *  getIdentifier() returns the identifier of the parent node of the property that was added.
 	 *  getInfo() returns an empty array
+	 * @api
 	 */
 	const PROPERTY_ADDED = 0x4;
 
@@ -66,6 +61,7 @@ interface PHPCR_Observation_EventInterface {
 	 *  getPath() returns the absolute path of the property that was removed.
 	 *  getIdentifier() returns the identifier of the parent node of the property that was removed.
 	 *  getInfo() returns an empty array
+	 * @api
 	 */
 	const PROPERTY_REMOVED = 0x8;
 
@@ -74,6 +70,7 @@ interface PHPCR_Observation_EventInterface {
 	 *  getPath() returns the absolute path of the property that was changed.
 	 *  getIdentifier() returns the identifier of the parent node of the property that was changed.
 	 *  getInfo() returns an empty array
+	 * @api
 	 */
 	const PROPERTY_CHANGED = 0x10;
 
@@ -89,6 +86,7 @@ interface PHPCR_Observation_EventInterface {
 	 *    then the returned aray has keys srcChildRelPath and destChildRelPath
 	 *    with values corresponding to the parameters passed to the orderBefore()
 	 *    method.
+	 * @api
 	 */
 	const NODE_MOVED = 0x20;
 
@@ -98,6 +96,7 @@ interface PHPCR_Observation_EventInterface {
 	 *  getPath() returns NULL.
 	 *  getIdentifier() returns NULL.
 	 *  getInfo() returns an empty array.
+	 * @api
 	 */
 	const PERSIST = 0x40;
 
@@ -113,6 +112,7 @@ interface PHPCR_Observation_EventInterface {
 	 *  PERSIST
 	 *
 	 * @return integer the type of this event.
+	 * @api
 	 */
 	public function getType();
 
@@ -124,6 +124,7 @@ interface PHPCR_Observation_EventInterface {
 	 *
 	 * @return string the absolute path associated with this event or NULL.
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function getPath();
 
@@ -132,6 +133,7 @@ interface PHPCR_Observation_EventInterface {
 	 * by Session.getUserID() of the session that caused the event.
 	 *
 	 * @return string the user ID.
+	 * @api
 	 */
 	public function getUserID();
 
@@ -143,6 +145,7 @@ interface PHPCR_Observation_EventInterface {
 	 *
 	 * @return string the identifier associated with this event or NULL.
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function getIdentifier();
 
@@ -153,6 +156,7 @@ interface PHPCR_Observation_EventInterface {
 	 *
 	 * @return array an array containing parameter information for instances of a NODE_MOVED event.
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function getInfo();
 
@@ -162,6 +166,7 @@ interface PHPCR_Observation_EventInterface {
 	 *
 	 * @return the user data string.
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function getUserData();
 
@@ -173,6 +178,7 @@ interface PHPCR_Observation_EventInterface {
 	 *
 	 * @return integer the date when the change was persisted that caused this event (milliseconds since epoch).
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function getDate();
 

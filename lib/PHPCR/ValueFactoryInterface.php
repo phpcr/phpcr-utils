@@ -22,16 +22,10 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @version $Id: ValueFactoryInterface.php 2191 2009-05-07 19:49:06Z k-fish $
- */
-
-/**
  * The ValueFactory object provides methods for the creation Value objects that can
  * then be used to set properties.
  *
- * @package PHPCR
- * @version $Id: ValueFactoryInterface.php 2191 2009-05-07 19:49:06Z k-fish $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_ValueFactoryInterface {
@@ -45,6 +39,7 @@ interface PHPCR_ValueFactoryInterface {
 	 * @param resource $handle
 	 * @return PHPCR_BinaryInterface
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function createBinary($handle);
 
@@ -61,6 +56,9 @@ interface PHPCR_ValueFactoryInterface {
 	 *   is set to TRUE
 	 * * if the given $Value is a DateTime object, the Value type will be DATE.
 	 *
+	 * Note: The Java API defines this with multiple differing signatures, you
+	 *       need to reproduce this behaviour in your implementation.
+	 *
 	 * @param mixed $value The value to use when creating the Value object
 	 * @param integer $type Type request for the Value object
 	 * @param boolean $weak When a Node is given as $value this can be given as TRUE to create a WEAKREFERENCE
@@ -68,6 +66,7 @@ interface PHPCR_ValueFactoryInterface {
 	 * @throws PHPCR_ValueFormatException is thrown if the specified value cannot be converted to the specified type.
 	 * @throws PHPCR_RepositoryException if the specified Node is not referenceable, the current Session is no longer active, or another error occurs.
 	 * @throws IllegalArgumentException if the specified DateTime value cannot be expressed in the ISO 8601-based format defined in the JCR 2.0 specification and the implementation does not support dates incompatible with that format.
+	 * @api
 	 */
 	public function createValue($value, $type = NULL, $weak = FALSE);
 

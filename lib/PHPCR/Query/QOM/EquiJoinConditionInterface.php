@@ -22,12 +22,6 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Query
- * @version $Id: EquiJoinConditionInterface.php 1979 2009-03-09 15:44:15Z k-fish $
- */
-
-/**
  * Tests whether the value of a property in a first selector is equal to the
  * value of a property in a second selector.
  *
@@ -36,9 +30,7 @@ declare(ENCODING = 'utf-8');
  *  selector2 has a property named property2, and
  *  the value of property1 equals the value of property2
  *
- * @package PHPCR
- * @subpackage Query
- * @version $Id: EquiJoinConditionInterface.php 1979 2009-03-09 15:44:15Z k-fish $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Query_QOM_EquiJoinConditionInterface extends PHPCR_Query_QOM_JoinConditionInterface {
@@ -47,6 +39,7 @@ interface PHPCR_Query_QOM_EquiJoinConditionInterface extends PHPCR_Query_QOM_Joi
 	 * Gets the name of the first selector.
 	 *
 	 * @return string the selector name; non-null
+	 * @api
 	 */
 	public function getSelector1Name();
 
@@ -54,6 +47,7 @@ interface PHPCR_Query_QOM_EquiJoinConditionInterface extends PHPCR_Query_QOM_Joi
 	 * Gets the property name in the first selector.
 	 *
 	 * @return string the property name; non-null
+	 * @api
 	 */
 	public function getProperty1Name();
 
@@ -61,6 +55,7 @@ interface PHPCR_Query_QOM_EquiJoinConditionInterface extends PHPCR_Query_QOM_Joi
 	 * Gets the name of the second selector.
 	 *
 	 * @return string the selector name; non-null
+	 * @api
 	 */
 	public function getSelector2Name();
 
@@ -68,6 +63,7 @@ interface PHPCR_Query_QOM_EquiJoinConditionInterface extends PHPCR_Query_QOM_Joi
 	 * Gets the property name in the second selector.
 	 *
 	 * @return string the property name; non-null
+	 * @api
 	 */
 	public function getProperty2Name();
 

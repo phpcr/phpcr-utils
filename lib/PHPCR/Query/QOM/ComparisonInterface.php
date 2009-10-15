@@ -22,12 +22,6 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Query
- * @version $Id: ComparisonInterface.php 2191 2009-05-07 19:49:06Z k-fish $
- */
-
-/**
  * Filters node-tuples based on the outcome of a binary operation.
  *
  * For any comparison, operand2 always evaluates to a scalar value. In contrast,
@@ -70,9 +64,7 @@ declare(ENCODING = 'utf-8');
  * * the string "\x" matches the character "x", and
  *   all other characters match themselves.
  *
- * @package PHPCR
- * @subpackage Query
- * @version $Id: ComparisonInterface.php 2191 2009-05-07 19:49:06Z k-fish $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Query_QOM_ComparisonInterface extends PHPCR_Query_QOM_ConstraintInterface {
@@ -82,6 +74,7 @@ interface PHPCR_Query_QOM_ComparisonInterface extends PHPCR_Query_QOM_Constraint
 	 * Gets the first operand.
 	 *
 	 * @return PHPCR_Query_QOM_DynamicOperandInterface the operand; non-null
+	 * @api
 	 */
 	public function getOperand1();
 
@@ -89,6 +82,7 @@ interface PHPCR_Query_QOM_ComparisonInterface extends PHPCR_Query_QOM_Constraint
 	 * Gets the operator.
 	 *
 	 * @return string one of PHPCR_Query_QOM_QueryObjectModelConstantsInterface.JCR_OPERATOR_*
+	 * @api
 	 */
 	public function getOperator();
 
@@ -96,6 +90,7 @@ interface PHPCR_Query_QOM_ComparisonInterface extends PHPCR_Query_QOM_Constraint
 	 * Gets the second operand.
 	 *
 	 * @return PHPCR_Query_QOM_StaticOperandInterface the operand; non-null
+	 * @api
 	 */
 	public function getOperand2();
 

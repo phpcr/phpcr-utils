@@ -22,23 +22,15 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @version $Id: GuestCredentials.php 1811 2009-01-28 12:04:49Z robert $
- */
-
-/**
  * GuestCredentials implements the Credentials interface and is used to obtain
  * a "guest", "public" or "anonymous" session.
  * Note that the characteristics of the session created from the
  * GuestCredentials remain implementation specific.
  *
- * @package PHPCR
- * @version $Id: GuestCredentials.php 1811 2009-01-28 12:04:49Z robert $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */
-final class GuestCredentials implements PHPCR_CredentialsInterface {
-
-}
+final class GuestCredentials implements PHPCR_CredentialsInterface {}
 
 ?>

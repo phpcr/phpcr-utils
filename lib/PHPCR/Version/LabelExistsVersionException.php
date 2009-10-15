@@ -22,19 +22,11 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Version
- * @version $Id: LabelExistsVersionException.php 1811 2009-01-28 12:04:49Z robert $
- */
-
-/**
  * Exception thrown by VersionHistory.addVersionLabel if moveLabel is set to
  * false and an attempt is made to add a label that already exists in the
  * VersionHistory.
  *
- * @package PHPCR
- * @subpackage Version
- * @version $Id: LabelExistsVersionException.php 1811 2009-01-28 12:04:49Z robert $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 class PHPCR_Version_LabelExistsVersionException extends PHPCR_Version_VersionException {

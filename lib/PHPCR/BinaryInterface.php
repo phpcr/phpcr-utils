@@ -22,15 +22,9 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @version $Id: BinaryInterface.php 2636 2009-06-23 09:10:29Z k-fish $
- */
-
-/**
  * A Binary object holds a JCR property value of type BINARY.
  *
- * @package PHPCR
- * @version $Id: BinaryInterface.php 2636 2009-06-23 09:10:29Z k-fish $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_BinaryInterface {
@@ -44,6 +38,7 @@ interface PHPCR_BinaryInterface {
 	 * @return resource A stream representation of this value.
 	 * @throws BadMethodCallException if dispose() has already been called on this Binary
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function getStream();
 
@@ -58,6 +53,7 @@ interface PHPCR_BinaryInterface {
 	 * @throws InvalidArgumentException if offset is negative.
 	 * @throws BadMethodCallException if dispose() has already been called on this Binary
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function read(&$bytes, $position);
 
@@ -67,6 +63,7 @@ interface PHPCR_BinaryInterface {
 	 * @return integer the size of this value in bytes.
 	 * @throws BadMethodCallException if dispose() has already been called on this Binary
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function getSize();
 
@@ -77,6 +74,7 @@ interface PHPCR_BinaryInterface {
 	 * Binary object.
 	 *
 	 * @return void
+	 * @api
 	 */
 	public function dispose();
 

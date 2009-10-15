@@ -22,12 +22,6 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Query
- * @version $Id: LengthInterface.php 1811 2009-01-28 12:04:49Z robert $
- */
-
-/**
  * Evaluates to the length (or lengths, if multi-valued) of a property.
  *
  * The length should be computed as though the getLength method (or getLengths,
@@ -35,9 +29,7 @@ declare(ENCODING = 'utf-8');
  *
  * If propertyValue evaluates to null, the Length operand also evaluates to null.
  *
- * @package PHPCR
- * @subpackage Query
- * @version $Id: LengthInterface.php 1811 2009-01-28 12:04:49Z robert $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Query_QOM_LengthInterface extends PHPCR_Query_QOM_DynamicOperandInterface {
@@ -46,6 +38,7 @@ interface PHPCR_Query_QOM_LengthInterface extends PHPCR_Query_QOM_DynamicOperand
 	 * Gets the property value for which to compute the length.
 	 *
 	 * @return PHPCR_Query_QOM_PropertyValueInterface the property value; non-null
+	 * @api
 	 */
 	public function getPropertyValue();
 

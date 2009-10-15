@@ -22,12 +22,6 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Retention
- * @version $Id: HoldInterface.php 2191 2009-05-07 19:49:06Z k-fish $
- */
-
-/**
  * Hold represents a hold that can be applied to an existing node in order to
  * prevent the node from being modified or removed. The format and interpretation
  * of the name are not specified. They are application-dependent.
@@ -35,9 +29,7 @@ declare(ENCODING = 'utf-8');
  * If isDeep() is true, the hold applies to the node and its entire subgraph.
  * Otherwise the hold applies to the node and its properties only.
  *
- * @package PHPCR
- * @subpackage Retention
- * @version $Id: HoldInterface.php 2191 2009-05-07 19:49:06Z k-fish $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Retention_HoldInterface {
@@ -47,6 +39,7 @@ interface PHPCR_Retention_HoldInterface {
 	 *
 	 * @return boolean TRUE if this Hold is deep.
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function isDeep();
 
@@ -55,6 +48,7 @@ interface PHPCR_Retention_HoldInterface {
 	 *
 	 * @return string the name of this Hold. A JCR name.
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function getName();
 

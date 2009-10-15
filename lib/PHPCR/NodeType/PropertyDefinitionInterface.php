@@ -22,17 +22,9 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage NodeType
- * @version $Id: PropertyDefinitionInterface.php 2191 2009-05-07 19:49:06Z k-fish $
- */
-
-/**
  * A property definition. Used in node type definitions.
  *
- * @package PHPCR
- * @subpackage NodeType
- * @version $Id: PropertyDefinitionInterface.php 2191 2009-05-07 19:49:06Z k-fish $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_NodeType_PropertyDefinitionInterface extends PHPCR_NodeType_ItemDefinitionInterface {
@@ -60,6 +52,7 @@ interface PHPCR_NodeType_PropertyDefinitionInterface extends PHPCR_NodeType_Item
 	 * PropertyDefinitionTemplate, then this method will return PropertyType.STRING.
 	 *
 	 * @return integer an int constant member of PropertyType.
+	 * @api
 	 */
 	public function getRequiredType();
 
@@ -187,6 +180,7 @@ interface PHPCR_NodeType_PropertyDefinitionInterface extends PHPCR_NodeType_Item
 	 * PropertyDefinitionTemplate, then this method will return null.
 	 *
 	 * @return array a String array.
+	 * @api
 	 */
 	public function getValueConstraints();
 
@@ -217,6 +211,7 @@ interface PHPCR_NodeType_PropertyDefinitionInterface extends PHPCR_NodeType_Item
 	 * PropertyDefinitionTemplate, then this method will return null.
 	 *
 	 * @return array an array of Value objects.
+	 * @api
 	 */
 	public function getDefaultValues();
 
@@ -233,6 +228,7 @@ interface PHPCR_NodeType_PropertyDefinitionInterface extends PHPCR_NodeType_Item
 	 * PropertyDefinitionTemplate, then this method will return false.
 	 *
 	 * @return boolean a boolean
+	 * @api
 	 */
 	public function isMultiple();
 
@@ -260,6 +256,7 @@ interface PHPCR_NodeType_PropertyDefinitionInterface extends PHPCR_NodeType_Item
 	 * Comparison of Values).
 	 *
 	 * @return array a string array
+	 * @api
 	 */
 	public function getAvailableQueryOperators();
 
@@ -272,6 +269,7 @@ interface PHPCR_NodeType_PropertyDefinitionInterface extends PHPCR_NodeType_Item
 	 * property definition has a queryable setting of TRUE.
 	 *
 	 * @return boolean a boolean
+	 * @api
 	 */
 	public function isFullTextSearchable();
 
@@ -284,6 +282,7 @@ interface PHPCR_NodeType_PropertyDefinitionInterface extends PHPCR_NodeType_Item
 	 * property definition has a queryable setting of TRUE.
 	 *
 	 * @return boolean a boolean
+	 * @api
 	 */
 	public function isQueryOrderable();
 

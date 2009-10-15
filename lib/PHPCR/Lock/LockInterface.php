@@ -22,17 +22,9 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Lock
- * @version $Id: LockInterface.php 2191 2009-05-07 19:49:06Z k-fish $
- */
-
-/**
  * Represents a lock placed on an item.
  *
- * @package PHPCR
- * @subpackage Lock
- * @version $Id: LockInterface.php 2191 2009-05-07 19:49:06Z k-fish $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Lock_LockInterface {
@@ -49,6 +41,7 @@ interface PHPCR_Lock_LockInterface {
 	 * locked nodes; that depends entirely upon who the token holder is.
 	 *
 	 * @return string a user ID
+	 * @api
 	 */
 	public function getLockOwner();
 
@@ -56,6 +49,7 @@ interface PHPCR_Lock_LockInterface {
 	 * Returns true if this is a deep lock; false otherwise.
 	 *
 	 * @return boolean
+	 * @api
 	 */
 	public function isDeep();
 
@@ -65,6 +59,7 @@ interface PHPCR_Lock_LockInterface {
 	 * the subgraph of the lock holder, H, then this call will return H.
 	 *
 	 * @return PHPCR_NodeInterface a Node
+	 * @api
 	 */
 	public function getNode();
 
@@ -76,6 +71,7 @@ interface PHPCR_Lock_LockInterface {
 	 * return null.
 	 *
 	 * @return string
+	 * @api
 	 */
 	public function getLockToken();
 
@@ -88,6 +84,7 @@ interface PHPCR_Lock_LockInterface {
 	 * @return integer the number of seconds remaining until this lock times out.
 
 	 * @throws PHPCR_RepositoryException if the timeout is infinite or unknown
+	 * @api
 	 */
 	public function getSecondsRemaining();
 
@@ -104,6 +101,7 @@ interface PHPCR_Lock_LockInterface {
 	 *
 	 * @return boolean
 	 * @throws RepositoryException if an error occurs
+	 * @api
 	 */
 	public function isLive();
 
@@ -112,6 +110,7 @@ interface PHPCR_Lock_LockInterface {
 	 * current session. Returns false otherwise.
 	 *
 	 * @return boolean
+	 * @api
 	 */
 	public function isSessionScoped();
 
@@ -121,6 +120,7 @@ interface PHPCR_Lock_LockInterface {
 	 * currently holds the token for this lock. Returns false otherwise.
 	 *
 	 * @return boolean
+	 * @api
 	 */
 	public function isLockOwningSession();
 
@@ -131,6 +131,7 @@ interface PHPCR_Lock_LockInterface {
 	 *
 	 * @throws PHPCR_Lock_LockException if this Session does not hold the correct lock token for this lock.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function refresh();
 

@@ -22,12 +22,6 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Query
- * @version $Id: UpperCaseInterface.php 1995 2009-03-14 19:57:47Z k-fish $
- */
-
-/**
  * Evaluates to the upper-case string value (or values, if multi-valued) of
  * operand.
  *
@@ -36,9 +30,7 @@ declare(ENCODING = 'utf-8');
  *
  * If operand evaluates to null, the UpperCase operand also evaluates to null.
  *
- * @package PHPCR
- * @subpackage Query
- * @version $Id: UpperCaseInterface.php 1995 2009-03-14 19:57:47Z k-fish $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Query_QOM_UpperCaseInterface extends PHPCR_Query_QOM_DynamicOperandInterface {
@@ -47,6 +39,7 @@ interface PHPCR_Query_QOM_UpperCaseInterface extends PHPCR_Query_QOM_DynamicOper
 	 * Gets the operand whose value is converted to a upper-case string.
 	 *
 	 * @return PHPCR_Query_QOM_DynamicOperandInterface the operand; non-null
+	 * @api
 	 */
 	public function getOperand();
 

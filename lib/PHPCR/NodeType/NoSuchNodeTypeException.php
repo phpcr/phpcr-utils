@@ -22,17 +22,9 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage NodeType
- * @version $Id: NoSuchNodeTypeException.php 1811 2009-01-28 12:04:49Z robert $
- */
-
-/**
  * Exception thrown by node type-related methods.
  *
- * @package PHPCR
- * @subpackage NodeType
- * @version $Id: NoSuchNodeTypeException.php 1811 2009-01-28 12:04:49Z robert $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 class PHPCR_NodeType_NoSuchNodeTypeException extends PHPCR_RepositoryException {

@@ -22,106 +22,116 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @version $Id: WorkspaceInterface.php 2636 2009-06-23 09:10:29Z k-fish $
- */
-
-/**
  * A Workspace object represents a view onto a persistent workspace within a
  * repository. This view is defined by the authorization settings of the Session
  * object associated with the Workspace object. Each Workspace object is
  * associated one-to-one with a Session object. The Workspace object can be
  * acquired by calling Session.getWorkspace() on the associated Session object.
  *
- * @package PHPCR
- * @version $Id: WorkspaceInterface.php 2636 2009-06-23 09:10:29Z k-fish $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_WorkspaceInterface {
 
 	/**
 	 * A constant for the name of the workspace root node.
+	 * @api
 	 */
 	const NAME_WORKSPACE_ROOT = '';
 
 	/**
 	 * A constant for the absolute path of the workspace root node.
+	 * @api
 	 */
 	const PATH_WORKSPACE_ROOT = '/';
 
 	/**
 	 * A constant for the name of the system node.
+	 * @api
 	 */
 	const NAME_SYSTEM_NODE = '{http://www.jcp.org/jcr/1.0}system';
 
 	/**
 	 * A constant for the absolute path of the system node.
 	 * This is '/' . NAME_SYSTEM_NODE
+	 * @api
 	 */
 	const PATH_SYSTEM_NODE = '/{http://www.jcp.org/jcr/1.0}system';
 
 	/**
 	 * A constant for the name of the node type definition storage node.
+	 * @api
 	 */
 	const NAME_NODE_TYPES_NODE = '{http://www.jcp.org/jcr/1.0}nodeTypes';
 
 	/**
 	 * A constant for the absolute path of the node type definition storage node.
 	 * This is PATH_SYSTEM_NODE . '/' . NAME_NODE_TYPES_NODE
+	 * @api
 	 */
 	const PATH_NODE_TYPES_NODE = '/{http://www.jcp.org/jcr/1.0}system/{http://www.jcp.org/jcr/1.0}nodeTypes';
 
 	/**
 	 * A constant for the name of the version storage node.
+	 * @api
 	 */
 	const NAME_VERSION_STORAGE_NODE = '{http://www.jcp.org/jcr/1.0}versionStorage';
 
 	/**
 	 * A constant for the absolute path of the version storage node.
 	 * This is PATH_SYSTEM_NODE . '/' . NAME_VERSION_STORAGE_NODE
+	 * @api
 	 */
 	const PATH_VERSION_STORAGE_NODE = '/{http://www.jcp.org/jcr/1.0}system/{http://www.jcp.org/jcr/1.0}versionStorage';
 
 	/**
 	 * A constant for the name of the activities node.
+	 * @api
 	 */
 	const NAME_ACTIVITIES_NODE = '{http://www.jcp.org/jcr/1.0}activities';
 
 	/**
 	 * A constant for the absolute path of the activities node.
 	 * This is PATH_SYSTEM_NODE . '/' . NAME_ACTIVITIES_NODE
+	 * @api
 	 */
 	const PATH_ACTIVITIES_NODE = '/{http://www.jcp.org/jcr/1.0}system/{http://www.jcp.org/jcr/1.0}activities';
 
 	/**
 	 * A constant for the name of the configurations node.
+	 * @api
 	 */
 	const NAME_CONFIGURATIONS_NODE = '{http://www.jcp.org/jcr/1.0}configurations';
 
 	/**
 	 * A constant for the absolute path of the configurations node.
 	 * This is PATH_SYSTEM_NODE . '/' . NAME_CONFIGURATIONS_NODE
+	 * @api
 	 */
 	const PATH_CONFIGURATIONS_NODE = '/{http://www.jcp.org/jcr/1.0}system/{http://www.jcp.org/jcr/1.0}configurations';
 
 	/**
 	 * A constant for the name of the unfiled storage node.
+	 * @api
 	 */
 	const NAME_UNFILED_NODE = '{http://www.jcp.org/jcr/1.0}unfiled';
 
 	/**
 	 * A constant for the absolute path of the unfiled storage node.
 	 * This is PATH_SYSTEM_NODE . '/' . NAME_UNFILED_NODE
+	 * @api
 	 */
 	const PATH_UNFILED_NODE = '/{http://www.jcp.org/jcr/1.0}system/{http://www.jcp.org/jcr/1.0}unfiled';
 
 	/**
 	 * A constant for the name of the jcr:xmltext node produced on importXML().
+	 * @api
 	 */
 	const NAME_JCR_XMLTEXT = '{http://www.jcp.org/jcr/1.0}xmltext';
 
 	/**
 	 * A constant for the name of the jcr:xmlcharacters property produced on importXML().
+	 * @api
 	 */
 	const NAME_JCR_XMLCHARACTERS = '{http://www.jcp.org/jcr/1.0}xmlcharacters';
 
@@ -129,6 +139,7 @@ interface PHPCR_WorkspaceInterface {
 	 * A constant for the relative path from the node representing the imported XML element of
 	 * the jcr:xmlcharacters property produced on importXML().
 	 * This is NAME_JCR_XMLTEXT . '/' . NAME_JCR_XMLCHARACTERS
+	 * @api
 	 */
 	const RELPATH_JCR_XMLCHARACTERS = '{http://www.jcp.org/jcr/1.0}xmltext/{http://www.jcp.org/jcr/1.0}xmlcharacters';
 
@@ -136,6 +147,7 @@ interface PHPCR_WorkspaceInterface {
 	 * Returns the Session object through which this Workspace object was acquired.
 	 *
 	 * @return PHPCR_SessionInterface a Session object.
+	 * @api
 	 */
 	public function getSession();
 
@@ -144,6 +156,7 @@ interface PHPCR_WorkspaceInterface {
 	 * Workspace object. This the name used in Repository->login.
 	 *
 	 * @return string the name of this workspace.
+	 * @api
 	 */
 	public function getName();
 
@@ -222,6 +235,7 @@ interface PHPCR_WorkspaceInterface {
 	 * @throws PHPCR_ItemExistsException if a node already exists at destAbsPath and either same-name siblings are not allowed or update on copy is not supported for the nodes involved.
 	 * @throws PHPCR_Lock_LockException if a lock prevents the copy.
 	 * @throws PHPCR_RepositoryException if the last element of destAbsPath has an index or if another error occurs.
+	 * @api
 	 */
 	public function copy($srcAbsPath, $destAbsPath, $srcWorkspace = NULL);
 
@@ -270,6 +284,7 @@ interface PHPCR_WorkspaceInterface {
 	 * @throws PHPCR_ItemExistsException if a node already exists at destAbsPath and same-name siblings are not allowed or if removeExisting is false and an identifier conflict occurs.
 	 * @throws PHPCR_Lock_LockException if a lock prevents the clone.
 	 * @throws PHPCR_RepositoryException if the last element of destAbsPath has an index or if another error occurs.
+	 * @api
 	 */
 	public function klone($srcWorkspace, $srcAbsPath, $destAbsPath, $removeExisting);
 
@@ -309,6 +324,7 @@ interface PHPCR_WorkspaceInterface {
 	 * @throws PHPCR_ItemExistsException if a node already exists at destAbsPath and same-name siblings are not allowed.
 	 * @throws PHPCR_Lock_LockException if a lock prevents the move.
 	 * @throws PHPCR_RepositoryException if the last element of destAbsPath has an index or if another error occurs.
+	 * @api
 	 */
 	public function move($srcAbsPath, $destAbsPath);
 
@@ -318,6 +334,7 @@ interface PHPCR_WorkspaceInterface {
 	 * @return PHPCR_Lock_LockManagerInterface
 	 * @throws PHPCR_UnsupportedRepositoryOperationException if the implementation does not support locking.
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function getLockManager();
 
@@ -326,6 +343,7 @@ interface PHPCR_WorkspaceInterface {
 	 *
 	 * @return PHPCR_Query_QueryManagerInterface the QueryManager object.
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function getQueryManager();
 
@@ -336,6 +354,7 @@ interface PHPCR_WorkspaceInterface {
 	 *
 	 * @return PHPCR_NamespaceRegistryInterface the NamespaceRegistry.
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function getNamespaceRegistry();
 
@@ -348,6 +367,7 @@ interface PHPCR_WorkspaceInterface {
 	 *
 	 * @return PHPCR_NodeType_NodeTypeManagerInterface a NodeTypeManager object.
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function getNodeTypeManager();
 
@@ -357,6 +377,7 @@ interface PHPCR_WorkspaceInterface {
 	 * @return PHPCR_Observation_ObservationManagerInterface an ObservationManager object.
 	 * @throws PHPCR::PHPCR_UnsupportedRepositoryOperationException if the implementation does not support observation.
 	 * @throws PHPCR::PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function getObservationManager();
 
@@ -366,6 +387,7 @@ interface PHPCR_WorkspaceInterface {
 	 * @return PHPCR_Version_VersionManagerInterface a VersionManager object.
 	 * @throws PHPCR_UnsupportedRepositoryOperationException if the implementation does not support versioning.
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function getVersionManager();
 
@@ -379,6 +401,7 @@ interface PHPCR_WorkspaceInterface {
 	 *
 	 * @return array string array of names of accessible workspaces.
 	 * @throws PHPCR_RepositoryException if an error occurs
+	 * @api
 	 */
 	public function getAccessibleWorkspaceNames();
 
@@ -447,6 +470,7 @@ interface PHPCR_WorkspaceInterface {
 	 * @throws PHPCR_AccessDeniedException if the session associated with this Workspace object does not have sufficient access to perform the import.
 	 * @throws PHPCR_RepositoryException if another error occurs.
 	 * @todo Decide on a return type that fits the PHP world
+	 * @api
 	 */
 	public function getImportContentHandler($parentAbsPath, $uuidBehavior);
 
@@ -507,6 +531,7 @@ interface PHPCR_WorkspaceInterface {
 	 * @throws PHPCR_Lock_LockException if a lock prevents the addition of the subgraph.
 	 * @throws PHPCR_AccessDeniedException if the session associated with this Workspace object does not have sufficient access to perform the import.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function importXML($parentAbsPath, $in, $uuidBehavior);
 
@@ -531,6 +556,7 @@ interface PHPCR_WorkspaceInterface {
 	 * @throws PHPCR_UnsupportedRepositoryOperationException if the repository does not support the creation of workspaces.
 	 * @throws PHPCR_NoSuchWorkspaceException if $srcWorkspace does not exist.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function createWorkspace($name, $srcWorkspace = NULL);
 
@@ -544,6 +570,7 @@ interface PHPCR_WorkspaceInterface {
 	 * @throws PHPCR_UnsupportedRepositoryOperationException if the repository does not support the removal of workspaces.
 	 * @throws PHPCR_NoSuchWorkspaceException if $name does not exist.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function deleteWorkspace($name);
 

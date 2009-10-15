@@ -22,18 +22,10 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Query
- * @version $Id: RowIteratorInterface.php 1811 2009-01-28 12:04:49Z robert $
- */
-
-/**
  * Allows easy iteration through a list of Rows with nextRow as well as a skip
  * method inherited from RangeIterator.
  *
- * @package PHPCR
- * @subpackage Query
- * @version $Id: RowIteratorInterface.php 1811 2009-01-28 12:04:49Z robert $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Query_RowIteratorInterface extends PHPCR_RangeIteratorInterface {
@@ -43,6 +35,7 @@ interface PHPCR_Query_RowIteratorInterface extends PHPCR_RangeIteratorInterface 
 	 *
 	 * @return PHPCR_Query_RowInterface
 	 * @throws OutOfBoundsException if the iterator contains no more elements.
+	 * @api
 	 */
 	public function nextRow();
 

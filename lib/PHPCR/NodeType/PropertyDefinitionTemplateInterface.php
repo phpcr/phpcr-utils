@@ -22,12 +22,6 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage NodeType
- * @version $Id: PropertyDefinitionTemplateInterface.php 2191 2009-05-07 19:49:06Z k-fish $
- */
-
-/**
  * The PropertyDefinitionTemplate interface extends PropertyDefinition with the
  * addition of write methods, enabling the characteristics of a child property
  * definition to be set, after which the PropertyDefinitionTemplate is added to
@@ -37,9 +31,7 @@ See the corresponding get methods for each attribute in PropertyDefinition for
 the default values assumed when a new empty PropertyDefinitionTemplate is created
 (as opposed to one extracted from an existing NodeType).
  *
- * @package PHPCR
- * @subpackage NodeType
- * @version $Id: PropertyDefinitionTemplateInterface.php 2191 2009-05-07 19:49:06Z k-fish $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_NodeType_PropertyDefinitionTemplateInterface extends PHPCR_NodeType_PropertyDefinitionInterface {
@@ -49,6 +41,7 @@ interface PHPCR_NodeType_PropertyDefinitionTemplateInterface extends PHPCR_NodeT
 	 *
 	 * @param string $name a String.
 	 * @return void
+	 * @api
 	 */
 	public function setName($name);
 
@@ -57,6 +50,7 @@ interface PHPCR_NodeType_PropertyDefinitionTemplateInterface extends PHPCR_NodeT
 	 *
 	 * @param boolean $autoCreated a boolean.
 	 * @return void
+	 * @api
 	 */
 	public function setAutoCreated($autoCreated);
 
@@ -65,6 +59,7 @@ interface PHPCR_NodeType_PropertyDefinitionTemplateInterface extends PHPCR_NodeT
 	 *
 	 * @param boolean $mandatory a boolean.
 	 * @return void
+	 * @api
 	 */
 	public function setMandatory($mandatory);
 
@@ -73,6 +68,7 @@ interface PHPCR_NodeType_PropertyDefinitionTemplateInterface extends PHPCR_NodeT
 	 *
 	 * @param integer $opv an int constant member of OnParentVersionAction.
 	 * @return void
+	 * @api
 	 */
 	public function setOnParentVersion($opv);
 
@@ -81,6 +77,7 @@ interface PHPCR_NodeType_PropertyDefinitionTemplateInterface extends PHPCR_NodeT
 	 *
 	 * @param boolean $protectedStatus a boolean.
 	 * @return void
+	 * @api
 	 */
 	public function setProtected($protectedStatus);
 
@@ -89,6 +86,7 @@ interface PHPCR_NodeType_PropertyDefinitionTemplateInterface extends PHPCR_NodeT
 	 *
 	 * @param integer $type an int constant member of PropertyType.
 	 * @return void
+	 * @api
 	 */
 	public function setRequiredType($type);
 
@@ -97,6 +95,7 @@ interface PHPCR_NodeType_PropertyDefinitionTemplateInterface extends PHPCR_NodeT
 	 *
 	 * @param array $constraints a String array.
 	 * @return void
+	 * @api
 	 */
 	public function setValueConstraints(array $constraints);
 
@@ -106,6 +105,7 @@ interface PHPCR_NodeType_PropertyDefinitionTemplateInterface extends PHPCR_NodeT
 	 *
 	 * @param array $defaultValues a Value array.
 	 * @return void
+	 * @api
 	 */
 	public function setDefaultValues(array $defaultValues);
 
@@ -114,6 +114,7 @@ interface PHPCR_NodeType_PropertyDefinitionTemplateInterface extends PHPCR_NodeT
 	 *
 	 * @param boolean $multiple a boolean.
 	 * @return void
+	 * @api
 	 */
 	public function setMultiple($multiple);
 
@@ -122,6 +123,7 @@ interface PHPCR_NodeType_PropertyDefinitionTemplateInterface extends PHPCR_NodeT
 	 *
 	 * @param array operators an array of String constants. See PropertyDefinition#getAvailableQueryOperators().
 	 * @return void
+	 * @api
 	 */
 	public function setAvailableQueryOperators(array $operators);
 
@@ -130,6 +132,7 @@ interface PHPCR_NodeType_PropertyDefinitionTemplateInterface extends PHPCR_NodeT
 	 *
 	 * @param boolean $fullTextSearchable a boolean.
 	 * @return void
+	 * @api
 	 */
 	public function setFullTextSearchable($fullTextSearchable);
 
@@ -138,6 +141,7 @@ interface PHPCR_NodeType_PropertyDefinitionTemplateInterface extends PHPCR_NodeT
 	 *
 	 * @param boolean $queryOrderable a boolean.
 	 * @return void
+	 * @api
 	 */
 	public function setQueryOrderable($queryOrderable);
 

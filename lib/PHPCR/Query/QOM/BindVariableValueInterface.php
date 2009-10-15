@@ -22,17 +22,9 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Query
- * @version $Id: BindVariableValueInterface.php 1811 2009-01-28 12:04:49Z robert $
- */
-
-/**
  * Evaluates to the value of a bind variable.
  *
- * @package PHPCR
- * @subpackage Query
- * @version $Id: BindVariableValueInterface.php 1811 2009-01-28 12:04:49Z robert $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Query_QOM_BindVariableValueInterface extends PHPCR_Query_QOM_StaticOperandInterface {
@@ -41,6 +33,7 @@ interface PHPCR_Query_QOM_BindVariableValueInterface extends PHPCR_Query_QOM_Sta
 	 * Gets the name of the bind variable.
 	 *
 	 * @return string the bind variable name; non-null
+	 * @api
 	 */
 	public function getBindVariableName();
 

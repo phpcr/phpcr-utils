@@ -22,18 +22,10 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Version
- * @version $Id: VersionInterface.php 1811 2009-01-28 12:04:49Z robert $
- */
-
-/**
  * A Version object wraps an nt:version node. It provides convenient access to
  * version information.
  *
- * @package PHPCR
- * @subpackage Version
- * @version $Id: VersionInterface.php 1811 2009-01-28 12:04:49Z robert $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Version_VersionInterface extends PHPCR_NodeInterface {
@@ -43,6 +35,7 @@ interface PHPCR_Version_VersionInterface extends PHPCR_NodeInterface {
 	 *
 	 * @return PHPCR_Version_VersionHistoryInterface the VersionHistory that contains this Version
 	 * @throws PHPCR_RepositoryException if an error occurs
+	 * @api
 	 */
 	public function getContainingHistory();
 
@@ -53,6 +46,7 @@ interface PHPCR_Version_VersionInterface extends PHPCR_NodeInterface {
 	 *
 	 * @return DateTime a DateTime object
 	 * @throws PHPCR_RepositoryException - if an error occurs
+	 * @api
 	 */
 	public function getCreated();
 
@@ -68,6 +62,7 @@ interface PHPCR_Version_VersionInterface extends PHPCR_NodeInterface {
 	 * @see VersionHistory#getAllLinearVersions()
 	 * @return PHPCR_VersionInterface a Version or NULL if no linear successor exists.
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function getLinearSuccessor();
 
@@ -78,6 +73,7 @@ interface PHPCR_Version_VersionInterface extends PHPCR_NodeInterface {
 	 *
 	 * @return array of PHPCR_Version_VersionInterface
 	 * @throws PHPCR_RepositoryException if an error occurs
+	 * @api
 	 */
 	public function getSuccessors();
 
@@ -93,6 +89,7 @@ interface PHPCR_Version_VersionInterface extends PHPCR_NodeInterface {
 	 * @see VersionHistory#getAllLinearVersions()
 	 * @return PHPCR_Version_VersionInterface a Version or NULL if no linear predecessor exists.
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function getLinearPredecessor();
 
@@ -104,6 +101,7 @@ interface PHPCR_Version_VersionInterface extends PHPCR_NodeInterface {
 	 *
 	 * @return array of PHPCR_Version_VersionInterface
 	 * @throws PHPCR_RepositoryException if an error occurs
+	 * @api
 	 */
 	public function getPredecessors();
 
@@ -112,6 +110,7 @@ interface PHPCR_Version_VersionInterface extends PHPCR_NodeInterface {
 	 *
 	 * @return PHPCR_NodeInterface a Node object
 	 * @throws PHPCR_RepositoryException if an error occurs
+	 * @api
 	 */
 	public function getFrozenNode();
 

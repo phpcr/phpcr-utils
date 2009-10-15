@@ -22,17 +22,9 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Lock
- * @version $Id: LockException.php 1818 2009-01-28 16:46:59Z k-fish $
- */
-
-/**
  * Exception thrown when a lock-related error occurs.
  *
- * @package PHPCR
- * @subpackage Lock
- * @version $Id: LockException.php 1818 2009-01-28 16:46:59Z k-fish $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 class PHPCR_Lock_LockException extends PHPCR_RepositoryException {
@@ -55,6 +47,7 @@ class PHPCR_Lock_LockException extends PHPCR_RepositoryException {
 	 * @param integer $code The exception error code
 	 * @param $failureNodePath the absolute path of the node that caused the error or  NULL if the implementation chooses not to, or cannot, return a path.
 	 * @author Karsten Dambekalns <karsten@typo3.org>
+	 * @api
 	 */
 	public function __construct($message, $code, $failureNodePath = NULL) {
 		parent::construct($message, $code);
@@ -67,6 +60,7 @@ class PHPCR_Lock_LockException extends PHPCR_RepositoryException {
 	 *
 	 * @return string path of the node that caused the error
 	 * @author Karsten Dambekalns <karsten@typo3.org>
+	 * @api
 	 */
 	public function getFailureNodePath() {
 		return $this->failureNodePath;

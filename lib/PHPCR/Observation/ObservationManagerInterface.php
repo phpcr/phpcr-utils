@@ -22,19 +22,11 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Observation
- * @version $Id: ObservationManagerInterface.php 2636 2009-06-23 09:10:29Z k-fish $
- */
-
-/**
  * The ObservationManager object.
  * Acquired via Workspace.getObservationManager(). Allows for the registration
  * and deregistration of event listeners.
  *
- * @package PHPCR
- * @subpackage Observation
- * @version $Id: ObservationManagerInterface.php 2636 2009-06-23 09:10:29Z k-fish $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Observation_ObservationManagerInterface {
@@ -89,6 +81,7 @@ interface PHPCR_Observation_ObservationManagerInterface {
 	 * @param boolean $noLocal - a boolean.
 	 * @return void
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function addEventListener(PHPCR_Observation_EventListenerInterface $listener, $eventTypes, $absPath, $isDeep, array $uuid, array $nodeTypeName, $noLocal);
 
@@ -103,6 +96,7 @@ interface PHPCR_Observation_ObservationManagerInterface {
 	 * @param PHPCR_Observation_EventListenerInterface $listener - The listener to deregister.
 	 * @return void
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function removeEventListener(PHPCR_Observation_EventListenerInterface $listener);
 
@@ -111,6 +105,7 @@ interface PHPCR_Observation_ObservationManagerInterface {
 	 *
 	 * @return an EventListenerIterator.
 	 * @throws PHPCR_RepositoryException if an error occurs
+	 * @api
 	 */
 	public function getRegisteredEventListeners();
 
@@ -120,6 +115,7 @@ interface PHPCR_Observation_ObservationManagerInterface {
 	 * @param string $userData the user data
 	 * @return void
 	 * @throws PHPCR_RepositoryException if an error occurs
+	 * @api
 	 */
 	public function setUserData($userData);
 
@@ -144,6 +140,7 @@ interface PHPCR_Observation_ObservationManagerInterface {
 	 * @param array $nodeTypeName array of node type names.
 	 * @return PHPCR_Observation_EventJournalInterface an EventJournal (or NULL).
 	 * @throws PHPCR_RepositoryException if an error occurs
+	 * @api
 	 */
 	public function getEventJournal($eventTypes = NULL, $absPath = NULL, $isDeep = NULL, array $uuid = NULL, array $nodeTypeName = NULL);
 

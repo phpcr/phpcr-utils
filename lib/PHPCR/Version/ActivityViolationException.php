@@ -22,12 +22,6 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Version
- * @version $Id: ActivityViolationException.php 1811 2009-01-28 12:04:49Z robert $
- */
-
-/**
  * Exception will be thrown by Node.checkout and Node.checkpoint if an activity
  * A is present on the current session and any of the following conditions is met:
  *
@@ -36,9 +30,7 @@ declare(ENCODING = 'utf-8');
  *  * There is a version in the version history of N that is not a predecessor
  *    of N but whose jcr:activity references A.
  *
- * @package PHPCR
- * @subpackage Version
- * @version $Id: ActivityViolationException.php 1811 2009-01-28 12:04:49Z robert $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 class PHPCR_Version_ActivityViolationException extends PHPCR_Version_VersionException {

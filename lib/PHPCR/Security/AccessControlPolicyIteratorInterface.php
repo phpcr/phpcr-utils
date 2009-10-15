@@ -22,18 +22,10 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Security
- * @version $Id: AccessControlPolicyIteratorInterface.php 1811 2009-01-28 12:04:49Z robert $
- */
-
-/**
  * Allows easy iteration through a list of AccessControlPolicys with
  * nextAccessControlPolicy as well as a skip method inherited from RangeIterator.
  *
- * @package PHPCR
- * @subpackage Security
- * @version $Id: AccessControlPolicyIteratorInterface.php 1811 2009-01-28 12:04:49Z robert $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Security_AccessControlPolicyIteratorInterface extends PHPCR_RangeIteratorInterface {
@@ -43,6 +35,7 @@ interface PHPCR_Security_AccessControlPolicyIteratorInterface extends PHPCR_Rang
 	 *
 	 * @return PHPCR_Security_AccessControlPolicyInterface the next AccessControlPolicy in the iteration
 	 * @throws OutOfBoundsException if iteration has no more AccessControlPolicys
+	 * @api
 	 */
 	public function nextAccessControlPolicy();
 

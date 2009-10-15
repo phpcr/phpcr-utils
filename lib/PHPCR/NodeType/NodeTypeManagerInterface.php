@@ -22,18 +22,10 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage NodeType
- * @version $Id: NodeTypeManagerInterface.php 1811 2009-01-28 12:04:49Z robert $
- */
-
-/**
  * Allows for the retrieval and (in implementations that support it) the
  * registration of node types. Accessed via Workspace.getNodeTypeManager().
  *
- * @package PHPCR
- * @subpackage NodeType
- * @version $Id: NodeTypeManagerInterface.php 1811 2009-01-28 12:04:49Z robert $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_NodeType_NodeTypeManagerInterface {
@@ -45,6 +37,7 @@ interface PHPCR_NodeType_NodeTypeManagerInterface {
 	 * @return PHPCR_NodeType_NodeTypeInterface A NodeType object.
 	 * @throws PHPCR_NodeType_NoSuchNodeTypeException if no node type by the given name exists.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function getNodeType($nodeTypeName);
 
@@ -55,6 +48,7 @@ interface PHPCR_NodeType_NodeTypeManagerInterface {
 	 * @param string $name - a String.
 	 * @return boolean a boolean
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function hasNodeType($name);
 
@@ -63,6 +57,7 @@ interface PHPCR_NodeType_NodeTypeManagerInterface {
 	 *
 	 * @return PHPCR_NodeType_NodeTypeInteratorInterface An NodeTypeIterator.
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function getAllNodeTypes();
 
@@ -71,6 +66,7 @@ interface PHPCR_NodeType_NodeTypeManagerInterface {
 	 *
 	 * @return PHPCR_NodeType_NodeTypeIteratorInterface An NodeTypeIterator.
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function getPrimaryNodeTypes();
 
@@ -80,6 +76,7 @@ interface PHPCR_NodeType_NodeTypeManagerInterface {
 	 *
 	 * @return PHPCR_NodeType_NodeTypeIteratorInterface An NodeTypeIterator.
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function getMixinNodeTypes();
 
@@ -95,6 +92,7 @@ interface PHPCR_NodeType_NodeTypeManagerInterface {
 	 * @return PHPCR_NodeType_NodeTypeTemplateInterface A NodeTypeTemplate.
 	 * @throws PHPCR_UnsupportedRepositoryOperationException if this implementation does not support node type registration.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function createNodeTypeTemplate($ntd = NULL);
 
@@ -105,6 +103,7 @@ interface PHPCR_NodeType_NodeTypeManagerInterface {
 	 * @return PHPCR_NodeType_NodeDefinitionTemplateInterface A NodeDefinitionTemplate.
 	 * @throws PHPCR_UnsupportedRepositoryOperationException if this implementation does not support node type registration.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function createNodeDefinitionTemplate();
 
@@ -115,6 +114,7 @@ interface PHPCR_NodeType_NodeTypeManagerInterface {
 	 * @return PHPCR_NodeType_PropertyDefinitionTemplateInterface A PropertyDefinitionTemplate.
 	 * @throws PHPCR_UnsupportedRepositoryOperationException if this implementation does not support node type registration.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function createPropertyDefinitionTemplate();
 
@@ -132,6 +132,7 @@ interface PHPCR_NodeType_NodeTypeManagerInterface {
 	 * @throws PHPCR_NodeType_NodeTypeExistsException if allowUpdate is false and the NodeTypeDefinition specifies a node type name that is already registered.
 	 * @throws PHPCR_UnsupportedRepositoryOperationException if this implementation does not support node type registration.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function registerNodeType(PHPCR_NodeType_NodeTypeDefinitionInterface $ntd, $allowUpdate);
 
@@ -149,6 +150,7 @@ interface PHPCR_NodeType_NodeTypeManagerInterface {
 	 * @throws PHPCR_NodeType_NodeTypeExistsException if allowUpdate is false and a NodeTypeDefinition within the Collection specifies a node type name that is already registered.
 	 * @throws PHPCR_UnsupportedRepositoryOperationException if this implementation does not support node type registration.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function registerNodeTypes(array $definitions, $allowUpdate);
 
@@ -160,6 +162,7 @@ interface PHPCR_NodeType_NodeTypeManagerInterface {
 	 * @throws PHPCR_UnsupportedRepositoryOperationException if this implementation does not support node type registration.
 	 * @throws PHPCR_NodeType_NoSuchNodeTypeException if no registered node type exists with the specified name.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function unregisterNodeType($name);
 
@@ -172,6 +175,7 @@ interface PHPCR_NodeType_NodeTypeManagerInterface {
 	 * @throws PHPCR_UnsupportedRepositoryOperationException if this implementation does not support node type registration.
 	 * @throws PHPCR_NodeType_NoSuchNodeTypeException if one of the names listed is not a registered node type.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function unregisterNodeTypes(array $names);
 }

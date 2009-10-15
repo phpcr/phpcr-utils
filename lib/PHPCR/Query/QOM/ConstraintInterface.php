@@ -22,20 +22,12 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Query
- * @version $Id: ConstraintInterface.php 1811 2009-01-28 12:04:49Z robert $
- */
-
-/**
  * Filters the set of node-tuples formed by evaluating the query's selectors and
  * the joins between them.
  *
  * To be included in the query results, a node-tuple must satisfy the constraint.
  *
- * @package PHPCR
- * @subpackage Query
- * @version $Id: ConstraintInterface.php 1811 2009-01-28 12:04:49Z robert $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Query_QOM_ConstraintInterface {

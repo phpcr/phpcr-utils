@@ -22,12 +22,6 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Query
- * @version $Id: PropertyValueInterface.php 1811 2009-01-28 12:04:49Z robert $
- */
-
-/**
  * Evaluates to the value (or values, if multi-valued) of a property.
  *
  * If, for a node-tuple, the selector node does not have a property named property,
@@ -38,9 +32,7 @@ declare(ENCODING = 'utf-8');
  * selector is not the name of a selector in the query, or
  * property is not a syntactically valid JCR name.
  *
- * @package PHPCR
- * @subpackage Query
- * @version $Id: PropertyValueInterface.php 1811 2009-01-28 12:04:49Z robert $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Query_QOM_PropertyValueInterface extends PHPCR_Query_QOM_DynamicOperandInterface {
@@ -49,6 +41,7 @@ interface PHPCR_Query_QOM_PropertyValueInterface extends PHPCR_Query_QOM_Dynamic
 	 * Gets the name of the selector against which to evaluate this operand.
 	 *
 	 * @return string the selector name; non-null
+	 * @api
 	 */
 	public function getSelectorName();
 
@@ -56,6 +49,7 @@ interface PHPCR_Query_QOM_PropertyValueInterface extends PHPCR_Query_QOM_Dynamic
 	 * Gets the name of the property.
 	 *
 	 * @return string the property name; non-null
+	 * @api
 	 */
 	public function getPropertyName();
 

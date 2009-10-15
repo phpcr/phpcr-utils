@@ -22,17 +22,9 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Lock
- * @version $Id: LockManagerInterface.php 2191 2009-05-07 19:49:06Z k-fish $
- */
-
-/**
  * This interface encapsulates methods for the management of locks.
  *
- * @package PHPCR
- * @subpackage Lock
- * @version $Id: LockManagerInterface.php 2191 2009-05-07 19:49:06Z k-fish $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Lock_LockManagerInterface {
@@ -46,6 +38,7 @@ interface PHPCR_Lock_LockManagerInterface {
 	 * @return void
 	 * @throws PHPCR_Lock_LockException if the specified lock token is already held by another Session and the implementation does not support simultaneous ownership of open-scoped locks.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function addLockToken($lockToken);
 
@@ -60,6 +53,7 @@ interface PHPCR_Lock_LockManagerInterface {
 	 * @throws PHPCR_AccessDeniedException if the current session does not have sufficient access to get the lock.
 	 * @throws PHPCR_PathNotFoundException if no node is found at $absPath
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function getLock($absPath);
 
@@ -70,6 +64,7 @@ interface PHPCR_Lock_LockManagerInterface {
 	 *
 	 * @return array an array of lock tokens (strings)
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function getLockTokens();
 
@@ -83,6 +78,7 @@ interface PHPCR_Lock_LockManagerInterface {
 	 * @return boolean a boolean.
 	 * @throws PHPCR_PathNotFoundException if no node is found at $absPath
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function holdsLock($absPath);
 
@@ -136,6 +132,7 @@ interface PHPCR_Lock_LockManagerInterface {
 	 * @throws PHPCR_InvalidItemStateException if this node has pending unsaved changes.
 	 * @throws PHPCR_PathNotFoundException if no node is found at $absPath
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function lock($absPath, $isDeep, $isSessionScoped, $timeoutHint, $ownerInfo);
 
@@ -148,6 +145,7 @@ interface PHPCR_Lock_LockManagerInterface {
 	 * @return boolean a boolean.
 	 * @throws PHPCR_PathNotFoundException if no node is found at $absPath
 	 * @throws PHPCR_RepositoryException if an error occurs.
+	 * @api
 	 */
 	public function isLocked($absPath);
 
@@ -158,6 +156,7 @@ interface PHPCR_Lock_LockManagerInterface {
 	 * @return void
 	 * @throws PHPCR_Lock_LockException if the current Session does not hold the specified lock token.
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function removeLockToken($lockToken);
 
@@ -183,6 +182,7 @@ interface PHPCR_Lock_LockManagerInterface {
 	 * @throws PHPCR_InvalidItemStateException if this node has pending unsaved changes.
 	 * @throws PHPCR_PathNotFoundException if no node is found at $absPath
 	 * @throws PHPCR_RepositoryException if another error occurs.
+	 * @api
 	 */
 	public function unlock($absPath);
 

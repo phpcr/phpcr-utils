@@ -22,12 +22,6 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Query
- * @version $Id: SelectorInterface.php 1811 2009-01-28 12:04:49Z robert $
- */
-
-/**
  * Selects a subset of the nodes in the repository based on node type.
 *
 * A selector selects every node in the repository, subject to access control
@@ -38,9 +32,7 @@ declare(ENCODING = 'utf-8');
 * the node has a mixin node type that is nodeType, or
 * the node has a mixin node type that is a subtype of nodeType.
 *
- * @package PHPCR
- * @subpackage Query
- * @version $Id: SelectorInterface.php 1811 2009-01-28 12:04:49Z robert $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Query_QOM_SelectorInterface extends PHPCR_Query_QOM_SourceInterface {
@@ -49,6 +41,7 @@ interface PHPCR_Query_QOM_SelectorInterface extends PHPCR_Query_QOM_SourceInterf
 	 * Gets the name of the required node type.
 	 *
 	 * @return string the node type name; non-null
+	 * @api
 	 */
 	public function getNodeTypeName();
 
@@ -57,6 +50,7 @@ interface PHPCR_Query_QOM_SelectorInterface extends PHPCR_Query_QOM_SourceInterf
 	 * A selector's name can be used elsewhere in the query to identify the selector.
 	 *
 	 * @return the selector name; non-null
+	 * @api
 	 */
 	public function getSelectorName();
 

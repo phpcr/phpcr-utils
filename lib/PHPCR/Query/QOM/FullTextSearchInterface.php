@@ -22,12 +22,6 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Query
- * @version $Id: FullTextSearchInterface.php 2191 2009-05-07 19:49:06Z k-fish $
- */
-
-/**
  * Performs a full-text search.
  *
  * The full-text search expression is evaluated against the set of full-text
@@ -69,9 +63,7 @@ declare(ENCODING = 'utf-8');
  *  "AND" has higher precedence than "OR".
  *  Within a term, each double quote ("), "-" (minus sign), and "\" (backslash) must be escaped by a preceding "\" (backslash).
  *
- * @package PHPCR
- * @subpackage Query
- * @version $Id: FullTextSearchInterface.php 2191 2009-05-07 19:49:06Z k-fish $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Query_QOM_FullTextSearchInterface extends PHPCR_Query_QOM_ConstraintInterface {
@@ -80,6 +72,7 @@ interface PHPCR_Query_QOM_FullTextSearchInterface extends PHPCR_Query_QOM_Constr
 	 * Gets the name of the selector against which to apply this constraint.
 	 *
 	 * @return string the selector name; non-null
+	 * @api
 	 */
 	public function getSelectorName();
 
@@ -87,6 +80,7 @@ interface PHPCR_Query_QOM_FullTextSearchInterface extends PHPCR_Query_QOM_Constr
 	 * Gets the name of the property.
 	 *
 	 * @return string the property name if the full-text search scope is a property, otherwise null if the full-text search scope is the node (or node subgraph, in some implementations).
+	 * @api
 	 */
 	public function getPropertyName();
 
@@ -94,6 +88,7 @@ interface PHPCR_Query_QOM_FullTextSearchInterface extends PHPCR_Query_QOM_Constr
 	 * Gets the full-text search expression.
 	 *
 	 * @return PHPCR_Query_QOM_StaticOperandInterface the full-text search expression; non-null
+	 * @api
 	 */
 	public function getFullTextSearchExpression();
 

@@ -22,20 +22,12 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Security
- * @version $Id: AccessControlListInterface.php 1811 2009-01-28 12:04:49Z robert $
- */
-
-/**
  * The AccessControlList is an AccessControlPolicy representing a list of access
  * control entries. It is mutable before being set to the AccessControlManager
  * and consequently defines methods to read and mutate the list i.e. to get, add
  * or remove individual entries.
  *
- * @package PHPCR
- * @subpackage Security
- * @version $Id: AccessControlListInterface.php 1811 2009-01-28 12:04:49Z robert $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Security_AccessControlListInterface extends PHPCR_Security_AccessControlPolicyInterface {
@@ -47,6 +39,7 @@ interface PHPCR_Security_AccessControlListInterface extends PHPCR_Security_Acces
 	 *
 	 * @return array all AccessControlEntry objects present with this policy.
 	 * @throws PHPCR_RepositoryException - if an error occurs.
+	 * @api
 	 */
 	public function getAccessControlEntries();
 
@@ -71,6 +64,7 @@ interface PHPCR_Security_AccessControlListInterface extends PHPCR_Security_Acces
 	 * @throws PHPCR_Security_AccessControlException - if the specified principal or any of the privileges does not existor if some other access control related exception occurs.
 	 * @throws PHPCR_RepositoryException - if another error occurs.
 	 * @todo find replacement for java.security.Principal
+	 * @api
 	 */
 	public function addAccessControlEntry($principal, array $privileges);
 
@@ -85,7 +79,8 @@ interface PHPCR_Security_AccessControlListInterface extends PHPCR_Security_Acces
 	 * @return void
 	 * @throws PHPCR_Security_AccessControlException if the specified entry is not present on the specified node.
 	 * @throws PHPCR_RepositoryException if another error occurs.
-	 * */
+	 * @api
+	 */
 	public function removeAccessControlEntry(PHPCR_Security_AccessControlEntryInterface $ace);
 
 }

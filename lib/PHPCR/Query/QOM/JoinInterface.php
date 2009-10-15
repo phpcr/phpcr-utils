@@ -22,17 +22,9 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Query
- * @version $Id: JoinInterface.php 2191 2009-05-07 19:49:06Z k-fish $
- */
-
-/**
  * Performs a join between two node-tuple sources.
  *
- * @package PHPCR
- * @subpackage Query
- * @version $Id: JoinInterface.php 2191 2009-05-07 19:49:06Z k-fish $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Query_QOM_JoinInterface extends PHPCR_Query_QOM_SourceInterface {
@@ -41,6 +33,7 @@ interface PHPCR_Query_QOM_JoinInterface extends PHPCR_Query_QOM_SourceInterface 
 	 * Gets the left node-tuple source.
 	 *
 	 * @return PHPCR_Query_QOM_SourceInterface the left source; non-null
+	 * @api
 	 */
 	public function getLeft();
 
@@ -48,6 +41,7 @@ interface PHPCR_Query_QOM_JoinInterface extends PHPCR_Query_QOM_SourceInterface 
 	 * Gets the right node-tuple source.
 	 *
 	 * @return PHPCR_Query_QOM_SourceInterface the right source; non-null
+	 * @api
 	 */
 	public function getRight();
 
@@ -55,6 +49,7 @@ interface PHPCR_Query_QOM_JoinInterface extends PHPCR_Query_QOM_SourceInterface 
 	 * Gets the join type.
 	 *
 	 * @return string one of QueryObjectModelConstants.JCR_JOIN_TYPE_*
+	 * @api
 	 */
 	public function getJoinType();
 
@@ -62,6 +57,7 @@ interface PHPCR_Query_QOM_JoinInterface extends PHPCR_Query_QOM_SourceInterface 
 	 * Gets the join condition.
 	 *
 	 * @return JoinCondition the join condition; non-null
+	 * @api
 	 */
 	public function getJoinCondition();
 }

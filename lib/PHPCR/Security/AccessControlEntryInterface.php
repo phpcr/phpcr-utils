@@ -22,18 +22,10 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Security
- * @version $Id: AccessControlEntryInterface.php 1811 2009-01-28 12:04:49Z robert $
- */
-
-/**
  * An AccessControlEntry represents the association of one or more Privilege
  * objects with a specific Principal
  *
- * @package PHPCR
- * @subpackage Security
- * @version $Id: AccessControlEntryInterface.php 1811 2009-01-28 12:04:49Z robert $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_Security_AccessControlEntryInterface {
@@ -43,6 +35,7 @@ interface PHPCR_Security_AccessControlEntryInterface {
 	 *
 	 * @return java.security.Principal a Principal.
 	 * @todo find replacement for java.security.Principal
+	 * @api
 	 */
 	public function getPrincipal();
 
@@ -50,6 +43,7 @@ interface PHPCR_Security_AccessControlEntryInterface {
 	 * Returns the privileges associated with this access control entry.
 	 *
 	 * @return array an array of Privileges.
+	 * @api
 	 */
 	public function getPrivileges();
 

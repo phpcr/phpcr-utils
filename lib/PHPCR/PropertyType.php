@@ -22,11 +22,6 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @version $Id: PropertyType.php 1818 2009-01-28 16:46:59Z k-fish $
- */
-
-/**
  * The property types supported by the JCR standard.
  *
  * The STRING property type is used to store strings.
@@ -43,8 +38,7 @@ declare(ENCODING = 'utf-8');
  * A URI property is identical to STRING property except that it only accepts values that conform to the syntax of a URI-reference as defined in RFC 3986. See also 4.2.6.6 URI in the specification.
  * UNDEFINED can be used within a property definition (see 4.7.5 Property Definitions) to specify that the property in question may be of any type. However, it cannot be the actual type of any property instance. For example it will never be returned by Property.getType() and (in level 2 implementations) it cannot be assigned as the type when creating a new property.
  *
- * @package PHPCR
- * @version $Id: PropertyType.php 1818 2009-01-28 16:46:59Z k-fish $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 final class PHPCR_PropertyType {
@@ -209,6 +203,7 @@ final class PHPCR_PropertyType {
 	 * @return string  name of the specified type
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Karsten Dambekalns <karsten@typo3.org>
+	 * @api
 	 */
 	static public function nameFromValue($type) {
 		switch (intval($type)) {
@@ -262,6 +257,7 @@ final class PHPCR_PropertyType {
 	 * @return int The numeric constant value
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Karsten Dambekalns <karsten@typo3.org>
+	 * @api
 	 */
 	static public function valueFromName($name) {
 		switch ($name) {
@@ -311,9 +307,12 @@ final class PHPCR_PropertyType {
 	 * Returns the numeric constant value of the type for the given PHP type
 	 * name as returned by gettype().
 	 *
+	 * Note: this is an addition not defined in JSR-283.
+	 *
 	 * @param string $type
 	 * @return integer
 	 * @author Karsten Dambekalns <karsten@typo3.org>
+	 * @api
 	 */
 	static public function valueFromType($type) {
 		switch (strtolower($type)) {

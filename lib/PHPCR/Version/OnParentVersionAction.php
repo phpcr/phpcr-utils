@@ -22,12 +22,6 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @subpackage Version
- * @version $Id: OnParentVersionAction.php 1811 2009-01-28 12:04:49Z robert $
- */
-
-/**
  * The possible actions specified by the onParentVersion attribute in a
  * property definition within a node type definition.
  *
@@ -45,31 +39,81 @@ declare(ENCODING = 'utf-8');
  * status is defined by the onParentVersion attribute in the PropertyDefinition
  * or NodeDefinition that applies to the item in question.
  *
- * @package PHPCR
- * @subpackage Version
- * @version $Id: OnParentVersionAction.php 1811 2009-01-28 12:04:49Z robert $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 final class OnParentVersionAction {
 
 	/**
-	 * The action constants.
+	 * The COPY action constant.
+	 * @api
 	 */
 	const COPY = 1;
+
+	/**
+	 * The VERSION action constant.
+	 * @api
+	 */
 	const VERSION = 2;
+
+	/**
+	 * The INITIALIZE action constant.
+	 * @api
+	 */
 	const INITIALIZE = 3;
+
+	/**
+	 * The COMPUTE action constant.
+	 * @api
+	 */
 	const COMPUTE = 4;
+
+	/**
+	 * The IGNORE action constant.
+	 * @api
+	 */
 	const IGNORE = 5;
+
+	/**
+	 * The ABORT action constant.
+	 * @api
+	 */
 	const ABORT = 6;
 
 	/**
-	 * The names of the defined on-version actions, as used in serialization.
+	 * The name of the COPY on-version action, as used in serialization.
+	 * @api
 	 */
 	const ACTIONNAME_COPY = 'COPY';
+
+	/**
+	 * The name of the VERSION on-version action, as used in serialization.
+	 * @api
+	 */
 	const ACTIONNAME_VERSION = 'VERSION';
+
+	/**
+	 * The name of the INITIALIZE on-version action, as used in serialization.
+	 * @api
+	 */
 	const ACTIONNAME_INITIALIZE = 'INITIALIZE';
+
+	/**
+	 * The name of the COMPUTE on-version action, as used in serialization.
+	 * @api
+	 */
 	const ACTIONNAME_COMPUTE = 'COMPUTE';
+
+	/**
+	 * The name of the IGNORE on-version action, as used in serialization.
+	 * @api
+	 */
 	const ACTIONNAME_IGNORE = 'IGNORE';
+
+	/**
+	 * The name of the ABORT on-version action, as used in serialization.
+	 * @api
+	 */
 	const ACTIONNAME_ABORT = 'ABORT';
 
 	/**
@@ -86,6 +130,7 @@ final class OnParentVersionAction {
 	 * @param integer $action the on-version action
 	 * @return string the name of the specified action
 	 * @author Karsten Dambekalns <karsten@typo3.org>
+	 * @api
 	 */
 	static public function nameFromValue($action) {
 		switch (intval($action)) {
@@ -117,6 +162,7 @@ final class OnParentVersionAction {
 	 * @param string $name the name of the on-version action
 	 * @return int the numeric constant value
 	 * @author Karsten Dambekalns <karsten@typo3.org>
+	 * @api
 	 */
 	static public function valueFromName($name) {
 		switch ($name) {

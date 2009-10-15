@@ -22,28 +22,38 @@ declare(ENCODING = 'utf-8');
  *                                                                        */
 
 /**
- * @package PHPCR
- * @version $Id: ImportUUIDBehaviourInterface.php 1811 2009-01-28 12:04:49Z robert $
- */
-
-/**
  * The possible actions specified by the uuidBehavior parameter in
  * Workspace->importXML(), Session->importXML(),
  * Workspace->getImportContentHandler() and
  * Session->getImportContentHandler().
  * *
- * @package PHPCR
- * @version $Id: ImportUUIDBehaviourInterface.php 1811 2009-01-28 12:04:49Z robert $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PHPCR_ImportUUIDBehaviourInterface {
 
 	/**
-	 * The supported behaviors.
+	 * When importing remove existing item upon collision.
+	 * @api
 	 */
 	const IMPORT_UUID_COLLISION_REMOVE_EXISTING = 1;
+
+	/**
+	 * When importing replace existing item upon collision.
+	 * @api
+	 */
 	const IMPORT_UUID_COLLISION_REPLACE_EXISTING = 2;
+
+	/**
+	 * When importing throw exception upon collision.
+	 * @api
+	 */
 	const IMPORT_UUID_COLLISION_THROW = 3;
+
+	/**
+	 * When importing create new UUIDs.
+	 * @api
+	 */
 	const IMPORT_UUID_CREATE_NEW = 0;
 
 }
