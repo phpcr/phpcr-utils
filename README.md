@@ -20,7 +20,8 @@ There are a couple of useful commands to interact with a phpcr repository.
 
 To use the console, make sure you have initialized the git submodules of
 phpcr-utils, then copy cli-config.php.dist to cli-config.php and adjust it
-to your implementation of PHPCR.
+to your implementation of PHPCR. Then you can run the commands from the
+phpcr-utils directory with ``./bin/phpcr`` 
 NOTE: If you are using PHPCR inside of Symfony, the DoctrinePHPCRBundle
 provides the commands inside the normal Symfony console and you don't need to
 prepare anything special.
