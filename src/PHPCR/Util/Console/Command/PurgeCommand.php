@@ -45,13 +45,15 @@ EOF
 
         if (! $force) {
             $dialog = new DialogHelper();
-            $res = $dialog->askConfirmation($output, 'Are you sure you want to delete all the nodes of the content repository?', false); // TODO: output server and workspace name
+            $res = $dialog->askConfirmation($output, 'Are you sure you want to delete all the nodes of the content repository? [yes|no]: ', false); // TODO: output server and workspace name
         }
 
         if ($force || $res) {
             NodeHelper::deleteAllNodes($this->getHelper('phpcr')->getSession());
             $session->save();
             $output->writeln("Done\n");
+        } else {
+            $output->writeln("Aborted\n");
         }
 
         return 0;
