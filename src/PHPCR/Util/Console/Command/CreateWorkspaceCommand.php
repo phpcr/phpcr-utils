@@ -23,8 +23,9 @@ class CreateWorkspaceCommand extends Command
         $this
             ->setName('phpcr:workspace:create')
             ->addArgument('name', InputArgument::REQUIRED, 'Name of the workspace to create')
+            ->setDescription('Create a workspace in the configured repository')
             ->setHelp(<<<EOT
-Create a workspace for the given name.
+Creates a workspace with the given name, if it does not already exist and if the repository implementation supports this operation.
 EOT
         );
     }
