@@ -21,12 +21,13 @@ There are a couple of useful commands to interact with a phpcr repository.
 To use the console, make sure you have initialized the git submodules of
 phpcr-utils, then copy cli-config.php.dist to cli-config.php and adjust it
 to your implementation of PHPCR. Then you can run the commands from the
-phpcr-utils directory with ``./bin/phpcr`` 
+phpcr-utils directory with ``./bin/phpcr``
 NOTE: If you are using PHPCR inside of Symfony, the DoctrinePHPCRBundle
 provides the commands inside the normal Symfony console and you don't need to
 prepare anything special.
 
 * ``phpcr:workspace:create <name>``: Create the workspace name in the configured repository
+* ``phpcr:register-node-types --allow-update [cnd-file]``: Register namespaces and node types from a "Compact Node Type Definition" .cnd file
 * ``phpcr:dump [--sys_nodes[="..."]] [--props[="..."]] [path]``: Show the node names
      under the specified path. If you set sys_nodes=yes you will also see system nodes.
      If you set props=yes you will additionally see all properties of the dumped nodes.
@@ -35,8 +36,12 @@ prepare anything special.
 * ``phpcr:sql2``: Run a query in the JCR SQL2 language against the repository and dump
      the resulting rows to the console.
 
-TODO: Implement commands for phpcr:import and phpcr:export to import
-and export the PHPCR document view and system view XML dumps.
+**TODO:**
+
+* Implement commands for phpcr:import and phpcr:export to import and export the
+    PHPCR document view and system view XML dumps.
+* Implement a simple .cnd parser in PHP and use it to make register-node-types
+    work with all repositories
 
 
 ## Helper Classes
