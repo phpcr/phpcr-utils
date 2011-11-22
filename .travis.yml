@@ -8,7 +8,7 @@ before_script:
   - git submodule update --init --recursive
 # this might get more involved if we want to test QueryBuilder with functional tests that require a real implementation...
 
-script: phpunit -c tests/phpunit_${TRANSPORT}.xml.dist
+script: phpunit -c tests/phpunit.xml.dist
 
 notifications:
   irc: "irc.freenode.org#jackalope"
