@@ -13,9 +13,9 @@ $classLoader->registerNamespaces(array(
 ));
 
 /* for phpunit.xml and travis */
-if (! $phpcr = getenv('phpcr.srcdir')) {
-    if (isset($GLOBALS['phpcr.srcdir'])) {
-        $phpcr = $GLOBALS['phpcr.srcdir'];
+if (! $phpcr = getenv('phpcr_srcdir')) {
+    if (isset($GLOBALS['phpcr_srcdir'])) {
+        $phpcr = $GLOBALS['phpcr_srcdir'];
     }
 }
 if ($phpcr) {
