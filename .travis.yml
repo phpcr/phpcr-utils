@@ -4,9 +4,6 @@ php:
   - 5.3
   - 5.4
 
-env:
-    - phpcr_srcdir=lib/vendor/phpcr/src
-
 before_script:
   - git submodule update --init --recursive
   - git clone https://github.com/phpcr/phpcr lib/vendor/phpcr

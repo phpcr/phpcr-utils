@@ -13,13 +13,19 @@ $classLoader->registerNamespaces(array(
 ));
 
 /* for phpunit.xml and travis */
-if (! $phpcr = getenv('phpcr_srcdir')) {
-    if (isset($GLOBALS['phpcr_srcdir'])) {
-        $phpcr = $GLOBALS['phpcr_srcdir'];
-    }
+if (isset($GLOBALS['phpcr_srcdir'])) {
+    $phpcr = $GLOBALS['phpcr_srcdir'];
+} else if (file_exists(__DIR__.'/../lib/vendor/phpcr/src')) {
+    $phpcr = __DIR__.'/../lib/vendor/phpcr/src';
+} else {
+    $phpcr = false;
 }
+
 if ($phpcr) {
+    if (! file_exists("$phpcr/PHPCR")) {
+        die("Invalid phpcr directory specified: $phpcr");
+    }
     $classLoader->registerNamespaces(array(
-        'PHPCR'         => __DIR__."/$phpcr",
+        'PHPCR'         => $phpcr,
     ));
 }

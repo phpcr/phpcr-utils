@@ -12,7 +12,7 @@
          bootstrap="bootstrap.php">
 
     <php>
-        <var name="phpcr_srcdir" value="../../phpcr/src" />
+        <var name="phpcr_srcdir" value="../phpcr/src" />
     </php>
     <testsuites>
         <testsuite name="PHPCR Util Test Suite">
