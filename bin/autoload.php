@@ -12,9 +12,14 @@ $classLoader->registerNamespaces(array(
     'Symfony\Component\ClassLoader' => __DIR__.'/../lib/vendor',
 ));
 
-/* for phpunit.xml */
-if (isset($GLOBALS['phpcr.srcdir'])) {
+/* for phpunit.xml and travis */
+if (! $phpcr = getenv('phpcr.srcdir')) {
+    if (isset($GLOBALS['phpcr.srcdir'])) {
+        $phpcr = $GLOBALS['phpcr.srcdir'];
+    }
+}
+if ($phpcr) {
     $classLoader->registerNamespaces(array(
-        'PHPCR'         => __DIR__.'/'.$GLOBALS['phpcr.srcdir'],
+        'PHPCR'         => __DIR__."/$phpcr",
     ));
 }
