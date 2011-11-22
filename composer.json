@@ -4,7 +4,6 @@
     "description": "PHP Content Repository implementation independant utilities",
     "keywords": ["phpcr", "contentrepository", "cli"],
     "homepage": "http://phpcr.github.com",
-    "version": "2.1.0-beta1",
     "license": "Apache License 2.0",
     "authors": [
         {
