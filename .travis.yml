@@ -4,8 +4,12 @@ php:
   - 5.3
   - 5.4
 
+env:
+    - phpcr.srcdir=lib/vendor/phpcr/src
+
 before_script:
   - git submodule update --init --recursive
+  - git clone https://github.com/phpcr/phpcr lib/vendor/phpcr
 # this might get more involved if we want to test QueryBuilder with functional tests that require a real implementation...
 
 script: phpunit -c tests/phpunit.xml.dist
