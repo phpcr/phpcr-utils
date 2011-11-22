@@ -16,4 +16,4 @@ if (!class_exists('PHPUnit_Framework_MockObject_MockBuilder')) {
     die('PHPUnit MockObject plugin is required, at least 1.0.8 version');
 }
 
-require __DIR__'/../bin/autoload.php';
+require __DIR__.'/../bin/autoload.php';
