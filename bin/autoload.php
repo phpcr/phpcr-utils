@@ -13,10 +13,10 @@ $classLoader->registerNamespaces(array(
 ));
 
 /* for phpunit.xml and travis */
-if (isset($GLOBALS['phpcr_srcdir'])) {
-    $phpcr = $GLOBALS['phpcr_srcdir'];
-} else if (file_exists(__DIR__.'/../lib/vendor/phpcr/src')) {
+if (file_exists(__DIR__.'/../lib/vendor/phpcr/src')) {
     $phpcr = __DIR__.'/../lib/vendor/phpcr/src';
+} else if (isset($GLOBALS['phpcr_srcdir'])) {
+    $phpcr = __DIR__.'/'.$GLOBALS['phpcr_srcdir'];
 } else {
     $phpcr = false;
 }

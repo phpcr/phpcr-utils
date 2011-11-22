@@ -12,7 +12,9 @@
          bootstrap="bootstrap.php">
 
     <php>
-        <var name="phpcr_srcdir" value="../phpcr/src" />
+        <!-- relative to bin/autoload.php
+        -->
+        <var name="phpcr_srcdir" value="../../phpcr/src" />
     </php>
     <testsuites>
         <testsuite name="PHPCR Util Test Suite">
