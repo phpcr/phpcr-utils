@@ -25,7 +25,9 @@ class CreateWorkspaceCommand extends Command
             ->addArgument('name', InputArgument::REQUIRED, 'Name of the workspace to create')
             ->setDescription('Create a workspace in the configured repository')
             ->setHelp(<<<EOT
-Creates a workspace with the given name, if it does not already exist and if the repository implementation supports this operation.
+The <info>workspace:create</info> command creates a workspace with the specified name.
+It will fail if a workspace with that name already exists or if the repository implementation
+does not support this operation.
 EOT
         );
     }
@@ -39,8 +41,16 @@ EOT
 
         $name = $input->getArgument('name');
 
-        $session->getWorkspace()->createWorkspace($name);
+        $workspace = $session->getWorkspace();
+
+        if (! $session->getRepository()->getDescriptor(\PHPCR\RepositoryInterface::OPTION_WORKSPACE_MANAGEMENT_SUPPORTED)) {
+            throw new \Exception('Your PHPCR implemenation does not support workspace management. Please refer to the documentation of your PHPCR implementation to learn how to create a workspace.');
+        }
+
+        $workspace->createWorkspace($name);
 
         $output->writeln("Created workspace '$name'.");
+
+        return 0;
     }
 }
