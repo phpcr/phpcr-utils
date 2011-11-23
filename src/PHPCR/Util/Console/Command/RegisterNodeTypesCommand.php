@@ -8,6 +8,8 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+use PHPCR\SessionInterface;
+
 /**
  * Command to load and register a node type defined in a CND file.
  *
@@ -67,8 +69,24 @@ EOT
 
         $cnd = file_get_contents($cnd_file);
         $allowUpdate = $input->getOption('allow-update');
-
         $session = $this->getHelper('phpcr')->getSession();
+
+        $this->updateFromCnd($input, $output, $session, $cnd, $allowUpdate);
+
+        $output->write(PHP_EOL.sprintf('Successfully registered node types from "<info>%s</info>"', $cnd_file) . PHP_EOL);
+    }
+
+    /**
+     * Actually do the update.
+     *
+     * @param SessionInterface $session the phpcr session to talk to
+     * @param string $cnd the compact namespace and node type definition in string form
+     *
+     * @throws \PHPCR\NodeType\NodeTypeExistsException if the node already exists and allowUpdate is false
+     * @throws \PHPCR\RepositoryException on other errors
+     */
+    protected function updateFromCnd(InputInterface $input, OutputInterface $output, SessionInterface $session, $cnd, $allowUpdate)
+    {
         if (! $session instanceof \Jackalope\Session) {
             throw new \Exception('PHPCR only provides an API to register node types. Your implementation is not Jackalope (which provides a method for .cnd). TODO: parse the file and do the necessary API calls');
         }
@@ -84,6 +102,5 @@ EOT
             }
             throw $e;
         }
-        $output->write(PHP_EOL.sprintf('Successfully registered node types from "<info>%s</info>"', $cnd_file) . PHP_EOL);
     }
 }
