@@ -1,4 +1,6 @@
-Utility things for the PHP Content Repository (PHPCR) API.
+# PHPCR Utilities [![Build Status](https://secure.travis-ci.org/phpcr/phpcr-utils.png)](http://travis-ci.org/phpcr/phpcr-utils)
+
+Commands and implementations for common tasks for the PHP Content Repository (PHPCR) API.
 
 If you are using or implementing (PHPCR)[https://github.com/phpcr/phpcr] you
 probably want some of the things in here.
