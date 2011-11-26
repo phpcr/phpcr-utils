@@ -8,12 +8,11 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-use Symfony\Bundle\DoctrinePHPCRBundle\Helper\NodeHelper;
-
-use Symfony\Bundle\DoctrinePHPCRBundle\Helper\TreeWalker;
-use Symfony\Bundle\DoctrinePHPCRBundle\Helper\TreeDumper\ConsoleDumperNodeVisitor;
-use Symfony\Bundle\DoctrinePHPCRBundle\Helper\TreeDumper\ConsoleDumperPropertyVisitor;
-use Symfony\Bundle\DoctrinePHPCRBundle\Helper\TreeDumper\SystemNodeFilter;
+use PHPCR\Util\NodeHelper;
+use PHPCR\Util\TreeWalker;
+use PHPCR\Util\Console\Helper\TreeDumper\ConsoleDumperNodeVisitor;
+use PHPCR\Util\Console\Helper\TreeDumper\ConsoleDumperPropertyVisitor;
+use PHPCR\Util\Console\Helper\TreeDumper\SystemNodeFilter;
 
 /**
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
