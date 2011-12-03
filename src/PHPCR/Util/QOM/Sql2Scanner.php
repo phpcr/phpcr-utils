@@ -25,7 +25,7 @@ class Sql2Scanner
     /**
      * Construct a scanner with the given SQL2 statement
      *
-     * @param string $sql2 
+     * @param string $sql2
      */
     public function __construct($sql2)
     {
@@ -34,7 +34,7 @@ class Sql2Scanner
     }
 
     /**
-     * Get the next token without removing it from the queue. 
+     * Get the next token without removing it from the queue.
      * Return an empty string when there are no more tokens.
      *
      * @return string
@@ -48,7 +48,7 @@ class Sql2Scanner
     }
 
     /**
-     * Get the next token and remove it from the queue. 
+     * Get the next token and remove it from the queue.
      * Return an empty string when there are no more tokens.
      *
      * @return string
@@ -63,12 +63,12 @@ class Sql2Scanner
     }
 
     /**
-     * Expect the next token to be the given one and throw an exception if it's 
-     * not the case. The equality test is done case sensitively/insensitively 
+     * Expect the next token to be the given one and throw an exception if it's
+     * not the case. The equality test is done case sensitively/insensitively
      * depending on the second parameter.
      *
      * @param string $token The expected token
-     * @param boolean $case_insensitive 
+     * @param boolean $case_insensitive
      */
     public function expectToken($token, $case_insensitive = true)
     {
@@ -79,12 +79,12 @@ class Sql2Scanner
     }
 
     /**
-     * Expect the next tokens to be the one given in the array of tokens and 
+     * Expect the next tokens to be the one given in the array of tokens and
      * throws an exception if it's not the case.
      * @see expectToken
      *
      * @param array $tokens
-     * @param boolean $case_insensitive 
+     * @param boolean $case_insensitive
      */
     public function expectTokens($tokens, $case_insensitive = true)
     {
@@ -120,12 +120,12 @@ class Sql2Scanner
     protected function scan($sql2)
     {
         $tokens = array();
-        $token = strtok($sql2, ' ');
+        $token = strtok($sql2, " \n\t");
         while ($token !== false) {
-
             $this->tokenize($tokens, $token);
-            $token = strtok(' ');
+            $token = strtok(" \n\t");
         }
+
         return $tokens;
     }
 
