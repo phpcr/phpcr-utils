@@ -50,9 +50,8 @@ class Sql2Command extends Command
 
         $result = $query->execute();
         foreach ($result as $i => $row) {
-            $values = $row->getValues();
             $output->writeln("\n".($i+1).'. Row:');
-            foreach ($values as $column => $value) {
+            foreach ($row as $column => $value) {
                 $output->writeln("$column: $value");
             }
         }
