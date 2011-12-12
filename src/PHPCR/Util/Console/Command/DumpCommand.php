@@ -45,7 +45,7 @@ properties with names starting with 'jcr:'), the <info>sys_nodes</info> option
 allows to turn this filter off.
 EOF
             )
-            ;
+        ;
     }
 
     /**

@@ -29,7 +29,8 @@ The <info>workspace:create</info> command creates a workspace with the specified
 It will fail if a workspace with that name already exists or if the repository implementation
 does not support this operation.
 EOT
-        );
+            )
+        ;
     }
 
     /**
