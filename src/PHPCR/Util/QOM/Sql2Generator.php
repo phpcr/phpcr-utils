@@ -481,8 +481,20 @@ class Sql2Generator
         return '$' . $var;
     }
 
+    /**
+     * @param string $literal
+     * @param string $type
+     */
+    public function evalCastLiteral($literal, $type) {
+        return "CAST('$literal' AS $type)";
+    }
+
     public function evalLiteral($literal)
     {
+        if ($literal instanceof \DateTime) {
+            $string = \PHPCR\PropertyType::convertType($literal, \PHPCR\PropertyType::STRING);
+            return $this->evalCastLiteral($string, 'DATE');
+        }
         return "'$literal'";
     }
 }
