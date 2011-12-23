@@ -485,7 +485,8 @@ class Sql2Generator
      * @param string $literal
      * @param string $type
      */
-    public function evalCastLiteral($literal, $type) {
+    public function evalCastLiteral($literal, $type)
+    {
         return "CAST('$literal' AS $type)";
     }
 
