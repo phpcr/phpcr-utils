@@ -29,7 +29,7 @@ class Sql2Command extends Command
         $this->setName('phpcr:sql2')
             ->addArgument('query', InputArgument::REQUIRED, 'JCR SQL2 statement to execute')
             ->setDescription('Execute a JCR SQL2 statement')
-            ->setHelp("The <info>phpcr:sql</info> command executes a JCR SQL2 statement on the content repository");
+            ->setHelp("The <info>sql2</info> command executes a JCR SQL2 statement on the content repository");
     }
 
     /**
@@ -50,7 +50,7 @@ class Sql2Command extends Command
 
         $result = $query->execute();
         foreach ($result as $i => $row) {
-            $output->writeln("\n".($i+1).'. Row:');
+            $output->writeln("\n".($i+1).'. Row (Path: '. $row->getPath() .', Score: '. $row->getScore() .'):');
             foreach ($row as $column => $value) {
                 $output->writeln("$column: $value");
             }

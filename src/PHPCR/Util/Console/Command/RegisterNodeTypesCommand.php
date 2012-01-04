@@ -26,15 +26,15 @@ class RegisterNodeTypesCommand extends Command
     protected function configure()
     {
         $this
-        ->setName('phpcr:register-node-types')
-        ->setDescription('Register node types in the PHPCR repository')
-        ->setDefinition(array(
-            new InputArgument(
-                'cnd-file', InputArgument::REQUIRED, 'Register namespaces and node types from a "Compact Node Type Definition" .cnd file'
-            ),
-            new InputOption('allow-update', '', InputOption::VALUE_NONE, 'Overwrite existig node type'),
-        ))
-        ->setHelp(<<<EOT
+            ->setName('phpcr:register-node-types')
+            ->setDescription('Register node types in the PHPCR repository')
+            ->setDefinition(array(
+                new InputArgument(
+                    'cnd-file', InputArgument::REQUIRED, 'Register namespaces and node types from a "Compact Node Type Definition" .cnd file'
+                ),
+                new InputOption('allow-update', '', InputOption::VALUE_NONE, 'Overwrite existig node type'),
+            ))
+            ->setHelp(<<<EOT
 Register node types in the PHPCR repository.
 
 This command allows to register node types in the repository that are defined
@@ -47,7 +47,8 @@ and their prefix used for the names of node types and properties.
 If you use --allow-update existing node type definitions will be overwritten
 in the repository.
 EOT
-        );
+            )
+        ;
     }
 
    /**

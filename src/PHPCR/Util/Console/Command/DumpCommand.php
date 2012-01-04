@@ -34,7 +34,18 @@ class DumpCommand extends Command
             //TODO: implement ->addOption('recurse', null, InputOption::VALUE_OPTIONAL, 'Set to a number to limit how deep into the tree to recurse', "-1")
             ->addArgument('path', InputArgument::OPTIONAL, 'Path of the node to dump', '/')
             ->setDescription('Dump the content repository')
-            ->setHelp("The <info>phpcr:dump</info> command dumps a node (specified by the <info>path</info> argument) and its subnodes in a yaml-like style.\n\nIf the <info>props</info> option is set to yes the nodes properties are displayed as yaml arrays.\nBy default the command filters out system nodes and properties (i.e. nodes and properties with names starting with 'jcr:'), the <info>sys_nodes</info> option allows to turn this filter off.");
+            ->setHelp(<<<EOF
+The <info>dump</info> command recursively outputs the name of the node specified
+by the <info>path</info> argument and its subnodes in a yaml-like style.
+
+If the <info>props</info> option is set to yes the nodes properties are
+displayed as yaml arrays.
+By default the command filters out system nodes and properties (i.e. nodes and
+properties with names starting with 'jcr:'), the <info>sys_nodes</info> option
+allows to turn this filter off.
+EOF
+            )
+        ;
     }
 
     /**

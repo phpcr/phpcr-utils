@@ -20,13 +20,15 @@ class PurgeCommand extends Command
     {
         parent::configure();
 
-        $this->setName('phpcr:purge')
+        $this
+            ->setName('phpcr:purge')
             ->setDescription('Remove all content from the repository')
             ->addOption('force', null, InputOption::VALUE_OPTIONAL, 'Set to "yes" to bypass the confirmation dialog', "no")
             ->setHelp(<<<EOF
 The <info>phpcr:purge</info> command remove all the non-standard nodes from the content repository
 EOF
-        );
+            )
+        ;
     }
 
     /**
