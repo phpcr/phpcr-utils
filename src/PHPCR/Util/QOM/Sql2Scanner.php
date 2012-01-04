@@ -25,7 +25,7 @@ class Sql2Scanner
     /**
      * Construct a scanner with the given SQL2 statement
      *
-     * @param string $sql2 
+     * @param string $sql2
      */
     public function __construct($sql2)
     {
@@ -120,11 +120,11 @@ class Sql2Scanner
     protected function scan($sql2)
     {
         $tokens = array();
-        $token = strtok($sql2, ' ');
+        $token = strtok($sql2, " \n\t");
         while ($token !== false) {
 
             $this->tokenize($tokens, $token);
-            $token = strtok(' ');
+            $token = strtok(" \n\t");
         }
         return $tokens;
     }
