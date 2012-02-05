@@ -196,7 +196,24 @@ class QueryBuilderTest extends \PHPUnit_Framework_TestCase
                  ->method('createQuery')
                  ->will($this->returnValue("true"));
         $qb->getQuery();
-        //state is clean, query is stored
+    }
+    public function testGetQueryWithOffsetAndLimit()
+    {
+        $source = $this->getMock('PHPCR\Query\QOM\SourceInterface', array(), array());
+        $constraint = $this->getMock('PHPCR\Query\QOM\ConstraintInterface', array(), array());
+        $query = $this->getMock('PHPCR\Query\QOM\QueryObjectModelInterface', array(), array());
+        $qb = new QueryBuilder($this->qf);
+        $qb->from($source);
+        $qb->where($constraint);
+        $qb->setFirstResult(13);
+        $qb->setMaxResults(42);
+        $query->expects($this->once())
+              ->method('setOffset');
+        $query->expects($this->once())
+              ->method('setLimit');
+        $this->qf->expects($this->once())
+                 ->method('createQuery')
+                 ->will($this->returnValue($query));
         $qb->getQuery();
     }
 
