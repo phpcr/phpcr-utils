@@ -416,6 +416,15 @@ class QueryBuilder
         }
         $this->state = self::STATE_CLEAN;
         $this->query = $this->qomFactory->createQuery($this->source, $this->constraint, $this->orderings, $this->columns);
+
+        if ($this->firstResult) {
+            $this->query->setOffset($this->firstResult);
+        }
+
+        if ($this->maxResults) {
+            $this->query->setLimit($this->maxResults);
+        }
+
         return $this->query;
     }
 
@@ -428,14 +437,6 @@ class QueryBuilder
     {
         if ($this->query === null || $this->state === self::STATE_DIRTY) {
             $this->query = $this->getQuery();
-        }
-
-        if ($this->firstResult) {
-            $this->query->setOffset($this->firstResult);
-        }
-
-        if ($this->maxResults) {
-            $this->query->setLimit($this->maxResults);
         }
 
         foreach ($this->params as $key => $value) {
