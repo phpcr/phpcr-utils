@@ -645,7 +645,12 @@ class Sql2ToQomQueryConverter
         $token = $this->scanner->fetchNextToken();
         if (substr($token, 0, 1) === '\'') {
             if (substr($token, -1) !== '\'') {
-                throw new \Exception("Syntax error: unterminated string");
+                throw new \Exception("Syntax error: unterminated single quoted string");
+            }
+            $token = substr($token, 1, strlen($token) - 2);
+        } elseif (substr($token, 0, 1) === '"') {
+            if (substr($token, -1) !== '"') {
+                throw new \Exception("Syntax error: unterminated double quoted string");
             }
             $token = substr($token, 1, strlen($token) - 2);
         }
