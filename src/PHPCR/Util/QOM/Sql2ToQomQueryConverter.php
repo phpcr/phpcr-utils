@@ -66,6 +66,10 @@ class Sql2ToQomQueryConverter
             }
         }
 
+        if (!$source instanceof \PHPCR\Query\QOM\SourceInterface) {
+            throw new \PHPCR\Query\InvalidQueryException('Invalid query, source could not be determined: '.$sql2);
+        }
+
         $query = $this->factory->createQuery($source, $constraint, $orderings, $columns);;
 
         return $query;
