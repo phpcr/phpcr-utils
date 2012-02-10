@@ -42,9 +42,9 @@ class Sql2ToQomQueryConverter
         $constraint = null;
         $orderings = array();
 
-        while($this->scanner->lookupNextToken() !== '') {
+        while ($this->scanner->lookupNextToken() !== '') {
 
-            switch(strtoupper($this->scanner->lookupNextToken())) {
+            switch (strtoupper($this->scanner->lookupNextToken())) {
                 case 'FROM':
                     $source = $this->parseSource();
                     break;
