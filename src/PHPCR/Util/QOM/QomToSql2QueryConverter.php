@@ -360,12 +360,10 @@ class QomToSql2QueryConverter
      */
     protected function convertFullTextSearchExpression($literal)
     {
-        if ($literal instanceof QOM\BindVariableValue)
-        {
+        if ($literal instanceof QOM\BindVariableValue) {
             return $this->convertBindVariable($literal);
         }
-        elseif ($literal instanceof QOM\Literal)
-        {
+        if ($literal instanceof QOM\Literal) {
             return $this->convertLiteral($literal);
         }
 
@@ -389,33 +387,28 @@ class QomToSql2QueryConverter
      */
     protected function convertDynamicOperand(QOM\DynamicOperandInterface $operand)
     {
-        if ($operand instanceof QOM\PropertyValueInterface)
-        {
+        if ($operand instanceof QOM\PropertyValueInterface) {
             return $this->convertPropertyValue($operand);
         }
-        elseif ($operand instanceof QOM\LengthInterface)
-        {
+        if ($operand instanceof QOM\LengthInterface) {
             return $this->generator->evalLength($this->convertPropertyValue($operand->getPropertyValue()));
         }
-        elseif ($operand instanceof QOM\NodeNameInterface)
-        {
+
+        if ($operand instanceof QOM\NodeNameInterface) {
             return $this->generator->evalNodeName($operand->getSelectorName());
         }
-        elseif ($operand instanceof QOM\NodeLocalNameInterface)
-        {
+
+        if ($operand instanceof QOM\NodeLocalNameInterface) {
             return $this->generator->evalNodeLocalName($operand->getSelectorName());
         }
-        elseif ($operand instanceof QOM\FullTextSearchScoreInterface)
-        {
+        if ($operand instanceof QOM\FullTextSearchScoreInterface) {
             return $this->generator->evalFullTextSearchScore($operand->getSelectorName());
         }
-        elseif ($operand instanceof QOM\LowerCaseInterface)
-        {
+        if ($operand instanceof QOM\LowerCaseInterface) {
             $operand = $this->convertDynamicOperand($operand->getOperand());
             return $this->generator->evalLower($operand);
         }
-        elseif ($operand instanceof QOM\UpperCaseInterface)
-        {
+        if ($operand instanceof QOM\UpperCaseInterface) {
             $operand = $this->convertDynamicOperand($operand->getOperand());
             return $this->generator->evalUpper($operand);
         }
