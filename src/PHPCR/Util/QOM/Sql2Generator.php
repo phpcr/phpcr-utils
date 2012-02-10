@@ -388,7 +388,13 @@ class Sql2Generator
      */
     public function evalPropertyValue($propertyName, $selectorName = null)
     {
+        if (false !== strpos($selectorName, ':')) {
+            $selectorName = "[$selectorName]";
+        }
         $sql2 = ! is_null($selectorName) ? $selectorName . '.' : '';
+        if (false !== strpos($propertyName, ':')) {
+            $propertyName = "[$propertyName]";
+        }
         $sql2 .= $propertyName;
         return $sql2;
     }
