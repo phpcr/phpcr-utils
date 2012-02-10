@@ -7,7 +7,9 @@ use PHPCR\Query\QOM\QueryObjectModelFactoryInterface,
     PHPCR\Query\QOM\ConstraintInterface,
     PHPCR\Query\QOM\SourceInterface,
     PHPCR\Query\QOM\JoinConditionInterface,
-    PHPCR\Query\QOM\QueryObjectModelConstantsInterface;
+    PHPCR\Query\QOM\QueryObjectModelConstantsInterface,
+    PHPCR\Query\QueryInterface,
+    PHPCR\Query\QOM\QueryObjectModelInterface;
 
 /**
  * QueryBuilder class is responsible for dynamically create QOM queries.
@@ -80,6 +82,33 @@ class QueryBuilder
     public function __construct(QueryObjectModelFactoryInterface $qomFactory)
     {
         $this->qomFactory = $qomFactory;
+    }
+
+    /**
+     * Get a query builder instance from an existing query
+     *
+     * @param  string $statement the statement in the specified language
+     * @param  string $language the query language
+     * @return QueryBuilder This QueryBuilder instance.
+     */
+    public function setFromQuery($statement, $language)
+    {
+        if (QueryInterface::JCR_SQL2 === $language) {
+            $converter = new Sql2ToQomQueryConverter($this->qomFactory);
+            $statement = $converter->parse($statement);
+        }
+
+        if (!$statement instanceof QueryObjectModelInterface) {
+            throw new \InvalidArgumentException("Language '$language' not supported");
+        }
+
+        $this->state = self::STATE_DIRTY;
+        $this->source = $statement->getSource();
+        $this->constraint = $statement->getConstraint();
+        $this->orderings = $statement->getOrderings();
+        $this->columns = $statement->getColumns();
+
+        return $this;
     }
 
     /**
