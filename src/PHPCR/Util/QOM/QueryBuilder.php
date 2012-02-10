@@ -287,7 +287,7 @@ class QueryBuilder
      * @param string $selectorName
      * @return QueryBuilder This QueryBuilder instance.
      */
-    public function select($propertyName, $columnName, $selectorName)
+    public function select($propertyName, $columnName = null, $selectorName = null)
     {
         $this->state = self::STATE_DIRTY;
         $this->columns = array($this->qomFactory->column($propertyName, $columnName, $selectorName));
@@ -302,7 +302,7 @@ class QueryBuilder
      * @param string $selectorName
      * @return QueryBuilder This QueryBuilder instance.
      */
-    public function addSelect($propertyName, $columnName, $selectorName)
+    public function addSelect($propertyName, $columnName = null, $selectorName = null)
     {
         $this->state = self::STATE_DIRTY;
         $this->columns[] = $this->qomFactory->column($propertyName, $columnName, $selectorName);
