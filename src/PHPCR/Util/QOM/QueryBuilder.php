@@ -279,6 +279,19 @@ class QueryBuilder
     }
 
     /**
+     * Sets the columns to be selected
+     *
+     * @param array The columns to be selected
+     * @return QueryBuilder This QueryBuilder instance.
+     */
+    public function setColumns(array $columns)
+    {
+        $this->columns = $columns;
+
+        return $this;
+    }
+
+    /**
      * Identifies a property in the specified or default selector to include in the tabular view of query results.
      * Replaces any previously specified columns to be selected if any.
      *
