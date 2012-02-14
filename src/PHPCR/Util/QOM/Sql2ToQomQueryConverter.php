@@ -7,7 +7,7 @@ use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants;
 
 /**
  * Parse SQL2 statements and output a corresponding QOM objects tree
- * 
+ *
  * TODO: finish implementation
  */
 class Sql2ToQomQueryConverter
@@ -22,6 +22,14 @@ class Sql2ToQomQueryConverter
      */
     protected $scanner;
 
+    /**
+     * @var string
+     */
+    protected $sql2;
+
+    /**
+     * @param \PHPCR\Query\QOM\QueryObjectModelFactoryInterface $factory
+     */
     public function __construct(QOM\QueryObjectModelFactoryInterface $factory)
     {
         $this->factory = $factory;
@@ -36,6 +44,7 @@ class Sql2ToQomQueryConverter
      */
     public function parse($sql2)
     {
+        $this->sql2 = $sql2;
         $this->scanner = new Sql2Scanner($sql2);
         $source = null;
         $columns = array();
@@ -43,7 +52,6 @@ class Sql2ToQomQueryConverter
         $orderings = array();
 
         while ($this->scanner->lookupNextToken() !== '') {
-
             switch (strtoupper($this->scanner->lookupNextToken())) {
                 case 'FROM':
                     $source = $this->parseSource();
@@ -70,7 +78,8 @@ class Sql2ToQomQueryConverter
             throw new \PHPCR\Query\InvalidQueryException('Invalid query, source could not be determined: '.$sql2);
         }
 
-        $query = $this->factory->createQuery($source, $constraint, $orderings, $columns);;
+        $query = $this->factory->createQuery($source, $constraint, $orderings, $columns);
+        ;
 
         return $query;
     }
@@ -121,7 +130,7 @@ class Sql2ToQomQueryConverter
 
     /**
      * 6.7.4. Name
-     * 
+     *
      * @return string
      */
     protected function parseName()
@@ -134,7 +143,7 @@ class Sql2ToQomQueryConverter
      * 6.7.5. Join
      * 6.7.6. Join type
      * Parse an SQL2 join source and return a QOM\Join
-     * 
+     *
      * @param string $leftSelector the left selector as it has been read by parseSource
      * return \PHPCR\Query\QOM\JoinInterface
      */
@@ -173,7 +182,7 @@ class Sql2ToQomQueryConverter
                 $joinType = Constants::JCR_JOIN_TYPE_RIGHT_OUTER;
                 break;
             default:
-                throw new \Exception('Syntax error: Expected JOIN, INNER JOIN, RIGHT JOIN or LEFT JOIN');
+                throw new \Exception("Syntax error: Expected JOIN, INNER JOIN, RIGHT JOIN or LEFT JOIN in '{$this->sql2}'");
         }
 
         return $joinType;
@@ -328,14 +337,14 @@ class Sql2ToQomQueryConverter
             }
 
             if ($constraint === null) {
-               // It's not a property existence neither, then it's a comparison
-               $constraint = $this->parseComparison();
+                // It's not a property existence neither, then it's a comparison
+                $constraint = $this->parseComparison();
             }
         }
 
         // No constraint read, 
         if ($constraint === null) {
-            throw new \Exception("Syntax error: constraint expected");
+            throw new \Exception("Syntax error: constraint expected in '{$this->sql2}'");
         }
 
         // Is it a composed contraint?
@@ -373,8 +382,8 @@ class Sql2ToQomQueryConverter
     {
         $op1 = $this->parseDynamicOperand();
 
-        if (is_null($op1)) {
-            throw new \Exception("Syntax error: dynamic operator expected");
+        if (null === $op1) {
+            throw new \Exception("Syntax error: dynamic operator expected in '{$this->sql2}'");
         }
 
         $operator = $this->parseOperator();
@@ -406,9 +415,9 @@ class Sql2ToQomQueryConverter
                 return Constants::JCR_OPERATOR_GREATER_THAN_OR_EQUAL_TO;
             case 'LIKE':
                 return Constants::JCR_OPERATOR_LIKE;
-            default:
-                throw new \Exception("Syntax error: operator expected");
         }
+
+        throw new \Exception("Syntax error: operator expected in '{$this->sql2}'");
     }
 
     /**
@@ -446,7 +455,7 @@ class Sql2ToQomQueryConverter
      */
     protected function parseFullTextSearch()
     {
-        throw new \Exception('Not implemented');
+        throw new \Exception("Not implemented in '{$this->sql2}'");
     }
 
     /**
@@ -549,18 +558,17 @@ class Sql2ToQomQueryConverter
      */
     protected function parseDynamicOperand()
     {
-
         $token = $this->scanner->lookupNextToken();
-        if ($this->scanner->tokenIs($token, 'LENGTH'))
-        {
+
+        if ($this->scanner->tokenIs($token, 'LENGTH')) {
             $this->scanner->fetchNextToken();
             $this->scanner->expectToken('(');
             $val = $this->parsePropertyValue();
             $this->scanner->expectToken(')');
             return $this->factory->length($val);
         }
-        elseif ($this->scanner->tokenIs($token, 'NAME'))
-        {
+
+        if ($this->scanner->tokenIs($token, 'NAME')) {
             $this->scanner->fetchNextToken();
             $this->scanner->expectToken('(');
 
@@ -572,8 +580,8 @@ class Sql2ToQomQueryConverter
             $this->scanner->expectToken(')');
             return $this->factory->nodeName($token);
         }
-        elseif ($this->scanner->tokenIs($token, 'LOCALNAME'))
-        {
+
+        if ($this->scanner->tokenIs($token, 'LOCALNAME')) {
             $this->scanner->fetchNextToken();
             $this->scanner->expectToken('(');
 
@@ -585,8 +593,8 @@ class Sql2ToQomQueryConverter
             $this->scanner->expectToken(')');
             return $this->factory->nodeLocalName($token);
         }
-        elseif ($this->scanner->tokenIs($token, 'SCORE'))
-        {
+
+        if ($this->scanner->tokenIs($token, 'SCORE')) {
             $this->scanner->fetchNextToken();
             $this->scanner->expectToken('(');
 
@@ -598,16 +606,16 @@ class Sql2ToQomQueryConverter
             $this->scanner->expectToken(')');
             return $this->factory->fullTextSearchScore($token);
         }
-        elseif ($this->scanner->tokenIs($token, 'LOWER'))
-        {
+
+        if ($this->scanner->tokenIs($token, 'LOWER')) {
             $this->scanner->fetchNextToken();
             $this->scanner->expectToken('(');
             $op = $this->parseDynamicOperand();
             $this->scanner->expectToken(')');
             return $this->factory->lowerCase($op);
         }
-        elseif ($this->scanner->tokenIs($token, 'UPPER'))
-        {
+
+        if ($this->scanner->tokenIs($token, 'UPPER')) {
             $this->scanner->fetchNextToken();
             $this->scanner->expectToken('(');
             $op = $this->parseDynamicOperand();
@@ -627,10 +635,17 @@ class Sql2ToQomQueryConverter
     protected function parsePropertyValue()
     {
         $token = $this->scanner->fetchNextToken();
+
+        if (substr($token, 0, 1) === '[' && substr($token, -1) === ']') {
+            // Remove brackets around the selector name
+            $token = substr($token, 1, -1);
+        }
+
         if ($this->scanner->lookupNextToken() === '.') {
             $this->scanner->fetchNextToken();
             return $this->factory->propertyValue($this->scanner->fetchNextToken(), $token);
         }
+
         return $this->factory->propertyValue($token);
     }
 
@@ -643,17 +658,30 @@ class Sql2ToQomQueryConverter
     protected function parseLiteral()
     {
         $token = $this->scanner->fetchNextToken();
+
+        $quoteString = false;
         if (substr($token, 0, 1) === '\'') {
-            if (substr($token, -1) !== '\'') {
-                throw new \Exception("Syntax error: unterminated single quoted string");
-            }
-            $token = substr($token, 1, strlen($token) - 2);
+            $quoteString = "'";
         } elseif (substr($token, 0, 1) === '"') {
-            if (substr($token, -1) !== '"') {
-                throw new \Exception("Syntax error: unterminated double quoted string");
-            }
-            $token = substr($token, 1, strlen($token) - 2);
+            $quoteString = '"';
         }
+
+        if ($quoteString) {
+            while (substr($token, -1) !== $quoteString) {
+                $nextToken = $this->scanner->fetchNextToken();
+                if ('' === $nextToken) {
+                    break;
+                }
+                $token .= $nextToken;
+            }
+
+            if (substr($token, -1) !== $quoteString) {
+                throw new \Exception("Syntax error: unterminated quoted string $token in '{$this->sql2}'");
+            }
+
+            $token = substr($token, 1, -1);
+        }
+
         return $this->factory->literal($token);
     }
 
@@ -664,7 +692,7 @@ class Sql2ToQomQueryConverter
     {
         $orderings = array();
         $continue = true;
-        while($continue) {
+        while ($continue) {
             $orderings[] = $this->parseOrdering();
             if ($this->scanner->tokenIs($this->scanner->lookupNextToken(), ',')) {
                 $this->scanner->expectToken(',');
@@ -694,7 +722,7 @@ class Sql2ToQomQueryConverter
             return $this->factory->ascending($operand);
         }
 
-        throw new \Exception("Syntax error: invalid ordering");
+        throw new \Exception("Syntax error: invalid ordering in '{$this->sql2}'");
     }
 
     /**
@@ -718,7 +746,6 @@ class Sql2ToQomQueryConverter
 
         // Column list
         while ($hasNext) {
-
             $columns[] = $this->parseColumn();
 
             // Are there more columns?
