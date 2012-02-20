@@ -74,10 +74,7 @@ EOF
 
         $propVisitor = null;
         if (ConsoleParametersParser::isTrueString($input->getOption('props'))) {
-            $propVisitor = new ConsoleDumperPropertyVisitor(
-                $output,
-                $dump_max_line_length
-            );
+            $propVisitor = new ConsoleDumperPropertyVisitor($output);
         }
 
         $walker = new TreeWalker($nodeVisitor, $propVisitor);
