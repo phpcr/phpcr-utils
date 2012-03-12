@@ -119,7 +119,7 @@ class Sql2ToQomQueryConverter
             $token = substr($token, 1, -1);
         }
 
-        if ($this->scanner->lookupNextToken() === 'AS') {
+        if (strtoupper($this->scanner->lookupNextToken()) === 'AS') {
             $this->scanner->fetchNextToken(); // Consume the AS
             $selectorName = $this->parseName();
             return $this->factory->selector($token, $selectorName);
@@ -342,7 +342,7 @@ class Sql2ToQomQueryConverter
             }
         }
 
-        // No constraint read, 
+        // No constraint read,
         if ($constraint === null) {
             throw new \Exception("Syntax error: constraint expected in '{$this->sql2}'");
         }
