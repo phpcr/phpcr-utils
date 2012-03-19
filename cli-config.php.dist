@@ -1,14 +1,10 @@
 <?php
 
-/* add your namespaces to class loader. for jackalope, do something like this */
-
+// adjust as needed
 $path_to_jackalope = __DIR__.'/../jackalope';
 
-// classLoader was created in the autoload that is included before this.
-$classLoader->registerNamespaces(array(
-    'Jackalope'   => "$path_to_jackalope/src",
-    'PHPCR'   => "$path_to_jackalope/lib/phpcr/src",
-));
+// $autoload was created in the autoload that is included before this.
+$autoload->add('Jackalope', "$path_to_jackalope/src");
 
 /* credentials you plan to use */
 $url = 'http://127.0.0.1:8080/server/';

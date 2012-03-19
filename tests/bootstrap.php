@@ -16,4 +16,11 @@ if (!class_exists('PHPUnit_Framework_MockObject_MockBuilder')) {
     die('PHPUnit MockObject plugin is required, at least 1.0.8 version');
 }
 
-require __DIR__.'/../bin/autoload.php';
+$vendorDir = __DIR__.'/../vendor';
+
+$file = $vendorDir.'/.composer/autoload.php';
+if (file_exists($file)) {
+    $autoload = require_once $file;
+} else {
+    throw new RuntimeException('Install dependencies to run test suite.');
+}
