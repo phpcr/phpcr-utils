@@ -249,6 +249,10 @@ class QomToSql2QueryConverter
                 $this->convertConstraint($constraint->getConstraint1()),
                 $this->convertConstraint($constraint->getConstraint2()));
         }
+        elseif ($constraint instanceof \Jackalope\Query\QOM\ParenthesisConstraint)
+        {
+            return $this->generator->evalParenthesis($this->convertConstraint($constraint->getConstraint()));
+        }
         elseif ($constraint instanceof QOM\NotInterface)
         {
             return $this->generator->evalNot($this->convertConstraint($constraint->getConstraint()));
