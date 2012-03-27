@@ -205,6 +205,16 @@ class Sql2Generator
     {
         return "NOT $constraint";
     }
+    
+     /**
+     * Parenthesis ::= '(' Constraint ')'
+     *
+     * @param string $constraint
+     */
+    public function evalParenthesis($constraint)
+    {
+        return "($constraint)";
+    }
 
     /**
      * SameNode ::= 'ISSAMENODE(' [selectorName ','] Path ')'

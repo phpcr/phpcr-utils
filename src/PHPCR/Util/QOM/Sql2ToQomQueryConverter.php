@@ -309,8 +309,7 @@ class Sql2ToQomQueryConverter
             $constraint = $this->parseNot();
         } elseif ($this->scanner->tokenIs($token, '(')) {
             // Grouping with parenthesis
-            $this->scanner->expectToken('(');
-            $constraint = $this->parseConstraint();
+            $constraint = $this->parseParenthesis();
             $this->scanner->expectToken(')');
         } elseif ($this->scanner->tokenIs($token, 'CONTAINS')) {
             // Full Text Search
@@ -372,6 +371,18 @@ class Sql2ToQomQueryConverter
         $this->scanner->expectToken('NOT');
         return $this->factory->notConstraint($this->parseConstraint());
     }
+    
+      /**
+     * 6.7.15 parenthesisConstraint
+     *
+     * @return \PHPCR\Query\QOM\ParenthesisInterface
+     */
+    protected function parseParenthesis()
+    {
+        $this->scanner->expectToken('(');
+        return $this->factory->parenthesisConstraint($this->parseConstraint());
+    }
+
 
     /**
      * 6.7.16 Comparison
