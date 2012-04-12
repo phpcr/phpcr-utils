@@ -310,7 +310,7 @@ class Sql1Generator
     public function evalFullTextSearch($selectorName, $searchExpression, $propertyName = null)
     {
         $sql1 = 'CONTAINS(';
-        $sql1 .= is_null($propertyName) ? $selectorName . '.*' : $selectorName . '.' . $propertyName;
+        $sql1 .= is_null($propertyName) ? '*' : $propertyName;
         $sql1 .= ', ' . $searchExpression . ')';
 
         return $sql1;

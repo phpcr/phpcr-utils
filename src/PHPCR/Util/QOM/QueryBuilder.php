@@ -487,7 +487,7 @@ class QueryBuilder
             return $this->query;
         }
         $this->state = self::STATE_CLEAN;
-        $this->query = $this->qomFactory->createQuery($this->source, $this->constraint, $this->orderings, $this->columns);
+        $this->query = $this->qomFactory->createQuery($this->source, $this->constraint, $this->orderings, $this->columns, $this->isSimpleQuery());
 
         if ($this->firstResult) {
             $this->query->setOffset($this->firstResult);
