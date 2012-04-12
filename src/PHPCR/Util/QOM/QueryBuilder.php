@@ -6,6 +6,7 @@ use PHPCR\Query\QOM\QueryObjectModelFactoryInterface,
     PHPCR\Query\QOM\DynamicOperandInterface,
     PHPCR\Query\QOM\ConstraintInterface,
     PHPCR\Query\QOM\SourceInterface,
+    PHPCR\Query\QOM\IsSimpleQueryInterface,
     PHPCR\Query\QOM\JoinConditionInterface,
     PHPCR\Query\QOM\QueryObjectModelConstantsInterface,
     PHPCR\Query\QueryInterface,
@@ -73,6 +74,9 @@ class QueryBuilder
      * @var array The query parameters.
      */
     private $params = array();
+    
+    
+    private $isSimpleQuery = true;
 
     /**
      * Initializes a new QueryBuilder
@@ -230,7 +234,8 @@ class QueryBuilder
     {
         $this->state = self::STATE_DIRTY;
         $this->constraint = $constraint;
-        return $this;
+        $this->checkSimpleQuery($constraint);
+       return $this;
     }
 
     /**
@@ -267,7 +272,30 @@ class QueryBuilder
         } else {
             $this->constraint = $constraint;
         }
+        $this->checkSimpleQuery($constraint);
         return $this;
+    }
+    
+    public function checkSimpleQuery($constraint) {
+        
+        if ($constraint instanceof IsSimpleQueryInterface) {
+            if (!$constraint->isSimpleQuery()) {
+                $this->setSimpleQuery(false);
+            } 
+        } else {
+            $this->setSimpleQuery(false);
+        }
+        
+    }
+          
+    function setSimpleQuery($simple)
+    {
+        $this->isSimpleQuery = $simple;
+    }
+    
+     public function isSimpleQuery()
+    {
+        return $this->isSimpleQuery;
     }
 
     /**
@@ -294,6 +322,7 @@ class QueryBuilder
         } else {
             $this->constraint = $constraint;
         }
+        $this->checkSimpleQuery($constraint);
         return $this;
     }
 
@@ -441,6 +470,7 @@ class QueryBuilder
         if (!$this->source) {
             throw new \RuntimeException('Cannot perform a join without a previous call to from');
         }
+        $this->setSimpleQuery(false);
         $this->state = self::STATE_DIRTY;
         $this->source = $this->qomFactory->join($this->source, $rightSource, $joinType, $joinCondition);
         return $this;
