@@ -210,10 +210,10 @@ class QueryBuilder
     public function orderBy(DynamicOperandInterface $sort, $order = null)
     {
         $this->state = self::STATE_DIRTY;
-        if ($order == 'ASC' ) {
-            $ordering = $this->qomFactory->ascending($sort);
-        } else {
+        if ($order == 'DESC' ) {
             $ordering = $this->qomFactory->descending($sort);
+        } else {
+            $ordering = $this->qomFactory->ascending($sort);
         }
         $this->orderings = array($ordering);
         return $this;
