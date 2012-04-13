@@ -137,7 +137,7 @@ class Sql1Generator
 
     public function evalPropertyExistence($selectorName, $propertyName)
     {
-        return "$selectorName.$propertyName IS NOT NULL";
+        return "$propertyName IS NOT NULL";
     }
 
     /**
