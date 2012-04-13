@@ -88,7 +88,7 @@ class QomToSql1QueryConverter
      * SameNode ::= 'ISSAMENODE(' [selectorName ','] Path ')'
      *        // If only one selector exists in this query, explicit
      *           specification of the selectorName is optional
-     * 
+     *
      * ChildNode ::= 'ISCHILDNODE(' [selectorName ','] Path ')'
      *        // If only one selector exists in this query, explicit
      *           specification of the selectorName is optional
@@ -97,7 +97,7 @@ class QomToSql1QueryConverter
      *        // If only one selector exists in this query, explicit
      *           specification of the selectorName is optional
      *
-     * @param \PHPCR\Query\QOM\ConstraintInterface $constraint 
+     * @param \PHPCR\Query\QOM\ConstraintInterface $constraint
      * @return string
      */
     protected function convertConstraint(QOM\ConstraintInterface $constraint)
@@ -161,7 +161,7 @@ class QomToSql1QueryConverter
      * GreaterThanOrEqualTo ::= '>='
      * Like ::= 'LIKE'
      *
-     * @param \PHPCR\Query\QOM\ComparisonInterface $comparison 
+     * @param \PHPCR\Query\QOM\ComparisonInterface $comparison
      * @return string
      */
     protected function convertComparison(QOM\ComparisonInterface $comparison)
@@ -183,7 +183,7 @@ class QomToSql1QueryConverter
      *   Note: The negation, 'NOT x IS NOT NULL'
      *      can be written 'x IS NULL'
      *
-     * @param \PHPCR\Query\QOM\PropertyExistenceInterface $constraint 
+     * @param \PHPCR\Query\QOM\PropertyExistenceInterface $constraint
      * @return string
      */
     protected function convertPropertyExistence(QOM\PropertyExistenceInterface $constraint)
@@ -200,9 +200,9 @@ class QomToSql1QueryConverter
      *                    FullTextSearchExpression ')'
      *                      // If only one selector exists in this query,
      *                         explicit specification of the selectorName
-     *                         preceding the propertyName is optional 
+     *                         preceding the propertyName is optional
      *
-     * @param \PHPCR\Query\QOM\FullTextSearchInterface $constraint 
+     * @param \PHPCR\Query\QOM\FullTextSearchInterface $constraint
      * @return string
      */
     protected function convertFullTextSearch(QOM\FullTextSearchInterface $constraint)
@@ -279,7 +279,7 @@ class QomToSql1QueryConverter
     /**
      * PropertyValue ::= [selectorName'.'] propertyName     // If only one selector exists
      *
-     * @param \PHPCR\Query\QOM\PropertyValueInterface $value 
+     * @param \PHPCR\Query\QOM\PropertyValueInterface $value
      * @return string
      */
     protected function convertPropertyValue(QOM\PropertyValueInterface $operand)
@@ -291,7 +291,7 @@ class QomToSql1QueryConverter
 
     /**
      * StaticOperand ::= Literal | BindVariableValue
-     * 
+     *
      * Literal ::= CastLiteral | UncastLiteral
      * CastLiteral ::= 'CAST(' UncastLiteral ' AS ' PropertyType ')'
      *
@@ -304,7 +304,7 @@ class QomToSql1QueryConverter
      * BindVariableValue ::= '$'bindVariableName
      * bindVariableName ::= Prefix
      *
-     * @param \PHPCR\Query\QOM\StaticOperandInterface $operand 
+     * @param \PHPCR\Query\QOM\StaticOperandInterface $operand
      * @return string
      */
     protected function convertStaticOperand(QOM\StaticOperandInterface $operand)
@@ -329,12 +329,12 @@ class QomToSql1QueryConverter
      * Ascending ::= 'ASC'
      * Descending ::= 'DESC'
      *
-     * @param array $orderings 
+     * @param array $orderings
      * @return string
      */
     protected function convertOrderings(array $orderings)
     {
-        $list = array(); 
+        $list = array();
         foreach ($orderings as $ordering) {
 
             $order = $this->generator->evalOrder($ordering->getOrder());
@@ -353,8 +353,8 @@ class QomToSql1QueryConverter
      * selectorName ::= Name
      * propertyName ::= Name
      * columnName ::= Name
-     * 
-     * @param array $columns 
+     *
+     * @param array $columns
      * @return string
      */
     protected function convertColumns(array $columns)

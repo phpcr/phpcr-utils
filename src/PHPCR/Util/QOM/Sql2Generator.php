@@ -21,7 +21,7 @@ class Sql2Generator
      * @param string $source
      * @param string $columns
      * @param string $constraint
-     * @param string $ordering 
+     * @param string $ordering
      * @return string
      */
     public function evalQuery($source, $columns, $constraint = '', $orderings = '')
@@ -42,10 +42,10 @@ class Sql2Generator
     /**
      * Selector ::= nodeTypeName ['AS' selectorName]
      * nodeTypeName ::= Name
-     * 
+     *
      * @param string $nodeTypeName The node type of the selector. If it does not contain starting and ending brackets ([]) they will be added automatically
      * @param string $selectorName
-     * @return string 
+     * @return string
      */
     public function evalSelector($nodeTypeName, $selectorName = null)
     {
@@ -67,12 +67,12 @@ class Sql2Generator
      *    // If JoinType is omitted INNER is assumed.
      * left ::= Source
      * right ::= Source
-     * 
+     *
      * @param string $left
      * @param string $right
      * @param string $joinCondition
      * @param string $joinType
-     * @return string 
+     * @return string
      */
     public function evalJoin($left, $right, $joinCondition, $joinType = '')
     {
@@ -84,9 +84,9 @@ class Sql2Generator
      * Inner ::= 'INNER'
      * LeftOuter ::= 'LEFT OUTER'
      * RightOuter ::= 'RIGHT OUTER'
-     * 
+     *
      * @param string $joinType
-     * @return string 
+     * @return string
      */
     public function evalJoinType($joinType)
     {
@@ -176,7 +176,7 @@ class Sql2Generator
 
     /**
      * And ::= constraint1 'AND' constraint2
-     * 
+     *
      * @param string $constraint1
      * @param string $constraint2
      */
@@ -210,7 +210,7 @@ class Sql2Generator
      * SameNode ::= 'ISSAMENODE(' [selectorName ','] Path ')'
      *
      * @param string $path
-     * @param string $selectorName 
+     * @param string $selectorName
      */
     public function evalSameNode($path, $selectorName = null)
     {
@@ -225,7 +225,7 @@ class Sql2Generator
      * SameNode ::= 'ISCHILDNODE(' [selectorName ','] Path ')'
      *
      * @param string $path
-     * @param string $selectorName 
+     * @param string $selectorName
      */
     public function evalChildNode($path, $selectorName = null)
     {
@@ -240,7 +240,7 @@ class Sql2Generator
      * SameNode ::= 'ISDESCENDANTNODE(' [selectorName ','] Path ')'
      *
      * @param string $path
-     * @param string $selectorName 
+     * @param string $selectorName
      */
     public function evalDescendantNode($path, $selectorName = null)
     {
@@ -256,7 +256,7 @@ class Sql2Generator
      *
      * @param string $operand1
      * @param string $operator
-     * @param string $operand2 
+     * @param string $operand2
      */
     public function evalComparison($operand1, $operator, $operand2)
     {
@@ -268,7 +268,7 @@ class Sql2Generator
      *        LessThanOrEqualTo | GreaterThan |
      *        GreaterThanOrEqualTo | Like
      *
-     * @param string $operator 
+     * @param string $operator
      */
     public function evalOperator($operator)
     {
@@ -305,7 +305,7 @@ class Sql2Generator
      *                    FullTextSearchExpression ')'
      * FullTextSearchExpression ::= BindVariable | ''' FullTextSearchLiteral '''
      *
-     * @param \PHPCR\Query\QOM\FullTextSearchInterface $constraint 
+     * @param \PHPCR\Query\QOM\FullTextSearchInterface $constraint
      * @return string
      */
     public function evalFullTextSearch($selectorName, $searchExpression, $propertyName = null)
@@ -321,7 +321,7 @@ class Sql2Generator
      * Length ::= 'LENGTH(' PropertyValue ')'
      *
      * @param string $propertyValue
-     * @return string 
+     * @return string
      */
     public function evalLength($propertyValue)
     {
@@ -331,33 +331,33 @@ class Sql2Generator
     /**
      * NodeName ::= 'NAME(' [selectorName] ')'
      *
-     * @param string $selectorValue 
+     * @param string $selectorValue
      */
     public function evalNodeName($selectorValue = null)
     {
-        $selectorValue = is_null($selectorValue) ? '' : $selectorValue; 
+        $selectorValue = is_null($selectorValue) ? '' : $selectorValue;
         return "NAME($selectorValue)";
     }
 
     /**
      * NodeLocalName ::= 'LOCALNAME(' [selectorName] ')'
      *
-     * @param string $selectorValue 
+     * @param string $selectorValue
      */
     public function evalNodeLocalName($selectorValue = null)
     {
-        $selectorValue = is_null($selectorValue) ? '' : $selectorValue; 
+        $selectorValue = is_null($selectorValue) ? '' : $selectorValue;
         return "LOCALNAME($selectorValue)";
     }
 
     /**
      * FullTextSearchScore ::= 'SCORE(' [selectorName] ')'
      *
-     * @param string $selectorValue 
+     * @param string $selectorValue
      */
     public function evalFullTextSearchScore($selectorValue = null)
     {
-        $selectorValue = is_null($selectorValue) ? '' : $selectorValue; 
+        $selectorValue = is_null($selectorValue) ? '' : $selectorValue;
         return "SCORE($selectorValue)";
     }
 
@@ -385,7 +385,7 @@ class Sql2Generator
      * PropertyValue ::= [selectorName'.'] propertyName     // If only one selector exists
      *
      * @param string $propertyName
-     * @param string $selectorName 
+     * @param string $selectorName
      */
     public function evalPropertyValue($propertyName, $selectorName = null)
     {

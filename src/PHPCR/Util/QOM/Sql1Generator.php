@@ -21,7 +21,7 @@ class Sql1Generator
      * @param string $source
      * @param string $columns
      * @param string $constraint
-     * @param string $ordering 
+     * @param string $ordering
      * @return string
      */
     public function evalQuery($source, $columns, $constraint = '', $orderings = '')
@@ -42,10 +42,10 @@ class Sql1Generator
     /**
      * Selector ::= nodeTypeName ['AS' selectorName]
      * nodeTypeName ::= Name
-     * 
+     *
      * @param string $nodeTypeName The node type of the selector. If it does not contain starting and ending brackets ([]) they will be added automatically
      * @param string $selectorName
-     * @return string 
+     * @return string
      */
     public function evalSelector($nodeTypeName, $selectorName = null)
     {
@@ -111,7 +111,7 @@ class Sql1Generator
      *        LessThanOrEqualTo | GreaterThan |
      *        GreaterThanOrEqualTo | Like
      *
-     * @param string $operator 
+     * @param string $operator
      */
     public function evalOperator($operator)
     {
@@ -147,7 +147,7 @@ class Sql1Generator
      *                    FullTextSearchExpression ')'
      * FullTextSearchExpression ::= BindVariable | ''' FullTextSearchLiteral '''
      *
-     * @param \PHPCR\Query\QOM\FullTextSearchInterface $constraint 
+     * @param \PHPCR\Query\QOM\FullTextSearchInterface $constraint
      * @return string
      */
     public function evalFullTextSearch($selectorName, $searchExpression, $propertyName = null)
@@ -163,7 +163,7 @@ class Sql1Generator
      * Length ::= 'LENGTH(' PropertyValue ')'
      *
      * @param string $propertyValue
-     * @return string 
+     * @return string
      */
     public function evalLength($propertyValue)
     {
@@ -173,33 +173,33 @@ class Sql1Generator
     /**
      * NodeName ::= 'NAME(' [selectorName] ')'
      *
-     * @param string $selectorValue 
+     * @param string $selectorValue
      */
     public function evalNodeName($selectorValue = null)
     {
-        $selectorValue = is_null($selectorValue) ? '' : $selectorValue; 
+        $selectorValue = is_null($selectorValue) ? '' : $selectorValue;
         return "NAME($selectorValue)";
     }
 
     /**
      * NodeLocalName ::= 'LOCALNAME(' [selectorName] ')'
      *
-     * @param string $selectorValue 
+     * @param string $selectorValue
      */
     public function evalNodeLocalName($selectorValue = null)
     {
-        $selectorValue = is_null($selectorValue) ? '' : $selectorValue; 
+        $selectorValue = is_null($selectorValue) ? '' : $selectorValue;
         return "LOCALNAME($selectorValue)";
     }
 
     /**
      * FullTextSearchScore ::= 'SCORE(' [selectorName] ')'
      *
-     * @param string $selectorValue 
+     * @param string $selectorValue
      */
     public function evalFullTextSearchScore($selectorValue = null)
     {
-        $selectorValue = is_null($selectorValue) ? '' : $selectorValue; 
+        $selectorValue = is_null($selectorValue) ? '' : $selectorValue;
         return "SCORE($selectorValue)";
     }
 
@@ -227,7 +227,7 @@ class Sql1Generator
      * PropertyValue ::= [selectorName'.'] propertyName     // If only one selector exists
      *
      * @param string $propertyName
-     * @param string $selectorName 
+     * @param string $selectorName
      */
     public function evalPropertyValue($propertyName, $selectorName = null)
     {
