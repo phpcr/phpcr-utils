@@ -63,120 +63,8 @@ class Sql1Generator
     }
 
     /**
-     * Join ::= left [JoinType] 'JOIN' right 'ON' JoinCondition
-     *    // If JoinType is omitted INNER is assumed.
-     * left ::= Source
-     * right ::= Source
-     * 
-     * @param string $left
-     * @param string $right
-     * @param string $joinCondition
-     * @param string $joinType
-     * @return string 
-     */
-    public function evalJoin($left, $right, $joinCondition, $joinType = '')
-    {
-        return "$left {$joinType}JOIN $right ON $joinCondition";
-    }
-
-    /**
-     * JoinType ::= Inner | LeftOuter | RightOuter
-     * Inner ::= 'INNER'
-     * LeftOuter ::= 'LEFT OUTER'
-     * RightOuter ::= 'RIGHT OUTER'
-     * 
-     * @param string $joinType
-     * @return string 
-     */
-    public function evalJoinType($joinType)
-    {
-        switch ($joinType) {
-            case Constants::JCR_JOIN_TYPE_INNER:
-                return 'INNER ';
-            case Constants::JCR_JOIN_TYPE_LEFT_OUTER:
-                return 'LEFT OUTER ';
-            case Constants::JCR_JOIN_TYPE_RIGHT_OUTER:
-                return 'RIGHT OUTER ';
-        }
-
-        return '';
-    }
-
-    /**
-     * EquiJoinCondition ::= selector1Name'.'property1Name '='
-     *                       selector2Name'.'property2Name
-     *   selector1Name ::= selectorName
-     *   selector2Name ::= selectorName
-     *   property1Name ::= propertyName
-     *   property2Name ::= propertyName
-     *
-     * @param string $sel1Name
-     * @param string $prop1Name
-     * @param string $sel2Name
-     * @param string $prop2Name
-     * @return string
-     */
-    public function evalEquiJoinCondition($sel1Name, $prop1Name, $sel2Name, $prop2Name)
-    {
-        return $sel1Name . '.' . $prop1Name . '=' . $sel2Name . '.' . $prop2Name;
-    }
-
-    /**
-     * SameNodeJoinCondition ::=
-     *   'ISSAMENODE(' selector1Name ','
-     *                  selector2Name
-     *                  [',' selector2Path] ')'
-     *   selector2Path ::= Path
-     *
-     * @param string $sel1Name
-     * @param string $sel2Name
-     * @param string $sel2path
-     * @return string
-     */
-    public function evalSameNodeJoinCondition($sel1Name, $sel2Name, $sel2Path = null)
-    {
-        $sql1 = "ISSAMENODE($sel1Name, $sel2Name";
-        $sql1 .= ! is_null($sel2Path) ? ', ' . $sel2Path : '';
-        $sql1 .= ')';
-
-        return $sql1;
-    }
-
-    /**
-     * ChildNodeJoinCondition ::=
-     *   'ISCHILDNODE(' childSelectorName ','
-     *                  parentSelectorName ')'
-     *   childSelectorName ::= selectorName
-     *   parentSelectorName ::= selectorName
-     *
-     * @param string $childSelectorName
-     * @param string $parentSelectorName
-     * @return string
-     */
-    public function evalChildNodeJoinCondition($childSelectorName, $parentSelectorName)
-    {
-        return "ISCHILDNODE($childSelectorName, $parentSelectorName)";
-    }
-
-    /**
-     * DescendantNodeJoinCondition ::=
-     *   'ISDESCENDANTNODE(' descendantSelectorName ','
-     *                       ancestorSelectorName ')'
-     *   descendantSelectorName ::= selectorName
-     *   ancestorSelectorName ::= selectorName
-     *
-     * @param string $descendantSelectorName
-     * @param string $ancestorselectorName
-     * @return string
-     */
-    public function evalDescendantNodeJoinCondition($descendantSelectorName, $ancestorselectorName)
-    {
-        return "ISDESCENDANTNODE($descendantSelectorName, $ancestorselectorName)";
-    }
-
-    /**
      * And ::= constraint1 'AND' constraint2
-     * 
+     *
      * @param string $constraint1
      * @param string $constraint2
      */
@@ -207,56 +95,11 @@ class Sql1Generator
     }
 
     /**
-     * SameNode ::= 'ISSAMENODE(' [selectorName ','] Path ')'
-     *
-     * @param string $path
-     * @param string $selectorName 
-     */
-    public function evalSameNode($path, $selectorName = null)
-    {
-        $sql1 = 'ISSAMENODE(';
-        $sql1 .= is_null($selectorName) ? $path : $selectorName . ', ' . $path;
-        $sql1 .= ')';
-
-        return $sql1;
-    }
-
-    /**
-     * SameNode ::= 'ISCHILDNODE(' [selectorName ','] Path ')'
-     *
-     * @param string $path
-     * @param string $selectorName 
-     */
-    public function evalChildNode($path, $selectorName = null)
-    {
-        $sql1 = 'ISCHILDNODE(';
-        $sql1 .= is_null($selectorName) ? $path : $selectorName . ', ' . $path;
-        $sql1 .= ')';
-
-        return $sql1;
-    }
-
-    /**
-     * SameNode ::= 'ISDESCENDANTNODE(' [selectorName ','] Path ')'
-     *
-     * @param string $path
-     * @param string $selectorName 
-     */
-    public function evalDescendantNode($path, $selectorName = null)
-    {
-        $sql1 = 'ISDESCENDANTNODE(';
-        $sql1 .= is_null($selectorName) ? $path : $selectorName . ', ' . $path;
-        $sql1 .= ')';
-
-        return $sql1;
-    }
-
-    /**
      * Comparison ::= DynamicOperand Operator StaticOperand
      *
      * @param string $operand1
      * @param string $operator
-     * @param string $operand2 
+     * @param string $operand2
      */
     public function evalComparison($operand1, $operator, $operand2)
     {
