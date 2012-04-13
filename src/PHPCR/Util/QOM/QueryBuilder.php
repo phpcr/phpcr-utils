@@ -73,7 +73,7 @@ class QueryBuilder
      * @var array The query parameters.
      */
     private $params = array();
-    
+
     /**
      * Initializes a new QueryBuilder
      *
@@ -230,7 +230,7 @@ class QueryBuilder
     {
         $this->state = self::STATE_DIRTY;
         $this->constraint = $constraint;
-       return $this;
+        return $this;
     }
 
     /**
@@ -269,7 +269,7 @@ class QueryBuilder
         }
         return $this;
     }
-    
+
     /**
      * Creates a new constraint formed by applying a logical OR to the
      * existing constraint and the new one
