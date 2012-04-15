@@ -6,7 +6,7 @@ php:
 
 before_script:
   - wget -nc http://getcomposer.org/composer.phar
-  - php composer.phar install --require-dev
+  - php composer.phar install --dev
 
 script: phpunit -c tests/phpunit.xml.dist
 
