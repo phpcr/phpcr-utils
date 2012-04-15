@@ -124,11 +124,13 @@ class QomToSql1QueryConverter
         }
         elseif ($constraint instanceof QOM\ChildNodeInterface)
         {
-            throw new NotSupportedConstraintException($constraint);
+            return $this->generator->evalChildNode(
+                $this->convertPath($constraint->getParentPath()));
         }
         elseif ($constraint instanceof QOM\DescendantNodeInterface)
         {
-            throw new NotSupportedConstraintException($constraint);
+            return $this->generator->evalDescendantNode(
+                $this->convertPath($constraint->getAncestorPath()));
         }
 
         // This should not happen, but who knows...

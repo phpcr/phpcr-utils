@@ -83,6 +83,42 @@ class Sql1Generator
         return "NOT $constraint";
     }
 
+    
+    protected function getPathForDescendantQuery($path) {
+        $path = trim($path,"/");
+        $sql1 = "/" . str_replace("/","[%]/",$path) ;
+        $sql1 .= "[%]/%";
+        return $sql1;
+    }
+        
+    
+    /**
+     * SameNode ::= 'jcr:path like Path/% and not jcr:path like Path/%/%' 
+     *
+     * @param string $path
+     * @param string $selectorName
+     */
+    public function evalChildNode($path, $selectorName = null)
+    {
+        $path = $this->getPathForDescendantQuery($path);
+        $sql1 = "jcr:path LIKE '" . $path ."'";
+        $sql1 .= " AND NOT jcr:path LIKE '" . $path . "/%'";
+        return $sql1;    
+    }
+   
+    /**
+     * SameNode ::= 'jcr:path like Path/%'
+     *
+     * @param string $path
+     * @param string $selectorName
+     */
+    public function evalDescendantNode($path)
+    {
+        $path = $this->getPathForDescendantQuery($path);
+        $sql1 = "jcr:path LIKE '" . $path . "'";
+        return $sql1;
+    }
+
     /**
      * Comparison ::= DynamicOperand Operator StaticOperand
      *
@@ -270,8 +306,7 @@ class Sql1Generator
     }
 
     /**
-     * Path ::= '[' quotedPath ']' | '[' simplePath ']' | simplePath
-     * quotedPath ::= A JCR Path that contains non-SQL-legal characters
+     * Path ::= simplePath
      * simplePath ::= A JCR Name that contains only SQL-legal characters
      *
      * @param string $path
@@ -279,14 +314,7 @@ class Sql1Generator
      */
     public function evalPath($path)
     {
-        if ($path) {
-            $sql1 = $path;
-            if (substr($path, 0,1) !== '[' && substr($path, -1) !== ']') {
-                $sql1 = '[' . $sql1 . ']';
-            }
-            return $sql1;
-        }
-        return null;
+        return $path;
     }
 
     public function evalBindVariable($var)
