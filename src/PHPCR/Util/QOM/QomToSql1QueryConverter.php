@@ -65,7 +65,7 @@ class QomToSql1QueryConverter
     }
 
     /**
-     * Selector ::= nodeTypeName ['AS' selectorName]
+     * Selector ::= nodeTypeName
      * nodeTypeName ::= Name
      *
      * @param \PHPCR\Query\QOM\SelectorInterface $selector
@@ -73,7 +73,7 @@ class QomToSql1QueryConverter
      */
     protected function convertSelector(QOM\SelectorInterface $selector)
     {
-        return $this->generator->evalSelector($selector->getNodeTypeName(), $selector->getSelectorName());
+        return $this->generator->evalSelector($selector->getNodeTypeName());
     }
 
     /**
@@ -84,18 +84,6 @@ class QomToSql1QueryConverter
      * And ::= constraint1 'AND' constraint2
      * Or ::= constraint1 'OR' constraint2
      * Not ::= 'NOT' Constraint
-     *
-     * SameNode ::= 'ISSAMENODE(' [selectorName ','] Path ')'
-     *        // If only one selector exists in this query, explicit
-     *           specification of the selectorName is optional
-     *
-     * ChildNode ::= 'ISCHILDNODE(' [selectorName ','] Path ')'
-     *        // If only one selector exists in this query, explicit
-     *           specification of the selectorName is optional
-     *
-     * DescendantNode ::= 'ISDESCENDANTNODE(' [selectorName ','] Path ')'
-     *        // If only one selector exists in this query, explicit
-     *           specification of the selectorName is optional
      *
      * @param \PHPCR\Query\QOM\ConstraintInterface $constraint
      * @return string
@@ -175,10 +163,7 @@ class QomToSql1QueryConverter
 
     /**
      * PropertyExistence ::=
-     *   selectorName'.'propertyName 'IS NOT NULL' |
-     *   propertyName 'IS NOT NULL'    If only one
-     *                                 selector exists in
-     *                                 this query
+     *   propertyName 'IS NOT NULL'
      *
      *   Note: The negation, 'NOT x IS NOT NULL'
      *      can be written 'x IS NULL'
@@ -189,14 +174,13 @@ class QomToSql1QueryConverter
     protected function convertPropertyExistence(QOM\PropertyExistenceInterface $constraint)
     {
         return $this->generator->evalPropertyExistence(
-            $constraint->getSelectorName(),
             $constraint->getPropertyName());
     }
 
     /**
      * FullTextSearch ::=
-     *       'CONTAINS(' ([selectorName'.']propertyName |
-     *                    selectorName'.*') ','
+     *       'CONTAINS(' (propertyName |
+     *                    '*') ','
      *                    FullTextSearchExpression ')'
      *                      // If only one selector exists in this query,
      *                         explicit specification of the selectorName
@@ -208,7 +192,7 @@ class QomToSql1QueryConverter
     protected function convertFullTextSearch(QOM\FullTextSearchInterface $constraint)
     {
         $searchExpression = $this->convertFullTextSearchExpression($constraint->getFullTextSearchExpression());
-        return $this->generator->evalFullTextSearch($constraint->getSelectorName(), $searchExpression, $constraint->getPropertyName());
+        return $this->generator->evalFullTextSearch($searchExpression, $constraint->getPropertyName());
     }
 
     /**
@@ -235,9 +219,9 @@ class QomToSql1QueryConverter
      *              LowerCase | UpperCase
      *
      * Length ::= 'LENGTH(' PropertyValue ')'
-     * NodeName ::= 'NAME(' [selectorName] ')'              // If only one selector exists
-     * NodeLocalName ::= 'LOCALNAME(' [selectorName] ')'    // If only one selector exists
-     * FullTextSearchScore ::= 'SCORE(' [selectorName] ')'  // If only one selector exists
+     * NodeName ::= 'NAME()'              // If only one selector exists
+     * NodeLocalName ::= 'LOCALNAME()'    // If only one selector exists
+     * FullTextSearchScore ::= 'SCORE()'  // If only one selector exists
      * LowerCase ::= 'LOWER(' DynamicOperand ')'
      * UpperCase ::= 'UPPER(' DynamicOperand ')'
      *
@@ -254,14 +238,14 @@ class QomToSql1QueryConverter
         }
 
         if ($operand instanceof QOM\NodeNameInterface) {
-            return $this->generator->evalNodeName($operand->getSelectorName());
+            return $this->generator->evalNodeName();
         }
 
         if ($operand instanceof QOM\NodeLocalNameInterface) {
-            return $this->generator->evalNodeLocalName($operand->getSelectorName());
+            return $this->generator->evalNodeLocalName();
         }
         if ($operand instanceof QOM\FullTextSearchScoreInterface) {
-            return $this->generator->evalFullTextSearchScore($operand->getSelectorName());
+            return $this->generator->evalFullTextSearchScore();
         }
         if ($operand instanceof QOM\LowerCaseInterface) {
             $operand = $this->convertDynamicOperand($operand->getOperand());
@@ -277,7 +261,7 @@ class QomToSql1QueryConverter
     }
 
     /**
-     * PropertyValue ::= [selectorName'.'] propertyName     // If only one selector exists
+     * PropertyValue ::=  propertyName     // If only one selector exists
      *
      * @param \PHPCR\Query\QOM\PropertyValueInterface $value
      * @return string
@@ -285,8 +269,8 @@ class QomToSql1QueryConverter
     protected function convertPropertyValue(QOM\PropertyValueInterface $operand)
     {
         return $this->generator->evalPropertyValue(
-            $operand->getPropertyName(),
-            $operand->getSelectorName());
+            $operand->getPropertyName()
+            );
     }
 
     /**
@@ -347,9 +331,7 @@ class QomToSql1QueryConverter
 
     /**
      * columns ::= (Column ',' {Column}) | '*'
-     * Column ::= ([selectorName'.']propertyName
-     *             ['AS' columnName]) |
-     *            (selectorName'.*')    // If only one selector exists
+     * Column ::= (propertyName | '*')
      * selectorName ::= Name
      * propertyName ::= Name
      * columnName ::= Name
@@ -361,10 +343,8 @@ class QomToSql1QueryConverter
     {
         $list = array();
         foreach ($columns as $column) {
-            $selector = $column->getSelectorName();
             $property = $column->getPropertyName();
-            $colname = $column->getColumnName();
-            $list[] = $this->generator->evalColumn($selector, $property, $colname);
+            $list[] = $this->generator->evalColumn($property);
         }
         return $this->generator->evalColumns($list);
     }

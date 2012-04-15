@@ -40,26 +40,15 @@ class Sql1Generator
     }
 
     /**
-     * Selector ::= nodeTypeName ['AS' selectorName]
+     * Selector ::= nodeTypeName
      * nodeTypeName ::= Name
      *
      * @param string $nodeTypeName The node type of the selector. If it does not contain starting and ending brackets ([]) they will be added automatically
-     * @param string $selectorName
      * @return string
      */
-    public function evalSelector($nodeTypeName, $selectorName = null)
+    public function evalSelector($nodeTypeName)
     {
-        $sql1 = $nodeTypeName;
-        if (substr($sql1, 0, 1) !== '[' && substr($sql1, -1) !== ']') {
-            $sql1 =  $sql1;
-        }
-
-        $name = $selectorName;
-        if (! is_null($name)) {
-            $sql1 .= ' AS ' . $name;
-        }
-
-        return $sql1;
+        return $nodeTypeName;
     }
 
     /**
@@ -135,22 +124,21 @@ class Sql1Generator
         return '';
     }
 
-    public function evalPropertyExistence($selectorName, $propertyName)
+    public function evalPropertyExistence($propertyName)
     {
         return "$propertyName IS NOT NULL";
     }
 
     /**
      * FullTextSearch ::=
-     *       'CONTAINS(' ([selectorName'.']propertyName |
-     *                    selectorName'.*') ','
+     *       'CONTAINS(' (propertyName | '*') ') ','
      *                    FullTextSearchExpression ')'
      * FullTextSearchExpression ::= BindVariable | ''' FullTextSearchLiteral '''
      *
      * @param \PHPCR\Query\QOM\FullTextSearchInterface $constraint
      * @return string
      */
-    public function evalFullTextSearch($selectorName, $searchExpression, $propertyName = null)
+    public function evalFullTextSearch($searchExpression, $propertyName = null)
     {
         $sql1 = 'CONTAINS(';
         $sql1 .= is_null($propertyName) ? '*' : $propertyName;
@@ -171,36 +159,29 @@ class Sql1Generator
     }
 
     /**
-     * NodeName ::= 'NAME(' [selectorName] ')'
+     * NodeName ::= 'NAME()'
      *
-     * @param string $selectorValue
      */
-    public function evalNodeName($selectorValue = null)
+    public function evalNodeName()
     {
-        $selectorValue = is_null($selectorValue) ? '' : $selectorValue;
-        return "NAME($selectorValue)";
+        return "NAME()";
     }
 
     /**
-     * NodeLocalName ::= 'LOCALNAME(' [selectorName] ')'
-     *
-     * @param string $selectorValue
+     * NodeLocalName ::= 'LOCALNAME()'
      */
-    public function evalNodeLocalName($selectorValue = null)
+    public function evalNodeLocalName()
     {
-        $selectorValue = is_null($selectorValue) ? '' : $selectorValue;
-        return "LOCALNAME($selectorValue)";
+        return "LOCALNAME()";
     }
 
     /**
-     * FullTextSearchScore ::= 'SCORE(' [selectorName] ')'
+     * FullTextSearchScore ::= 'SCORE()'
      *
-     * @param string $selectorValue
      */
-    public function evalFullTextSearchScore($selectorValue = null)
+    public function evalFullTextSearchScore()
     {
-        $selectorValue = is_null($selectorValue) ? '' : $selectorValue;
-        return "SCORE($selectorValue)";
+        return "SCORE()";
     }
 
     /**
@@ -224,22 +205,13 @@ class Sql1Generator
     }
 
     /**
-     * PropertyValue ::= [selectorName'.'] propertyName     // If only one selector exists
+     * PropertyValue ::= propertyName
      *
      * @param string $propertyName
-     * @param string $selectorName
      */
-    public function evalPropertyValue($propertyName, $selectorName = null)
+    public function evalPropertyValue($propertyName)
     {
-        if (false !== strpos($selectorName, ':')) {
-            $selectorName = "$selectorName";
-        }
-        $sql1 = ! is_null($selectorName) ? $selectorName . '.' : '';
-        if (false !== strpos($propertyName, ':')) {
-            $propertyName = "$propertyName";
-        }
-        $sql1 .= $propertyName;
-        return $sql1;
+        return $propertyName;
     }
 
     public function evalOrderings($orderings)
@@ -292,17 +264,9 @@ class Sql1Generator
         return $sql1;
     }
 
-    public function evalColumn($selector, $property = null, $colname = null)
+    public function evalColumn($property = null)
     {
-        $sql1 = '';
-        if (! is_null($selector) && is_null($property) && is_null($colname)) {
-            $sql1 .= $selector . '.*';
-        } else {
-            $sql1 .= ! is_null($selector) ? $selector . '.' : '';
-            $sql1 .= $property;
-            $sql1 .= ! is_null($colname) ? ' AS ' . $colname : '';
-        }
-        return $sql1;
+        return $property;
     }
 
     /**
