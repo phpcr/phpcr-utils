@@ -184,43 +184,6 @@ class Sql1Generator
     }
 
     /**
-     * Length ::= 'LENGTH(' PropertyValue ')'
-     *
-     * @param string $propertyValue
-     * @return string
-     */
-    public function evalLength($propertyValue)
-    {
-        return "LENGTH($propertyValue)";
-    }
-
-    /**
-     * NodeName ::= 'NAME()'
-     *
-     */
-    public function evalNodeName()
-    {
-        return "NAME()";
-    }
-
-    /**
-     * NodeLocalName ::= 'LOCALNAME()'
-     */
-    public function evalNodeLocalName()
-    {
-        return "LOCALNAME()";
-    }
-
-    /**
-     * FullTextSearchScore ::= 'SCORE()'
-     *
-     */
-    public function evalFullTextSearchScore()
-    {
-        return "SCORE()";
-    }
-
-    /**
      * LowerCase ::= 'LOWER(' DynamicOperand ')'
      *
      * @param string $operand

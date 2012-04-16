@@ -216,14 +216,8 @@ class QomToSql1QueryConverter
     }
 
     /**
-     * DynamicOperand ::= PropertyValue | Length | NodeName |
-     *              NodeLocalName | FullTextSearchScore |
-     *              LowerCase | UpperCase
+     * DynamicOperand ::= PropertyValue | LowerCase | UpperCase
      *
-     * Length ::= 'LENGTH(' PropertyValue ')'
-     * NodeName ::= 'NAME()'              // If only one selector exists
-     * NodeLocalName ::= 'LOCALNAME()'    // If only one selector exists
-     * FullTextSearchScore ::= 'SCORE()'  // If only one selector exists
      * LowerCase ::= 'LOWER(' DynamicOperand ')'
      * UpperCase ::= 'UPPER(' DynamicOperand ')'
      *
@@ -236,18 +230,16 @@ class QomToSql1QueryConverter
             return $this->convertPropertyValue($operand);
         }
         if ($operand instanceof QOM\LengthInterface) {
-            return $this->generator->evalLength($this->convertPropertyValue($operand->getPropertyValue()));
+            throw new NotSupportedOperandException($operand);
         }
-
         if ($operand instanceof QOM\NodeNameInterface) {
-            return $this->generator->evalNodeName();
+            throw new NotSupportedOperandException($operand);
         }
-
         if ($operand instanceof QOM\NodeLocalNameInterface) {
-            return $this->generator->evalNodeLocalName();
+            throw new NotSupportedOperandException($operand);
         }
         if ($operand instanceof QOM\FullTextSearchScoreInterface) {
-            return $this->generator->evalFullTextSearchScore();
+            throw new NotSupportedOperandException($operand);
         }
         if ($operand instanceof QOM\LowerCaseInterface) {
             $operand = $this->convertDynamicOperand($operand->getOperand());
