@@ -85,6 +85,7 @@ class Sql1Generator
 
     
     protected function getPathForDescendantQuery($path) {
+        $path = trim($path,"'");
         $path = trim($path,"/");
         $sql1 = "/" . str_replace("/","[%]/",$path) ;
         $sql1 .= "[%]/%";
