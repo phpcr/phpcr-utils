@@ -182,7 +182,7 @@ class Sql2Generator
      */
     public function evalAnd($constraint1, $constraint2)
     {
-        return "$constraint1 AND $constraint2";
+        return "($constraint1 AND $constraint2)";
     }
 
     /**
@@ -193,7 +193,7 @@ class Sql2Generator
      */
     public function evalOr($constraint1, $constraint2)
     {
-        return "$constraint1 OR $constraint2";
+        return "($constraint1 OR $constraint2)";
     }
 
     /**
