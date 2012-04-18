@@ -294,7 +294,8 @@ class Sql2Generator
 
     public function evalPropertyExistence($selectorName, $propertyName)
     {
-        return "$selectorName.$propertyName IS NOT NULL";
+        $sql2 = is_null($selectorName) ? $propertyName : $selectorName . '.' . $propertyName;
+        return $sql2 . " IS NOT NULL";
     }
 
     /**
