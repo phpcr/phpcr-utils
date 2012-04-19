@@ -149,12 +149,10 @@ class Sql1Generator extends BaseSqlGenerator
             case 'DOUBLE':
                 if ((int) $literal == $literal) {
                     return $literal .".0";
-                } else {
-                    return $literal;
                 }
-
-            default:
-                return "'$literal'";
+                return $literal;
         }
+
+        return "'$literal'";
     }
 }
