@@ -292,6 +292,9 @@ class Sql1Generator
      */
     public function evalCastLiteral($literal, $type)
     {
+        if ($type == 'DATE') {
+            return "TIMESTAMP '$literal'";
+        }
         return "CAST('$literal' AS $type)";
     }
 
