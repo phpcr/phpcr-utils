@@ -10,35 +10,8 @@ use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants;
  *
  * TODO: is eval... the best name for the functions here?
  */
-class Sql2Generator
+class Sql2Generator extends SqlGenerator
 {
-    /**
-     * Query ::= 'SELECT' columns
-     *     'FROM' Source
-     *     ['WHERE' Constraint]
-     *     ['ORDER BY' orderings]
-     *
-     * @param string $source
-     * @param string $columns
-     * @param string $constraint
-     * @param string $ordering
-     * @return string
-     */
-    public function evalQuery($source, $columns, $constraint = '', $orderings = '')
-    {
-        $sql2 = "SELECT $columns FROM $source";
-
-        if ($constraint) {
-            $sql2 .= " WHERE $constraint";
-        }
-
-        if ($orderings) {
-            $sql2 .= " ORDER BY $orderings";
-        }
-
-        return $sql2;
-    }
-
     /**
      * Selector ::= nodeTypeName ['AS' selectorName]
      * nodeTypeName ::= Name
@@ -175,38 +148,6 @@ class Sql2Generator
     }
 
     /**
-     * And ::= constraint1 'AND' constraint2
-     *
-     * @param string $constraint1
-     * @param string $constraint2
-     */
-    public function evalAnd($constraint1, $constraint2)
-    {
-        return "$constraint1 AND $constraint2";
-    }
-
-    /**
-     * Or ::= constraint1 'OR' constraint2
-     *
-     * @param string $constraint1
-     * @param string $constraint2
-     */
-    public function evalOr($constraint1, $constraint2)
-    {
-        return "$constraint1 OR $constraint2";
-    }
-
-    /**
-     * Not ::= 'NOT' Constraint
-     *
-     * @param string $constraint
-     */
-    public function evalNot($constraint)
-    {
-        return "NOT $constraint";
-    }
-
-    /**
      * SameNode ::= 'ISSAMENODE(' [selectorName ','] Path ')'
      *
      * @param string $path
@@ -249,47 +190,6 @@ class Sql2Generator
         $sql2 .= ')';
 
         return $sql2;
-    }
-
-    /**
-     * Comparison ::= DynamicOperand Operator StaticOperand
-     *
-     * @param string $operand1
-     * @param string $operator
-     * @param string $operand2
-     */
-    public function evalComparison($operand1, $operator, $operand2)
-    {
-        return "$operand1 $operator $operand2";
-    }
-
-    /**
-     * Operator ::= EqualTo | NotEqualTo | LessThan |
-     *        LessThanOrEqualTo | GreaterThan |
-     *        GreaterThanOrEqualTo | Like
-     *
-     * @param string $operator
-     */
-    public function evalOperator($operator)
-    {
-        switch ($operator) {
-            case Constants::JCR_OPERATOR_EQUAL_TO:
-                return '=';
-            case Constants::JCR_OPERATOR_GREATER_THAN:
-                return '>';
-            case Constants::JCR_OPERATOR_GREATER_THAN_OR_EQUAL_TO:
-                return '>=';
-            case Constants::JCR_OPERATOR_LESS_THAN:
-                return '<';
-            case Constants::JCR_OPERATOR_LESS_THAN_OR_EQUAL_TO:
-                return '<=';
-            case Constants::JCR_OPERATOR_LIKE:
-                return 'LIKE';
-            case Constants::JCR_OPERATOR_NOT_EQUAL_TO:
-                return '<>';
-        }
-
-        return '';
     }
 
     public function evalPropertyExistence($selectorName, $propertyName)
@@ -362,26 +262,6 @@ class Sql2Generator
     }
 
     /**
-     * LowerCase ::= 'LOWER(' DynamicOperand ')'
-     *
-     * @param string $operand
-     */
-    public function evalLower($operand)
-    {
-        return "LOWER($operand)";
-    }
-
-    /**
-     * LowerCase ::= 'UPPER(' DynamicOperand ')'
-     *
-     * @param string $operand
-     */
-    public function evalUpper($operand)
-    {
-        return "UPPER($operand)";
-    }
-
-    /**
      * PropertyValue ::= [selectorName'.'] propertyName     // If only one selector exists
      *
      * @param string $propertyName
@@ -398,37 +278,6 @@ class Sql2Generator
         }
         $sql2 .= $propertyName;
         return $sql2;
-    }
-
-    public function evalOrderings($orderings)
-    {
-        $sql2 = '';
-
-        foreach ($orderings as $ordering) {
-
-            if ($sql2 !== '') {
-                $sql2 .= ', ';
-            }
-
-            $sql2 .= $ordering;
-        }
-        return $sql2;
-    }
-
-    public function evalOrdering($operand, $order)
-    {
-        return "$operand $order";
-    }
-
-    public function evalOrder($order)
-    {
-        switch ($order) {
-            case Constants::JCR_ORDER_ASCENDING:
-                return 'ASC';
-            case Constants::JCR_ORDER_DESCENDING:
-                return 'DESC';
-        }
-        return '';
     }
 
     public function evalColumns($columns)
@@ -483,11 +332,6 @@ class Sql2Generator
         return null;
     }
 
-    public function evalBindVariable($var)
-    {
-        return '$' . $var;
-    }
-
     /**
      * @param string $literal
      * @param string $type
@@ -495,14 +339,5 @@ class Sql2Generator
     public function evalCastLiteral($literal, $type)
     {
         return "CAST('$literal' AS $type)";
-    }
-
-    public function evalLiteral($literal)
-    {
-        if ($literal instanceof \DateTime) {
-            $string = \PHPCR\PropertyType::convertType($literal, \PHPCR\PropertyType::STRING);
-            return $this->evalCastLiteral($string, 'DATE');
-        }
-        return "'$literal'";
     }
 }
