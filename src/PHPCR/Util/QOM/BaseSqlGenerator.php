@@ -5,7 +5,7 @@ namespace PHPCR\Util\QOM;
 use PHPCR\Query\QOM;
 use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants;
 
-class SqlGenerator {
+abstract class BaseSqlGenerator {
 
     /**
      * Query ::= 'SELECT' columns

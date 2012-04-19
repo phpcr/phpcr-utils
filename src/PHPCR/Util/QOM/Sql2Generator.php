@@ -10,7 +10,7 @@ use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants;
  *
  * TODO: is eval... the best name for the functions here?
  */
-class Sql2Generator extends SqlGenerator
+class Sql2Generator extends BaseSqlGenerator
 {
     /**
      * Selector ::= nodeTypeName ['AS' selectorName]
