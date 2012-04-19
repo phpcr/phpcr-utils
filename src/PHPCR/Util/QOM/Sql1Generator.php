@@ -98,6 +98,17 @@ class Sql1Generator extends SqlGenerator
         return $sql1;
     }
 
+    /**
+     * PropertyValue ::= propertyName
+     *
+     * @param string $propertyName
+     */
+    public function evalPropertyValue($propertyName)
+    {
+        return $propertyName;
+    }
+
+
     public function evalColumn($property = null)
     {
         return $property;
@@ -124,6 +135,15 @@ class Sql1Generator extends SqlGenerator
         switch ($type) {
             case 'DATE':
                 return "TIMESTAMP '$literal'";
+            case 'LONG':
+                return $literal;
+            case 'DOUBLE':
+                if ((int) $literal == $literal) {
+                    return $literal .".0";
+                } else {
+                    return $literal;
+                }
+
             default:
                 return "'$literal'";
         }
