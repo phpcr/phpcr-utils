@@ -159,12 +159,10 @@ abstract class BaseQomToSqlQueryConverter {
      */
     protected function convertStaticOperand(QOM\StaticOperandInterface $operand)
     {
-        if ($operand instanceof QOM\BindVariableValueInterface)
-        {
+        if ($operand instanceof QOM\BindVariableValueInterface) {
             return $this->convertBindVariable($operand->getBindVariableName());
         }
-        elseif ($operand instanceof QOM\LiteralInterface)
-        {
+        if ($operand instanceof QOM\LiteralInterface) {
             return $this->convertLiteral($operand->getLiteralValue());
         }
 
@@ -200,7 +198,6 @@ abstract class BaseQomToSqlQueryConverter {
     {
         $list = array();
         foreach ($orderings as $ordering) {
-
             $order = $this->generator->evalOrder($ordering->getOrder());
             $operand = $this->convertDynamicOperand($ordering->getOperand());
             $list[] = $this->generator->evalOrdering($operand, $order);
@@ -245,6 +242,7 @@ abstract class BaseQomToSqlQueryConverter {
             $colname = $column->getColumnName();
             $list[] = $this->generator->evalColumn($selector, $property, $colname);
         }
+
         return $this->generator->evalColumns($list);
     }
 

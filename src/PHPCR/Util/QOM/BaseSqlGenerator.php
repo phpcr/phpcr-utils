@@ -168,17 +168,16 @@ abstract class BaseSqlGenerator {
         if ($literal instanceof \DateTime) {
             $string = \PHPCR\PropertyType::convertType($literal, \PHPCR\PropertyType::STRING);
             return $this->evalCastLiteral($string, 'DATE');
-        } else if (is_bool($literal)) {
-            if ($literal) {
-                $string = 'true';
-            } else {
-                $string = 'false';
-            }
+        }
+        if (is_bool($literal)) {
+            $string = $literal ? 'true' : 'false';
             return $this->evalCastLiteral($string, 'BOOLEAN');
-        } else if (is_int($literal)) {
+        }
+        if (is_int($literal)) {
             $string = \PHPCR\PropertyType::convertType($literal, \PHPCR\PropertyType::STRING);
             return $this->evalCastLiteral($string, 'LONG');
-        } else if (is_float($literal)) {
+        }
+        if (is_float($literal)) {
             $string = \PHPCR\PropertyType::convertType($literal, \PHPCR\PropertyType::STRING);
             return $this->evalCastLiteral($string, 'DOUBLE');
         }

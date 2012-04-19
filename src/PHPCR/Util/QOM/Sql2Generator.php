@@ -289,7 +289,6 @@ class Sql2Generator extends BaseSqlGenerator
 
         $sql2 = '';
         foreach ($columns as $column) {
-
             if ($sql2 !== '') {
                 $sql2 .= ', ';
             }

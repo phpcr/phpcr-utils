@@ -19,9 +19,7 @@ class QomToSql1QueryConverter extends BaseQomToSqlQueryConverter
     protected function convertSource(QOM\SourceInterface $source)
     {
         if ($source instanceof QOM\SelectorInterface) {
-
             return $this->convertSelector($source);
-
         }
 
         throw new \InvalidArgumentException("Invalid Source");
@@ -41,45 +39,37 @@ class QomToSql1QueryConverter extends BaseQomToSqlQueryConverter
      */
     protected function convertConstraint(QOM\ConstraintInterface $constraint)
     {
-        if ($constraint instanceof QOM\AndInterface)
-        {
+        if ($constraint instanceof QOM\AndInterface) {
             return $this->generator->evalAnd(
                 $this->convertConstraint($constraint->getConstraint1()),
                 $this->convertConstraint($constraint->getConstraint2()));
         }
-        elseif ($constraint instanceof QOM\OrInterface)
-        {
+        if ($constraint instanceof QOM\OrInterface) {
             return $this->generator->evalOr(
                 $this->convertConstraint($constraint->getConstraint1()),
                 $this->convertConstraint($constraint->getConstraint2()));
         }
-        elseif ($constraint instanceof QOM\NotInterface)
-        {
+        if ($constraint instanceof QOM\NotInterface) {
             return $this->generator->evalNot($this->convertConstraint($constraint->getConstraint()));
         }
-        elseif ($constraint instanceof QOM\ComparisonInterface)
-        {
+        if ($constraint instanceof QOM\ComparisonInterface) {
             return $this->convertComparison($constraint);
         }
-        elseif ($constraint instanceof QOM\PropertyExistenceInterface)
-        {
+        if ($constraint instanceof QOM\PropertyExistenceInterface) {
             return $this->convertPropertyExistence($constraint);
         }
         elseif ($constraint instanceof QOM\FullTextSearchInterface)
         {
             return $this->convertFullTextSearch($constraint);
         }
-        elseif ($constraint instanceof QOM\SameNodeInterface)
-        {
+        if ($constraint instanceof QOM\SameNodeInterface) {
             throw new NotSupportedConstraintException($constraint);
         }
-        elseif ($constraint instanceof QOM\ChildNodeInterface)
-        {
+        if ($constraint instanceof QOM\ChildNodeInterface) {
             return $this->generator->evalChildNode(
                 $this->convertPath($constraint->getParentPath()));
         }
-        elseif ($constraint instanceof QOM\DescendantNodeInterface)
-        {
+        if ($constraint instanceof QOM\DescendantNodeInterface) {
             return $this->generator->evalDescendantNode(
                 $this->convertPath($constraint->getAncestorPath()));
         }

@@ -26,7 +26,8 @@ class Sql1Generator extends BaseSqlGenerator
         return $nodeTypeName;
     }
 
-    protected function getPathForDescendantQuery($path) {
+    protected function getPathForDescendantQuery($path)
+    {
         $path = trim($path,"'");
         $path = trim($path,"/");
         $sql1 = "/" . str_replace("/","[%]/",$path) ;
@@ -96,7 +97,6 @@ class Sql1Generator extends BaseSqlGenerator
 
         $sql1 = '';
         foreach ($columns as $column) {
-
             if ($sql1 !== '') {
                 $sql1 .= ', ';
             }
