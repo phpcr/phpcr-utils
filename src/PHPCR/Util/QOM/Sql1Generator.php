@@ -18,9 +18,10 @@ class Sql1Generator extends BaseSqlGenerator
      * nodeTypeName ::= Name
      *
      * @param string $nodeTypeName The node type of the selector. If it does not contain starting and ending brackets ([]) they will be added automatically
+     * @param string $selectorName (unused)
      * @return string
      */
-    public function evalSelector($nodeTypeName)
+    public function evalSelector($nodeTypeName, $selectorName = null)
     {
         return $nodeTypeName;
     }
@@ -61,16 +62,24 @@ class Sql1Generator extends BaseSqlGenerator
         return $sql1;
     }
 
+    public function evalPropertyExistence($selectorName, $propertyName)
+    {
+        return $propertyName . " IS NOT NULL";
+    }
+
+
     /**
      * FullTextSearch ::=
      *       'CONTAINS(' (propertyName | '*') ') ','
      *                    FullTextSearchExpression ')'
      * FullTextSearchExpression ::= BindVariable | ''' FullTextSearchLiteral '''
      *
-     * @param \PHPCR\Query\QOM\FullTextSearchInterface $constraint
+     * @param string $selectorName unusued
+     * @param string $searchExpression
+     * @param string $ropertyName
      * @return string
      */
-    public function evalFullTextSearch($searchExpression, $propertyName = null)
+    public function evalFullTextSearch($selectorName, $searchExpression, $propertyName = null)
     {
         $sql1 = 'CONTAINS(';
         $sql1 .= is_null($propertyName) ? '*' : $propertyName;
@@ -103,7 +112,7 @@ class Sql1Generator extends BaseSqlGenerator
      *
      * @param string $propertyName
      */
-    public function evalPropertyValue($propertyName)
+    public function evalPropertyValue($propertyName, $selectorName = null)
     {
         return $propertyName;
     }

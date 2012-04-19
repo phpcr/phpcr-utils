@@ -204,8 +204,9 @@ class Sql2Generator extends BaseSqlGenerator
      *                    selectorName'.*') ','
      *                    FullTextSearchExpression ')'
      * FullTextSearchExpression ::= BindVariable | ''' FullTextSearchLiteral '''
-     *
-     * @param \PHPCR\Query\QOM\FullTextSearchInterface $constraint
+     * @param string $selectorName unusued
+     * @param string $searchExpression
+     * @param string $ropertyName
      * @return string
      */
     public function evalFullTextSearch($selectorName, $searchExpression, $propertyName = null)
