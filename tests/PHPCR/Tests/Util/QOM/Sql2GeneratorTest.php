@@ -29,4 +29,16 @@ class Sql2GeneratorTest extends \PHPUnit_Framework_TestCase
         $literal = $this->generator->evalLiteral(true);
         $this->assertEquals("CAST('true' AS BOOLEAN)", $literal);
     }
+
+    public function testLongLiteral()
+    {
+        $literal = $this->generator->evalLiteral(11);
+        $this->assertEquals("CAST('11' AS LONG)", $literal);
+    }
+
+    public function testDoubleLiteral()
+    {
+        $literal = $this->generator->evalLiteral(11.0);
+        $this->assertEquals("CAST('11' AS DOUBLE)", $literal);
+    }
 }

@@ -2,6 +2,9 @@
 
 namespace PHPCR\Util\QOM;
 
+use PHPCR\Query\QOM;
+use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants;
+
 class SqlGenerator {
 
     /**
@@ -172,7 +175,14 @@ class SqlGenerator {
                 $string = 'false';
             }
             return $this->evalCastLiteral($string, 'BOOLEAN');
+        } else if (is_int($literal)) {
+            $string = \PHPCR\PropertyType::convertType($literal, \PHPCR\PropertyType::STRING);
+            return $this->evalCastLiteral($string, 'LONG');
+        } else if (is_float($literal)) {
+            $string = \PHPCR\PropertyType::convertType($literal, \PHPCR\PropertyType::STRING);
+            return $this->evalCastLiteral($string, 'DOUBLE');
         }
+
         return "'$literal'";
     }
 }
