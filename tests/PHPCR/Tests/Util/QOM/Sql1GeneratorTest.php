@@ -2,15 +2,15 @@
 
 namespace PHPCR\Tests\Util\QOM;
 
-use PHPCR\Util\QOM\Sql2Generator;
+use PHPCR\Util\QOM\Sql1Generator;
 
-class Sql2GeneratorTest extends \PHPUnit_Framework_TestCase
+class Sql1GeneratorTest extends \PHPUnit_Framework_TestCase
 {
     protected $generator;
 
     public function setUp()
     {
-        $this->generator = new Sql2Generator();
+        $this->generator = new Sql1Generator();
     }
 
     public function testLiteral()
@@ -22,37 +22,37 @@ class Sql2GeneratorTest extends \PHPUnit_Framework_TestCase
     public function testDateTimeLiteral()
     {
         $literal = $this->generator->evalLiteral(new \DateTime('2011-12-23T00:00:00.000+00:00'));
-        $this->assertEquals("CAST('2011-12-23T00:00:00.000+00:00' AS DATE)", $literal);
+        $this->assertEquals("TIMESTAMP '2011-12-23T00:00:00.000+00:00'", $literal);
     }
 
     public function testBoolLiteral()
     {
         $literal = $this->generator->evalLiteral(true);
-        $this->assertEquals("CAST('true' AS BOOLEAN)", $literal);
+        $this->assertEquals("'true'", $literal);
     }
 
     public function testLongLiteral()
     {
         $literal = $this->generator->evalLiteral(11);
-        $this->assertEquals("CAST('11' AS LONG)", $literal);
+        $this->assertSame("11", $literal);
     }
 
     public function testDoubleLiteral()
     {
         $literal = $this->generator->evalLiteral(11.0);
-        $this->assertEquals("CAST('11' AS DOUBLE)", $literal);
+        $this->assertSame("11.0", $literal);
     }
 
     public function testChildNode()
     {
         $literal = $this->generator->evalChildNode("/foo/bar/baz");
-        $this->assertSame("ISCHILDNODE(/foo/bar/baz)", $literal);
+        $this->assertSame("jcr:path LIKE '/foo[%]/bar[%]/baz[%]/%' AND NOT jcr:path LIKE '/foo[%]/bar[%]/baz[%]/%/%'", $literal);
     }
 
     public function testDescendantNode()
     {
         $literal = $this->generator->evalDescendantNode("/foo/bar/baz");
-        $this->assertSame("ISDESCENDANTNODE(/foo/bar/baz)", $literal);
+        $this->assertSame("jcr:path LIKE '/foo[%]/bar[%]/baz[%]/%'", $literal);
     }
 
     public function testPopertyExistence()
@@ -63,16 +63,16 @@ class Sql2GeneratorTest extends \PHPUnit_Framework_TestCase
 
     public function testFullTextSearch()
     {
-        $literal = $this->generator->evalFullTextSearch("data", "'foo'");
-        $this->assertSame("CONTAINS(data.*, 'foo')", $literal);
-        $literal = $this->generator->evalFullTextSearch("data", "'foo'", "bar");
-        $this->assertSame("CONTAINS(data.bar, 'foo')", $literal);
+        $literal = $this->generator->evalFullTextSearch(null, "'foo'");
+        $this->assertSame("CONTAINS(*, 'foo')", $literal);
+        $literal = $this->generator->evalFullTextSearch(null, "'foo'", "bar");
+        $this->assertSame("CONTAINS(bar, 'foo')", $literal);
     }
 
     public function testColumns()
     {
         $literal = $this->generator->evalColumns(null);
-        $this->assertSame("*", $literal);
+        $this->assertSame("s", $literal);
         $literal = $this->generator->evalColumns(array("bar","foo"));
         $this->assertSame("bar, foo", $literal);
     }
