@@ -118,7 +118,7 @@ class Sql1Generator extends BaseSqlGenerator
     }
 
 
-    public function evalColumn($property = null)
+    public function evalColumn($selecor = null, $property = null)
     {
         return $property;
     }
