@@ -28,8 +28,7 @@ class Sql1Generator extends BaseSqlGenerator
 
     protected function getPathForDescendantQuery($path)
     {
-        $path = trim($path,"'");
-        $path = trim($path,"/");
+        $path = trim($path,"\"'/");
         $sql1 = "/" . str_replace("/","[%]/",$path) ;
         $sql1 .= "[%]/%";
         return $sql1;
