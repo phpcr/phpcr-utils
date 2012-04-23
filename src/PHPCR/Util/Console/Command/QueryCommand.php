@@ -17,7 +17,7 @@ use PHPCR\Util\Console\Helper\TreeDumper\SystemNodeFilter;
 /**
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  */
-class Sql2Command extends Command
+class QueryCommand extends Command
 {
     /**
      * Configures the current command.
@@ -26,10 +26,11 @@ class Sql2Command extends Command
     {
         parent::configure();
 
-        $this->setName('phpcr:sql2')
-            ->addArgument('query', InputArgument::REQUIRED, 'JCR SQL2 statement to execute')
+        $this->setName('phpcr:query')
+            ->addArgument('query', InputArgument::REQUIRED, 'A query statement to execute')
+            ->addOption('language', 'l', InputOption::VALUE_OPTIONAL, 'The query language (sql, jcr_sql2', 'jcr_sql2')
             ->setDescription('Execute a JCR SQL2 statement')
-            ->setHelp("The <info>sql2</info> command executes a JCR SQL2 statement on the content repository");
+            ->setHelp("The <info>query</info> command executes a JCR query statement on the content repository");
     }
 
     /**
@@ -46,9 +47,15 @@ class Sql2Command extends Command
 
         $session = $this->getHelper('phpcr')->getSession();
         $qm = $session->getWorkspace()->getQueryManager();
-        $query = $qm->createQuery($sql, \PHPCR\Query\QueryInterface::JCR_SQL2);
+        $language = strtoupper($input->getOption('language'));
+        if (!defined('\PHPCR\Query\QueryInterface::'.$language)) {
+            throw new \RuntimeException("Query language '\\PHPCR\\Query\\QueryInterface::$language' not defined.");
+        }
+
+        $query = $qm->createQuery($sql, constant('\PHPCR\Query\QueryInterface::'.$language));
 
         $result = $query->execute();
+        $output->writeln("Results:\n");
         foreach ($result as $i => $row) {
             $output->writeln("\n".($i+1).'. Row (Path: '. $row->getPath() .', Score: '. $row->getScore() .'):');
             foreach ($row as $column => $value) {
