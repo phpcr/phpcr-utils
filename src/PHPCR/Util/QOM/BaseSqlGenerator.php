@@ -4,9 +4,10 @@ namespace PHPCR\Util\QOM;
 
 use PHPCR\Query\QOM;
 use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants;
+use PHPCR\PropertyType;
 
-abstract class BaseSqlGenerator {
-
+abstract class BaseSqlGenerator
+{
     /**
      * Query ::= 'SELECT' columns
      *     'FROM' Source
@@ -104,7 +105,7 @@ abstract class BaseSqlGenerator {
                 return '<>';
         }
 
-        return '';
+        return $operator;
     }
 
     /**
@@ -139,6 +140,7 @@ abstract class BaseSqlGenerator {
 
             $sql2 .= $ordering;
         }
+
         return $sql2;
     }
 
@@ -166,7 +168,7 @@ abstract class BaseSqlGenerator {
     public function evalLiteral($literal)
     {
         if ($literal instanceof \DateTime) {
-            $string = \PHPCR\PropertyType::convertType($literal, \PHPCR\PropertyType::STRING);
+            $string = PropertyType::convertType($literal, PropertyType::STRING);
             return $this->evalCastLiteral($string, 'DATE');
         }
         if (is_bool($literal)) {
@@ -174,11 +176,11 @@ abstract class BaseSqlGenerator {
             return $this->evalCastLiteral($string, 'BOOLEAN');
         }
         if (is_int($literal)) {
-            $string = \PHPCR\PropertyType::convertType($literal, \PHPCR\PropertyType::STRING);
+            $string = PropertyType::convertType($literal, PropertyType::STRING);
             return $this->evalCastLiteral($string, 'LONG');
         }
         if (is_float($literal)) {
-            $string = \PHPCR\PropertyType::convertType($literal, \PHPCR\PropertyType::STRING);
+            $string = PropertyType::convertType($literal, PropertyType::STRING);
             return $this->evalCastLiteral($string, 'DOUBLE');
         }
 
