@@ -72,7 +72,7 @@ class Sql2Generator extends BaseSqlGenerator
                 return 'RIGHT OUTER ';
         }
 
-        return '';
+        return $joinType;
     }
 
     /**
@@ -91,7 +91,7 @@ class Sql2Generator extends BaseSqlGenerator
      */
     public function evalEquiJoinCondition($sel1Name, $prop1Name, $sel2Name, $prop2Name)
     {
-        return $sel1Name . '.' . $prop1Name . '=' . $sel2Name . '.' . $prop2Name;
+        return $this->qualifyProperty($sel1Name, $prop1Name) . '=' .$this->qualifyProperty($sel2Name, $prop2Name);
     }
 
     /**
@@ -194,8 +194,7 @@ class Sql2Generator extends BaseSqlGenerator
 
     public function evalPropertyExistence($selectorName, $propertyName)
     {
-        $sql2 = is_null($selectorName) ? $propertyName : $selectorName . '.' . $propertyName;
-        return $sql2 . " IS NOT NULL";
+        return $this->qualifyProperty($selectorName, $propertyName) . " IS NOT NULL";
     }
 
     /**
@@ -211,8 +210,10 @@ class Sql2Generator extends BaseSqlGenerator
      */
     public function evalFullTextSearch($selectorName, $searchExpression, $propertyName = null)
     {
+        $propertyName = $propertyName ?: '*';
+
         $sql2 = 'CONTAINS(';
-        $sql2 .= is_null($propertyName) ? $selectorName . '.*' : $selectorName . '.' . $propertyName;
+        $sql2 .= $this->qualifyProperty($selectorName, $propertyName);
         $sql2 .= ', ' . $searchExpression . ')';
 
         return $sql2;
@@ -236,7 +237,6 @@ class Sql2Generator extends BaseSqlGenerator
      */
     public function evalNodeName($selectorValue = null)
     {
-        $selectorValue = is_null($selectorValue) ? '' : $selectorValue;
         return "NAME($selectorValue)";
     }
 
@@ -247,7 +247,6 @@ class Sql2Generator extends BaseSqlGenerator
      */
     public function evalNodeLocalName($selectorValue = null)
     {
-        $selectorValue = is_null($selectorValue) ? '' : $selectorValue;
         return "LOCALNAME($selectorValue)";
     }
 
@@ -258,7 +257,6 @@ class Sql2Generator extends BaseSqlGenerator
      */
     public function evalFullTextSearchScore($selectorValue = null)
     {
-        $selectorValue = is_null($selectorValue) ? '' : $selectorValue;
         return "SCORE($selectorValue)";
     }
 
@@ -278,6 +276,7 @@ class Sql2Generator extends BaseSqlGenerator
             $propertyName = "[$propertyName]";
         }
         $sql2 .= $propertyName;
+
         return $sql2;
     }
 
@@ -299,16 +298,16 @@ class Sql2Generator extends BaseSqlGenerator
         return $sql2;
     }
 
-    public function evalColumn($selector, $property = null, $colname = null)
+    public function evalColumn($selectorName, $propertyName = null, $colname = null)
     {
         $sql2 = '';
-        if (! is_null($selector) && is_null($property) && is_null($colname)) {
-            $sql2 .= $selector . '.*';
+        if (! is_null($selectorName) && is_null($propertyName) && is_null($colname)) {
+            $sql2 .= $selectorName . '.*';
         } else {
-            $sql2 .= ! is_null($selector) ? $selector . '.' : '';
-            $sql2 .= $property;
+            $sql2 .= $this->qualifyProperty($selectorName, $propertyName);
             $sql2 .= ! is_null($colname) ? ' AS ' . $colname : '';
         }
+
         return $sql2;
     }
 
@@ -329,6 +328,7 @@ class Sql2Generator extends BaseSqlGenerator
             }
             return $sql2;
         }
+
         return null;
     }
 
@@ -339,5 +339,10 @@ class Sql2Generator extends BaseSqlGenerator
     public function evalCastLiteral($literal, $type)
     {
         return "CAST('$literal' AS $type)";
+    }
+
+    private function qualifyProperty($selectorName, $propertyName)
+    {
+        return $selectorName ? $selectorName.'.'.$propertyName : $propertyName;
     }
 }

@@ -12,7 +12,6 @@ use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants;
  */
 class Sql1Generator extends BaseSqlGenerator
 {
-
     /**
      * Selector ::= nodeTypeName
      * nodeTypeName ::= Name
@@ -33,7 +32,6 @@ class Sql1Generator extends BaseSqlGenerator
         $sql1 .= "[%]/%";
         return $sql1;
     }
-
 
     /**
      * SameNode ::= 'jcr:path like Path/% and not jcr:path like Path/%/%'
@@ -67,7 +65,6 @@ class Sql1Generator extends BaseSqlGenerator
         return $propertyName . " IS NOT NULL";
     }
 
-
     /**
      * FullTextSearch ::=
      *       'CONTAINS(' (propertyName | '*') ') ','
@@ -81,8 +78,10 @@ class Sql1Generator extends BaseSqlGenerator
      */
     public function evalFullTextSearch($selectorName, $searchExpression, $propertyName = null)
     {
+        $propertyName = $propertyName ? : '*';
+
         $sql1 = 'CONTAINS(';
-        $sql1 .= is_null($propertyName) ? '*' : $propertyName;
+        $sql1 .= $propertyName;
         $sql1 .= ', ' . $searchExpression . ')';
 
         return $sql1;
