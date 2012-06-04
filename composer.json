@@ -4,7 +4,7 @@
     "description": "PHP Content Repository implementation independant utilities",
     "keywords": ["phpcr", "contentrepository", "cli"],
     "homepage": "http://phpcr.github.com",
-    "license": "Apache License 2.0",
+    "license": "Apache-2.0",
     "authors": [
         {
             "name": "David Buchmann",
@@ -31,6 +31,11 @@
     "autoload": {
         "psr-0": {
             "PHPCR\\Util": "src"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.1-dev"
         }
     }
 }
