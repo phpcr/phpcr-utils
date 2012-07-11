@@ -41,7 +41,12 @@ EOF
     }
 
     /**
-     * @see Command
+     * Executes the current command.
+     *
+     * @param InputInterface  $input  An InputInterface instance
+     * @param OutputInterface $output An OutputInterface instance
+     *
+     * @return integer 0 if everything went fine, or an error code
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -53,5 +58,7 @@ EOF
         $parentpath = $input->getOption('parentpath') ? $input->getOption('parentpath') : '/';
         $session->importXml($parentpath, $input->getArgument('filename'), ImportUUIDBehaviorInterface::IMPORT_UUID_CREATE_NEW);
         $session->save();
+
+        return 0;
     }
 }
