@@ -7,7 +7,7 @@ $file = $vendorDir.'/autoload.php';
 if (file_exists($file)) {
     $autoload = require_once $file;
 } else {
-    throw new RuntimeException('Install dependencies to run test suite.');
+    die("Install dependencies to run test suite.\n");
 }
 
 $configFile = getcwd() . DIRECTORY_SEPARATOR . 'cli-config.php';
@@ -41,6 +41,7 @@ $cli->setCatchExceptions(true);
 $cli->setHelperSet($helperSet);
 $cli->addCommands(array(
     new \PHPCR\Util\Console\Command\CreateWorkspaceCommand(),
+    new \PHPCR\Util\Console\Command\ImportXmlCommand(),
     new \PHPCR\Util\Console\Command\DumpCommand(),
     new \PHPCR\Util\Console\Command\PurgeCommand(),
     new \PHPCR\Util\Console\Command\RegisterNodeTypesCommand(),
