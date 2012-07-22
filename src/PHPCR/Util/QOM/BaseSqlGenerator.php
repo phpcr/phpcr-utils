@@ -43,7 +43,7 @@ abstract class BaseSqlGenerator
      */
     public function evalAnd($constraint1, $constraint2)
     {
-        return "$constraint1 AND $constraint2";
+        return "($constraint1 AND $constraint2)";
     }
 
     /**
@@ -54,7 +54,7 @@ abstract class BaseSqlGenerator
      */
     public function evalOr($constraint1, $constraint2)
     {
-        return "$constraint1 OR $constraint2";
+        return "($constraint1 OR $constraint2)";
     }
 
     /**
