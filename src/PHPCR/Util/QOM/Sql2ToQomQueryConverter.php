@@ -455,7 +455,14 @@ class Sql2ToQomQueryConverter
      */
     protected function parseFullTextSearch()
     {
-        throw new \Exception("Not implemented in '{$this->sql2}'");
+        $this->scanner->expectTokens(array('CONTAINS', '('));
+
+        list($propertyName, $selectorName) = $this->parseIdentifier();
+        $this->scanner->expectToken(',');
+        $expression = $this->scanner->fetchNextToken();
+        $this->scanner->expectToken(')');
+
+        return $this->factory->fullTextSearch($propertyName, $expression, $selectorName);
     }
 
     /**
@@ -760,21 +767,13 @@ class Sql2ToQomQueryConverter
         return $columns;
     }
 
-    /**
-     * Parse a single SQL2 column definition and return a QOM\Column
-     *
-     * @return \PHPCR\Query\QOM\ColumnInterface
-     */
-    protected function parseColumn()
+    private function parseIdentifier()
     {
-        $propertyName = '';
-        $columnName = null;
-        $selectorName = null;
-
         $token = $this->scanner->fetchNextToken();
 
         // selector.property
         if ($this->scanner->lookupNextToken() !== '.') {
+            $selectorName = null;
             $propertyName = $token;
         } else {
             $selectorName = $token;
@@ -782,10 +781,24 @@ class Sql2ToQomQueryConverter
             $propertyName = $this->scanner->fetchNextToken();
         }
 
+        return array($propertyName, $selectorName);
+    }
+
+    /**
+     * Parse a single SQL2 column definition and return a QOM\Column
+     *
+     * @return \PHPCR\Query\QOM\ColumnInterface
+     */
+    protected function parseColumn()
+    {
+        list($propertyName, $selectorName) = $this->parseIdentifier();
+
         // AS name
         if (strtoupper($this->scanner->lookupNextToken()) === 'AS') {
             $this->scanner->fetchNextToken();
             $columnName = $this->scanner->fetchNextToken();
+        } else {
+            $columnName = null;
         }
 
         return $this->factory->column($propertyName, $columnName, $selectorName);
