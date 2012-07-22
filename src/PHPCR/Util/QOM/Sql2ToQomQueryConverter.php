@@ -16,7 +16,7 @@ class Sql2ToQomQueryConverter
     protected $factory;
 
     /**
-     * @var \PHPCR\Query\QOM\Sql2Converter\Scanner;
+     * @var \PHPCR\Util\QOM\Sql2Scanner;
      */
     protected $scanner;
 
@@ -440,7 +440,7 @@ class Sql2ToQomQueryConverter
 
         list($propertyName, $selectorName) = $this->parseIdentifier();
         $this->scanner->expectToken(',');
-        $expression = $this->scanner->fetchNextToken();
+        $expression = $this->parseLiteral()->getLiteralValue();
         $this->scanner->expectToken(')');
 
         return $this->factory->fullTextSearch($propertyName, $expression, $selectorName);
