@@ -223,13 +223,9 @@ class Sql2ToQomQueryConverter
      */
     protected function parseEquiJoin()
     {
-        $selector1 = $this->scanner->fetchNextToken();
-        $this->scanner->expectToken('.');
-        $prop1 = $this->scanner->fetchNextToken();
+        list($prop1, $selector1) = $this->parseIdentifier();
         $this->scanner->expectToken('=');
-        $selector2 = $this->scanner->fetchNextToken();
-        $this->scanner->expectToken('.');
-        $prop2 = $this->scanner->fetchNextToken();
+        list($prop2, $selector2) = $this->parseIdentifier();
 
         return $this->factory->equiJoinCondition($selector1, $prop1, $selector2, $prop2);
     }
@@ -427,14 +423,7 @@ class Sql2ToQomQueryConverter
      */
     protected function parsePropertyExistence()
     {
-        $prop = $this->scanner->fetchNextToken();
-        $selector = null;
-        $token = $this->scanner->lookupNextToken();
-        if ($this->scanner->tokenIs($token, '.')) {
-            $this->scanner->expectToken('.');
-            $selector = $prop;
-            $prop = $this->scanner->fetchNextToken();
-        }
+        list($prop, $selector) = $this->parseIdentifier();
 
         $this->scanner->expectToken('IS');
         $token = $this->scanner->lookupNextToken();
@@ -641,19 +630,9 @@ class Sql2ToQomQueryConverter
      */
     protected function parsePropertyValue()
     {
-        $token = $this->scanner->fetchNextToken();
+        list($prop, $selector) = $this->parseIdentifier();
 
-        if (substr($token, 0, 1) === '[' && substr($token, -1) === ']') {
-            // Remove brackets around the selector name
-            $token = substr($token, 1, -1);
-        }
-
-        if ($this->scanner->lookupNextToken() === '.') {
-            $this->scanner->fetchNextToken();
-            return $this->factory->propertyValue($this->scanner->fetchNextToken(), $token);
-        }
-
-        return $this->factory->propertyValue($token);
+        return $this->factory->propertyValue($prop, $selector);
     }
 
     /**
@@ -767,20 +746,31 @@ class Sql2ToQomQueryConverter
         return $columns;
     }
 
+    private function removeBrackets($token)
+    {
+        if (substr($token, 0, 1) === '[' && substr($token, -1) === ']') {
+            // Remove brackets around the selector name
+            $token = substr($token, 1, -1);
+        }
+
+        return $token;
+    }
+
     private function parseIdentifier()
     {
         $token = $this->scanner->fetchNextToken();
 
         // selector.property
-        if ($this->scanner->lookupNextToken() !== '.') {
+        if ($this->scanner->lookupNextToken() === '.') {
+            $selectorName = $this->removeBrackets($token);
+            $this->scanner->fetchNextToken();
+            $propertyName = $this->scanner->fetchNextToken();
+        } else {
             $selectorName = null;
             $propertyName = $token;
-        } else {
-            $selectorName = $token;
-            $this->scanner->fetchNextToken(); // Consume the '.'
-            $propertyName = $this->scanner->fetchNextToken();
         }
 
+        $propertyName = $this->removeBrackets($propertyName);
         return array($propertyName, $selectorName);
     }
 
