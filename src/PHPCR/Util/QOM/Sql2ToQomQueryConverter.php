@@ -7,8 +7,6 @@ use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants;
 
 /**
  * Parse SQL2 statements and output a corresponding QOM objects tree
- *
- * TODO: finish implementation
  */
 class Sql2ToQomQueryConverter
 {
@@ -79,7 +77,6 @@ class Sql2ToQomQueryConverter
         }
 
         $query = $this->factory->createQuery($source, $constraint, $orderings, $columns);
-        ;
 
         return $query;
     }
@@ -112,12 +109,7 @@ class Sql2ToQomQueryConverter
      */
     protected function parseSelector()
     {
-        $token = $this->scanner->fetchNextToken();
-
-        if (substr($token, 0, 1) === '[' && substr($token, -1) === ']') {
-            // Remove brackets around the selector name
-            $token = substr($token, 1, -1);
-        }
+        $token = $this->fetchTokenWithoutBrackets();
 
         if (strtoupper($this->scanner->lookupNextToken()) === 'AS') {
             $this->scanner->fetchNextToken(); // Consume the AS
@@ -746,8 +738,10 @@ class Sql2ToQomQueryConverter
         return $columns;
     }
 
-    private function removeBrackets($token)
+    private function fetchTokenWithoutBrackets()
     {
+        $token = $this->scanner->fetchNextToken();
+
         if (substr($token, 0, 1) === '[' && substr($token, -1) === ']') {
             // Remove brackets around the selector name
             $token = substr($token, 1, -1);
@@ -758,19 +752,18 @@ class Sql2ToQomQueryConverter
 
     private function parseIdentifier()
     {
-        $token = $this->scanner->fetchNextToken();
+        $token = $this->fetchTokenWithoutBrackets();
 
         // selector.property
         if ($this->scanner->lookupNextToken() === '.') {
-            $selectorName = $this->removeBrackets($token);
+            $selectorName = $token;
             $this->scanner->fetchNextToken();
-            $propertyName = $this->scanner->fetchNextToken();
+            $propertyName = $this->fetchTokenWithoutBrackets();
         } else {
             $selectorName = null;
             $propertyName = $token;
         }
 
-        $propertyName = $this->removeBrackets($propertyName);
         return array($propertyName, $selectorName);
     }
 
