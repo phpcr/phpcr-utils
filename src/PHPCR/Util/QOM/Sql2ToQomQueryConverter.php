@@ -200,15 +200,12 @@ class Sql2ToQomQueryConverter
 
         $token = $this->scanner->lookupNextToken();
         if ($this->scanner->tokenIs($token, 'ISSAMENODE')) {
-
             return $this->parseSameNodeJoinCondition();
-
-        } elseif ($this->scanner->tokenIs($token, 'ISCHILDNODE')) {
-
+        }
+        if ($this->scanner->tokenIs($token, 'ISCHILDNODE')) {
             return $this->parseChildNodeJoinCondition();
-
-        } elseif ($this->scanner->tokenIs($token, 'ISDESCENDANTNODE')) {
-
+        }
+        if ($this->scanner->tokenIs($token, 'ISDESCENDANTNODE')) {
             return $this->parseDescendantNodeJoinCondition();
         }
 
@@ -521,7 +518,7 @@ class Sql2ToQomQueryConverter
      */
     protected function parsePath()
     {
-        $path = $this->scanner->fetchNextToken();
+        $path = $this->parseLiteral()->getLiteralValue();
         if (substr($path, 0, 1) === '[' && substr($path, -1) === ']') {
             $path = substr($path, 1, -1);
         }
