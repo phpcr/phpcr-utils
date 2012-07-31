@@ -7,8 +7,6 @@ use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants;
 
 /**
  * Parse SQL2 statements and output a corresponding QOM objects tree
- *
- * TODO: finish implementation
  */
 class Sql2ToQomQueryConverter
 {
@@ -18,7 +16,7 @@ class Sql2ToQomQueryConverter
     protected $factory;
 
     /**
-     * @var \PHPCR\Query\QOM\Sql2Converter\Scanner;
+     * @var \PHPCR\Util\QOM\Sql2Scanner;
      */
     protected $scanner;
 
@@ -79,7 +77,6 @@ class Sql2ToQomQueryConverter
         }
 
         $query = $this->factory->createQuery($source, $constraint, $orderings, $columns);
-        ;
 
         return $query;
     }
@@ -112,12 +109,7 @@ class Sql2ToQomQueryConverter
      */
     protected function parseSelector()
     {
-        $token = $this->scanner->fetchNextToken();
-
-        if (substr($token, 0, 1) === '[' && substr($token, -1) === ']') {
-            // Remove brackets around the selector name
-            $token = substr($token, 1, -1);
-        }
+        $token = $this->fetchTokenWithoutBrackets();
 
         if (strtoupper($this->scanner->lookupNextToken()) === 'AS') {
             $this->scanner->fetchNextToken(); // Consume the AS
@@ -220,13 +212,9 @@ class Sql2ToQomQueryConverter
      */
     protected function parseEquiJoin()
     {
-        $selector1 = $this->scanner->fetchNextToken();
-        $this->scanner->expectToken('.');
-        $prop1 = $this->scanner->fetchNextToken();
+        list($prop1, $selector1) = $this->parseIdentifier();
         $this->scanner->expectToken('=');
-        $selector2 = $this->scanner->fetchNextToken();
-        $this->scanner->expectToken('.');
-        $prop2 = $this->scanner->fetchNextToken();
+        list($prop2, $selector2) = $this->parseIdentifier();
 
         return $this->factory->equiJoinCondition($selector1, $prop1, $selector2, $prop2);
     }
@@ -424,14 +412,7 @@ class Sql2ToQomQueryConverter
      */
     protected function parsePropertyExistence()
     {
-        $prop = $this->scanner->fetchNextToken();
-        $selector = null;
-        $token = $this->scanner->lookupNextToken();
-        if ($this->scanner->tokenIs($token, '.')) {
-            $this->scanner->expectToken('.');
-            $selector = $prop;
-            $prop = $this->scanner->fetchNextToken();
-        }
+        list($prop, $selector) = $this->parseIdentifier();
 
         $this->scanner->expectToken('IS');
         $token = $this->scanner->lookupNextToken();
@@ -452,7 +433,14 @@ class Sql2ToQomQueryConverter
      */
     protected function parseFullTextSearch()
     {
-        throw new \Exception("Not implemented in '{$this->sql2}'");
+        $this->scanner->expectTokens(array('CONTAINS', '('));
+
+        list($propertyName, $selectorName) = $this->parseIdentifier();
+        $this->scanner->expectToken(',');
+        $expression = $this->parseLiteral()->getLiteralValue();
+        $this->scanner->expectToken(')');
+
+        return $this->factory->fullTextSearch($propertyName, $expression, $selectorName);
     }
 
     /**
@@ -631,19 +619,9 @@ class Sql2ToQomQueryConverter
      */
     protected function parsePropertyValue()
     {
-        $token = $this->scanner->fetchNextToken();
+        list($prop, $selector) = $this->parseIdentifier();
 
-        if (substr($token, 0, 1) === '[' && substr($token, -1) === ']') {
-            // Remove brackets around the selector name
-            $token = substr($token, 1, -1);
-        }
-
-        if ($this->scanner->lookupNextToken() === '.') {
-            $this->scanner->fetchNextToken();
-            return $this->factory->propertyValue($this->scanner->fetchNextToken(), $token);
-        }
-
-        return $this->factory->propertyValue($token);
+        return $this->factory->propertyValue($prop, $selector);
     }
 
     /**
@@ -757,6 +735,35 @@ class Sql2ToQomQueryConverter
         return $columns;
     }
 
+    private function fetchTokenWithoutBrackets()
+    {
+        $token = $this->scanner->fetchNextToken();
+
+        if (substr($token, 0, 1) === '[' && substr($token, -1) === ']') {
+            // Remove brackets around the selector name
+            $token = substr($token, 1, -1);
+        }
+
+        return $token;
+    }
+
+    private function parseIdentifier()
+    {
+        $token = $this->fetchTokenWithoutBrackets();
+
+        // selector.property
+        if ($this->scanner->lookupNextToken() === '.') {
+            $selectorName = $token;
+            $this->scanner->fetchNextToken();
+            $propertyName = $this->fetchTokenWithoutBrackets();
+        } else {
+            $selectorName = null;
+            $propertyName = $token;
+        }
+
+        return array($propertyName, $selectorName);
+    }
+
     /**
      * Parse a single SQL2 column definition and return a QOM\Column
      *
@@ -764,25 +771,14 @@ class Sql2ToQomQueryConverter
      */
     protected function parseColumn()
     {
-        $propertyName = '';
-        $columnName = null;
-        $selectorName = null;
-
-        $token = $this->scanner->fetchNextToken();
-
-        // selector.property
-        if ($this->scanner->lookupNextToken() !== '.') {
-            $propertyName = $token;
-        } else {
-            $selectorName = $token;
-            $this->scanner->fetchNextToken(); // Consume the '.'
-            $propertyName = $this->scanner->fetchNextToken();
-        }
+        list($propertyName, $selectorName) = $this->parseIdentifier();
 
         // AS name
         if (strtoupper($this->scanner->lookupNextToken()) === 'AS') {
             $this->scanner->fetchNextToken();
             $columnName = $this->scanner->fetchNextToken();
+        } else {
+            $columnName = null;
         }
 
         return $this->factory->column($propertyName, $columnName, $selectorName);
