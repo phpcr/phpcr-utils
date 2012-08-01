@@ -35,8 +35,7 @@ and XML attributes into properties.
 If the <info>parentpath</info> option is set, the document is imported to that
 path. Otherwise the document is imported at the repository root.
 EOF
-        )
-        ;
+            )
         ;
     }
 
