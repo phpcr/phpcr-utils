@@ -109,7 +109,7 @@ class Sql2Generator extends BaseSqlGenerator
     public function evalSameNodeJoinCondition($sel1Name, $sel2Name, $sel2Path = null)
     {
         $sql2 = "ISSAMENODE($sel1Name, $sel2Name";
-        $sql2 .= ! is_null($sel2Path) ? ', ' . $sel2Path : '';
+        $sql2 .= is_null($sel2Path) ? '' : ", \"$sel2Path\"";
         $sql2 .= ')';
 
         return $sql2;
@@ -156,7 +156,7 @@ class Sql2Generator extends BaseSqlGenerator
     public function evalSameNode($path, $selectorName = null)
     {
         $sql2 = 'ISSAMENODE(';
-        $sql2 .= is_null($selectorName) ? $path : $selectorName . ', ' . $path;
+        $sql2 .= is_null($selectorName) ? $path : "$selectorName, \"$path\"";
         $sql2 .= ')';
 
         return $sql2;
@@ -171,7 +171,7 @@ class Sql2Generator extends BaseSqlGenerator
     public function evalChildNode($path, $selectorName = null)
     {
         $sql2 = 'ISCHILDNODE(';
-        $sql2 .= is_null($selectorName) ? $path : $selectorName . ', ' . $path;
+        $sql2 .= is_null($selectorName) ? $path : "$selectorName, \"$path\"";
         $sql2 .= ')';
 
         return $sql2;
@@ -186,7 +186,7 @@ class Sql2Generator extends BaseSqlGenerator
     public function evalDescendantNode($path, $selectorName = null)
     {
         $sql2 = 'ISDESCENDANTNODE(';
-        $sql2 .= is_null($selectorName) ? $path : $selectorName . ', ' . $path;
+        $sql2 .= is_null($selectorName) ? $path : "$selectorName, \"$path\"";
         $sql2 .= ')';
 
         return $sql2;
