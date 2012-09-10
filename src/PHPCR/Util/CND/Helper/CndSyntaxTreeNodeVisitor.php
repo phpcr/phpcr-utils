@@ -6,27 +6,39 @@ namespace PHPCR\Util\CND\Helper;
 // TODO: as it is now, this will not work !!!
 
 use PHPCR\Util\CND\Parser\SyntaxTreeNode,
-    PHPCR\Util\CND\Parser\SyntaxTreeVisitorInterface;
-// TODO cleanup this dependency
-//    PHPCR\Util\CND\PHPCR\NodeType\NodeTypeDefinition;
+    PHPCR\Util\CND\Parser\SyntaxTreeVisitorInterface,
+    PHPCR\SessionInterface,
+    PHPCR\NodeType\NodeTypeDefinitionInterface;
 
 /**
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  */
 class CndSyntaxTreeNodeVisitor implements SyntaxTreeVisitorInterface
 {
-    protected $generator;
+    /**
+     * @var \PHPCR\NodeTypeManagerInterface
+     */
+    protected $nodeTypeManager;
 
+    /**
+     * @var \PHPCR\NamespaceRegistryInterface
+     */
+    protected $namespaceRegistry;
+
+    /**
+     * @var array
+     */
     protected $nodeTypeDefs = array();
 
     /**
-     * @var \LazyGuy\PhpParse\PHPCR\NodeType\NodeTypeDefinition
+     * @var \PHPCR\NodeTypeDefinitionInterface
      */
     protected $curNodeTypeDef;
 
-    public function __construct(NodeTypeGenerator $generator)
+    public function __construct(SessionInterface $session)
     {
-        $this->generator = $generator;
+        $this->namespaceRegistry = $session->getWorkspace()->getNamespaceRegistry();
+        $this->nodeTypeManager = $session->getWorkspace()->getNodeTypeManager();
     }
 
     public function getNodeTypeDefs()
@@ -38,12 +50,12 @@ class CndSyntaxTreeNodeVisitor implements SyntaxTreeVisitorInterface
     {
         //var_dump($node->getType());
         
-//        switch ($node->getType()) {
-//
-//            case 'nodeTypeDef':
-//                $this->curNodeTypeDef = new NodeTypeDefinition();
-//                $this->nodeTypeDefs[] = $this->curNodeTypeDef;
-//                break;
+        switch ($node->getType()) {
+
+            case 'nodeTypeDef':
+                $this->curNodeTypeDef = new NodeTypeDefinition();
+                $this->nodeTypeDefs[] = $this->curNodeTypeDef;
+                break;
 //
 //            case 'nodeTypeName':
 //                if ($node->hasProperty('value')) {
@@ -65,7 +77,7 @@ class CndSyntaxTreeNodeVisitor implements SyntaxTreeVisitorInterface
 //                break;
 //
 //            // TODO: write the rest
-//        }
+        }
     }
 
 }
