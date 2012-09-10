@@ -4,6 +4,9 @@ namespace PHPCR\Util\CND\Exception;
 
 use PHPCR\Util\CND\Reader\ReaderInterface;
 
+/**
+ * @author Daniel Barsotti <daniel.barsotti@liip.ch>
+ */
 class ScannerException extends \Exception
 {
     public function __construct(ReaderInterface $reader, $msg)

@@ -11,6 +11,8 @@ use PHPCR\Util\CND\Scanner\GenericToken as Token,
  *
  * @see http://www.day.com/specs/jcr/2.0/25_Appendix.html#25.2.3 CND Grammar
  * @see http://jackrabbit.apache.org/node-type-notation.html
+ *
+ * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  */
 class CndParser extends AbstractParser
 {

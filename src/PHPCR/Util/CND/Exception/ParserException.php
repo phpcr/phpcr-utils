@@ -5,6 +5,9 @@ namespace PHPCR\Util\CND\Exception;
 use PHPCR\Util\CND\Scanner\TokenQueue,
     PHPCR\Util\CND\Scanner\GenericToken;
 
+/**
+ * @author Daniel Barsotti <daniel.barsotti@liip.ch>
+ */
 class ParserException extends \Exception
 {
     public function __construct(TokenQueue $queue, $msg)

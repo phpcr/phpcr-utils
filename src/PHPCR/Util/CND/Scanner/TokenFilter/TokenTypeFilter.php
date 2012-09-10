@@ -4,6 +4,9 @@ namespace PHPCR\Util\CND\Scanner\TokenFilter;
 
 use PHPCR\Util\CND\Scanner\Token;
 
+/**
+ * @author Daniel Barsotti <daniel.barsotti@liip.ch>
+ */
 class TokenTypeFilter implements TokenFilterInterface
 {
     /**

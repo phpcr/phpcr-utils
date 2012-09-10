@@ -2,6 +2,9 @@
 
 namespace PHPCR\Util\CND\Scanner\TokenFilter;
 
+/**
+ * @author Daniel Barsotti <daniel.barsotti@liip.ch>
+ */
 class TokenFilterChain implements TokenFilterInterface
 {
     protected $filters;

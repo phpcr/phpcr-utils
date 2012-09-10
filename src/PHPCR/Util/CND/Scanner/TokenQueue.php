@@ -2,6 +2,9 @@
 
 namespace PHPCR\Util\CND\Scanner;
 
+/**
+ * @author Daniel Barsotti <daniel.barsotti@liip.ch>
+ */
 class TokenQueue implements \IteratorAggregate
 {
     /**

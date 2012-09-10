@@ -2,6 +2,9 @@
 
 namespace PHPCR\Util\CND\Reader;
 
+/**
+ * @author Daniel Barsotti <daniel.barsotti@liip.ch>
+ */
 class FileReader extends BufferReader
 {
     protected $fileName;

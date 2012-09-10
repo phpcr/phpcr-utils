@@ -10,6 +10,9 @@ use PHPCR\Util\CND\Parser\SyntaxTreeNode,
 // TODO cleanup this dependency
 //    PHPCR\Util\CND\PHPCR\NodeType\NodeTypeDefinition;
 
+/**
+ * @author Daniel Barsotti <daniel.barsotti@liip.ch>
+ */
 class CndSyntaxTreeNodeVisitor implements SyntaxTreeVisitorInterface
 {
     protected $generator;

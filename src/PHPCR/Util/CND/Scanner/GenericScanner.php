@@ -11,6 +11,8 @@ use PHPCR\Util\CND\Reader\ReaderInterface,
  *
  * This class can be extended and the class properties redefined in order to adapt
  * the token generation to your needs.
+ *
+ * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  */
 class GenericScanner extends AbstractScanner
 {

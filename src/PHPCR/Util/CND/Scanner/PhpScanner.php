@@ -4,6 +4,9 @@ namespace PHPCR\Util\CND\Scanner;
 
 use PHPCR\Util\CND\Reader\ReaderInterface;
 
+/**
+ * @author Daniel Barsotti <daniel.barsotti@liip.ch>
+ */
 class PhpScanner extends AbstractScanner
 {
     /**

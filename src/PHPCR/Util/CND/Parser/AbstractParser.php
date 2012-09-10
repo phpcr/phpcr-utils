@@ -15,6 +15,8 @@ use PHPCR\Util\CND\Scanner\GenericToken as Token,
  *      - checkToken            - check if the next token matches
  *      - expectToken           - expect the next token to match
  *      - checkAndExpectToken   - check and then expect the next token to match
+ *
+ * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  */
 abstract class AbstractParser extends AbstractDebuggable implements ParserInterface
 {

@@ -4,6 +4,9 @@ namespace PHPCR\Util\CND\Helper;
 
 use PHPCR\Util\CND\Parser\SyntaxTreeNode;
 
+/**
+ * @author Daniel Barsotti <daniel.barsotti@liip.ch>
+ */
 class NodeTypeGenerator
 {
     protected $root;

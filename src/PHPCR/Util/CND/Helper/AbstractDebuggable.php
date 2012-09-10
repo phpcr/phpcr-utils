@@ -5,6 +5,8 @@ namespace PHPCR\Util\CND\Helper;
 /**
  * This abstract class provides few debugging function that will only
  * have an effect if the named constant DEBUG exists and is set to true.
+ *
+ * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  */
 abstract class AbstractDebuggable
 {

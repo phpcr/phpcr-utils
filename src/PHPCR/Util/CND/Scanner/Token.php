@@ -6,6 +6,8 @@ namespace PHPCR\Util\CND\Scanner;
  * Base Token class.
  *
  * Unless you want to redefine the token type constants, you should rather use GenericToken.
+ *
+ * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  */
 class Token
 {

@@ -4,6 +4,9 @@ namespace PHPCR\Util\CND\Scanner\Context;
 
 use PHPCR\Util\CND\Scanner\TokenFilter;
 
+/**
+ * @author Daniel Barsotti <daniel.barsotti@liip.ch>
+ */
 class DefaultScannerContextWithoutSpacesAndComments extends DefaultScannerContext
 {
     public function __construct()

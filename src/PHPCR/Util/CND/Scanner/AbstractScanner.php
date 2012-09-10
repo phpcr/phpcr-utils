@@ -5,6 +5,9 @@ namespace PHPCR\Util\CND\Scanner;
 use PHPCR\Util\CND\Helper\AbstractDebuggable,
     PHPCR\Util\CND\Reader\ReaderInterface;
 
+/**
+ * @author Daniel Barsotti <daniel.barsotti@liip.ch>
+ */
 abstract class AbstractScanner extends AbstractDebuggable implements ScannerInterface
 {
     private $queue;
