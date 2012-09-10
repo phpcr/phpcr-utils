@@ -1,0 +1,6 @@
+<ns= 'http://namespace.com/ns'>
+[ns:NodeType]>ns:ParentType1, ns:ParentType2 o m
+-ex:property(STRING)='default1','default2' m a p * VERSION
+ <'constraint1', 'constraint2'
++ns:node(ns:reqType1,ns:reqType2)=ns:defaultType
+ m a p  VERSION

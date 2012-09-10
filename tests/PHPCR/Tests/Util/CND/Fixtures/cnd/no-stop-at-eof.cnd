@@ -1,0 +1,5 @@
+<'phpcr'='http://www.doctrine-project.org/projects/phpcr_odm'>
+[phpcr:primary_item_test] > ?
+- phpcr:content (STRING)
+= ?
+< ?

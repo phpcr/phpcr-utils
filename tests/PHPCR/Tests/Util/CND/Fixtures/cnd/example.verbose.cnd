@@ -1,0 +1,48 @@
+/*  An example node type definition */
+
+// The namespace declaration
+<ns = 'http://namespace.com/ns'>
+
+// Node type name
+[ns:NodeType]
+
+// Supertypes
+> ns:ParentType1, ns:ParentType2
+
+// This node type supports orderable child nodes
+orderable
+
+// This is a mixin node type
+mixin
+
+// Nodes of this node type have a property called 'ex:property' of type STRING
+- ex:property (STRING)
+
+// The default values for this
+// (multi-value) property are...
+= 'default1', 'default2'
+
+// and it is...
+mandatory autocreated protected
+
+// and multi-valued
+multiple
+
+// and has an on-parent-version setting of ...
+VERSION
+
+// The constraint settings are...
+< 'constraint1', 'constraint2'
+
+// Nodes of this node type have a child node called ns:node which must be of
+// at least the node types ns:reqType1 and ns:reqType2
++ ns:node (ns:reqType1, ns:reqType2)
+
+// and the default primary node type of the child node is...
+= ns:defaultType
+
+// This child node is...
+mandatory autocreated protected
+
+// and has an on-parent-version setting of ...
+VERSION
