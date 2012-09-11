@@ -10,7 +10,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * A command to create a workspace in the phcpr repository
  *
- * @author Lukas
+ * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  * @author David Buchmann <david@liip.ch>
  */
 class CreateWorkspaceCommand extends Command
