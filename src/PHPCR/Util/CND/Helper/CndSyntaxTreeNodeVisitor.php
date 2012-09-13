@@ -7,7 +7,8 @@ namespace PHPCR\Util\CND\Helper;
 
 use PHPCR\Util\CND\Parser\SyntaxTreeNode,
     PHPCR\Util\CND\Parser\SyntaxTreeVisitorInterface,
-    PHPCR\SessionInterface,
+    PHPCR\NamespaceRegistryInterface,
+    PHPCR\NodeType\NodeTypeManagerInterface,
     PHPCR\NodeType\NodeTypeDefinitionInterface;
 
 /**
@@ -31,14 +32,19 @@ class CndSyntaxTreeNodeVisitor implements SyntaxTreeVisitorInterface
     protected $nodeTypeDefs = array();
 
     /**
-     * @var \PHPCR\NodeTypeDefinitionInterface
+     * @var array
+     */
+    protected $namespaces = array();
+
+    /**
+     * @var \PHPCR\NodeTypeTemplateInterface
      */
     protected $curNodeTypeDef;
 
-    public function __construct(SessionInterface $session)
+    public function __construct(NamespaceRegistryInterface $nsRegistry, NodeTypeManagerInterface $ntManager)
     {
-        $this->namespaceRegistry = $session->getWorkspace()->getNamespaceRegistry();
-        $this->nodeTypeManager = $session->getWorkspace()->getNodeTypeManager();
+        $this->namespaceRegistry = $nsRegistry;
+        $this->nodeTypeManager = $ntManager;
     }
 
     public function getNodeTypeDefs()
@@ -46,37 +52,46 @@ class CndSyntaxTreeNodeVisitor implements SyntaxTreeVisitorInterface
         return $this->nodeTypeDefs;
     }
 
+    public function getNamespaces()
+    {
+        return $this->namespaces;
+    }
+
     public function visit(SyntaxTreeNode $node)
     {
-        //var_dump($node->getType());
-        
+        var_dump($node->getType());
+
         switch ($node->getType()) {
 
+            case 'nsMapping':
+                $this->namespaces[$node->getProperty('prefix')] = $node->getProperty('uri');
+                break;
+
             case 'nodeTypeDef':
-                $this->curNodeTypeDef = new NodeTypeDefinition();
+                $this->curNodeTypeDef = $this->nodeTypeManager->createNodeTypeTemplate();
                 $this->nodeTypeDefs[] = $this->curNodeTypeDef;
                 break;
-//
-//            case 'nodeTypeName':
-//                if ($node->hasProperty('value')) {
-//                    $this->curNodeTypeDef->setName($node->getProperty('value'));
-//                }
-//                break;
-//
-//            case 'supertypes':
-//                if ($node->hasProperty('value')) {
-//                    $this->curNodeTypeDef->addDeclaredSupertypeName($node->getProperty('value'));
-//                }
-//                break;
-//
-//            case 'nodeTypeAttributes':
-//                if ($node->hasChild('orderable')) $this->curNodeTypeDef->setHasOrderableChildNodes(true);
-//                if ($node->hasChild('mixin')) $this->curNodeTypeDef->setIsMixin(true);
-//                if ($node->hasChild('abstract')) $this->curNodeTypeDef->setIsAbstract(true);
-//                if ($node->hasChild('query')) $this->curNodeTypeDef->setIsQueryable(true);
-//                break;
-//
-//            // TODO: write the rest
+
+            case 'nodeTypeName':
+                if ($node->hasProperty('value')) {
+                    $this->curNodeTypeDef->setName($node->getProperty('value'));
+                }
+                break;
+
+            case 'supertypes':
+                if ($node->hasProperty('value')) {
+                    $this->curNodeTypeDef->setDeclaredSuperTypeNames($node->getProperty('value'));
+                }
+                break;
+
+            case 'nodeTypeAttributes':
+                if ($node->hasChild('orderable')) $this->curNodeTypeDef->setOrderableChildNodes(true);
+                if ($node->hasChild('mixin')) $this->curNodeTypeDef->setMixin(true);
+                if ($node->hasChild('abstract')) $this->curNodeTypeDef->setAbstract(true);
+                if ($node->hasChild('query')) $this->curNodeTypeDef->setQueryable(true);
+                break;
+
+            // TODO: write the rest
         }
     }
 

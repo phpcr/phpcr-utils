@@ -3,32 +3,41 @@
 namespace PHPCR\Util\CND\Helper;
 
 use PHPCR\Util\CND\Parser\SyntaxTreeNode,
-    PHPCR\SessionInterface;
+    PHPCR\WorkspaceInterface;
 
 /**
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  */
 class NodeTypeGenerator
 {
+    /**
+     * @var \PHPCR\Util\CND\Parser\SyntaxTreeNode
+     */
     protected $root;
 
-    protected $session;
+    /**
+     * @var \PHPCR\WorkspaceInterface
+     */
+    protected $workspace;
 
     /**
-     * @param \PHPCR\SessionInterface $session
+     * @param \PHPCR\WorkspaceInterface $session
      * @param \PHPCR\Util\CND\Parser\SyntaxTreeNode $root
      */
-    public function __construct(SessionInterface $session, SyntaxTreeNode $root)
+    public function __construct(WorkspaceInterface $workspace, SyntaxTreeNode $root)
     {
-        $this->session = $session;
+        $this->workspace = $workspace;
         $this->root = $root;
     }
 
     public function generate()
     {
-        $visitor = new CndSyntaxTreeNodeVisitor($this);
+        $visitor = new CndSyntaxTreeNodeVisitor($this->workspace->getNamespaceRegistry(), $this->workspace->getNodeTypeManager());
         $this->root->accept($visitor);
-        return $visitor->getNodeTypeDefs();
+        return array(
+            'namespaces' => $visitor->getNamespaces(),
+            'nodeTypes' => $visitor->getNodeTypeDefs(),
+        );
     }
 
 }
