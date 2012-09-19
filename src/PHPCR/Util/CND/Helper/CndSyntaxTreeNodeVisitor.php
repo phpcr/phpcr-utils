@@ -88,8 +88,8 @@ class CndSyntaxTreeNodeVisitor implements SyntaxTreeVisitorInterface
 
             case 'nodeTypeAttributes':
                 $this->setNodeTypeAttributes($node);
-                // OPTIMIZATION: Here we could "ask" the tree not to send the children as they just have been taken in account
-                break;
+                // return false to indicate we don't want to visit the children
+                return false;
 
             case 'propertyDef':
                 $this->curPropTypeDef = $this->nodeTypeManager->createPropertyDefinitionTemplate();
@@ -114,11 +114,11 @@ class CndSyntaxTreeNodeVisitor implements SyntaxTreeVisitorInterface
 
             case 'propertyTypeAttributes':
                 $this->setPropertyTypeAttributes($node);
-                // OPTIMIZATION: Here we could "ask" the tree not to send the children as they just have been taken in account
-                break;
+                // return false to indicate we don't want to visit the children
+                return false;
 
             default:
-//                var_dump(sprintf('Unhandled node [%s]', $node->getType()));
+                var_dump(sprintf('Unhandled node [%s]', $node->getType()));
 
         }
     }

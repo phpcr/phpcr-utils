@@ -55,14 +55,17 @@ class SyntaxTreeNode
     }
 
     /**
+     * Make the $visitor visit this node and it's children.
+     * The visitor may return the value boolean false (strict equality) to indicate to not visit the children.
      * @param SyntaxTreeVisitorInterface $visitor
      * @return void
      */
     public function accept(SyntaxTreeVisitorInterface $visitor)
     {
-        $visitor->visit($this);
-        foreach($this->children as $child) {
-            $child->accept($visitor);
+        if (false !== $visitor->visit($this)) {
+            foreach($this->children as $child) {
+                $child->accept($visitor);
+            }
         }
     }
 
