@@ -110,6 +110,7 @@ class CndSyntaxTreeNodeVisitor implements SyntaxTreeVisitorInterface
 
             case 'valueConstraints':
                 $this->curPropTypeDef->setValueConstraints($node->getProperty('value'));
+                var_dump($this->curNodeTypeDef->getDeclaredChildNodeDefinitions());die;
                 break;
 
             case 'propertyTypeAttributes':
@@ -118,7 +119,7 @@ class CndSyntaxTreeNodeVisitor implements SyntaxTreeVisitorInterface
                 return false;
 
             default:
-                var_dump(sprintf('Unhandled node [%s]', $node->getType()));
+//                var_dump(sprintf('Unhandled node [%s]', $node->getType()));
 
         }
     }
