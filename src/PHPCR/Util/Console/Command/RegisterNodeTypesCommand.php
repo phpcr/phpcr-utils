@@ -75,6 +75,8 @@ EOT
         $this->updateFromCnd($input, $output, $session, $cnd, $allowUpdate);
 
         $output->write(PHP_EOL.sprintf('Successfully registered node types from "<info>%s</info>"', $cnd_file) . PHP_EOL);
+
+        return 0;
     }
 
     /**

@@ -21,11 +21,11 @@ class ExportXmlCommand extends Command
 
         $this
             ->setName('phpcr:import')
-            ->addArgument('filename', null, 'The xml file to export to')
+            ->addArgument('filename', InputArgument::REQUIRED, 'The xml file to export to')
             ->addOption('path', 'p', InputOption::VALUE_OPTIONAL, 'Path of the node to export', '/')
             ->addOption('skip_binary', null, InputOption::VALUE_OPTIONAL, 'Set to "yes" to skip binaries', "no")
             ->addOption('no_recurse', null, InputOption::VALUE_OPTIONAL, 'Set to "yes" to prevent recursion', "no")
-            ->setDescription('Export xml data into the repository, either in JCR system view format or arbitrary xml')
+            ->setDescription('Export nodes from the repository, either to the JCR system view format or the document view format')
             ->setHelp(<<<EOF
 The <info>export</info> command uses the PHPCR SessionInterface::exportSystemView
 method to export parts of the repository into an XML document.
