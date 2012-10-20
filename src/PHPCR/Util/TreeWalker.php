@@ -101,8 +101,9 @@ class TreeWalker
      * Traverse a node
      * @param NodeInterface $node
      * @param int $level Recursion level
+     * @param int $recurse Max recursion level
      */
-    public function traverse(NodeInterface $node, $level = 0)
+    public function traverse(NodeInterface $node, $recurse = -1, $level = 0)
     {
         if ($this->mustVisitNode($node)) {
 
@@ -122,7 +123,9 @@ class TreeWalker
 
             // Visit children
             foreach ($node->getNodes() as $child) {
-                $this->traverse($child, $level + 1);
+                if ($recurse < 0 || $level < $recurse) {
+                    $this->traverse($child, $recurse, $level + 1);
+                }
             }
         }
     }

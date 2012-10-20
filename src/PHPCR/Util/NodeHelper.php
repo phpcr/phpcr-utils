@@ -49,7 +49,7 @@ class NodeHelper
      *
      * Note that if you want to delete a node under your root node, you can just
      * use the remove method on that node. This method is just here to help you
-     * because the implemenation might add nodes like jcr:system to the root
+     * because the implementation might add nodes like jcr:system to the root
      * node which you are not allowed to remove.
      *
      * @param SessionInterface $session the session to remove all children of
