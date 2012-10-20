@@ -45,7 +45,8 @@ EOT
         $workspace = $session->getWorkspace();
 
         if (! $session->getRepository()->getDescriptor(\PHPCR\RepositoryInterface::OPTION_WORKSPACE_MANAGEMENT_SUPPORTED)) {
-            throw new \Exception('Your PHPCR implemenation does not support workspace management. Please refer to the documentation of your PHPCR implementation to learn how to create a workspace.');
+            $output->writeln('<error>Your PHPCR implemenation does not support workspace management. Please refer to the documentation of your PHPCR implementation to learn how to create a workspace.</error>');
+            return 1;
         }
 
         $workspace->createWorkspace($name);
