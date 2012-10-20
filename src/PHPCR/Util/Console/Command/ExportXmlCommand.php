@@ -50,7 +50,8 @@ EOF
         /** @var $session \PHPCR\SessionInterface */
         $session = $this->getHelper('phpcr')->getSession();
         if (! $session->getRepository()->getDescriptor(RepositoryInterface::OPTION_XML_EXPORT_SUPPORTED)) {
-            throw new \RuntimeException('This repository does not support xml export');
+            $output->writeln('This repository does not support xml export');
+            return 1;
         }
 
         $path = $input->getOption('path');

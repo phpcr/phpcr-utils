@@ -85,12 +85,12 @@ EOF
             $walker->addPropertyFilter($filter);
         }
 
-        // do not catch error but let user see the node was not found
-        if ($session->nodeExists($path)) {
-            $walker->traverse($session->getNode($path), $input->getOption('depth'));
-        } else {
+        if (!$session->nodeExists($path)) {
             $output->writeln("Path '$path' does not exist\n");
+            return 1;
         }
+
+        $walker->traverse($session->getNode($path), $input->getOption('depth'));
 
         return 0;
     }

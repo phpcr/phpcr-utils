@@ -52,7 +52,8 @@ EOF
         /** @var $session \PHPCR\SessionInterface */
         $session = $this->getHelper('phpcr')->getSession();
         if (! $session->getRepository()->getDescriptor(RepositoryInterface::OPTION_XML_IMPORT_SUPPORTED)) {
-            throw new \RuntimeException('This repository does not support xml import');
+            $output->writeln('This repository does not support xml import');
+            return 1;
         }
 
         $parentpath = $input->getOption('parentpath');
