@@ -24,7 +24,7 @@ class ExportXmlCommand extends Command
             ->addArgument('filename', InputArgument::REQUIRED, 'The xml file to export to')
             ->addOption('path', 'p', InputOption::VALUE_OPTIONAL, 'Path of the node to export', '/')
             ->addOption('skip_binary', null, InputOption::VALUE_OPTIONAL, 'Set to "yes" to skip binaries', "no")
-            ->addOption('no_recurse', null, InputOption::VALUE_OPTIONAL, 'Set to "yes" to prevent recursion', "no")
+            ->addOption('recurse', null, InputOption::VALUE_OPTIONAL, 'Set to "no" to prevent recursion', "yes")
             ->setDescription('Export nodes from the repository, either to the JCR system view format or the document view format')
             ->setHelp(<<<EOF
 The <info>export</info> command uses the PHPCR SessionInterface::exportSystemView
@@ -55,7 +55,7 @@ EOF
 
         $path = $input->getOption('path');
         $stream = fopen($input->getArgument('filename'), 'w');
-        $session->exportSystemView($path, $stream, $input->getOption('skip_binary') === 'yes', $input->getOption('no_recurse') === 'yes');
+        $session->exportSystemView($path, $stream, $input->getOption('skip_binary') === 'yes', $input->getOption('recurse') === 'no');
 
         return 0;
     }

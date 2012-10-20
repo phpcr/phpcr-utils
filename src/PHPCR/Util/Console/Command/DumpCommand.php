@@ -31,7 +31,7 @@ class DumpCommand extends Command
             ->setName('phpcr:dump')
             ->addOption('sys_nodes', null, InputOption::VALUE_OPTIONAL, 'Set to "yes" to dump the system nodes', "no")
             ->addOption('props', null, InputOption::VALUE_OPTIONAL, 'Set to "yes" to dump the node properties', "no")
-            ->addOption('recurse', null, InputOption::VALUE_OPTIONAL, 'Set to a number to limit how deep into the tree to recurse', "-1")
+            ->addOption('depth', null, InputOption::VALUE_OPTIONAL, 'Set to a number to limit how deep into the tree to recurse', "-1")
             ->addArgument('path', InputArgument::OPTIONAL, 'Path of the node to dump', '/')
             ->setDescription('Dump the content repository')
             ->setHelp(<<<EOF
@@ -87,7 +87,7 @@ EOF
 
         // do not catch error but let user see the node was not found
         if ($session->nodeExists($path)) {
-            $walker->traverse($session->getNode($path), $input->getOption('recurse'));
+            $walker->traverse($session->getNode($path), $input->getOption('depth'));
         } else {
             $output->writeln("Path '$path' does not exist\n");
         }
