@@ -86,7 +86,7 @@ EOF
         }
 
         if (!$session->nodeExists($path)) {
-            $output->writeln("Path '$path' does not exist\n");
+            $output->writeln("<error>Path '$path' does not exist</error>");
             return 1;
         }
 

@@ -75,7 +75,7 @@ EOT
         try {
             $this->updateFromCnd($input, $output, $session, $cnd, $allowUpdate);
         } catch (\Exception $e) {
-            $output->writeln($e->getMessage());
+            $output->writeln('<error>'.$e->getMessage().'</error>');
             return 1;
         }
 
