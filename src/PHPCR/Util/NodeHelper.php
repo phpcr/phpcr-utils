@@ -2,8 +2,10 @@
 
 namespace PHPCR\Util;
 
-use PHPCR\SessionInterface;
 use PHPCR\ItemInterface;
+use PHPCR\NodeInterface;
+use PHPCR\PropertyType;
+use PHPCR\SessionInterface;
 
 /**
  * Helper with only static methods to work with PHPCR nodes
@@ -45,6 +47,34 @@ class NodeHelper
     }
 
     /**
+     * Delete all hard references from a node
+     *
+     * @param NodeInterface $node
+     */
+    public static function deleteAllHardReferences(NodeInterface $node)
+    {
+        foreach ($node->getProperties() as $property) {
+            if (PropertyType::REFERENCE === $property->getType()) {
+                $node->setProperty($property->getName(), $property->isMultiple() ? array() : null);
+            }
+        }
+    }
+
+    /**
+     * Delete all hard references from a node and its children
+     *
+     * @param NodeInterface $node
+     */
+    public static function deleteAllHardReferencesRecursive(NodeInterface $node)
+    {
+        static::deleteAllHardReferences($node);
+
+        foreach ($node->getNodes() as $childNode) {
+            static::deleteAllHardReferencesRecursive($childNode);
+        }
+    }
+
+    /**
      * Delete all the nodes in the repository which are not in a system namespace
      *
      * Note that if you want to delete a node under your root node, you can just
@@ -62,6 +92,8 @@ class NodeHelper
         $root = $session->getRootNode();
         foreach ($root->getNodes() as $node) {
             if (! self::isSystemItem($node)) {
+                static::deleteAllHardReferencesRecursive($node);
+                $session->save();
                 $node->remove();
             }
         }
