@@ -5,8 +5,8 @@ namespace PHPCR\Util\QOM;
 use PHPCR\Query\QOM;
 use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants;
 
-abstract class BaseQomToSqlQueryConverter {
-
+abstract class BaseQomToSqlQueryConverter
+{
     /**
      * @var \PHPCR\Util\QOM\Sql2Generator
      */
