@@ -91,7 +91,7 @@ class Sql2Generator extends BaseSqlGenerator
      */
     public function evalEquiJoinCondition($sel1Name, $prop1Name, $sel2Name, $prop2Name)
     {
-        return $this->qualifyProperty($sel1Name, $prop1Name) . '=' .$this->qualifyProperty($sel2Name, $prop2Name);
+        return $this->evalPropertyValue($prop1Name, $sel1Name) . '=' .$this->evalPropertyValue($prop2Name, $sel2Name);
     }
 
     /**
@@ -194,7 +194,7 @@ class Sql2Generator extends BaseSqlGenerator
 
     public function evalPropertyExistence($selectorName, $propertyName)
     {
-        return $this->qualifyProperty($selectorName, $propertyName) . " IS NOT NULL";
+        return $this->evalPropertyValue($propertyName, $selectorName) . " IS NOT NULL";
     }
 
     /**
@@ -213,7 +213,7 @@ class Sql2Generator extends BaseSqlGenerator
         $propertyName = $propertyName ?: '*';
 
         $sql2 = 'CONTAINS(';
-        $sql2 .= $this->qualifyProperty($selectorName, $propertyName);
+        $sql2 .= $this->evalPropertyValue($propertyName, $selectorName);
         $sql2 .= ', ' . $searchExpression . ')';
 
         return $sql2;
@@ -304,7 +304,7 @@ class Sql2Generator extends BaseSqlGenerator
         if (! is_null($selectorName) && is_null($propertyName) && is_null($colname)) {
             $sql2 .= $selectorName . '.*';
         } else {
-            $sql2 .= $this->qualifyProperty($selectorName, $propertyName);
+            $sql2 .= $this->evalPropertyValue($propertyName, $selectorName);
             $sql2 .= ! is_null($colname) ? ' AS ' . $colname : '';
         }
 
@@ -343,10 +343,5 @@ class Sql2Generator extends BaseSqlGenerator
     public function evalCastLiteral($literal, $type)
     {
         return "CAST('$literal' AS $type)";
-    }
-
-    private function qualifyProperty($selectorName, $propertyName)
-    {
-        return $selectorName ? $selectorName.'.'.$propertyName : $propertyName;
     }
 }
