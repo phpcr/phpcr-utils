@@ -34,7 +34,7 @@ class TreeWalker
     protected $propertyFilters = array();
 
     /**
-     * @param ItemVisitorInterface $nodeVisitor The visitor for the nodes
+     * @param ItemVisitorInterface $nodeVisitor     The visitor for the nodes
      * @param ItemVisitorInterface $propertyVisitor The visitor for the nodes properties
      */
     public function __construct(ItemVisitorInterface $nodeVisitor, ItemVisitorInterface $propertyVisitor = null)
@@ -67,7 +67,7 @@ class TreeWalker
 
     /**
      * Return whether a node must be traversed or not
-     * @param NodeInterface $node
+     * @param  NodeInterface $node
      * @return boolean
      */
     protected function mustVisitNode(NodeInterface $node)
@@ -83,7 +83,7 @@ class TreeWalker
 
     /**
      * Return whether a node property must be traversed or not
-     * @param PropertyInterface $property
+     * @param  PropertyInterface $property
      * @return boolean
      */
     protected function mustVisitProperty(PropertyInterface $property)
@@ -100,8 +100,8 @@ class TreeWalker
     /**
      * Traverse a node
      * @param NodeInterface $node
-     * @param int $level Recursion level
-     * @param int $recurse Max recursion level
+     * @param int           $level   Recursion level
+     * @param int           $recurse Max recursion level
      */
     public function traverse(NodeInterface $node, $recurse = -1, $level = 0)
     {

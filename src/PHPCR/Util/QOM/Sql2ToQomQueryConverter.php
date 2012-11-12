@@ -37,7 +37,7 @@ class Sql2ToQomQueryConverter
      * 6.7.1. Query
      * Parse an SQL2 query and return the corresponding QOM QueryObjectModel
      *
-     * @param string $sql2
+     * @param  string                                      $sql2
      * @return \PHPCR\Query\QOM\QueryObjectModelInterface;
      */
     public function parse($sql2)
@@ -114,6 +114,7 @@ class Sql2ToQomQueryConverter
         if (strtoupper($this->scanner->lookupNextToken()) === 'AS') {
             $this->scanner->fetchNextToken(); // Consume the AS
             $selectorName = $this->parseName();
+
             return $this->factory->selector($token, $selectorName);
         }
 
@@ -355,6 +356,7 @@ class Sql2ToQomQueryConverter
     protected function parseNot()
     {
         $this->scanner->expectToken('NOT');
+
         return $this->factory->notConstraint($this->parseConstraint());
     }
 
@@ -418,6 +420,7 @@ class Sql2ToQomQueryConverter
         $token = $this->scanner->lookupNextToken();
         if ($this->scanner->tokenIs($token, 'NULL')) {
             $this->scanner->fetchNextToken();
+
             return $this->factory->not($this->factory->propertyExistence($prop, $selector));
         }
 
@@ -458,6 +461,7 @@ class Sql2ToQomQueryConverter
             $path = $this->parsePath();
         }
         $this->scanner->expectToken(')');
+
         return $this->factory->sameNode($path, $selector);
     }
 
@@ -476,6 +480,7 @@ class Sql2ToQomQueryConverter
             $path = $this->parsePath();
         }
         $this->scanner->expectToken(')');
+
         return $this->factory->childNode($path, $selector);
     }
 
@@ -494,6 +499,7 @@ class Sql2ToQomQueryConverter
             $path = $this->parsePath();
         }
         $this->scanner->expectToken(')');
+
         return $this->factory->descendantNode($path, $selector);
     }
 
@@ -510,6 +516,7 @@ class Sql2ToQomQueryConverter
         if (substr($path, 0, 1) === '[' && substr($path, -1) === ']') {
             $path = substr($path, 1, -1);
         }
+
         return $path;
     }
 
@@ -526,6 +533,7 @@ class Sql2ToQomQueryConverter
         if (substr($token, 0, 1) === '$') {
             return $this->factory->bindVariable(substr($token, 1));
         }
+
         return $this->parseLiteral();
     }
 
@@ -550,6 +558,7 @@ class Sql2ToQomQueryConverter
             $this->scanner->expectToken('(');
             $val = $this->parsePropertyValue();
             $this->scanner->expectToken(')');
+
             return $this->factory->length($val);
         }
 
@@ -563,6 +572,7 @@ class Sql2ToQomQueryConverter
             }
 
             $this->scanner->expectToken(')');
+
             return $this->factory->nodeName($token);
         }
 
@@ -576,6 +586,7 @@ class Sql2ToQomQueryConverter
             }
 
             $this->scanner->expectToken(')');
+
             return $this->factory->nodeLocalName($token);
         }
 
@@ -589,6 +600,7 @@ class Sql2ToQomQueryConverter
             }
 
             $this->scanner->expectToken(')');
+
             return $this->factory->fullTextSearchScore($token);
         }
 
@@ -597,6 +609,7 @@ class Sql2ToQomQueryConverter
             $this->scanner->expectToken('(');
             $op = $this->parseDynamicOperand();
             $this->scanner->expectToken(')');
+
             return $this->factory->lowerCase($op);
         }
 
@@ -605,6 +618,7 @@ class Sql2ToQomQueryConverter
             $this->scanner->expectToken('(');
             $op = $this->parseDynamicOperand();
             $this->scanner->expectToken(')');
+
             return $this->factory->upperCase($op);
         }
 
@@ -675,6 +689,7 @@ class Sql2ToQomQueryConverter
                 $continue = false;
             }
         }
+
         return $orderings;
     }
 
@@ -688,12 +703,14 @@ class Sql2ToQomQueryConverter
 
         if ($token === 'DESC') {
             $this->scanner->expectToken('DESC');
+
             return $this->factory->descending($operand);
         } elseif ($token === 'ASC' || $token === ',' || $token === '') {
             if ($token === 'ASC') {
                 // Consume ASC
                 $this->scanner->fetchNextToken();
             }
+
             return $this->factory->ascending($operand);
         }
 
@@ -713,6 +730,7 @@ class Sql2ToQomQueryConverter
         // Wildcard
         if ($this->scanner->lookupNextToken() === '*') {
             $this->scanner->fetchNextToken();
+
             return array();
         }
 

@@ -24,7 +24,7 @@ class NodeHelper
      * Create a node and it's parents, if necessary.  Like mkdir -p.
      *
      * @param SessionInterface $session the phpcr session to create the path
-     * @param string $path  full path, like /content/jobs/data
+     * @param string           $path    full path, like /content/jobs/data
      *
      * @return PHPCR\NodeInterface the last node of the path, i.e. data
      */
@@ -79,6 +79,7 @@ class NodeHelper
     public static function isSystemItem(ItemInterface $item)
     {
         $name = $item->getName();
+
         return strpos($name, 'jcr:') === 0 || strpos($name, 'rep:') === 0;
     }
 }

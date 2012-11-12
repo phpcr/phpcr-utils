@@ -76,6 +76,7 @@ EOT
             $this->updateFromCnd($input, $output, $session, $cnd, $allowUpdate);
         } catch (\Exception $e) {
             $output->writeln('<error>'.$e->getMessage().'</error>');
+
             return 1;
         }
 
@@ -88,10 +89,10 @@ EOT
      * Actually do the update.
      *
      * @param SessionInterface $session the phpcr session to talk to
-     * @param string $cnd the compact namespace and node type definition in string form
+     * @param string           $cnd     the compact namespace and node type definition in string form
      *
      * @throws \PHPCR\NodeType\NodeTypeExistsException if the node already exists and allowUpdate is false
-     * @throws \PHPCR\RepositoryException on other errors
+     * @throws \PHPCR\RepositoryException              on other errors
      */
     protected function updateFromCnd(InputInterface $input, OutputInterface $output, SessionInterface $session, $cnd, $allowUpdate)
     {

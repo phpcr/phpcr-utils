@@ -35,4 +35,3 @@ class PhpcrHelper extends Helper
         return 'phpcr';
     }
 }
-

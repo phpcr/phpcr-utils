@@ -16,8 +16,8 @@ class Sql2Generator extends BaseSqlGenerator
      * Selector ::= nodeTypeName ['AS' selectorName]
      * nodeTypeName ::= Name
      *
-     * @param string $nodeTypeName The node type of the selector. If it does not contain starting and ending brackets ([]) they will be added automatically
-     * @param string $selectorName
+     * @param  string $nodeTypeName The node type of the selector. If it does not contain starting and ending brackets ([]) they will be added automatically
+     * @param  string $selectorName
      * @return string
      */
     public function evalSelector($nodeTypeName, $selectorName = null)
@@ -41,10 +41,10 @@ class Sql2Generator extends BaseSqlGenerator
      * left ::= Source
      * right ::= Source
      *
-     * @param string $left
-     * @param string $right
-     * @param string $joinCondition
-     * @param string $joinType
+     * @param  string $left
+     * @param  string $right
+     * @param  string $joinCondition
+     * @param  string $joinType
      * @return string
      */
     public function evalJoin($left, $right, $joinCondition, $joinType = '')
@@ -58,7 +58,7 @@ class Sql2Generator extends BaseSqlGenerator
      * LeftOuter ::= 'LEFT OUTER'
      * RightOuter ::= 'RIGHT OUTER'
      *
-     * @param string $joinType
+     * @param  string $joinType
      * @return string
      */
     public function evalJoinType($joinType)
@@ -83,10 +83,10 @@ class Sql2Generator extends BaseSqlGenerator
      *   property1Name ::= propertyName
      *   property2Name ::= propertyName
      *
-     * @param string $sel1Name
-     * @param string $prop1Name
-     * @param string $sel2Name
-     * @param string $prop2Name
+     * @param  string $sel1Name
+     * @param  string $prop1Name
+     * @param  string $sel2Name
+     * @param  string $prop2Name
      * @return string
      */
     public function evalEquiJoinCondition($sel1Name, $prop1Name, $sel2Name, $prop2Name)
@@ -101,9 +101,9 @@ class Sql2Generator extends BaseSqlGenerator
      *                  [',' selector2Path] ')'
      *   selector2Path ::= Path
      *
-     * @param string $sel1Name
-     * @param string $sel2Name
-     * @param string $sel2path
+     * @param  string $sel1Name
+     * @param  string $sel2Name
+     * @param  string $sel2path
      * @return string
      */
     public function evalSameNodeJoinCondition($sel1Name, $sel2Name, $sel2Path = null)
@@ -122,8 +122,8 @@ class Sql2Generator extends BaseSqlGenerator
      *   childSelectorName ::= selectorName
      *   parentSelectorName ::= selectorName
      *
-     * @param string $childSelectorName
-     * @param string $parentSelectorName
+     * @param  string $childSelectorName
+     * @param  string $parentSelectorName
      * @return string
      */
     public function evalChildNodeJoinCondition($childSelectorName, $parentSelectorName)
@@ -138,8 +138,8 @@ class Sql2Generator extends BaseSqlGenerator
      *   descendantSelectorName ::= selectorName
      *   ancestorSelectorName ::= selectorName
      *
-     * @param string $descendantSelectorName
-     * @param string $ancestorselectorName
+     * @param  string $descendantSelectorName
+     * @param  string $ancestorselectorName
      * @return string
      */
     public function evalDescendantNodeJoinCondition($descendantSelectorName, $ancestorselectorName)
@@ -203,9 +203,9 @@ class Sql2Generator extends BaseSqlGenerator
      *                    selectorName'.*') ','
      *                    FullTextSearchExpression ')'
      * FullTextSearchExpression ::= BindVariable | ''' FullTextSearchLiteral '''
-     * @param string $selectorName unusued
-     * @param string $searchExpression
-     * @param string $ropertyName
+     * @param  string $selectorName     unusued
+     * @param  string $searchExpression
+     * @param  string $ropertyName
      * @return string
      */
     public function evalFullTextSearch($selectorName, $searchExpression, $propertyName = null)
@@ -222,7 +222,7 @@ class Sql2Generator extends BaseSqlGenerator
     /**
      * Length ::= 'LENGTH(' PropertyValue ')'
      *
-     * @param string $propertyValue
+     * @param  string $propertyValue
      * @return string
      */
     public function evalLength($propertyValue)
@@ -316,7 +316,7 @@ class Sql2Generator extends BaseSqlGenerator
      * quotedPath ::= A JCR Path that contains non-SQL-legal characters
      * simplePath ::= A JCR Name that contains only SQL-legal characters
      *
-     * @param string $path
+     * @param  string $path
      * @return string
      */
     public function evalPath($path)
@@ -330,6 +330,7 @@ class Sql2Generator extends BaseSqlGenerator
                 }
                 $sql2 = '[' . $sql2 . ']';
             }
+
             return $sql2;
         }
 

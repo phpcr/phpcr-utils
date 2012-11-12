@@ -2,7 +2,6 @@
 
 namespace PHPCR\Util\Console\Command;
 
-
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -87,6 +86,7 @@ EOF
 
         if (!$session->nodeExists($path)) {
             $output->writeln("<error>Path '$path' does not exist</error>");
+
             return 1;
         }
 

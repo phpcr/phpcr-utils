@@ -3,7 +3,6 @@
 namespace PHPCR\Util\Console\Command;
 
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -53,6 +52,7 @@ EOF
         $session = $this->getHelper('phpcr')->getSession();
         if (! $session->getRepository()->getDescriptor(RepositoryInterface::OPTION_XML_IMPORT_SUPPORTED)) {
             $output->writeln('<error>This repository does not support xml import</error>');
+
             return 1;
         }
 
