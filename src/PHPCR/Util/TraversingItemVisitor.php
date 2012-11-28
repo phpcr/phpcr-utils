@@ -115,6 +115,11 @@ abstract class TraversingItemVisitor implements ItemVisitorInterface
         $this->currentDepth = 0;
     }
 
+    public function setLevel($level)
+    {
+        $this->currentDepth = $level;
+    }
+
     /**
      * Implement this method to add behavior performed before a Property is
      * visited.
