@@ -325,7 +325,7 @@ class Sql2Generator extends BaseSqlGenerator
             $sql2 = $path;
             // only ensure proper quoting if the user did not quote himself, we trust him to get it right if he did.
             if (substr($path, 0,1) !== '[' && substr($path, -1) !== ']') {
-                if (false !== strpos($sql2, ' ')) {
+                if (false !== strpos($sql2, ' ') || false !== strpos($sql2, '.')) {
                     $sql2 = '"' . $sql2 . '"';
                 }
                 $sql2 = '[' . $sql2 . ']';
