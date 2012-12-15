@@ -123,6 +123,14 @@ class QueryBuilder
     }
 
     /**
+     * Shortcut for getQOMFactory()
+     */
+    public function qomf()
+    {
+        return $this->getQOMFactory();
+    }
+
+    /**
      * sets the position of the first result to retrieve (the "offset").
      *
      * @param integer $firstResult The First result to return.
