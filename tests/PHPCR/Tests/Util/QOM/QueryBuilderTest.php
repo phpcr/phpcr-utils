@@ -37,6 +37,26 @@ class QueryBuilderTest extends \PHPUnit_Framework_TestCase
         $orderings = $qb->getOrderings();
     }
 
+    public function testAddOrderByLowercase()
+    {
+        $dynamicOperand = $this->getMock('PHPCR\Query\QOM\DynamicOperandInterface', array(), array());
+        $qb = new QueryBuilder($this->qf);
+        $qb->addOrderBy($dynamicOperand, 'asc');
+        $qb->addOrderBy($dynamicOperand, 'desc');
+        $this->assertEquals(2, count($qb->getOrderings()));
+        $orderings = $qb->getOrderings();
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testAddOrderByInvalid()
+    {
+        $dynamicOperand = $this->getMock('PHPCR\Query\QOM\DynamicOperandInterface', array(), array());
+        $qb = new QueryBuilder($this->qf);
+        $qb->addOrderBy($dynamicOperand, 'FOO');
+    }
+
     public function testOrderBy()
     {
         $dynamicOperand = $this->getMock('PHPCR\Query\QOM\DynamicOperandInterface', array(), array());
