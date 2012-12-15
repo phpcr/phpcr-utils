@@ -193,6 +193,12 @@ class QueryBuilder
      */
     public function addOrderBy(DynamicOperandInterface $sort, $order = 'ASC')
     {
+        $order = strtoupper($order);
+
+        if (!in_array($order, array('ASC', 'DESC'))) {
+            throw new \InvalidArgumentException('Order must be one of "ASC" or "DESC"');
+        }
+
         $this->state = self::STATE_DIRTY;
         if ($order == 'DESC') {
             $ordering = $this->qomFactory->descending($sort);
@@ -213,15 +219,10 @@ class QueryBuilder
      *
      * @return QueryBuilder This QueryBuilder instance.
      */
-    public function orderBy(DynamicOperandInterface $sort, $order = null)
+    public function orderBy(DynamicOperandInterface $sort, $order = 'ASC')
     {
-        $this->state = self::STATE_DIRTY;
-        if ($order == 'DESC') {
-            $ordering = $this->qomFactory->descending($sort);
-        } else {
-            $ordering = $this->qomFactory->ascending($sort);
-        }
-        $this->orderings = array($ordering);
+        $this->orderings = array();
+        $this->addOrderBy($sort, $order);
 
         return $this;
     }
