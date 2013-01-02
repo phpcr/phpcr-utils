@@ -58,7 +58,12 @@ class QueryCommand extends Command
             $query->setOffset($offset);
         }
 
+        $output->writeln(sprintf('<info>Executing, language:</info> %s', $query->getLanguage()));
+
+        $start = microtime(true);
         $result = $query->execute();
+        $elapsed = microtime(true) - $start; 
+
         $output->writeln("Results:\n");
         foreach ($result as $i => $row) {
             $output->writeln("\n".($i+1).'. Row (Path: '. $row->getPath() .', Score: '. $row->getScore() .'):');
@@ -66,6 +71,7 @@ class QueryCommand extends Command
                 $output->writeln("$column: $value");
             }
         }
+        $output->writeln(sprintf('<info>%.2f seconds</info>', $elapsed));
 
         return 0;
     }
