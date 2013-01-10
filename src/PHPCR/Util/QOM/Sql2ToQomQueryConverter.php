@@ -37,7 +37,7 @@ class Sql2ToQomQueryConverter
      * 6.7.1. Query
      * Parse an SQL2 query and return the corresponding QOM QueryObjectModel
      *
-     * @param  string                                      $sql2
+     * @param string $sql2
      * @return \PHPCR\Query\QOM\QueryObjectModelInterface;
      */
     public function parse($sql2)
@@ -195,9 +195,11 @@ class Sql2ToQomQueryConverter
         if ($this->scanner->tokenIs($token, 'ISSAMENODE')) {
             return $this->parseSameNodeJoinCondition();
         }
+
         if ($this->scanner->tokenIs($token, 'ISCHILDNODE')) {
             return $this->parseChildNodeJoinCondition();
         }
+
         if ($this->scanner->tokenIs($token, 'ISDESCENDANTNODE')) {
             return $this->parseDescendantNodeJoinCondition();
         }
@@ -228,17 +230,19 @@ class Sql2ToQomQueryConverter
      */
     protected function parseSameNodeJoinCondition()
     {
-        $path = null;
         $this->scanner->expectTokens(array('ISSAMENODE', '('));
-        $selector1 = $this->scanner->fetchNextToken();
+        $selector1 = $this->parseSelector();
         $this->scanner->expectToken(',');
-        $selector2 = $this->scanner->fetchNextToken();
+        $selector2 = $this->parseSelector();
 
         $token = $this->scanner->lookupNextToken();
         if ($this->scanner->tokenIs($token, ',')) {
             $this->scanner->fetchNextToken(); // consume the coma
             $path = $this->parsePath();
+        } else {
+            $path = null;
         }
+
         $this->scanner->expectToken(')');
 
         return $this->factory->sameNodeJoinCondition($selector1, $selector2, $path);
@@ -253,9 +257,9 @@ class Sql2ToQomQueryConverter
     protected function parseChildNodeJoinCondition()
     {
         $this->scanner->expectTokens(array('ISCHILDNODE', '('));
-        $child = $this->scanner->fetchNextToken();
+        $child = $this->parseSelector();
         $this->scanner->expectToken(',');
-        $parent = $this->scanner->fetchNextToken();
+        $parent = $this->parseSelector();
         $this->scanner->expectToken(')');
 
         return $this->factory->childNodeJoinCondition($child, $parent);
@@ -270,9 +274,9 @@ class Sql2ToQomQueryConverter
     protected function parseDescendantNodeJoinCondition()
     {
         $this->scanner->expectTokens(array('ISDESCENDANTNODE', '('));
-        $child = $this->scanner->fetchNextToken();
+        $child = $this->parseSelector();
         $this->scanner->expectToken(',');
-        $parent = $this->scanner->fetchNextToken();
+        $parent = $this->parseSelector();
         $this->scanner->expectToken(')');
 
         return $this->factory->descendantNodeJoinCondition($child, $parent);
@@ -340,9 +344,9 @@ class Sql2ToQomQueryConverter
             $constraint2 = $this->parseConstraint();
             if ($this->scanner->tokenIs($token, 'AND')) {
                 return $this->factory->andConstraint($constraint, $constraint2);
-            } else {
-                return $this->factory->orConstraint($constraint, $constraint2);
             }
+
+            return $this->factory->orConstraint($constraint, $constraint2);
         }
 
         return $constraint;
@@ -705,7 +709,9 @@ class Sql2ToQomQueryConverter
             $this->scanner->expectToken('DESC');
 
             return $this->factory->descending($operand);
-        } elseif ($token === 'ASC' || $token === ',' || $token === '') {
+        }
+
+        if ($token === 'ASC' || $token === ',' || $token === '') {
             if ($token === 'ASC') {
                 // Consume ASC
                 $this->scanner->fetchNextToken();
@@ -730,7 +736,6 @@ class Sql2ToQomQueryConverter
         // Wildcard
         if ($this->scanner->lookupNextToken() === '*') {
             $this->scanner->fetchNextToken();
-
             return array();
         }
 
