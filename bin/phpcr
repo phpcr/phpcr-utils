@@ -7,7 +7,7 @@ $file = $vendorDir.'/autoload.php';
 if (file_exists($file)) {
     $autoload = require_once $file;
 } else {
-    die("Install dependencies to run test suite.\n");
+    die("Install dependencies before using this command.\n");
 }
 
 $configFile = getcwd() . DIRECTORY_SEPARATOR . 'cli-config.php';
