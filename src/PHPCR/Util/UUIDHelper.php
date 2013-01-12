@@ -32,10 +32,10 @@ class UUIDHelper
     /**
      * Checks if the string could be a uuid.
      *
-     * @param string $id Possible uuid
+     * @param  string  $id Possible uuid
      * @return boolean True if the test was passed, else false.
      */
-    static public function isUUID($id)
+    public static function isUUID($id)
     {
         // UUID is HEX_CHAR{8}-HEX_CHAR{4}-HEX_CHAR{4}-HEX_CHAR{4}-HEX_CHAR{12}
         if (1 === preg_match('/^[[:xdigit:]]{8}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{12}$/', $id)) {
@@ -50,7 +50,7 @@ class UUIDHelper
      *
      * @return string
      */
-    static public function generateUUID()
+    public static function generateUUID()
     {
         return sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
             // 32 bits for "time_low"

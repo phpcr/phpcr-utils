@@ -2,8 +2,11 @@
 
 namespace PHPCR\Util\Console\Command;
 
-
 use Symfony\Component\Console\Command\Command;
+use PHPCR\ItemNotFoundException;
+use PHPCR\RepositoryException;
+use PHPCR\PathNotFoundException;
+use PHPCR\Util\UUIDHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
@@ -31,8 +34,8 @@ class DumpCommand extends Command
             ->setName('phpcr:dump')
             ->addOption('sys_nodes', null, InputOption::VALUE_OPTIONAL, 'Set to "yes" to dump the system nodes', "no")
             ->addOption('props', null, InputOption::VALUE_OPTIONAL, 'Set to "yes" to dump the node properties', "no")
-            //TODO: implement ->addOption('recurse', null, InputOption::VALUE_OPTIONAL, 'Set to a number to limit how deep into the tree to recurse', "-1")
-            ->addArgument('path', InputArgument::OPTIONAL, 'Path of the node to dump', '/')
+            ->addOption('depth', null, InputOption::VALUE_OPTIONAL, 'Set to a number to limit how deep into the tree to recurse', "-1")
+            ->addArgument('identifier', InputArgument::OPTIONAL, 'Path or UUID of the node to dump', '/')
             ->setDescription('Dump the content repository')
             ->setHelp(<<<EOF
 The <info>dump</info> command recursively outputs the name of the node specified
@@ -68,7 +71,7 @@ EOF
     {
         $session = $this->getHelper('phpcr')->getSession();
 
-        $path = $input->getArgument('path');
+        $identifier = $input->getArgument('identifier');
 
         $nodeVisitor = new ConsoleDumperNodeVisitor($output);
 
@@ -85,8 +88,16 @@ EOF
             $walker->addPropertyFilter($filter);
         }
 
-        // do not catch error but let user see the node was not found
-        $walker->traverse($session->getNode($path));
+        try {
+            $node = $session->getNodeByIdentifier($identifier);
+            $walker->traverse($node, $input->getOption('depth'));
+        } catch (RepositoryException $e) {
+            if ($e instanceof PathNotFoundException || $e instanceof ItemNotFoundException) {
+                $output->writeln("<error>Path '$identifier' does not exist</error>");
+
+                return 1;
+            }
+        }
 
         return 0;
     }

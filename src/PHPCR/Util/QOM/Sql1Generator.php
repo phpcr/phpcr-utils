@@ -3,7 +3,6 @@
 namespace PHPCR\Util\QOM;
 
 use PHPCR\Query\QOM;
-use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants;
 
 /**
  * Generate SQL1 statements
@@ -16,8 +15,8 @@ class Sql1Generator extends BaseSqlGenerator
      * Selector ::= nodeTypeName
      * nodeTypeName ::= Name
      *
-     * @param string $nodeTypeName The node type of the selector. If it does not contain starting and ending brackets ([]) they will be added automatically
-     * @param string $selectorName (unused)
+     * @param  string $nodeTypeName The node type of the selector. If it does not contain starting and ending brackets ([]) they will be added automatically
+     * @param  string $selectorName (unused)
      * @return string
      */
     public function evalSelector($nodeTypeName, $selectorName = null)
@@ -27,9 +26,14 @@ class Sql1Generator extends BaseSqlGenerator
 
     protected function getPathForDescendantQuery($path)
     {
-        $path = trim($path,"\"'/");
-        $sql1 = "/" . str_replace("/","[%]/",$path) ;
-        $sql1 .= "[%]/%";
+        if ($path == '/') {
+            $sql1 = '/%';
+        } else {
+            $path = trim($path,"\"'/");
+            $sql1 = "/" . str_replace("/","[%]/",$path) ;
+            $sql1 .= "[%]/%";
+        }
+
         return $sql1;
     }
 
@@ -44,6 +48,7 @@ class Sql1Generator extends BaseSqlGenerator
         $path = $this->getPathForDescendantQuery($path);
         $sql1 = "jcr:path LIKE '" . $path ."'";
         $sql1 .= " AND NOT jcr:path LIKE '" . $path . "/%'";
+
         return $sql1;
     }
 
@@ -57,6 +62,7 @@ class Sql1Generator extends BaseSqlGenerator
     {
         $path = $this->getPathForDescendantQuery($path);
         $sql1 = "jcr:path LIKE '" . $path . "'";
+
         return $sql1;
     }
 
@@ -71,9 +77,9 @@ class Sql1Generator extends BaseSqlGenerator
      *                    FullTextSearchExpression ')'
      * FullTextSearchExpression ::= BindVariable | ''' FullTextSearchLiteral '''
      *
-     * @param string $selectorName unusued
-     * @param string $searchExpression
-     * @param string $ropertyName
+     * @param  string $selectorName     unusued
+     * @param  string $searchExpression
+     * @param  string $ropertyName
      * @return string
      */
     public function evalFullTextSearch($selectorName, $searchExpression, $propertyName = null)
@@ -125,7 +131,7 @@ class Sql1Generator extends BaseSqlGenerator
      * Path ::= simplePath
      * simplePath ::= A JCR Name that contains only SQL-legal characters
      *
-     * @param string $path
+     * @param  string $path
      * @return string
      */
     public function evalPath($path)
@@ -148,6 +154,7 @@ class Sql1Generator extends BaseSqlGenerator
                 if ((int) $literal == $literal) {
                     return $literal .".0";
                 }
+
                 return $literal;
         }
 

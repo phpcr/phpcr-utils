@@ -3,6 +3,7 @@
 namespace PHPCR\Util\Console\Command;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -22,7 +23,8 @@ class PurgeCommand extends Command
 
         $this
             ->setName('phpcr:purge')
-            ->setDescription('Remove all content from the repository')
+            ->setDescription('Remove content from the repository')
+            ->addArgument('path', InputArgument::OPTIONAL, 'Path of the node to purge', '/')
             ->addOption('force', null, InputOption::VALUE_OPTIONAL, 'Set to "yes" to bypass the confirmation dialog', "no")
             ->setHelp(<<<EOF
 The <info>phpcr:purge</info> command remove all the non-standard nodes from the content repository
@@ -43,17 +45,24 @@ EOF
     {
         $session = $this->getHelper('phpcr')->getSession();
 
+        $path = $input->getArgument('path');
         $force = ConsoleParametersParser::isTrueString($input->getOption('force'));
 
         if (! $force) {
             $dialog = new DialogHelper();
-            $res = $dialog->askConfirmation($output, 'Are you sure you want to delete all the nodes of the content repository? [yes|no]: ', false); // TODO: output server and workspace name
+            $workspaceName = $session->getWorkspace()->getName();
+            $force = $dialog->askConfirmation($output, "Are you sure you want to purge path '$path' and all its children from the workspace '$workspaceName'? [yes|no]: ", false);
         }
 
-        if ($force || $res) {
-            NodeHelper::deleteAllNodes($this->getHelper('phpcr')->getSession());
+        if ($force) {
+            if ('/' === $path) {
+                NodeHelper::deleteAllNodes($this->getHelper('phpcr')->getSession());
+            } else {
+                $session->removeItem($path);
+            }
+
             $session->save();
-            $output->writeln("Done\n");
+            $output->writeln("Done purging '$path' and all its children\n");
         } else {
             $output->writeln("Aborted\n");
         }

@@ -72,25 +72,34 @@ EOT
         $allowUpdate = $input->getOption('allow-update');
         $session = $this->getHelper('phpcr')->getSession();
 
-        $this->updateFromCnd($input, $output, $session, $cnd, $allowUpdate);
+        try {
+            $this->updateFromCnd($input, $output, $session, $cnd, $allowUpdate);
+        } catch (\Exception $e) {
+            $output->writeln('<error>'.$e->getMessage().'</error>');
+
+            return 1;
+        }
 
         $output->write(PHP_EOL.sprintf('Successfully registered node types from "<info>%s</info>"', $cnd_file) . PHP_EOL);
+
+        return 0;
     }
 
     /**
      * Actually do the update.
      *
      * @param SessionInterface $session the phpcr session to talk to
-     * @param string $cnd the compact namespace and node type definition in string form
+     * @param string           $cnd     the compact namespace and node type definition in string form
      *
      * @throws \PHPCR\NodeType\NodeTypeExistsException if the node already exists and allowUpdate is false
-     * @throws \PHPCR\RepositoryException on other errors
+     * @throws \PHPCR\RepositoryException              on other errors
      */
     protected function updateFromCnd(InputInterface $input, OutputInterface $output, SessionInterface $session, $cnd, $allowUpdate)
     {
         if (! $session instanceof \Jackalope\Session) {
             throw new \Exception('PHPCR only provides an API to register node types. Your implementation is not Jackalope (which provides a method for .cnd). TODO: parse the file and do the necessary API calls');
         }
+
         $ntm = $session->getWorkspace()->getNodeTypeManager();
 
         try {

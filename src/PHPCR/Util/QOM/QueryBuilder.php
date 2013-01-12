@@ -2,14 +2,14 @@
 
 namespace PHPCR\Util\QOM;
 
-use PHPCR\Query\QOM\QueryObjectModelFactoryInterface,
-    PHPCR\Query\QOM\DynamicOperandInterface,
-    PHPCR\Query\QOM\ConstraintInterface,
-    PHPCR\Query\QOM\SourceInterface,
-    PHPCR\Query\QOM\JoinConditionInterface,
-    PHPCR\Query\QOM\QueryObjectModelConstantsInterface,
-    PHPCR\Query\QueryInterface,
-    PHPCR\Query\QOM\QueryObjectModelInterface;
+use PHPCR\Query\QOM\QueryObjectModelFactoryInterface;
+use PHPCR\Query\QOM\DynamicOperandInterface;
+use PHPCR\Query\QOM\ConstraintInterface;
+use PHPCR\Query\QOM\SourceInterface;
+use PHPCR\Query\QOM\JoinConditionInterface;
+use PHPCR\Query\QOM\QueryObjectModelConstantsInterface;
+use PHPCR\Query\QueryInterface;
+use PHPCR\Query\QOM\QueryObjectModelInterface;
 
 /**
  * QueryBuilder class is responsible for dynamically create QOM queries.
@@ -30,7 +30,7 @@ class QueryBuilder
     private $state = self::STATE_CLEAN;
 
     /**
-     * @var \PHPCR\Query\QOM\QueryObjectModelFactoryInterface QOMFactory
+     * @var QueryObjectModelFactoryInterface QOMFactory
      */
     private $qomFactory;
 
@@ -50,7 +50,7 @@ class QueryBuilder
     private $orderings = array();
 
     /**
-     * @var \PHPCR\Query\QOM\ConstraintInterface to apply to the query.
+     * @var ConstraintInterface to apply to the query.
      */
     private $constraint = null;
 
@@ -60,12 +60,12 @@ class QueryBuilder
     private $columns = array();
 
     /**
-     * @var \PHPCR\Query\QOM\SourceInterface source of the query.
+     * @var SourceInterface source of the query.
      */
     private $source = null;
 
     /**
-     * @var \PHPCR\Query\QueryObjectModelInterface
+     * @var QueryObjectModelInterface
      */
     private $query = null;
 
@@ -77,7 +77,7 @@ class QueryBuilder
     /**
      * Initializes a new QueryBuilder
      *
-     * @param \PHPCR\Query\QOM\QueryObjectModelFactoryInterface $qomFactory
+     * @param QueryObjectModelFactoryInterface $qomFactory
      */
     public function __construct(QueryObjectModelFactoryInterface $qomFactory)
     {
@@ -87,8 +87,9 @@ class QueryBuilder
     /**
      * Get a query builder instance from an existing query
      *
-     * @param  string $statement the statement in the specified language
-     * @param  string $language the query language
+     * @param string $statement the statement in the specified language
+     * @param string $language  the query language
+     *
      * @return QueryBuilder This QueryBuilder instance.
      */
     public function setFromQuery($statement, $language)
@@ -114,7 +115,7 @@ class QueryBuilder
     /**
      * Get the associated QOMFactory for this query builder
      *
-     * @return \PHPCR\Query\QOM\QueryObjectModelFactoryInterface
+     * @return QueryObjectModelFactoryInterface
      */
     public function getQOMFactory()
     {
@@ -122,19 +123,28 @@ class QueryBuilder
     }
 
     /**
+     * Shortcut for getQOMFactory()
+     */
+    public function qomf()
+    {
+        return $this->getQOMFactory();
+    }
+
+    /**
      * sets the position of the first result to retrieve (the "offset").
      *
      * @param integer $firstResult The First result to return.
+     *
      * @return QueryBuilder This QueryBuilder instance.
      */
     public function setFirstResult($firstResult)
     {
         $this->firstResult = $firstResult;
+
         return $this;
     }
 
     /**
-     * getFirstResult
      * Gets the position of the first result the query object was set to retrieve (the "offset").
      * Returns NULL if {@link setFirstResult} was not applied to this QueryBuilder.
      *
@@ -150,11 +160,13 @@ class QueryBuilder
      * Sets the maximum number of results to retrieve (the "limit").
      *
      * @param integer $maxResults The maximum number of results to retrieve.
-     * @return PHPCR\Util\QOM\QueryBuilder This QueryBuilder instance.
+     *
+     * @return QueryBuilder This QueryBuilder instance.
      */
     public function setMaxResults($maxResults)
     {
         $this->maxResults = $maxResults;
+
         return $this;
     }
 
@@ -169,11 +181,10 @@ class QueryBuilder
         return $this->maxResults;
     }
 
-
     /**
      * Gets the array of orderings.
      *
-     * @return arrray Orderings to apply.
+     * @return \PHPCR\Query\QOM\OrderingInterface[] Orderings to apply.
      */
     public function getOrderings()
     {
@@ -183,19 +194,27 @@ class QueryBuilder
     /**
      * Adds an ordering to the query results.
      *
-     * @param \PHPCR\Query\QOM\DynamicOperandInterface $sort The ordering expression.
-     * @param string $order The ordering direction.
+     * @param DynamicOperandInterface $sort  The ordering expression.
+     * @param string                  $order The ordering direction.
+     *
      * @return QueryBuilder This QueryBuilder instance.
      */
     public function addOrderBy(DynamicOperandInterface $sort, $order = 'ASC')
     {
+        $order = strtoupper($order);
+
+        if (!in_array($order, array('ASC', 'DESC'))) {
+            throw new \InvalidArgumentException('Order must be one of "ASC" or "DESC"');
+        }
+
         $this->state = self::STATE_DIRTY;
-        if ($order == 'DESC' ) {
+        if ($order == 'DESC') {
             $ordering = $this->qomFactory->descending($sort);
         } else {
             $ordering = $this->qomFactory->ascending($sort);
         }
         $this->orderings[] = $ordering;
+
         return $this;
     }
 
@@ -203,19 +222,16 @@ class QueryBuilder
      * Specifies an ordering for the query results.
      * Replaces any previously specified orderings, if any.
      *
-     * @param \PHPCR\Query\QOM\DynamicOperandInterface $sort The ordering expression.
-     * @param string $order The ordering direction.
+     * @param DynamicOperandInterface $sort  The ordering expression.
+     * @param string                  $order The ordering direction.
+     *
      * @return QueryBuilder This QueryBuilder instance.
      */
-    public function orderBy(DynamicOperandInterface $sort, $order = null)
+    public function orderBy(DynamicOperandInterface $sort, $order = 'ASC')
     {
-        $this->state = self::STATE_DIRTY;
-        if ($order == 'DESC' ) {
-            $ordering = $this->qomFactory->descending($sort);
-        } else {
-            $ordering = $this->qomFactory->ascending($sort);
-        }
-        $this->orderings = array($ordering);
+        $this->orderings = array();
+        $this->addOrderBy($sort, $order);
+
         return $this;
     }
 
@@ -223,20 +239,22 @@ class QueryBuilder
      * Specifies one restriction (may be simple or composed).
      * Replaces any previously specified restrictions, if any.
      *
-     * @param \PHPCR\Query\QOM\ConstraintInterface $constraint
+     * @param ConstraintInterface $constraint
+     *
      * @return QueryBuilder This QueryBuilder instance.
      */
     public function where(ConstraintInterface $constraint)
     {
         $this->state = self::STATE_DIRTY;
         $this->constraint = $constraint;
+
         return $this;
     }
 
     /**
      * Returns the constraint to apply
      *
-     * @return \PHPCR\Query\QOM\ConstraintInterface the constraint to be applied
+     * @return ConstraintInterface the constraint to be applied
      */
     public function getConstraint()
     {
@@ -256,7 +274,8 @@ class QueryBuilder
      * If there is no previous constraint then it will simply store the
      * provided one
      *
-     * @param \PHPCR\Query\QOM\ConstraintInterface $constraint
+     * @param ConstraintInterface $constraint
+     *
      * @return QueryBuilder This QueryBuilder instance.
      */
     public function andWhere(ConstraintInterface $constraint)
@@ -267,6 +286,7 @@ class QueryBuilder
         } else {
             $this->constraint = $constraint;
         }
+
         return $this;
     }
 
@@ -283,7 +303,8 @@ class QueryBuilder
      * If there is no previous constraint then it will simply store the
      * provided one
      *
-     * @param \PHPCR\Query\QOM\ConstraintInterface $constraint
+     * @param ConstraintInterface $constraint
+     *
      * @return QueryBuilder This QueryBuilder instance.
      */
     public function orWhere(ConstraintInterface $constraint)
@@ -294,13 +315,14 @@ class QueryBuilder
         } else {
             $this->constraint = $constraint;
         }
+
         return $this;
     }
 
     /**
      * Returns the columns to be selected
      *
-     * @return array The columns to be selected
+     * @return \PHPCR\Query\QOM\ColumnInterface[] The columns to be selected
      */
     public function getColumns()
     {
@@ -310,7 +332,8 @@ class QueryBuilder
     /**
      * Sets the columns to be selected
      *
-     * @param array The columns to be selected
+     * @param \PHPCR\Query\QOM\ColumnInterface[] $columns The columns to be selected
+     *
      * @return QueryBuilder This QueryBuilder instance.
      */
     public function setColumns(array $columns)
@@ -327,12 +350,14 @@ class QueryBuilder
      * @param string $propertyName
      * @param string $columnName
      * @param string $selectorName
+     *
      * @return QueryBuilder This QueryBuilder instance.
      */
     public function select($propertyName, $columnName = null, $selectorName = null)
     {
         $this->state = self::STATE_DIRTY;
         $this->columns = array($this->qomFactory->column($propertyName, $columnName, $selectorName));
+
         return $this;
     }
 
@@ -342,12 +367,14 @@ class QueryBuilder
      * @param string $propertyName
      * @param string $columnName
      * @param string $selectorName
+     *
      * @return QueryBuilder This QueryBuilder instance.
      */
     public function addSelect($propertyName, $columnName = null, $selectorName = null)
     {
         $this->state = self::STATE_DIRTY;
         $this->columns[] = $this->qomFactory->column($propertyName, $columnName, $selectorName);
+
         return $this;
     }
 
@@ -356,19 +383,21 @@ class QueryBuilder
      * or a join.
      *
      * @param SourceInterface $source
+     *
      * @return QueryBuilder This QueryBuilder instance.
      */
     public function from(SourceInterface $source)
     {
         $this->state = self::STATE_DIRTY;
         $this->source = $source;
+
         return $this;
     }
 
     /**
      * Gets the default Selector.
      *
-     * @return \PHPCR\Query\QOM\SourceInterface The default selector.
+     * @return SourceInterface The default selector.
      */
     public function getSource()
     {
@@ -378,10 +407,12 @@ class QueryBuilder
     /**
      * Performs an inner join between the stored source and the supplied source.
      *
-     * @param \PHPCR\Query\QOM\SourceInterface $rightSource
-     * @param \PHPCR\Query\QOM\JoinConditionInterface $joinCondition
+     * @param SourceInterface        $rightSource
+     * @param JoinConditionInterface $joinCondition
+     *
      * @return QueryBuilder This QueryBuilder instance.
-     * @trows RuntimeException if there is not an existing source.
+     *
+     * @throws RuntimeException if there is not an existing source.
      */
     public function join(SourceInterface $rightSource, JoinConditionInterface $joinCondition)
     {
@@ -391,10 +422,12 @@ class QueryBuilder
     /**
      * Performs an inner join between the stored source and the supplied source.
      *
-     * @param \PHPCR\Query\QOM\SourceInterface $rightSource
-     * @param \PHPCR\Query\QOM\JoinConditionInterface $joinCondition
+     * @param SourceInterface        $rightSource
+     * @param JoinConditionInterface $joinCondition
+     *
      * @return QueryBuilder This QueryBuilder instance.
-     * @trows RuntimeException if there is not an existing source.
+     *
+     * @throws RuntimeException if there is not an existing source.
      */
     public function innerJoin(SourceInterface $rightSource, JoinConditionInterface $joinCondition)
     {
@@ -404,10 +437,12 @@ class QueryBuilder
     /**
      * Performs an left outer join between the stored source and the supplied source.
      *
-     * @param \PHPCR\Query\QOM\SourceInterface $rightSource
-     * @param \PHPCR\Query\QOM\JoinConditionInterface $joinCondition
+     * @param SourceInterface        $rightSource
+     * @param JoinConditionInterface $joinCondition
+     *
      * @return QueryBuilder This QueryBuilder instance.
-     * @trows RuntimeException if there is not an existing source.
+     *
+     * @throws RuntimeException if there is not an existing source.
      */
     public function leftJoin(SourceInterface $rightSource, JoinConditionInterface $joinCondition)
     {
@@ -417,10 +452,12 @@ class QueryBuilder
     /**
      * Performs a right outer join between the stored source and the supplied source.
      *
-     * @param \PHPCR\Query\QOM\SourceInterface $rightSource
-     * @param \PHPCR\Query\QOM\JoinConditionInterface $joinCondition
+     * @param SourceInterface        $rightSource
+     * @param JoinConditionInterface $joinCondition
+     *
      * @return QueryBuilder This QueryBuilder instance.
-     * @trows RuntimeException if there is not an existing source.
+     *
+     * @throws RuntimeException if there is not an existing source.
      */
     public function rightJoin(SourceInterface $rightSource, JoinConditionInterface $joinCondition)
     {
@@ -430,11 +467,13 @@ class QueryBuilder
     /**
      * Performs an join between the stored source and the supplied source.
      *
-     * @param \PHPCR\Query\QOM\SourceInterface $rightSource
-     * @param string $joinType as specified in PHPCR\Query\QOM\QueryObjectModelConstantsInterface
-     * @param \PHPCR\Query\QOM\JoinConditionInterface $joinCondition
+     * @param SourceInterface        $rightSource
+     * @param string                 $joinType      as specified in PHPCR\Query\QOM\QueryObjectModelConstantsInterface
+     * @param JoinConditionInterface $joinCondition
+     *
      * @return QueryBuilder This QueryBuilder instance.
-     * @trows RuntimeException if there is not an existing source.
+     *
+     * @throws RuntimeException if there is not an existing source.
      */
     public function joinWithType(SourceInterface $rightSource, $joinType, JoinConditionInterface $joinCondition)
     {
@@ -443,13 +482,14 @@ class QueryBuilder
         }
         $this->state = self::STATE_DIRTY;
         $this->source = $this->qomFactory->join($this->source, $rightSource, $joinType, $joinCondition);
+
         return $this;
     }
 
     /**
      * Gets the query built
      *
-     * @return \PHPCR\Query\QueryObjectModelInterface
+     * @return QueryObjectModelInterface
      */
     public function getQuery()
     {
@@ -493,13 +533,15 @@ class QueryBuilder
     /**
      * Sets a query parameter for the query being constructed.
      *
-     * @param string $key The parameter name.
-     * @param mixed $value The parameter value.
+     * @param string $key   The parameter name.
+     * @param mixed  $value The parameter value.
+     *
      * @return QueryBuilder This QueryBuilder instance.
      */
     public function setParameter($key, $value)
     {
         $this->params[$key] = $value;
+
         return $this;
     }
 
@@ -507,6 +549,7 @@ class QueryBuilder
      * Gets a (previously set) query parameter of the query being constructed.
      *
      * @param string $key The key (name) of the bound parameter.
+     *
      * @return mixed The value of the bound parameter.
      */
     public function getParameter($key)
@@ -518,6 +561,7 @@ class QueryBuilder
      * Sets a collection of query parameters for the query being constructed.
      *
      * @param array $params The query parameters to set.
+     *
      * @return QueryBuilder This QueryBuilder instance.
      */
     public function setParameters(array $params)

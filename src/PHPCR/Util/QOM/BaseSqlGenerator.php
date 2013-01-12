@@ -14,10 +14,10 @@ abstract class BaseSqlGenerator
      *     ['WHERE' Constraint]
      *     ['ORDER BY' orderings]
      *
-     * @param string $source
-     * @param string $columns
-     * @param string $constraint
-     * @param string $ordering
+     * @param  string $source
+     * @param  string $columns
+     * @param  string $constraint
+     * @param  string $ordering
      * @return string
      */
     public function evalQuery($source, $columns, $constraint = '', $orderings = '')
@@ -157,6 +157,7 @@ abstract class BaseSqlGenerator
             case Constants::JCR_ORDER_DESCENDING:
                 return 'DESC';
         }
+
         return '';
     }
 
@@ -169,18 +170,22 @@ abstract class BaseSqlGenerator
     {
         if ($literal instanceof \DateTime) {
             $string = PropertyType::convertType($literal, PropertyType::STRING);
+
             return $this->evalCastLiteral($string, 'DATE');
         }
         if (is_bool($literal)) {
             $string = $literal ? 'true' : 'false';
+
             return $this->evalCastLiteral($string, 'BOOLEAN');
         }
         if (is_int($literal)) {
             $string = PropertyType::convertType($literal, PropertyType::STRING);
+
             return $this->evalCastLiteral($string, 'LONG');
         }
         if (is_float($literal)) {
             $string = PropertyType::convertType($literal, PropertyType::STRING);
+
             return $this->evalCastLiteral($string, 'DOUBLE');
         }
 
