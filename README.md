@@ -62,7 +62,7 @@ tree.
 ### QOM QueryBuilder
 
 The ``QueryBuilder`` is a fluent query builder with method names matching the
-(Doctrine QueryBuilder)[http://www.doctrine-project.org/docs/orm/2.1/en/reference/query-builder.html]
+[Doctrine QueryBuilder](http://www.doctrine-project.org/docs/orm/2.1/en/reference/query-builder.html)
 on top of the QOM factory. It is the easiest way to programmatically build a
 PHPCR query.
 
