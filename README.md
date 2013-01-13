@@ -2,7 +2,7 @@
 
 Commands and implementations for common tasks for the PHP Content Repository (PHPCR) API.
 
-If you are using or implementing (PHPCR)[https://github.com/phpcr/phpcr] you
+If you are using or implementing [PHPCR](https://github.com/phpcr/phpcr) you
 probably want some of the things in here.
 
 PHPCR Users: Note that your PHPCR implementation probably already bundles the
