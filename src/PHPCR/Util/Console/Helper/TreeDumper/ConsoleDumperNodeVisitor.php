@@ -14,12 +14,18 @@ use PHPCR\NodeInterface;
 class ConsoleDumperNodeVisitor implements ItemVisitorInterface
 {
     protected $output;
+    protected $identifiers;
 
     protected $level = 0;
 
-    public function __construct(OutputInterface $output)
+    /**
+     * @param OutputInterface $output
+     * @param bool $identifiers whether to output the node UUID
+     */
+    public function __construct(OutputInterface $output, $identifiers = false)
     {
         $this->output = $output;
+        $this->identifiers = $identifiers;
     }
 
     public function setLevel($level)
@@ -39,6 +45,15 @@ class ConsoleDumperNodeVisitor implements ItemVisitorInterface
             $name = 'ROOT';
         }
 
-        $this->output->writeln(str_repeat('  ', $this->level) . '<comment>' . $name . '</comment>:');
+        $out = str_repeat('  ', $this->level)
+            . '<comment>' . $name . '</comment>';
+        if ($this->identifiers) {
+            $identifier = $item->getIdentifier();
+            if ($identifier) {
+                $out .= "($identifier)";
+            }
+        }
+        $out .= ':';
+        $this->output->writeln($out);
     }
 }

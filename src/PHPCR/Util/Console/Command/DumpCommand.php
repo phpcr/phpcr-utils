@@ -35,6 +35,7 @@ class DumpCommand extends Command
             ->addOption('sys_nodes', null, InputOption::VALUE_OPTIONAL, 'Set to "yes" to dump the system nodes', "no")
             ->addOption('props', null, InputOption::VALUE_OPTIONAL, 'Set to "yes" to dump the node properties', "no")
             ->addOption('depth', null, InputOption::VALUE_OPTIONAL, 'Set to a number to limit how deep into the tree to recurse', "-1")
+            ->addOption('identifiers', null, InputOption::VALUE_OPTIONAL, 'Set to "yes" to also output node UUID', 'no')
             ->addArgument('identifier', InputArgument::OPTIONAL, 'Path or UUID of the node to dump', '/')
             ->setDescription('Dump the content repository')
             ->setHelp(<<<EOF
@@ -71,9 +72,12 @@ EOF
     {
         $session = $this->getHelper('phpcr')->getSession();
 
+        // node to dump
         $identifier = $input->getArgument('identifier');
 
-        $nodeVisitor = new ConsoleDumperNodeVisitor($output);
+        // whether to dump node uuid
+        $identifiers = ConsoleParametersParser::isTrueString($input->getOption('identifiers'));
+        $nodeVisitor = new ConsoleDumperNodeVisitor($output, $identifiers);
 
         $propVisitor = null;
         if (ConsoleParametersParser::isTrueString($input->getOption('props'))) {
