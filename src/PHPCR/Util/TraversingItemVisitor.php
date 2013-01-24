@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is part of the PHPCR API and was originally ported from the Java
+ * This file is part of the PHPCR Utils and was originally ported from the Java
  * JCR API to PHP by Karsten Dambekalns for the FLOW3 project.
  *
  * Copyright 2008-2011 Karsten Dambekalns <karsten@typo3.org>
@@ -115,6 +115,11 @@ abstract class TraversingItemVisitor implements ItemVisitorInterface
         $this->currentDepth = 0;
     }
 
+    /**
+     * Update the current depth level for indention
+     *
+     * @param int $level
+     */
     public function setLevel($level)
     {
         $this->currentDepth = $level;

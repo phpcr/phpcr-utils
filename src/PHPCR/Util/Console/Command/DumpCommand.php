@@ -1,12 +1,30 @@
 <?php
 
+/**
+ * This file is part of the PHPCR Utils
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * @license http://www.apache.org/licenses/LICENSE-2.0 Apache Software License 2.0
+ * @link http://phpcr.github.com/
+ */
+
 namespace PHPCR\Util\Console\Command;
 
 use Symfony\Component\Console\Command\Command;
 use PHPCR\ItemNotFoundException;
 use PHPCR\RepositoryException;
 use PHPCR\PathNotFoundException;
-use PHPCR\Util\UUIDHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
@@ -19,14 +37,21 @@ use PHPCR\Util\Console\Helper\TreeDumper\ConsoleDumperPropertyVisitor;
 use PHPCR\Util\Console\Helper\TreeDumper\SystemNodeFilter;
 
 /**
+ * Command to dump all nodes under a path to the console
+ *
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  */
 class DumpCommand extends Command
 {
+    /**
+     * Limit after which to cut lines when dumping properties
+     *
+     * @var int
+     */
     private $dump_max_line_length = 120;
 
     /**
-     * Configures the current command.
+     * {@inheritDoc}
      */
     protected function configure()
     {
@@ -54,6 +79,8 @@ EOF
 
     /**
      * Change at which length lines in the dump get cut.
+     *
+     * @param int $length maximum line length after which to cut the output.
      */
     public function setDumpMaxLineLength($length)
     {
@@ -61,12 +88,7 @@ EOF
     }
 
     /**
-     * Executes the dump command.
-     *
-     * @param InputInterface  $input  An InputInterface instance
-     * @param OutputInterface $output An OutputInterface instance
-     *
-     * @return integer 0 if everything went fine, or an error code
+     * {@inheritDoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
