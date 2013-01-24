@@ -1,16 +1,45 @@
 <?php
 
+/**
+ * This file is part of the PHPCR Utils
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * @license http://www.apache.org/licenses/LICENSE-2.0 Apache Software License 2.0
+ * @link http://phpcr.github.com/
+ */
+
 namespace PHPCR\Util\QOM;
 
 use PHPCR\Query\QOM;
 
+/**
+ * Common base class for the SQL(1) and SQL2 converters
+ */
 abstract class BaseQomToSqlQueryConverter
 {
     /**
-     * @var Sql2Generator
+     * The generator to use
+     *
+     * @var BaseSqlGenerator
      */
     protected $generator;
 
+    /**
+     * Instantiate the converter
+     *
+     * @param BaseSqlGenerator $generator
+     */
     public function __construct(BaseSqlGenerator $generator)
     {
         $this->generator = $generator;
@@ -44,10 +73,30 @@ abstract class BaseQomToSqlQueryConverter
         return $this->generator->evalQuery($source, $columns, $constraint, $orderings);
     }
 
+    /**
+     * Convert a source. This is different between SQL1 and SQL2
+     *
+     * @param QOM\SourceInterface $source
+     *
+     * @return string
+     */
     abstract protected function convertSource(QOM\SourceInterface $source);
 
+    /**
+     * Convert a constraint. This is different between SQL1 and SQL2.
+     *
+     * @param QOM\ConstraintInterface $constraint
+     *
+     * @return string
+     */
     abstract protected function convertConstraint(QOM\ConstraintInterface $constraint);
 
+    /**
+     * Convert dynamic operand. This is different between SQL1 and SQL2.
+     * @param QOM\DynamicOperandInterface $operand
+     *
+     * @return mixed
+     */
     abstract protected function convertDynamicOperand(QOM\DynamicOperandInterface $operand);
 
     /**
@@ -133,16 +182,16 @@ abstract class BaseQomToSqlQueryConverter
      * @param  string $expr
      * @return string
      */
-    protected function convertFullTextSearchExpression($literal)
+    protected function convertFullTextSearchExpression($expr)
     {
-        if ($literal instanceof QOM\BindVariableValueInterface) {
-            return $this->convertBindVariable($literal);
+        if ($expr instanceof QOM\BindVariableValueInterface) {
+            return $this->convertBindVariable($expr);
         }
-        if ($literal instanceof QOM\LiteralInterface) {
-            return $this->convertLiteral($literal);
+        if ($expr instanceof QOM\LiteralInterface) {
+            return $this->convertLiteral($expr);
         }
 
-        return "'$literal'";
+        return "'$expr'";
     }
 
     /**
@@ -182,11 +231,11 @@ abstract class BaseQomToSqlQueryConverter
      * @param  QOM\PropertyValueInterface $value
      * @return string
      */
-    protected function convertPropertyValue(QOM\PropertyValueInterface $operand)
+    protected function convertPropertyValue(QOM\PropertyValueInterface $value)
     {
         return $this->generator->evalPropertyValue(
-            $operand->getPropertyName(),
-            $operand->getSelectorName());
+            $value->getPropertyName(),
+            $value->getSelectorName());
     }
 
     /**
@@ -212,16 +261,40 @@ abstract class BaseQomToSqlQueryConverter
         return $this->generator->evalOrderings($list);
     }
 
+    /**
+     * Path ::= '[' quotedPath ']' | '[' simplePath ']' | simplePath
+     * quotedPath ::= A JCR Path that contains non-SQL-legal characters
+     * simplePath ::= A JCR Name that contains only SQL-legal characters
+     *
+     * @param string $path
+     *
+     * @return string
+     */
     protected function convertPath($path)
     {
         return $this->generator->evalPath($path);
     }
 
+    /**
+     * BindVariableValue ::= '$'bindVariableName
+     * bindVariableName ::= Prefix
+     *
+     * @param string $var
+     *
+     * @return string
+     */
     protected function convertBindVariable($var)
     {
         return $this->generator->evalBindVariable($var);
     }
 
+    /**
+     * Literal ::= CastLiteral | UncastLiteral
+     *
+     * @param mixed $literal
+     *
+     * @return string
+     */
     protected function convertLiteral($literal)
     {
         return $this->generator->evalLiteral($literal);

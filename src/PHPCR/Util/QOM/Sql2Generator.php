@@ -1,5 +1,24 @@
 <?php
 
+/**
+ * This file is part of the PHPCR Utils
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * @license http://www.apache.org/licenses/LICENSE-2.0 Apache Software License 2.0
+ * @link http://phpcr.github.com/
+ */
+
 namespace PHPCR\Util\QOM;
 
 use PHPCR\Query\QOM;
@@ -16,8 +35,9 @@ class Sql2Generator extends BaseSqlGenerator
      * Selector ::= nodeTypeName ['AS' selectorName]
      * nodeTypeName ::= Name
      *
-     * @param  string $nodeTypeName The node type of the selector. If it does not contain starting and ending brackets ([]) they will be added automatically
-     * @param  string $selectorName
+     * @param string $nodeTypeName The node type of the selector. If it does not contain starting and ending brackets ([]) they will be added automatically
+     * @param string $selectorName
+     *
      * @return string
      */
     public function evalSelector($nodeTypeName, $selectorName = null)
@@ -41,10 +61,11 @@ class Sql2Generator extends BaseSqlGenerator
      * left ::= Source
      * right ::= Source
      *
-     * @param  string $left
-     * @param  string $right
-     * @param  string $joinCondition
-     * @param  string $joinType
+     * @param string $left
+     * @param string $right
+     * @param string $joinCondition
+     * @param string $joinType
+     *
      * @return string
      */
     public function evalJoin($left, $right, $joinCondition, $joinType = '')
@@ -103,7 +124,7 @@ class Sql2Generator extends BaseSqlGenerator
      *
      * @param  string $sel1Name
      * @param  string $sel2Name
-     * @param  string $sel2path
+     * @param  string $sel2Path
      * @return string
      */
     public function evalSameNodeJoinCondition($sel1Name, $sel2Name, $sel2Path = null)
@@ -192,6 +213,18 @@ class Sql2Generator extends BaseSqlGenerator
         return $sql2;
     }
 
+    /**
+     * PropertyExistence ::=
+     *   selectorName'.'propertyName 'IS NOT NULL' |
+     *   propertyName 'IS NOT NULL'    If only one
+     *                                 selector exists in
+     *                                 this query
+     *
+     * @param $selectorName
+     * @param $propertyName
+     *
+     * @return string
+     */
     public function evalPropertyExistence($selectorName, $propertyName)
     {
         return $this->evalPropertyValue($propertyName, $selectorName) . " IS NOT NULL";
@@ -205,7 +238,7 @@ class Sql2Generator extends BaseSqlGenerator
      * FullTextSearchExpression ::= BindVariable | ''' FullTextSearchLiteral '''
      * @param  string $selectorName     unusued
      * @param  string $searchExpression
-     * @param  string $ropertyName
+     * @param  string $propertyName
      * @return string
      */
     public function evalFullTextSearch($selectorName, $searchExpression, $propertyName = null)
@@ -280,6 +313,13 @@ class Sql2Generator extends BaseSqlGenerator
         return $sql2;
     }
 
+    /**
+     * columns ::= (Column ',' {Column}) | '*'
+     *
+     * @param $columns
+     *
+     * @return string
+     */
     public function evalColumns($columns)
     {
         if (count($columns) === 0) {
@@ -298,6 +338,20 @@ class Sql2Generator extends BaseSqlGenerator
         return $sql2;
     }
 
+    /**
+     * Column ::= ([selectorName'.']propertyName
+     *             ['AS' columnName]) |
+     *            (selectorName'.*')    // If only one selector exists
+     * selectorName ::= Name
+     * propertyName ::= Name
+     * columnName ::= Name
+     *
+     * @param string $selectorName
+     * @param string $propertyName
+     * @param string $colname
+     *
+     * @return string
+     */
     public function evalColumn($selectorName, $propertyName = null, $colname = null)
     {
         $sql2 = '';
@@ -338,8 +392,9 @@ class Sql2Generator extends BaseSqlGenerator
     }
 
     /**
-     * @param string $literal
-     * @param string $type
+     * {@inheritDoc}
+     *
+     * CastLiteral ::= 'CAST(' UncastLiteral ' AS ' PropertyType ')'
      */
     public function evalCastLiteral($literal, $type)
     {
