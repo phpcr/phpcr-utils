@@ -1,5 +1,24 @@
 <?php
 
+/**
+ * This file is part of the PHPCR Utils
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * @license http://www.apache.org/licenses/LICENSE-2.0 Apache Software License 2.0
+ * @link http://phpcr.github.com/
+ */
+
 namespace PHPCR\Util\QOM;
 
 use PHPCR\Query\QOM;
@@ -24,6 +43,13 @@ class Sql1Generator extends BaseSqlGenerator
         return $nodeTypeName;
     }
 
+    /**
+     * Helper method to emulate descendant with LIKE query on path property.
+     *
+     * @param $path
+     *
+     * @return string
+     */
     protected function getPathForDescendantQuery($path)
     {
         if ($path == '/') {
@@ -53,10 +79,11 @@ class Sql1Generator extends BaseSqlGenerator
     }
 
     /**
-     * SameNode ::= 'jcr:path like Path/%'
+     * Emulate descendant query with LIKE query
      *
      * @param string $path
-     * @param string $selectorName
+     *
+     * @return string
      */
     public function evalDescendantNode($path)
     {
@@ -66,6 +93,16 @@ class Sql1Generator extends BaseSqlGenerator
         return $sql1;
     }
 
+    /**
+     * PropertyExistence ::=
+     *   propertyName 'IS NOT NULL'
+
+     * @param string $selectorName declared to simplifiy interface - as there
+     *      are no joins in SQL1 there is no need for a selector.
+     * @param string $propertyName
+     *
+     * @return string
+     */
     public function evalPropertyExistence($selectorName, $propertyName)
     {
         return $propertyName . " IS NOT NULL";
@@ -79,7 +116,7 @@ class Sql1Generator extends BaseSqlGenerator
      *
      * @param  string $selectorName     unusued
      * @param  string $searchExpression
-     * @param  string $ropertyName
+     * @param  string $propertyName
      * @return string
      */
     public function evalFullTextSearch($selectorName, $searchExpression, $propertyName = null)
@@ -93,6 +130,13 @@ class Sql1Generator extends BaseSqlGenerator
         return $sql1;
     }
 
+    /**
+     * columns ::= (Column ',' {Column}) | '*'
+     *
+     * @param $columns
+     *
+     * @return string
+     */
     public function evalColumns($columns)
     {
         if (count($columns) === 0) {
@@ -115,6 +159,7 @@ class Sql1Generator extends BaseSqlGenerator
      * PropertyValue ::= propertyName
      *
      * @param string $propertyName
+     * @param string $selectorName unused in SQL1
      */
     public function evalPropertyValue($propertyName, $selectorName = null)
     {
@@ -122,9 +167,21 @@ class Sql1Generator extends BaseSqlGenerator
     }
 
 
-    public function evalColumn($selecor = null, $property = null)
+    /**
+     * Column ::= (propertyName)
+     * propertyName ::= Name
+     *
+     * No support for column name ('AS' columnName) in SQL1
+     *
+     * @param string $selectorName unused in SQL1
+     * @param string $propertyName
+     *
+     * @return string
+     */
+
+    public function evalColumn($selectorName = null, $propertyName = null)
     {
-        return $property;
+        return $propertyName;
     }
 
     /**
@@ -140,8 +197,9 @@ class Sql1Generator extends BaseSqlGenerator
     }
 
     /**
-     * @param string $literal
-     * @param string $type
+     * {@inheritDoc}
+     *
+     * No explicit support, do some tricks where possible.
      */
     public function evalCastLiteral($literal, $type)
     {

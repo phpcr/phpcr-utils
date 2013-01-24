@@ -1,5 +1,24 @@
 <?php
 
+/**
+ * This file is part of the PHPCR Utils
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * @license http://www.apache.org/licenses/LICENSE-2.0 Apache Software License 2.0
+ * @link http://phpcr.github.com/
+ */
+
 namespace PHPCR\Util\QOM;
 
 use PHPCR\Query\QOM;
@@ -11,21 +30,29 @@ use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants;
 class Sql2ToQomQueryConverter
 {
     /**
+     * The factory to create QOM objects
+     *
      * @var \PHPCR\Query\QOM\QueryObjectModelFactoryInterface
      */
     protected $factory;
 
     /**
+     * Scanner to parse SQL2
+     *
      * @var \PHPCR\Util\QOM\Sql2Scanner;
      */
     protected $scanner;
 
     /**
+     * The SQL2 query (the converter is not reentrant)
+     *
      * @var string
      */
     protected $sql2;
 
     /**
+     * Instantiate a converter
+     *
      * @param \PHPCR\Query\QOM\QueryObjectModelFactoryInterface $factory
      */
     public function __construct(QOM\QueryObjectModelFactoryInterface $factory)
@@ -38,6 +65,7 @@ class Sql2ToQomQueryConverter
      * Parse an SQL2 query and return the corresponding QOM QueryObjectModel
      *
      * @param string $sql2
+     *
      * @return \PHPCR\Query\QOM\QueryObjectModelInterface;
      */
     public function parse($sql2)
@@ -736,6 +764,7 @@ class Sql2ToQomQueryConverter
         // Wildcard
         if ($this->scanner->lookupNextToken() === '*') {
             $this->scanner->fetchNextToken();
+
             return array();
         }
 
@@ -758,6 +787,12 @@ class Sql2ToQomQueryConverter
         return $columns;
     }
 
+    /**
+     * Get the next token and make sure to remove the brackets if the token is
+     * in the [ns:name] notation
+     *
+     * @return string
+     */
     private function fetchTokenWithoutBrackets()
     {
         $token = $this->scanner->fetchNextToken();
@@ -770,6 +805,11 @@ class Sql2ToQomQueryConverter
         return $token;
     }
 
+    /**
+     * Parse something that is expected to be a property identifier.
+     *
+     * @return array with property name and selector name if specified, null otherwise
+     */
     private function parseIdentifier()
     {
         $token = $this->fetchTokenWithoutBrackets();

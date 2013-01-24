@@ -1,5 +1,24 @@
 <?php
 
+/**
+ * This file is part of the PHPCR Utils
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * @license http://www.apache.org/licenses/LICENSE-2.0 Apache Software License 2.0
+ * @link http://phpcr.github.com/
+ */
+
 namespace PHPCR\Util\QOM;
 
 /**
@@ -8,16 +27,22 @@ namespace PHPCR\Util\QOM;
 class Sql2Scanner
 {
     /**
+     * The SQL2 query currently being parsed
+     *
      * @var string
      */
     protected $sql2;
 
     /**
+     * Token scanning result of the SQL2 string
+     *
      * @var array
      */
     protected $tokens;
 
     /**
+     * Parsing position in the SQL string
+     *
      * @var int
      */
     protected $curpos = 0;
@@ -36,6 +61,8 @@ class Sql2Scanner
     /**
      * Get the next token without removing it from the queue.
      * Return an empty string when there are no more tokens.
+     *
+     * @param int $offset number of tokens to look ahead - defaults to 0, the current token
      *
      * @return string
      */
