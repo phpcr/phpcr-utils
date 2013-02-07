@@ -29,7 +29,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Helper\DialogHelper;
 
 use PHPCR\Util\NodeHelper;
-use PHPCR\Util\Console\Helper\ConsoleParametersParser;
 
 /**
  * Command to remove all nodes from a path in the workspace of the configured
@@ -66,7 +65,7 @@ EOF
         $session = $this->getHelper('phpcr')->getSession();
 
         $path = $input->getArgument('path');
-        $force = ConsoleParametersParser::isTrueString($input->getOption('force'));
+        $force = $input->hasParameterOption('--force');
 
         if (! $force) {
             $dialog = new DialogHelper();

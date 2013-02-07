@@ -31,7 +31,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 use PHPCR\Util\TreeWalker;
-use PHPCR\Util\Console\Helper\ConsoleParametersParser;
 use PHPCR\Util\Console\Helper\TreeDumper\ConsoleDumperNodeVisitor;
 use PHPCR\Util\Console\Helper\TreeDumper\ConsoleDumperPropertyVisitor;
 use PHPCR\Util\Console\Helper\TreeDumper\SystemNodeFilter;
@@ -98,17 +97,17 @@ EOF
         $identifier = $input->getArgument('identifier');
 
         // whether to dump node uuid
-        $identifiers = ConsoleParametersParser::isTrueString($input->getOption('identifiers'));
+        $identifiers = $input->hasParameterOption('--identifiers');
         $nodeVisitor = new ConsoleDumperNodeVisitor($output, $identifiers);
 
         $propVisitor = null;
-        if (ConsoleParametersParser::isTrueString($input->getOption('props'))) {
+        if ($input->hasParameterOption('--props')) {
             $propVisitor = new ConsoleDumperPropertyVisitor($output);
         }
 
         $walker = new TreeWalker($nodeVisitor, $propVisitor);
 
-        if (! ConsoleParametersParser::isTrueString($input->getOption('sys_nodes'))) {
+        if (!$input->hasParameterOption('--sys_nodes')) {
             $filter = new SystemNodeFilter();
             $walker->addNodeFilter($filter);
             $walker->addPropertyFilter($filter);
