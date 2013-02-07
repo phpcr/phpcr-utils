@@ -66,7 +66,7 @@ EOF
         $session = $this->getHelper('phpcr')->getSession();
 
         $path = $input->getArgument('path');
-        $force = ConsoleParametersParser::isTrueString($input->getOption('force'));
+        $force = $input->hasParameterOption('--force');
 
         if (! $force) {
             $dialog = new DialogHelper();
