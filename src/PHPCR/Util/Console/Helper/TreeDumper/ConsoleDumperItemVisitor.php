@@ -29,7 +29,7 @@ use PHPCR\ItemVisitorInterface;
  *
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  */
-abstract ConsoleDumperItemVisitor implements ItemVisitorInterface
+abstract class ConsoleDumperItemVisitor implements ItemVisitorInterface
 {
     /**
      * Target for printing information
