@@ -75,7 +75,7 @@ EOF
 
         if ($force) {
             if ('/' === $path) {
-                NodeHelper::deleteAllNodes($this->getHelper('phpcr')->getSession());
+                NodeHelper::purgeWorkspace($this->getHelper('phpcr')->getSession());
             } else {
                 $session->removeItem($path);
             }

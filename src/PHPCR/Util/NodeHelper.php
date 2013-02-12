@@ -21,8 +21,10 @@
 
 namespace PHPCR\Util;
 
-use PHPCR\SessionInterface;
 use PHPCR\ItemInterface;
+use PHPCR\NodeInterface;
+use PHPCR\PropertyType;
+use PHPCR\SessionInterface;
 use PHPCR\RepositoryException;
 use PHPCR\NamespaceException;
 
@@ -66,7 +68,9 @@ class NodeHelper
     }
 
     /**
-     * Delete all the nodes in the repository which are not in a system namespace
+     * Delete all content in the workspace this session is bound to.
+     *
+     * Remember to save the session after calling the purge method.
      *
      * Note that if you want to delete a node under your root node, you can just
      * use the remove method on that node. This method is just here to help you
@@ -78,19 +82,31 @@ class NodeHelper
      *
      * @see isSystemItem
      */
-    public static function deleteAllNodes(SessionInterface $session)
+    public static function purgeWorkspace(SessionInterface $session)
     {
         $root = $session->getRootNode();
-        foreach ($root->getNodes() as $node) {
-            if (! self::isSystemItem($node)) {
-                $node->remove();
-            }
-        }
+
         foreach ($root->getProperties() as $property) {
             if (! self::isSystemItem($property)) {
                 $property->remove();
             }
         }
+
+        foreach ($root->getNodes() as $node) {
+            if (! self::isSystemItem($node)) {
+                $node->remove();
+            }
+        }
+    }
+
+    /**
+     * Kept as alias of purgeWorkspace for BC compatibility
+     *
+     * @deprecated
+     */
+    public static function deleteAllNodes(SessionInterface $session)
+    {
+        self::purgeWorkspace($session);
     }
 
     /**
