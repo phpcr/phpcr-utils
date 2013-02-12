@@ -49,34 +49,6 @@ class NodeHelper
     }
 
     /**
-     * Delete all hard references from a node
-     *
-     * @param NodeInterface $node
-     */
-    public static function deleteAllHardReferences(NodeInterface $node)
-    {
-        foreach ($node->getProperties() as $property) {
-            if (PropertyType::REFERENCE === $property->getType()) {
-                $node->setProperty($property->getName(), $property->isMultiple() ? array() : null);
-            }
-        }
-    }
-
-    /**
-     * Delete all hard references from a node and its children
-     *
-     * @param NodeInterface $node
-     */
-    public static function deleteAllHardReferencesRecursive(NodeInterface $node)
-    {
-        static::deleteAllHardReferences($node);
-
-        foreach ($node->getNodes() as $childNode) {
-            static::deleteAllHardReferencesRecursive($childNode);
-        }
-    }
-
-    /**
      * Delete all content in the workspace this session is bound to.
      *
      * Remember to save the session after calling the purge method.
@@ -103,9 +75,6 @@ class NodeHelper
 
         foreach ($root->getNodes() as $node) {
             if (! self::isSystemItem($node)) {
-                // TODO: do we need this or not?
-                //static::deleteAllHardReferencesRecursive($node);
-                //$session->save();
                 $node->remove();
             }
         }
