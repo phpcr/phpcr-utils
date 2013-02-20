@@ -146,6 +146,23 @@ class PathHelperTest extends \PHPUnit_Framework_TestCase
         PathHelper::normalizePath('');
     }
 
+    /**
+     * @dataProvider dataproviderAbsolutizePath
+     */
+    public function testAbsolutizePath($inputPath, $context, $outputPath)
+    {
+        $this->assertSame($outputPath, PathHelper::absolutizePath($inputPath, $context));
+    }
+    public static function dataproviderAbsolutizePath()
+    {
+        return array(
+            array('/../foo',    '/',    '/foo'),
+            array('../',        '/',    '/'),
+            array('../foo/bar', '/baz', '/foo/bar'),
+            array('foo/./bar',  '/baz', '/baz/foo/bar'),
+        );
+    }
+
     public function testGetParentPath()
     {
         $this->assertEquals('/parent', PathHelper::getParentPath('/parent/child'));
@@ -153,6 +170,10 @@ class PathHelperTest extends \PHPUnit_Framework_TestCase
     public function testGetParentPathNamespaced()
     {
         $this->assertEquals('/jcr:parent', PathHelper::getParentPath('/jcr:parent/ns:child'));
+    }
+    public function testGetParentPathNodeAtRoot()
+    {
+        $this->assertEquals('/', PathHelper::getParentPath('/parent'));
     }
     public function testGetParentPathRoot()
     {

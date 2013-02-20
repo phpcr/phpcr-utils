@@ -134,6 +134,9 @@ class PathHelper
      *      just to return false.
      *
      * @return string The normalized path or false if $throw was false and the path invalid
+     *
+     * @throws RepositoryException if the path is not a valid absolute path and
+     *      $throw is true
      */
     public static function normalizePath($path, $destination = false, $throw = true)
     {
@@ -175,6 +178,35 @@ class PathHelper
     }
 
     /**
+     * In addition to normalizing and validating, this method combines the path
+     * with a context if it is not absolute.
+     *
+     * @param string $path      A relative or absolute path
+     * @param string $context   The absolute path context to make $path absolute if needed
+     * @param bool $destination whether this is a destination path (by copy or
+     *      move), meaning [] is not allowed in validation.
+     * @param bool $throw whether to throw an exception if validation fails or
+     *      just to return false.
+     *
+     * @return string The normalized, absolute path or false if $throw was
+     *      false and the path invalid
+     *
+     * @throws RepositoryException if the path can not be made into a valid
+     *      absolute path and $throw is true
+     */
+    public static function absolutizePath($path, $context, $destination = false, $throw = true)
+    {
+        if (! $path) {
+            throw new RepositoryException('empty path');
+        }
+        if ('/' !== $path[0]) {
+            $path = ('/' === $context) ? "/$path" : "$context/$path";
+        }
+
+        return self::normalizePath($path, $destination, $throw);
+    }
+
+    /**
      * Get the parent path of a valid absolute path.
      *
      * @param string $path the path to get the parent from
@@ -185,10 +217,17 @@ class PathHelper
     {
         if ('/' === $path) {
 
-            return $path;
+            return '/';
         }
 
-        return substr($path, 0, strrpos($path, '/'));
+        $pos = strrpos($path, '/');
+
+        if (0 === $pos) {
+
+            return '/';
+        }
+
+        return substr($path, 0, $pos);
     }
 
     /**
