@@ -145,30 +145,41 @@ class PathHelper
         }
 
         if ('/' === $path) {
-            $normalizedPath = '/';
-        } else {
-            $finalParts= array();
-            $parts = explode('/', $path);
 
-            foreach ($parts as $pathPart) {
-                switch ($pathPart) {
-                    case '.':
-                        break;
-                    case '..':
-                        if (count($finalParts) > 1) {
-                            // do not remove leading slash. "/.." is "/", not ""
-                            array_pop($finalParts);
-                        }
-                        break;
-                    default:
-                        $finalParts[] = $pathPart;
-                        break;
-                }
-            }
-            $normalizedPath =  count($finalParts) > 1 ?
-                implode('/', $finalParts) :
-                '/'; // first element is always the empty-name root element
+            return '/';
         }
+
+        if ('/' !== $path[0]) {
+            if ($throw) {
+                throw new RepositoryException("Not an absolute path '$path'");
+            }
+
+            return false;
+        }
+
+        $finalParts= array();
+        $parts = explode('/', $path);
+
+        foreach ($parts as $pathPart) {
+            switch ($pathPart) {
+                case '.':
+                    break;
+                case '..':
+                    if (count($finalParts) > 1) {
+                        // do not remove leading slash. "/.." is "/", not ""
+                        array_pop($finalParts);
+                    }
+                    break;
+                default:
+                    $finalParts[] = $pathPart;
+                    break;
+            }
+        }
+        $normalizedPath =  count($finalParts) > 1 ?
+            implode('/', $finalParts) :
+            '/'  // first element is always the empty-name root element. this might have been a path like /x/..
+        ;
+
         if (! self::assertValidAbsolutePath($normalizedPath, $destination, $throw)) {
 
             return false;
