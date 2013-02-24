@@ -101,4 +101,22 @@ class NodeHelperTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals($expected, $reorders);
     }
+
+    /**
+     * @group benchmark
+     */
+    public function testBenchmarkOrderBeforeArray()
+    {
+        $nodes = array();
+
+        for ($i = 0; $i < 1000000; $i++) {
+            $nodes[] = 'test' . $i;
+        }
+
+        $start = microtime(true);
+
+        NodeHelper::orderBeforeArray('test250', 'test750', $nodes);
+
+        $this->assertLessThan(1.0, microtime(true) - $start);
+    }
 }
