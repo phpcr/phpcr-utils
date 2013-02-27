@@ -26,6 +26,7 @@ use PHPCR\NodeInterface;
 use PHPCR\PropertyType;
 use PHPCR\SessionInterface;
 use PHPCR\RepositoryException;
+use PHPCR\ItemNotFoundException;
 use PHPCR\NamespaceException;
 
 /**
@@ -257,5 +258,115 @@ class NodeHelper
         } while (isset($usedNames[$name]));
 
         return $name;
+    }
+
+    /**
+     * Compare two arrays and generate a list of move operations that executed
+     * in order will transform $old into $new.
+     *
+     * The result is an array with the keys being elements of the array to move
+     * right before the element in the value. A value of null means move to the
+     * end.
+     *
+     * If $old contains elements not present in $new, those elements are
+     * ignored and do not show up.
+     *
+     * @param array $old old order
+     * @param array $new new order
+     *
+     * @return array the keys are elements to move, values the destination to
+     *      move before or null to move to the end.
+     */
+    public static function calculateOrderBefore(array $old, array $new)
+    {
+        $reorders = array();
+
+        //check for deleted items
+        $newIndex = array_flip($new);
+
+        foreach ($old as $key => $value) {
+            if (!isset($newIndex[$value])) {
+                unset($old[$key]);
+            }
+        }
+
+        // reindex the arrays to avoid holes in the indexes
+        $old = array_values($old);
+        $new = array_values($new);
+
+        $len = count($new) - 1;
+        $oldIndex = array_flip($old);
+
+        //go backwards on the new node order and arrange them this way
+        for ($i = $len; $i >= 0; $i--) {
+            //get the name of the child node
+            $current = $new[$i];
+            //check if it's not the last node
+            if (isset($new[$i + 1])) {
+                // get the name of the next node
+                $next = $new[$i + 1];
+                //if in the old order $c and next are not neighbors already, do the reorder command
+                if ($oldIndex[$current] + 1 != $oldIndex[$next]) {
+                    $reorders[$current] = $next;
+                    $old = self::orderBeforeArray($current,$next,$old);
+                    $oldIndex = array_flip($old);
+                }
+            } else {
+                //check if it's not already at the end of the nodes
+                if ($oldIndex[$current] != $len) {
+                    $reorders[$current] = null;
+                    $old = self::orderBeforeArray($current,null,$old);
+                    $oldIndex = array_flip($old);
+                }
+            }
+        }
+
+        return $reorders;
+    }
+
+
+    /**
+     * Move the element $name of $list to right before $destination,
+     * validating existence of all elements.
+     *
+     * @param string $name  name of the element to move
+     * @param string $destination name of the element $srcChildRelPath has
+     *      to be ordered before, null to move to the end
+     * @param array  $list            the array of names
+     *
+     * @return array The updated $nodes array with new order
+     *
+     * @throws \PHPCR\ItemNotFoundException if $srcChildRelPath or $destChildRelPath are not found in $nodes
+     */
+    public static function orderBeforeArray($name, $destination, $list)
+    {
+        // reindex the array so there are no gaps
+        $list = array_values($list);
+        $oldpos = array_search($name, $list);
+
+        if (false === $oldpos) {
+
+            throw new ItemNotFoundException("$name is not a child of this node");
+        }
+
+        if ($destination == null) {
+            // null means move to end
+            unset($list[$oldpos]);
+            $list[] = $name;
+        } else {
+            // insert before element $destination
+            $newpos = array_search($destination, $list);
+            if ($newpos === false) {
+
+                throw new ItemNotFoundException("$destination is not a child of this node");
+            }
+            if ($oldpos < $newpos) {
+                // we first unset, the position will change by one
+                $newpos--;
+            }
+            unset($list[$oldpos]);
+            array_splice($list, $newpos, 0, $name);
+        }
+        return $list;
     }
 }

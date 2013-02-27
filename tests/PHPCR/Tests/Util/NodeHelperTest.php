@@ -59,5 +59,64 @@ class NodeHelperTest extends \PHPUnit_Framework_TestCase
         NodeHelper::generateAutoNodeName($this->usedNames, $this->namespaces, 'a', $hint);
     }
 
+    public function testCalculateOrderBeforeSwapLast()
+    {
+        $old = array('one', 'two', 'three', 'four');
+        $new = array('one', 'two', 'four', 'three');
 
+        $reorders = NodeHelper::calculateOrderBefore($old, $new);
+
+        $expected = array(
+            'three' => null,
+            'two'   => 'four', // TODO: this is an unnecessary but harmless NOOP. we should try to eliminate
+        );
+        $this->assertEquals($expected, $reorders);
+    }
+
+    public function testCalculateOrderBeforeSwap()
+    {
+        $old = array('one', 'two', 'three', 'four');
+        $new = array('one', 'four', 'three', 'two');
+
+        $reorders = NodeHelper::calculateOrderBefore($old, $new);
+
+        $expected = array(
+            'three' => 'two',
+            'two'   => null,
+        );
+        $this->assertEquals($expected, $reorders);
+    }
+
+    public function testCalculateOrderBeforeReverse()
+    {
+        $old = array('one', 'two', 'three', 'four');
+        $new = array('four', 'three', 'two', 'one');
+
+        $reorders = NodeHelper::calculateOrderBefore($old, $new);
+
+        $expected = array(
+            'three' => 'two',
+            'two'   => 'one',
+            'one'   => null,
+        );
+        $this->assertEquals($expected, $reorders);
+    }
+
+    /**
+     * @group benchmark
+     */
+    public function testBenchmarkOrderBeforeArray()
+    {
+        $nodes = array();
+
+        for ($i = 0; $i < 1000000; $i++) {
+            $nodes[] = 'test' . $i;
+        }
+
+        $start = microtime(true);
+
+        NodeHelper::orderBeforeArray('test250', 'test750', $nodes);
+
+        $this->assertLessThan(1.0, microtime(true) - $start);
+    }
 }
