@@ -1,5 +1,24 @@
 <?php
 
+/**
+ * This file is part of the PHPCR Utils
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * @license http://www.apache.org/licenses/LICENSE-2.0 Apache Software License 2.0
+ * @link http://phpcr.github.com/
+ */
+
 namespace PHPCR\Util\Console\Command;
 
 use Symfony\Component\Console\Input\InputArgument;
@@ -9,9 +28,11 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 use PHPCR\SessionInterface;
+use PHPCR\NodeType\NodeTypeExistsException;
 
 /**
- * Command to load and register a node type defined in a CND file.
+ * Command to load and register a node type defined in a common nodetype
+ * definition (CND) file.
  *
  * See the link below for the cnd definition.
  * @link http://jackrabbit.apache.org/node-type-notation.html
@@ -20,8 +41,8 @@ use PHPCR\SessionInterface;
  */
 class RegisterNodeTypesCommand extends Command
 {
-   /**
-     * @see Command
+    /**
+     * {@inheritDoc}
      */
     protected function configure()
     {
@@ -51,8 +72,8 @@ EOT
         ;
     }
 
-   /**
-     * @see Command
+    /**
+     * {@inheritDoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -73,9 +94,10 @@ EOT
         $session = $this->getHelper('phpcr')->getSession();
 
         try {
-            $this->updateFromCnd($input, $output, $session, $cnd, $allowUpdate);
+            $this->updateFromCnd($output, $session, $cnd, $allowUpdate);
         } catch (\Exception $e) {
             $output->writeln('<error>'.$e->getMessage().'</error>');
+
             return 1;
         }
 
@@ -87,23 +109,20 @@ EOT
     /**
      * Actually do the update.
      *
-     * @param SessionInterface $session the phpcr session to talk to
-     * @param string $cnd the compact namespace and node type definition in string form
+     * @param OutputInterface  $output      the console output stream
+     * @param SessionInterface $session     the PHPCR session to talk to
+     * @param string           $cnd         the compact namespace and node type definition in string form
+     * @param bool             $allowUpdate whether to allow updating existing node types.
      *
-     * @throws \PHPCR\NodeType\NodeTypeExistsException if the node already exists and allowUpdate is false
      * @throws \PHPCR\RepositoryException on other errors
      */
-    protected function updateFromCnd(InputInterface $input, OutputInterface $output, SessionInterface $session, $cnd, $allowUpdate)
+    protected function updateFromCnd(OutputInterface $output, SessionInterface $session, $cnd, $allowUpdate)
     {
-        if (! $session instanceof \Jackalope\Session) {
-            throw new \Exception('PHPCR only provides an API to register node types. Your implementation is not Jackalope (which provides a method for .cnd). TODO: parse the file and do the necessary API calls');
-        }
-
         $ntm = $session->getWorkspace()->getNodeTypeManager();
 
         try {
             $ntm->registerNodeTypesCnd($cnd, $allowUpdate);
-        } catch (\PHPCR\NodeType\NodeTypeExistsException $e) {
+        } catch (NodeTypeExistsException $e) {
             if (!$allowUpdate) {
                 $output->write(PHP_EOL.'<error>The node type(s) you tried to register already exist.</error>'.PHP_EOL);
                 $output->write(PHP_EOL.'If you want to override the existing definition call this command with the ');

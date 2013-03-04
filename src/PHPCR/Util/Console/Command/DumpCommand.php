@@ -1,29 +1,56 @@
 <?php
 
+/**
+ * This file is part of the PHPCR Utils
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * @license http://www.apache.org/licenses/LICENSE-2.0 Apache Software License 2.0
+ * @link http://phpcr.github.com/
+ */
+
 namespace PHPCR\Util\Console\Command;
 
-
 use Symfony\Component\Console\Command\Command;
+use PHPCR\ItemNotFoundException;
+use PHPCR\RepositoryException;
+use PHPCR\PathNotFoundException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 use PHPCR\Util\TreeWalker;
-use PHPCR\Util\Console\Helper\ConsoleParametersParser;
 use PHPCR\Util\Console\Helper\TreeDumper\ConsoleDumperNodeVisitor;
 use PHPCR\Util\Console\Helper\TreeDumper\ConsoleDumperPropertyVisitor;
 use PHPCR\Util\Console\Helper\TreeDumper\SystemNodeFilter;
 
 /**
+ * Command to dump all nodes under a path to the console
+ *
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  */
 class DumpCommand extends Command
 {
+    /**
+     * Limit after which to cut lines when dumping properties
+     *
+     * @var int
+     */
     private $dump_max_line_length = 120;
 
     /**
-     * Configures the current command.
+     * {@inheritDoc}
      */
     protected function configure()
     {
@@ -32,7 +59,8 @@ class DumpCommand extends Command
             ->addOption('sys_nodes', null, InputOption::VALUE_OPTIONAL, 'Set to "yes" to dump the system nodes', "no")
             ->addOption('props', null, InputOption::VALUE_OPTIONAL, 'Set to "yes" to dump the node properties', "no")
             ->addOption('depth', null, InputOption::VALUE_OPTIONAL, 'Set to a number to limit how deep into the tree to recurse', "-1")
-            ->addArgument('path', InputArgument::OPTIONAL, 'Path of the node to dump', '/')
+            ->addOption('identifiers', null, InputOption::VALUE_OPTIONAL, 'Set to "yes" to also output node UUID', 'no')
+            ->addArgument('identifier', InputArgument::OPTIONAL, 'Path or UUID of the node to dump', '/')
             ->setDescription('Dump the content repository')
             ->setHelp(<<<EOF
 The <info>dump</info> command recursively outputs the name of the node specified
@@ -50,6 +78,8 @@ EOF
 
     /**
      * Change at which length lines in the dump get cut.
+     *
+     * @param int $length maximum line length after which to cut the output.
      */
     public function setDumpMaxLineLength($length)
     {
@@ -57,40 +87,42 @@ EOF
     }
 
     /**
-     * Executes the dump command.
-     *
-     * @param InputInterface  $input  An InputInterface instance
-     * @param OutputInterface $output An OutputInterface instance
-     *
-     * @return integer 0 if everything went fine, or an error code
+     * {@inheritDoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $session = $this->getHelper('phpcr')->getSession();
 
-        $path = $input->getArgument('path');
+        // node to dump
+        $identifier = $input->getArgument('identifier');
 
-        $nodeVisitor = new ConsoleDumperNodeVisitor($output);
+        // whether to dump node uuid
+        $identifiers = $input->hasParameterOption('--identifiers');
+        $nodeVisitor = new ConsoleDumperNodeVisitor($output, $identifiers);
 
         $propVisitor = null;
-        if (ConsoleParametersParser::isTrueString($input->getOption('props'))) {
+        if ($input->hasParameterOption('--props')) {
             $propVisitor = new ConsoleDumperPropertyVisitor($output);
         }
 
         $walker = new TreeWalker($nodeVisitor, $propVisitor);
 
-        if (! ConsoleParametersParser::isTrueString($input->getOption('sys_nodes'))) {
+        if (!$input->hasParameterOption('--sys_nodes')) {
             $filter = new SystemNodeFilter();
             $walker->addNodeFilter($filter);
             $walker->addPropertyFilter($filter);
         }
 
-        if (!$session->nodeExists($path)) {
-            $output->writeln("<error>Path '$path' does not exist</error>");
-            return 1;
-        }
+        try {
+            $node = $session->getNodeByIdentifier($identifier);
+            $walker->traverse($node, $input->getOption('depth'));
+        } catch (RepositoryException $e) {
+            if ($e instanceof PathNotFoundException || $e instanceof ItemNotFoundException) {
+                $output->writeln("<error>Path '$identifier' does not exist</error>");
 
-        $walker->traverse($session->getNode($path), $input->getOption('depth'));
+                return 1;
+            }
+        }
 
         return 0;
     }

@@ -45,12 +45,18 @@ class Sql1GeneratorTest extends \PHPUnit_Framework_TestCase
 
     public function testChildNode()
     {
+        $literal = $this->generator->evalChildNode("/");
+        $this->assertSame("jcr:path LIKE '/%' AND NOT jcr:path LIKE '/%/%'", $literal);
+
         $literal = $this->generator->evalChildNode("/foo/bar/baz");
         $this->assertSame("jcr:path LIKE '/foo[%]/bar[%]/baz[%]/%' AND NOT jcr:path LIKE '/foo[%]/bar[%]/baz[%]/%/%'", $literal);
     }
 
     public function testDescendantNode()
     {
+        $literal = $this->generator->evalDescendantNode("/");
+        $this->assertSame("jcr:path LIKE '/%'", $literal);
+
         $literal = $this->generator->evalDescendantNode("/foo/bar/baz");
         $this->assertSame("jcr:path LIKE '/foo[%]/bar[%]/baz[%]/%'", $literal);
     }

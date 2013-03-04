@@ -19,22 +19,49 @@
  * @link http://phpcr.github.com/
  */
 
-namespace PHPCR\Util;
+namespace PHPCR\Util\Console\Helper\TreeDumper;
 
-use PHPCR\ItemInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use PHPCR\ItemVisitorInterface;
 
 /**
+ * TODO: this should base on the TraversingItemVisitor
  *
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  */
-interface TreeWalkerFilterInterface
+abstract class ConsoleDumperItemVisitor implements ItemVisitorInterface
 {
     /**
-     * Whether to visit the passed item
+     * Target for printing information
      *
-     * @param \PHPCR\ItemInterface $item
-     *
-     * @return mixed
+     * @var OutputInterface
      */
-    public function mustVisit(ItemInterface $item);
+    protected $output;
+
+    /**
+     * Current depth in the tree
+     *
+     * @var int
+     */
+    protected $level = 0;
+
+    /**
+     * Instantiate the console dumper visitor
+     *
+     * @param OutputInterface $output
+     */
+    public function __construct(OutputInterface $output)
+    {
+        $this->output = $output;
+    }
+
+    /**
+     * Set the current depth level for indention
+     *
+     * @param int $level
+     */
+    public function setLevel($level)
+    {
+        $this->level = $level;
+    }
 }

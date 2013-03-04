@@ -1,17 +1,45 @@
 <?php
 
+/**
+ * This file is part of the PHPCR Utils
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * @license http://www.apache.org/licenses/LICENSE-2.0 Apache Software License 2.0
+ * @link http://phpcr.github.com/
+ */
+
 namespace PHPCR\Util\QOM;
 
 use PHPCR\Query\QOM;
-use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants;
 
+/**
+ * Common base class for the SQL(1) and SQL2 converters
+ */
 abstract class BaseQomToSqlQueryConverter
 {
     /**
-     * @var \PHPCR\Util\QOM\Sql2Generator
+     * The generator to use
+     *
+     * @var BaseSqlGenerator
      */
     protected $generator;
 
+    /**
+     * Instantiate the converter
+     *
+     * @param BaseSqlGenerator $generator
+     */
     public function __construct(BaseSqlGenerator $generator)
     {
         $this->generator = $generator;
@@ -23,7 +51,8 @@ abstract class BaseQomToSqlQueryConverter
      *     ['WHERE' Constraint]
      *     ['ORDER BY' orderings]
      *
-     * @param \PHPCR\Query\QOM\QueryObjectModelInterface $query
+     * @param QOM\QueryObjectModelInterface $query
+     *
      * @return string
      */
     public function convert(QOM\QueryObjectModelInterface $query)
@@ -45,10 +74,36 @@ abstract class BaseQomToSqlQueryConverter
     }
 
     /**
+     * Convert a source. This is different between SQL1 and SQL2
+     *
+     * @param QOM\SourceInterface $source
+     *
+     * @return string
+     */
+    abstract protected function convertSource(QOM\SourceInterface $source);
+
+    /**
+     * Convert a constraint. This is different between SQL1 and SQL2.
+     *
+     * @param QOM\ConstraintInterface $constraint
+     *
+     * @return string
+     */
+    abstract protected function convertConstraint(QOM\ConstraintInterface $constraint);
+
+    /**
+     * Convert dynamic operand. This is different between SQL1 and SQL2.
+     * @param QOM\DynamicOperandInterface $operand
+     *
+     * @return mixed
+     */
+    abstract protected function convertDynamicOperand(QOM\DynamicOperandInterface $operand);
+
+    /**
      * Selector ::= nodeTypeName ['AS' selectorName]
      * nodeTypeName ::= Name
      *
-     * @param \PHPCR\Query\QOM\SelectorInterface $selector
+     * @param  QOM\SelectorInterface $selector
      * @return string
      */
     protected function convertSelector(QOM\SelectorInterface $selector)
@@ -70,7 +125,7 @@ abstract class BaseQomToSqlQueryConverter
      * GreaterThanOrEqualTo ::= '>='
      * Like ::= 'LIKE'
      *
-     * @param \PHPCR\Query\QOM\ComparisonInterface $comparison
+     * @param  QOM\ComparisonInterface $comparison
      * @return string
      */
     protected function convertComparison(QOM\ComparisonInterface $comparison)
@@ -92,7 +147,7 @@ abstract class BaseQomToSqlQueryConverter
      *   Note: The negation, 'NOT x IS NOT NULL'
      *      can be written 'x IS NULL'
      *
-     * @param \PHPCR\Query\QOM\PropertyExistenceInterface $constraint
+     * @param  QOM\PropertyExistenceInterface $constraint
      * @return string
      */
     protected function convertPropertyExistence(QOM\PropertyExistenceInterface $constraint)
@@ -111,33 +166,33 @@ abstract class BaseQomToSqlQueryConverter
      *                         explicit specification of the selectorName
      *                         preceding the propertyName is optional
      *
-     * @param \PHPCR\Query\QOM\FullTextSearchInterface $constraint
+     * @param  QOM\FullTextSearchInterface $constraint
      * @return string
      */
     protected function convertFullTextSearch(QOM\FullTextSearchInterface $constraint)
     {
         $searchExpression = $this->convertFullTextSearchExpression($constraint->getFullTextSearchExpression());
+
         return $this->generator->evalFullTextSearch($constraint->getSelectorName(), $searchExpression, $constraint->getPropertyName());
     }
 
     /**
      * FullTextSearchExpression ::= BindVariable | ''' FullTextSearchLiteral '''
      *
-     * @param string $expr
+     * @param  string $expr
      * @return string
      */
-    protected function convertFullTextSearchExpression($literal)
+    protected function convertFullTextSearchExpression($expr)
     {
-        if ($literal instanceof QOM\BindVariableValue) {
-            return $this->convertBindVariable($literal);
+        if ($expr instanceof QOM\BindVariableValueInterface) {
+            return $this->convertBindVariable($expr);
         }
-        if ($literal instanceof QOM\Literal) {
-            return $this->convertLiteral($literal);
+        if ($expr instanceof QOM\LiteralInterface) {
+            return $this->convertLiteral($expr);
         }
 
-        return "'$literal'";
+        return "'$expr'";
     }
-
 
     /**
      * StaticOperand ::= Literal | BindVariableValue
@@ -154,7 +209,7 @@ abstract class BaseQomToSqlQueryConverter
      * BindVariableValue ::= '$'bindVariableName
      * bindVariableName ::= Prefix
      *
-     * @param \PHPCR\Query\QOM\StaticOperandInterface $operand
+     * @param  QOM\StaticOperandInterface $operand
      * @return string
      */
     protected function convertStaticOperand(QOM\StaticOperandInterface $operand)
@@ -173,16 +228,15 @@ abstract class BaseQomToSqlQueryConverter
     /**
      * PropertyValue ::= [selectorName'.'] propertyName     // If only one selector exists
      *
-     * @param \PHPCR\Query\QOM\PropertyValueInterface $value
+     * @param  QOM\PropertyValueInterface $value
      * @return string
      */
-    protected function convertPropertyValue(QOM\PropertyValueInterface $operand)
+    protected function convertPropertyValue(QOM\PropertyValueInterface $value)
     {
         return $this->generator->evalPropertyValue(
-            $operand->getPropertyName(),
-            $operand->getSelectorName());
+            $value->getPropertyName(),
+            $value->getSelectorName());
     }
-
 
     /**
      * orderings ::= Ordering {',' Ordering}
@@ -191,12 +245,13 @@ abstract class BaseQomToSqlQueryConverter
      * Ascending ::= 'ASC'
      * Descending ::= 'DESC'
      *
-     * @param array $orderings
+     * @param  QOM\OrderingInterface[] $orderings
      * @return string
      */
     protected function convertOrderings(array $orderings)
     {
         $list = array();
+        /** @var $ordering QOM\OrderingInterface */
         foreach ($orderings as $ordering) {
             $order = $this->generator->evalOrder($ordering->getOrder());
             $operand = $this->convertDynamicOperand($ordering->getOperand());
@@ -206,16 +261,40 @@ abstract class BaseQomToSqlQueryConverter
         return $this->generator->evalOrderings($list);
     }
 
+    /**
+     * Path ::= '[' quotedPath ']' | '[' simplePath ']' | simplePath
+     * quotedPath ::= A JCR Path that contains non-SQL-legal characters
+     * simplePath ::= A JCR Name that contains only SQL-legal characters
+     *
+     * @param string $path
+     *
+     * @return string
+     */
     protected function convertPath($path)
     {
         return $this->generator->evalPath($path);
     }
 
+    /**
+     * BindVariableValue ::= '$'bindVariableName
+     * bindVariableName ::= Prefix
+     *
+     * @param string $var
+     *
+     * @return string
+     */
     protected function convertBindVariable($var)
     {
         return $this->generator->evalBindVariable($var);
     }
 
+    /**
+     * Literal ::= CastLiteral | UncastLiteral
+     *
+     * @param mixed $literal
+     *
+     * @return string
+     */
     protected function convertLiteral($literal)
     {
         return $this->generator->evalLiteral($literal);
@@ -230,12 +309,13 @@ abstract class BaseQomToSqlQueryConverter
      * propertyName ::= Name
      * columnName ::= Name
      *
-     * @param array $columns
+     * @param  QOM\ColumnInterface[] $columns
      * @return string
      */
     protected function convertColumns(array $columns)
     {
         $list = array();
+        /** @var $column QOM\ColumnInterface */
         foreach ($columns as $column) {
             $selector = $column->getSelectorName();
             $property = $column->getPropertyName();

@@ -1,9 +1,27 @@
 <?php
 
+/**
+ * This file is part of the PHPCR Utils
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * @license http://www.apache.org/licenses/LICENSE-2.0 Apache Software License 2.0
+ * @link http://phpcr.github.com/
+ */
+
 namespace PHPCR\Util\QOM;
 
 use PHPCR\Query\QOM;
-use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants;
 
 /**
  * Convert a QOM query into an SQL2 statement
@@ -13,7 +31,8 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
     /**
      * Source ::= Selector | Join
      *
-     * @param \PHPCR\Query\QOM\SourceInterface $source
+     * @param QOM\SourceInterface $source
+     *
      * @return string
      */
     protected function convertSource(QOM\SourceInterface $source)
@@ -39,7 +58,7 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
      * LeftOuter ::= 'LEFT OUTER'
      * RightOuter ::= 'RIGHT OUTER'
      *
-     * @param \PHPCR\Query\QOM\JoinInterface $join
+     * @param  QOM\JoinInterface $join
      * @return string
      */
     protected function convertJoin(QOM\JoinInterface $join)
@@ -47,6 +66,7 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
         $left = $this->convertSource($join->getLeft());
         $right = $this->convertSource($join->getRight());
         $condition = $this->convertJoinCondition($join->getJoinCondition());
+
         return $this->generator->evalJoin($left, $right, $condition, $this->generator->evalJoinType($join->getJoinType()));
     }
 
@@ -56,7 +76,7 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
      *             ChildNodeJoinCondition |
      *             DescendantNodeJoinCondition
      *
-     * @param \PHPCR\Query\QOM\JoinConditionInterface $condition
+     * @param  QOM\JoinConditionInterface $condition
      * @return string
      */
     protected function convertJoinCondition(QOM\JoinConditionInterface $condition)
@@ -85,7 +105,7 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
      *   property1Name ::= propertyName
      *   property2Name ::= propertyName
      *
-     * @param \PHPCR\Query\QOM\EquiJoinConditionInterface $condition
+     * @param  QOM\EquiJoinConditionInterface $condition
      * @return string
      */
     protected function convertEquiJoinCondition(QOM\EquiJoinConditionInterface $condition)
@@ -104,7 +124,7 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
      *                  [',' selector2Path] ')'
      *   selector2Path ::= Path
      *
-     * @param \PHPCR\Query\QOM\SameNodeJoinConditionInterface $condition
+     * @param  QOM\SameNodeJoinConditionInterface $condition
      * @return string
      */
     protected function convertSameNodeJoinCondition(QOM\SameNodeJoinConditionInterface $condition)
@@ -122,7 +142,7 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
      *   childSelectorName ::= selectorName
      *   parentSelectorName ::= selectorName
      *
-     * @param \PHPCR\Query\QOM\ChildNodeJoinConditionInterface $condition
+     * @param  QOM\ChildNodeJoinConditionInterface $condition
      * @return string
      */
     protected function convertChildNodeJoinCondition(QOM\ChildNodeJoinConditionInterface $condition)
@@ -139,7 +159,7 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
      *   descendantSelectorName ::= selectorName
      *   ancestorSelectorName ::= selectorName
      *
-     * @param \PHPCR\Query\QOM\DescendantNodeJoinConditionInterface $condition
+     * @param  QOM\DescendantNodeJoinConditionInterface $condition
      * @return string
      */
     protected function convertDescendantNodeJoinCondition(QOM\DescendantNodeJoinConditionInterface $condition)
@@ -170,7 +190,7 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
      *        // If only one selector exists in this query, explicit
      *           specification of the selectorName is optional
      *
-     * @param \PHPCR\Query\QOM\ConstraintInterface $constraint
+     * @param  QOM\ConstraintInterface $constraint
      * @return string
      */
     protected function convertConstraint(QOM\ConstraintInterface $constraint)
@@ -193,9 +213,7 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
         }
         if ($constraint instanceof QOM\PropertyExistenceInterface) {
             return $this->convertPropertyExistence($constraint);
-        }
-        elseif ($constraint instanceof QOM\FullTextSearchInterface)
-        {
+        } elseif ($constraint instanceof QOM\FullTextSearchInterface) {
             return $this->convertFullTextSearch($constraint);
         }
         if ($constraint instanceof QOM\SameNodeInterface) {
@@ -230,7 +248,7 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
      * LowerCase ::= 'LOWER(' DynamicOperand ')'
      * UpperCase ::= 'UPPER(' DynamicOperand ')'
      *
-     * @param \PHPCR\Query\QOM\DynamicOperandInterface $operand
+     * @param  QOM\DynamicOperandInterface $operand
      * @return string
      */
     protected function convertDynamicOperand(QOM\DynamicOperandInterface $operand)
@@ -254,10 +272,12 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
         }
         if ($operand instanceof QOM\LowerCaseInterface) {
             $operand = $this->convertDynamicOperand($operand->getOperand());
+
             return $this->generator->evalLower($operand);
         }
         if ($operand instanceof QOM\UpperCaseInterface) {
             $operand = $this->convertDynamicOperand($operand->getOperand());
+
             return $this->generator->evalUpper($operand);
         }
 
