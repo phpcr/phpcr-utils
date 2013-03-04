@@ -20,7 +20,7 @@ class ExportXmlCommand extends Command
         parent::configure();
 
         $this
-            ->setName('phpcr:import')
+            ->setName('phpcr:export')
             ->addArgument('filename', InputArgument::REQUIRED, 'The xml file to export to')
             ->addOption('path', 'p', InputOption::VALUE_OPTIONAL, 'Path of the node to export', '/')
             ->addOption('skip_binary', null, InputOption::VALUE_OPTIONAL, 'Set to "yes" to skip binaries', "no")
