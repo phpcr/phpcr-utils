@@ -26,8 +26,6 @@ use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants;
 
 /**
  * Generate SQL2 statements
- *
- * TODO: is eval... the best name for the functions here?
  */
 class Sql2Generator extends BaseSqlGenerator
 {
@@ -42,10 +40,7 @@ class Sql2Generator extends BaseSqlGenerator
      */
     public function evalSelector($nodeTypeName, $selectorName = null)
     {
-        $sql2 = $nodeTypeName;
-        if (substr($sql2, 0, 1) !== '[' && substr($sql2, -1) !== ']') {
-            $sql2 = '[' . $sql2 . ']';
-        }
+        $sql2 = $this->addBracketsIfNeeded($nodeTypeName);
 
         $name = $selectorName;
         if (! is_null($name)) {
@@ -129,7 +124,10 @@ class Sql2Generator extends BaseSqlGenerator
      */
     public function evalSameNodeJoinCondition($sel1Name, $sel2Name, $sel2Path = null)
     {
-        $sql2 = "ISSAMENODE($sel1Name, $sel2Name";
+        $sql2 = 'ISSAMENODE('
+            . $this->addBracketsIfNeeded($sel1Name) . ', '
+            . $this->addBracketsIfNeeded($sel2Name)
+        ;
         $sql2 .= ! is_null($sel2Path) ? ', ' . $sel2Path : '';
         $sql2 .= ')';
 
@@ -149,7 +147,10 @@ class Sql2Generator extends BaseSqlGenerator
      */
     public function evalChildNodeJoinCondition($childSelectorName, $parentSelectorName)
     {
-        return "ISCHILDNODE($childSelectorName, $parentSelectorName)";
+        return 'ISCHILDNODE('
+            . $this->addBracketsIfNeeded($childSelectorName) . ', '
+            . $this->addBracketsIfNeeded($parentSelectorName) . ')'
+        ;
     }
 
     /**
@@ -165,7 +166,10 @@ class Sql2Generator extends BaseSqlGenerator
      */
     public function evalDescendantNodeJoinCondition($descendantSelectorName, $ancestorselectorName)
     {
-        return "ISDESCENDANTNODE($descendantSelectorName, $ancestorselectorName)";
+        return 'ISDESCENDANTNODE('
+            . $this->addBracketsIfNeeded($descendantSelectorName) . ', '
+            . $this->addBracketsIfNeeded($ancestorselectorName) . ')'
+        ;
     }
 
     /**
@@ -177,7 +181,7 @@ class Sql2Generator extends BaseSqlGenerator
     public function evalSameNode($path, $selectorName = null)
     {
         $sql2 = 'ISSAMENODE(';
-        $sql2 .= is_null($selectorName) ? $path : $selectorName . ', ' . $path;
+        $sql2 .= is_null($selectorName) ? $path : $this->addBracketsIfNeeded($selectorName) . ', ' . $path;
         $sql2 .= ')';
 
         return $sql2;
@@ -192,7 +196,7 @@ class Sql2Generator extends BaseSqlGenerator
     public function evalChildNode($path, $selectorName = null)
     {
         $sql2 = 'ISCHILDNODE(';
-        $sql2 .= is_null($selectorName) ? $path : $selectorName . ', ' . $path;
+        $sql2 .= is_null($selectorName) ? $path : $this->addBracketsIfNeeded($selectorName) . ', ' . $path;
         $sql2 .= ')';
 
         return $sql2;
@@ -207,7 +211,7 @@ class Sql2Generator extends BaseSqlGenerator
     public function evalDescendantNode($path, $selectorName = null)
     {
         $sql2 = 'ISDESCENDANTNODE(';
-        $sql2 .= is_null($selectorName) ? $path : $selectorName . ', ' . $path;
+        $sql2 .= is_null($selectorName) ? $path : $this->addBracketsIfNeeded($selectorName) . ', ' . $path;
         $sql2 .= ')';
 
         return $sql2;
@@ -301,10 +305,7 @@ class Sql2Generator extends BaseSqlGenerator
      */
     public function evalPropertyValue($propertyName, $selectorName = null)
     {
-        if (false !== strpos($selectorName, ':')) {
-            $selectorName = "[$selectorName]";
-        }
-        $sql2 = ! is_null($selectorName) ? $selectorName . '.' : '';
+        $sql2 = ! is_null($selectorName) ? $this->addBracketsIfNeeded($selectorName) . '.' : '';
         if (false !== strpos($propertyName, ':')) {
             $propertyName = "[$propertyName]";
         }
@@ -356,7 +357,7 @@ class Sql2Generator extends BaseSqlGenerator
     {
         $sql2 = '';
         if (! is_null($selectorName) && is_null($propertyName) && is_null($colname)) {
-            $sql2 .= $selectorName . '.*';
+            $sql2 .= $this->addBracketsIfNeeded($selectorName) . '.*';
         } else {
             $sql2 .= $this->evalPropertyValue($propertyName, $selectorName);
             $sql2 .= ! is_null($colname) ? ' AS ' . $colname : '';
@@ -399,5 +400,24 @@ class Sql2Generator extends BaseSqlGenerator
     public function evalCastLiteral($literal, $type)
     {
         return "CAST('$literal' AS $type)";
+    }
+
+    /**
+     * Add square brackets around a selector if needed
+     *
+     * @param string $selector
+     *
+     * @return string $selector guaranteed to have [] around it if needed
+     */
+    private function addBracketsIfNeeded($selector)
+    {
+        if (substr($selector, 0, 1) !== '['
+            && substr($selector, -1) !== ']'
+            && false !== strpos($selector, ':')
+        ) {
+            return "[$selector]";
+        }
+
+        return $selector;
     }
 }
