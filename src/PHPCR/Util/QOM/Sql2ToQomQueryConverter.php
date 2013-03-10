@@ -259,9 +259,9 @@ class Sql2ToQomQueryConverter
     protected function parseSameNodeJoinCondition()
     {
         $this->scanner->expectTokens(array('ISSAMENODE', '('));
-        $selector1 = $this->parseSelector();
+        $selector1 = $this->fetchTokenWithoutBrackets();
         $this->scanner->expectToken(',');
-        $selector2 = $this->parseSelector();
+        $selector2 = $this->fetchTokenWithoutBrackets();
 
         $token = $this->scanner->lookupNextToken();
         if ($this->scanner->tokenIs($token, ',')) {
@@ -285,9 +285,9 @@ class Sql2ToQomQueryConverter
     protected function parseChildNodeJoinCondition()
     {
         $this->scanner->expectTokens(array('ISCHILDNODE', '('));
-        $child = $this->parseSelector();
+        $child = $this->fetchTokenWithoutBrackets();
         $this->scanner->expectToken(',');
-        $parent = $this->parseSelector();
+        $parent = $this->fetchTokenWithoutBrackets();
         $this->scanner->expectToken(')');
 
         return $this->factory->childNodeJoinCondition($child, $parent);
@@ -302,9 +302,9 @@ class Sql2ToQomQueryConverter
     protected function parseDescendantNodeJoinCondition()
     {
         $this->scanner->expectTokens(array('ISDESCENDANTNODE', '('));
-        $child = $this->parseSelector();
+        $child = $this->fetchTokenWithoutBrackets();
         $this->scanner->expectToken(',');
-        $parent = $this->parseSelector();
+        $parent = $this->fetchTokenWithoutBrackets();
         $this->scanner->expectToken(')');
 
         return $this->factory->descendantNodeJoinCondition($child, $parent);
