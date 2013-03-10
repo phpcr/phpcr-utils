@@ -139,7 +139,7 @@ class Sql2ToQomQueryConverter
     {
         $token = $this->fetchTokenWithoutBrackets();
 
-        if (strtoupper($this->scanner->lookupNextToken()) === 'AS') {
+        if ($this->scanner->tokenIs($this->scanner->lookupNextToken(), 'AS')) {
             $this->scanner->fetchNextToken(); // Consume the AS
             $selectorName = $this->parseName();
 
@@ -414,7 +414,7 @@ class Sql2ToQomQueryConverter
     /**
      * 6.7.17 Operator
      *
-     * @return \PHPCR\Query\QOM\OperatorInterface
+     * @return string a constant from QueryObjectModelConstantsInterface
      */
     protected function parseOperator()
     {
@@ -453,7 +453,7 @@ class Sql2ToQomQueryConverter
         if ($this->scanner->tokenIs($token, 'NULL')) {
             $this->scanner->fetchNextToken();
 
-            return $this->factory->not($this->factory->propertyExistence($prop, $selector));
+            return $this->factory->notConstraint($this->factory->propertyExistence($prop, $selector));
         }
 
         $this->scanner->expectTokens(array('NOT', 'NULL'));
@@ -731,18 +731,17 @@ class Sql2ToQomQueryConverter
     protected function parseOrdering()
     {
         $operand = $this->parseDynamicOperand();
-        $token = strtoupper($this->scanner->lookupNextToken());
+        $token = $this->scanner->lookupNextToken();
 
-        if ($token === 'DESC') {
+        if ($this->scanner->tokenIs($token, 'DESC')) {
             $this->scanner->expectToken('DESC');
 
             return $this->factory->descending($operand);
         }
 
-        if ($token === 'ASC' || $token === ',' || $token === '') {
-            if ($token === 'ASC') {
-                // Consume ASC
-                $this->scanner->fetchNextToken();
+        if ($this->scanner->tokenIs($token, 'ASC') || ',' === $token || '' === $token) {
+            if ($this->scanner->tokenIs($token, 'ASC')) {
+                $this->scanner->expectToken('ASC');
             }
 
             return $this->factory->ascending($operand);
@@ -837,7 +836,7 @@ class Sql2ToQomQueryConverter
         list($propertyName, $selectorName) = $this->parseIdentifier();
 
         // AS name
-        if (strtoupper($this->scanner->lookupNextToken()) === 'AS') {
+        if ($this->scanner->tokenIs($this->scanner->lookupNextToken(), 'AS')) {
             $this->scanner->fetchNextToken();
             $columnName = $this->scanner->fetchNextToken();
         } else {
