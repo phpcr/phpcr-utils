@@ -68,7 +68,7 @@ class QueryCommand extends Command
         foreach ($result as $i => $row) {
             $output->writeln("\n".($i+1).'. Row (Path: '. $row->getPath() .', Score: '. $row->getScore() .'):');
             foreach ($row as $column => $value) {
-                $output->writeln("$column: $value");
+                $output->writeln("$column: ".var_export($value, true));
             }
         }
         $output->writeln(sprintf('<info>%.2f seconds</info>', $elapsed));
