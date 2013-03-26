@@ -115,14 +115,19 @@ EOF
         }
 
         try {
-            $node = $session->getNodeByIdentifier($identifier);
+            if (strpos($identifier, '/') === 0) {
+                $node = $session->getNode($identifier);
+            } else {
+                $node = $session->getNodeByIdentifier($identifier);
+            }
             $walker->traverse($node, $input->getOption('depth'));
         } catch (RepositoryException $e) {
             if ($e instanceof PathNotFoundException || $e instanceof ItemNotFoundException) {
                 $output->writeln("<error>Path '$identifier' does not exist</error>");
-
-                return 1;
             }
+            $output->writeln('<error>Error: '.$e->getMessage().'</error>');
+
+            return 1;
         }
 
         return 0;
