@@ -21,6 +21,7 @@
 
 namespace PHPCR\Util\Console\Command;
 
+use PHPCR\Util\UUIDHelper;
 use Symfony\Component\Console\Command\Command;
 use PHPCR\ItemNotFoundException;
 use PHPCR\RepositoryException;
@@ -115,10 +116,10 @@ EOF
         }
 
         try {
-            if (strpos($identifier, '/') === 0) {
-                $node = $session->getNode($identifier);
-            } else {
+            if (UUIDHelper::isUUID($identifier)) {
                 $node = $session->getNodeByIdentifier($identifier);
+            } else {
+                $node = $session->getNode($identifier);
             }
             $walker->traverse($node, $input->getOption('depth'));
         } catch (RepositoryException $e) {
