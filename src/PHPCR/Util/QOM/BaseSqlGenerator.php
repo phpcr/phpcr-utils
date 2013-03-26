@@ -1,11 +1,33 @@
 <?php
 
+/**
+ * This file is part of the PHPCR Utils
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * @license http://www.apache.org/licenses/LICENSE-2.0 Apache Software License 2.0
+ * @link http://phpcr.github.com/
+ */
+
 namespace PHPCR\Util\QOM;
 
 use PHPCR\Query\QOM;
 use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants;
 use PHPCR\PropertyType;
 
+/**
+ * Common base class for SQL(1) and SQL2 generators
+ */
 abstract class BaseSqlGenerator
 {
     /**
@@ -17,7 +39,8 @@ abstract class BaseSqlGenerator
      * @param string $source
      * @param string $columns
      * @param string $constraint
-     * @param string $ordering
+     * @param string $orderings
+     *
      * @return string
      */
     public function evalQuery($source, $columns, $constraint = '', $orderings = '')
@@ -128,6 +151,13 @@ abstract class BaseSqlGenerator
         return "UPPER($operand)";
     }
 
+    /**
+     * orderings ::= Ordering {',' Ordering}
+     *
+     * @param $orderings
+     *
+     * @return string
+     */
     public function evalOrderings($orderings)
     {
         $sql2 = '';
@@ -144,11 +174,28 @@ abstract class BaseSqlGenerator
         return $sql2;
     }
 
+    /**
+     * Ordering ::= DynamicOperand [Order]
+     *
+     * @param $operand
+     * @param $order
+     *
+     * @return string
+     */
     public function evalOrdering($operand, $order)
     {
         return "$operand $order";
     }
 
+    /**
+     * Order ::= Ascending | Descending
+     * Ascending ::= 'ASC'
+     * Descending ::= 'DESC'
+     *
+     * @param $order
+     *
+     * @return string
+     */
     public function evalOrder($order)
     {
         switch ($order) {
@@ -157,33 +204,73 @@ abstract class BaseSqlGenerator
             case Constants::JCR_ORDER_DESCENDING:
                 return 'DESC';
         }
+
         return '';
     }
 
+    /**
+     * BindVariableValue ::= '$'bindVariableName
+     * bindVariableName ::= Prefix
+     *
+     * @param $var
+     *
+     * @return string
+     */
     public function evalBindVariable($var)
     {
         return '$' . $var;
     }
 
+    /**
+     * Literal ::= CastLiteral | UncastLiteral
+     *
+     * @param mixed $literal
+     *
+     * @return string
+     */
     public function evalLiteral($literal)
     {
         if ($literal instanceof \DateTime) {
             $string = PropertyType::convertType($literal, PropertyType::STRING);
+
             return $this->evalCastLiteral($string, 'DATE');
         }
         if (is_bool($literal)) {
             $string = $literal ? 'true' : 'false';
+
             return $this->evalCastLiteral($string, 'BOOLEAN');
         }
         if (is_int($literal)) {
             $string = PropertyType::convertType($literal, PropertyType::STRING);
+
             return $this->evalCastLiteral($string, 'LONG');
         }
         if (is_float($literal)) {
             $string = PropertyType::convertType($literal, PropertyType::STRING);
+
             return $this->evalCastLiteral($string, 'DOUBLE');
         }
 
         return "'$literal'";
     }
+
+    /**
+     * Cast a literal. This is different between SQL1 and SQL2.
+     *
+     * @param string $literal
+     * @param string $type
+     *
+     * @return string
+     */
+    abstract public function evalCastLiteral($literal, $type);
+
+    /**
+     * Evaluate a path. This is different between SQL1 and SQL2.
+     *
+     * @param string $path
+     *
+     * @return string
+     */
+    abstract public function evalPath($path);
+
 }

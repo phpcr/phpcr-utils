@@ -1,7 +1,7 @@
 <?php
 
 /**
- * This file is part of the PHPCR API and was originally ported from the Java
+ * This file is part of the PHPCR Utils and was originally ported from the Java
  * JCR API to PHP by Karsten Dambekalns for the FLOW3 project.
  *
  * Copyright 2008-2011 Karsten Dambekalns <karsten@typo3.org>
@@ -24,6 +24,14 @@
 
 namespace PHPCR\Util;
 
+use SplQueue;
+
+use PHPCR\ItemInterface;
+use PHPCR\PropertyInterface;
+use PHPCR\NodeInterface;
+use PHPCR\ItemVisitorInterface;
+use PHPCR\RepositoryException;
+
 /**
  * An implementation of ItemVisitor.
  *
@@ -39,11 +47,10 @@ namespace PHPCR\Util;
  *
  * @author Karsten Dambekalns <karsten@typo3.org>
  * @author Day Management AG, Switzerland
- * @package phpcr
- * @subpackage interfaces
+ *
  * @api
  */
-abstract class TraversingItemVisitor implements \PHPCR\ItemVisitorInterface
+abstract class TraversingItemVisitor implements ItemVisitorInterface
 {
     /**
      * Indicates if traversal should be done in a breadth-first manner rather
@@ -65,14 +72,14 @@ abstract class TraversingItemVisitor implements \PHPCR\ItemVisitorInterface
     /**
      * Queue used to implement breadth-first traversal.
      *
-     * @var \SplQueue
+     * @var SplQueue
      */
     protected $currentQueue;
 
     /**
      * Queue used to implement breadth-first traversal.
      *
-     * @var \SplQueue
+     * @var SplQueue
      */
     protected $nextQueue;
 
@@ -102,45 +109,55 @@ abstract class TraversingItemVisitor implements \PHPCR\ItemVisitorInterface
         $this->maxDepth = $maxDepth;
 
         if ($this->breadthFirst === true) {
-            $this->currentQueue = new \SplQueue();
-            $this->nextQueue = new \SplQueue();
+            $this->currentQueue = new SplQueue();
+            $this->nextQueue = new SplQueue();
         }
         $this->currentDepth = 0;
+    }
+
+    /**
+     * Update the current depth level for indention
+     *
+     * @param int $level
+     */
+    public function setLevel($level)
+    {
+        $this->currentDepth = $level;
     }
 
     /**
      * Implement this method to add behavior performed before a Property is
      * visited.
      *
-     * @param \PHPCR\ItemInterface $item the Item that is accepting this
+     * @param ItemInterface $item the Item that is accepting this
      *      visitor.
      * @param integer $depth hierarchy level of this node (the root node starts
      *      at depth 0).
      *
      * @return void
      *
-     * @throws \PHPCR\RepositoryException if an error occurs.
+     * @throws RepositoryException if an error occurs.
      *
      * @api
      */
-    protected abstract function entering(\PHPCR\ItemInterface $item, $depth);
+    abstract protected function entering(ItemInterface $item, $depth);
 
     /**
      * Implement this method to add behavior performed after a Property is
      * visited.
      *
-     * @param \PHPCR\ItemInterface $item the Item that is accepting this
+     * @param ItemInterface $item the Item that is accepting this
      *      visitor.
      * @param integer $depth hierarchy level of this property (the root node
      *      starts at depth 0).
      *
      * @return void
      *
-     * @throws \PHPCR\RepositoryException if an error occurs.
+     * @throws RepositoryException if an error occurs.
      *
      * @api
      */
-    protected abstract function leaving(\PHPCR\ItemInterface $item, $depth);
+    abstract protected function leaving(ItemInterface $item, $depth);
 
     /**
      * Called when the Visitor is passed to an Item.
@@ -151,33 +168,36 @@ abstract class TraversingItemVisitor implements \PHPCR\ItemVisitorInterface
      *
      * If this method throws, the visiting process is aborted.
      *
-     * @param \PHPCR\ItemInterface $item the Node or Property that is accepting
+     * @param ItemInterface $item the Node or Property that is accepting
      *      this visitor.
      *
      * @return void
      *
-     * @throws \PHPCR\RepositoryException if an error occurs.
+     * @throws RepositoryException if an error occurs.
      *
      * @api
      */
-    public function visit(\PHPCR\ItemInterface $item)
+    public function visit(ItemInterface $item)
     {
         if ($this->currentDepth == 0) {
             $this->currentDepth = $item->getDepth();
         }
-        if ($item instanceof \PHPCR\PropertyInterface) {
+        if ($item instanceof PropertyInterface) {
             $this->entering($item, $this->currentDepth);
             $this->leaving($item, $this->currentDepth);
         } else {
+            /** @var $item NodeInterface */
             try {
                 if ($this->breadthFirst === false) {
                     $this->entering($item, $this->currentDepth);
                     if ($this->maxDepth == -1 || $this->currentDepth < $this->maxDepth) {
                         $this->currentDepth++;
                         foreach ($item->getProperties() as $property) {
+                            /** @var $property PropertyInterface */
                             $property->accept($this);
                         }
                         foreach ($item->getNodes() as $node) {
+                            /** @var $node NodeInterface */
                             $node->accept($this);
                         }
                         $this->currentDepth--;
@@ -189,9 +209,11 @@ abstract class TraversingItemVisitor implements \PHPCR\ItemVisitorInterface
 
                     if ($this->maxDepth == -1 || $this->currentDepth < $this->maxDepth) {
                         foreach ($item->getProperties() as $property) {
+                            /** @var $property PropertyInterface */
                             $property->accept($this);
                         }
                         foreach ($item->getNodes() as $node) {
+                            /** @var $node NodeInterface */
                             $node->accept($this);
                         }
                     }
@@ -200,14 +222,14 @@ abstract class TraversingItemVisitor implements \PHPCR\ItemVisitorInterface
                         if ($this->currentQueue->isEmpty()) {
                             $this->currentDepth++;
                             $this->currentQueue = $this->nextQueue;
-                            $this->nextQueue = new \SplQueue();
+                            $this->nextQueue = new SplQueue();
                         }
                         $item = $this->currentQueue->dequeue();
                         $item->accept($this);
                     }
                     $this->currentDepth = 0;
                 }
-            } catch (\PHPCR\RepositoryException $exception) {
+            } catch (RepositoryException $exception) {
                 $this->currentDepth = 0;
                 throw $exception;
             }

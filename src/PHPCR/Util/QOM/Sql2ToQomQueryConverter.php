@@ -1,5 +1,24 @@
 <?php
 
+/**
+ * This file is part of the PHPCR Utils
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * @license http://www.apache.org/licenses/LICENSE-2.0 Apache Software License 2.0
+ * @link http://phpcr.github.com/
+ */
+
 namespace PHPCR\Util\QOM;
 
 use PHPCR\Query\QOM;
@@ -11,21 +30,29 @@ use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants;
 class Sql2ToQomQueryConverter
 {
     /**
+     * The factory to create QOM objects
+     *
      * @var \PHPCR\Query\QOM\QueryObjectModelFactoryInterface
      */
     protected $factory;
 
     /**
+     * Scanner to parse SQL2
+     *
      * @var \PHPCR\Util\QOM\Sql2Scanner;
      */
     protected $scanner;
 
     /**
+     * The SQL2 query (the converter is not reentrant)
+     *
      * @var string
      */
     protected $sql2;
 
     /**
+     * Instantiate a converter
+     *
      * @param \PHPCR\Query\QOM\QueryObjectModelFactoryInterface $factory
      */
     public function __construct(QOM\QueryObjectModelFactoryInterface $factory)
@@ -38,6 +65,7 @@ class Sql2ToQomQueryConverter
      * Parse an SQL2 query and return the corresponding QOM QueryObjectModel
      *
      * @param string $sql2
+     *
      * @return \PHPCR\Query\QOM\QueryObjectModelInterface;
      */
     public function parse($sql2)
@@ -111,9 +139,10 @@ class Sql2ToQomQueryConverter
     {
         $token = $this->fetchTokenWithoutBrackets();
 
-        if (strtoupper($this->scanner->lookupNextToken()) === 'AS') {
+        if ($this->scanner->tokenIs($this->scanner->lookupNextToken(), 'AS')) {
             $this->scanner->fetchNextToken(); // Consume the AS
             $selectorName = $this->parseName();
+
             return $this->factory->selector($token, $selectorName);
         }
 
@@ -194,9 +223,11 @@ class Sql2ToQomQueryConverter
         if ($this->scanner->tokenIs($token, 'ISSAMENODE')) {
             return $this->parseSameNodeJoinCondition();
         }
+
         if ($this->scanner->tokenIs($token, 'ISCHILDNODE')) {
             return $this->parseChildNodeJoinCondition();
         }
+
         if ($this->scanner->tokenIs($token, 'ISDESCENDANTNODE')) {
             return $this->parseDescendantNodeJoinCondition();
         }
@@ -227,17 +258,19 @@ class Sql2ToQomQueryConverter
      */
     protected function parseSameNodeJoinCondition()
     {
-        $path = null;
         $this->scanner->expectTokens(array('ISSAMENODE', '('));
-        $selector1 = $this->scanner->fetchNextToken();
+        $selector1 = $this->fetchTokenWithoutBrackets();
         $this->scanner->expectToken(',');
-        $selector2 = $this->scanner->fetchNextToken();
+        $selector2 = $this->fetchTokenWithoutBrackets();
 
         $token = $this->scanner->lookupNextToken();
         if ($this->scanner->tokenIs($token, ',')) {
             $this->scanner->fetchNextToken(); // consume the coma
             $path = $this->parsePath();
+        } else {
+            $path = null;
         }
+
         $this->scanner->expectToken(')');
 
         return $this->factory->sameNodeJoinCondition($selector1, $selector2, $path);
@@ -252,9 +285,9 @@ class Sql2ToQomQueryConverter
     protected function parseChildNodeJoinCondition()
     {
         $this->scanner->expectTokens(array('ISCHILDNODE', '('));
-        $child = $this->scanner->fetchNextToken();
+        $child = $this->fetchTokenWithoutBrackets();
         $this->scanner->expectToken(',');
-        $parent = $this->scanner->fetchNextToken();
+        $parent = $this->fetchTokenWithoutBrackets();
         $this->scanner->expectToken(')');
 
         return $this->factory->childNodeJoinCondition($child, $parent);
@@ -269,9 +302,9 @@ class Sql2ToQomQueryConverter
     protected function parseDescendantNodeJoinCondition()
     {
         $this->scanner->expectTokens(array('ISDESCENDANTNODE', '('));
-        $child = $this->scanner->fetchNextToken();
+        $child = $this->fetchTokenWithoutBrackets();
         $this->scanner->expectToken(',');
-        $parent = $this->scanner->fetchNextToken();
+        $parent = $this->fetchTokenWithoutBrackets();
         $this->scanner->expectToken(')');
 
         return $this->factory->descendantNodeJoinCondition($child, $parent);
@@ -339,9 +372,9 @@ class Sql2ToQomQueryConverter
             $constraint2 = $this->parseConstraint();
             if ($this->scanner->tokenIs($token, 'AND')) {
                 return $this->factory->andConstraint($constraint, $constraint2);
-            } else {
-                return $this->factory->orConstraint($constraint, $constraint2);
             }
+
+            return $this->factory->orConstraint($constraint, $constraint2);
         }
 
         return $constraint;
@@ -355,6 +388,7 @@ class Sql2ToQomQueryConverter
     protected function parseNot()
     {
         $this->scanner->expectToken('NOT');
+
         return $this->factory->notConstraint($this->parseConstraint());
     }
 
@@ -380,7 +414,7 @@ class Sql2ToQomQueryConverter
     /**
      * 6.7.17 Operator
      *
-     * @return \PHPCR\Query\QOM\OperatorInterface
+     * @return string a constant from QueryObjectModelConstantsInterface
      */
     protected function parseOperator()
     {
@@ -418,7 +452,8 @@ class Sql2ToQomQueryConverter
         $token = $this->scanner->lookupNextToken();
         if ($this->scanner->tokenIs($token, 'NULL')) {
             $this->scanner->fetchNextToken();
-            return $this->factory->not($this->factory->propertyExistence($prop, $selector));
+
+            return $this->factory->notConstraint($this->factory->propertyExistence($prop, $selector));
         }
 
         $this->scanner->expectTokens(array('NOT', 'NULL'));
@@ -458,6 +493,7 @@ class Sql2ToQomQueryConverter
             $path = $this->parsePath();
         }
         $this->scanner->expectToken(')');
+
         return $this->factory->sameNode($path, $selector);
     }
 
@@ -476,6 +512,7 @@ class Sql2ToQomQueryConverter
             $path = $this->parsePath();
         }
         $this->scanner->expectToken(')');
+
         return $this->factory->childNode($path, $selector);
     }
 
@@ -494,6 +531,7 @@ class Sql2ToQomQueryConverter
             $path = $this->parsePath();
         }
         $this->scanner->expectToken(')');
+
         return $this->factory->descendantNode($path, $selector);
     }
 
@@ -510,6 +548,7 @@ class Sql2ToQomQueryConverter
         if (substr($path, 0, 1) === '[' && substr($path, -1) === ']') {
             $path = substr($path, 1, -1);
         }
+
         return $path;
     }
 
@@ -526,6 +565,7 @@ class Sql2ToQomQueryConverter
         if (substr($token, 0, 1) === '$') {
             return $this->factory->bindVariable(substr($token, 1));
         }
+
         return $this->parseLiteral();
     }
 
@@ -550,6 +590,7 @@ class Sql2ToQomQueryConverter
             $this->scanner->expectToken('(');
             $val = $this->parsePropertyValue();
             $this->scanner->expectToken(')');
+
             return $this->factory->length($val);
         }
 
@@ -563,6 +604,7 @@ class Sql2ToQomQueryConverter
             }
 
             $this->scanner->expectToken(')');
+
             return $this->factory->nodeName($token);
         }
 
@@ -576,6 +618,7 @@ class Sql2ToQomQueryConverter
             }
 
             $this->scanner->expectToken(')');
+
             return $this->factory->nodeLocalName($token);
         }
 
@@ -589,6 +632,7 @@ class Sql2ToQomQueryConverter
             }
 
             $this->scanner->expectToken(')');
+
             return $this->factory->fullTextSearchScore($token);
         }
 
@@ -597,6 +641,7 @@ class Sql2ToQomQueryConverter
             $this->scanner->expectToken('(');
             $op = $this->parseDynamicOperand();
             $this->scanner->expectToken(')');
+
             return $this->factory->lowerCase($op);
         }
 
@@ -605,6 +650,7 @@ class Sql2ToQomQueryConverter
             $this->scanner->expectToken('(');
             $op = $this->parseDynamicOperand();
             $this->scanner->expectToken(')');
+
             return $this->factory->upperCase($op);
         }
 
@@ -675,6 +721,7 @@ class Sql2ToQomQueryConverter
                 $continue = false;
             }
         }
+
         return $orderings;
     }
 
@@ -684,16 +731,19 @@ class Sql2ToQomQueryConverter
     protected function parseOrdering()
     {
         $operand = $this->parseDynamicOperand();
-        $token = strtoupper($this->scanner->lookupNextToken());
+        $token = $this->scanner->lookupNextToken();
 
-        if ($token === 'DESC') {
+        if ($this->scanner->tokenIs($token, 'DESC')) {
             $this->scanner->expectToken('DESC');
+
             return $this->factory->descending($operand);
-        } elseif ($token === 'ASC' || $token === ',' || $token === '') {
-            if ($token === 'ASC') {
-                // Consume ASC
-                $this->scanner->fetchNextToken();
+        }
+
+        if ($this->scanner->tokenIs($token, 'ASC') || ',' === $token || '' === $token) {
+            if ($this->scanner->tokenIs($token, 'ASC')) {
+                $this->scanner->expectToken('ASC');
             }
+
             return $this->factory->ascending($operand);
         }
 
@@ -713,6 +763,7 @@ class Sql2ToQomQueryConverter
         // Wildcard
         if ($this->scanner->lookupNextToken() === '*') {
             $this->scanner->fetchNextToken();
+
             return array();
         }
 
@@ -735,6 +786,12 @@ class Sql2ToQomQueryConverter
         return $columns;
     }
 
+    /**
+     * Get the next token and make sure to remove the brackets if the token is
+     * in the [ns:name] notation
+     *
+     * @return string
+     */
     private function fetchTokenWithoutBrackets()
     {
         $token = $this->scanner->fetchNextToken();
@@ -747,6 +804,11 @@ class Sql2ToQomQueryConverter
         return $token;
     }
 
+    /**
+     * Parse something that is expected to be a property identifier.
+     *
+     * @return array with property name and selector name if specified, null otherwise
+     */
     private function parseIdentifier()
     {
         $token = $this->fetchTokenWithoutBrackets();
@@ -774,7 +836,7 @@ class Sql2ToQomQueryConverter
         list($propertyName, $selectorName) = $this->parseIdentifier();
 
         // AS name
-        if (strtoupper($this->scanner->lookupNextToken()) === 'AS') {
+        if ($this->scanner->tokenIs($this->scanner->lookupNextToken(), 'AS')) {
             $this->scanner->fetchNextToken();
             $columnName = $this->scanner->fetchNextToken();
         } else {
