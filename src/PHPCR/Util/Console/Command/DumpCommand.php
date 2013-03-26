@@ -21,6 +21,7 @@
 
 namespace PHPCR\Util\Console\Command;
 
+use PHPCR\Util\UUIDHelper;
 use Symfony\Component\Console\Command\Command;
 use PHPCR\ItemNotFoundException;
 use PHPCR\RepositoryException;
@@ -56,20 +57,21 @@ class DumpCommand extends Command
     {
         $this
             ->setName('phpcr:dump')
-            ->addOption('sys_nodes', null, InputOption::VALUE_OPTIONAL, 'Set to "yes" to dump the system nodes', "no")
-            ->addOption('props', null, InputOption::VALUE_OPTIONAL, 'Set to "yes" to dump the node properties', "no")
+            ->addOption('sys_nodes', null, InputOption::VALUE_NONE, 'Use to dump the system nodes')
+            ->addOption('props', null, InputOption::VALUE_NONE, 'Use to dump the node properties')
             ->addOption('depth', null, InputOption::VALUE_OPTIONAL, 'Set to a number to limit how deep into the tree to recurse', "-1")
-            ->addOption('identifiers', null, InputOption::VALUE_OPTIONAL, 'Set to "yes" to also output node UUID', 'no')
-            ->addArgument('identifier', InputArgument::OPTIONAL, 'Path or UUID of the node to dump', '/')
+            ->addOption('identifiers', null, InputOption::VALUE_NONE, 'Use to also output node UUID')
+            ->addArgument('identifier', InputArgument::OPTIONAL, 'Path of the node to dump', '/')
             ->setDescription('Dump the content repository')
             ->setHelp(<<<EOF
 The <info>dump</info> command recursively outputs the name of the node specified
-by the <info>path</info> argument and its subnodes in a yaml-like style.
+by the <info>identifier</info> argument and its subnodes in a yaml-like style.
 
-If the <info>props</info> option is set to yes the nodes properties are
+If the <info>props</info> option is used the nodes properties are
 displayed as yaml arrays.
 By default the command filters out system nodes and properties (i.e. nodes and
 properties with names starting with 'jcr:'), the <info>sys_nodes</info> option
+allows to turn this filter off.
 allows to turn this filter off.
 EOF
             )
@@ -114,14 +116,19 @@ EOF
         }
 
         try {
-            $node = $session->getNodeByIdentifier($identifier);
+            if (UUIDHelper::isUUID($identifier)) {
+                $node = $session->getNodeByIdentifier($identifier);
+            } else {
+                $node = $session->getNode($identifier);
+            }
             $walker->traverse($node, $input->getOption('depth'));
         } catch (RepositoryException $e) {
             if ($e instanceof PathNotFoundException || $e instanceof ItemNotFoundException) {
                 $output->writeln("<error>Path '$identifier' does not exist</error>");
-
-                return 1;
             }
+            $output->writeln('<error>Error: '.$e->getMessage().'</error>');
+
+            return 1;
         }
 
         return 0;
