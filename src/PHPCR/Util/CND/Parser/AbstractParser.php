@@ -2,13 +2,12 @@
 
 namespace PHPCR\Util\CND\Parser;
 
-use PHPCR\Util\CND\Scanner\GenericToken as Token,
-    PHPCR\Util\CND\Scanner\TokenQueue,
-    PHPCR\Util\CND\Exception\ParserException,
-    PHPCR\Util\CND\Helper\AbstractDebuggable;
+use PHPCR\Util\CND\Scanner\GenericToken as Token;
+use PHPCR\Util\CND\Scanner\TokenQueue;
+use PHPCR\Util\CND\Exception\ParserException;
 
 /**
- * Abstract base class for parsers with debugging capabilities.
+ * Abstract base class for parsers
  *
  * It implements helper functions for parsers:
  *
@@ -18,29 +17,22 @@ use PHPCR\Util\CND\Scanner\GenericToken as Token,
  *
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  */
-abstract class AbstractParser extends AbstractDebuggable implements ParserInterface
+abstract class AbstractParser
 {
     /**
      * The token queue
-     * @var \LazyGuy\PhpParse\Scanner\TokenQueue
+     * @var TokenQueue
      */
     protected $tokenQueue;
-
-    /**
-     * @param \LazyGuy\PhpParse\Scanner\TokenQueue $tokenQueue
-     */
-    public function __construct(TokenQueue $tokenQueue)
-    {
-        $this->tokenQueue = $tokenQueue;
-    }
 
     /**
      * Check the next token without consuming it and return true if it matches the given type and data.
      * If the data is not provided (equal to null) then only the token type is checked.
      * Return false otherwise.
-     * 
+     *
      * @param int $type The expected token type
      * @param null|string $data The expected data or null
+     *
      * @return bool
      */
     protected function checkToken($type, $data = null)
@@ -63,13 +55,34 @@ abstract class AbstractParser extends AbstractDebuggable implements ParserInterf
     }
 
     /**
+     * Check if the token data is one of the elements of the data array.
+     *
+     * @param int   $type
+     * @param array $data
+     *
+     * @return bool
+     */
+    protected function checkTokenIn($type, array $data)
+    {
+        foreach ($data as $d) {
+            if ($this->checkToken($type, $d)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Check if the next token matches the expected type and data. If it does, then consume and return it,
      * otherwise throw an exception.
      *
-     * @throws \LazyGuy\PhpParse\Exception\ParserException
      * @param int $type The expected token type
      * @param null|string $data The expected token data or null
-     * @return \LazyGuy\PhpParse\Scanner\Token
+     *
+     * @return Token
+     *
+     * @throws ParserException
      */
     protected function expectToken($type, $data = null)
     {
@@ -90,7 +103,7 @@ abstract class AbstractParser extends AbstractDebuggable implements ParserInterf
      *
      * @param int $type The expected token type
      * @param null|string $data The expected token data or null
-     * @return bool|\LazyGuy\PhpParse\Scanner\Token
+     * @return bool|Token
      */
     protected function checkAndExpectToken($type, $data = null)
     {

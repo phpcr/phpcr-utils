@@ -62,14 +62,6 @@ class BufferReader implements ReaderInterface
     }
 
     /**
-     * @return string
-     */
-    function getBuffer()
-    {
-        return $this->buffer;
-    }
-
-    /**
      * Return the literal delimited by start and end position
      * @return string
      */
@@ -120,14 +112,6 @@ class BufferReader implements ReaderInterface
         $this->forwardPos = $this->startPos;
         $this->nextCurLine = $this->curLine;
         $this->nextCurCol = $this->curCol;
-    }
-
-    public function unget()
-    {
-        if ($this->forwardPos > $this->startPos) {
-            $this->forwardPos--;
-            $this->nextCurCol--;
-        }
     }
 
     public function consume()

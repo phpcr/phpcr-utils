@@ -2,14 +2,16 @@
 
 namespace PHPCR\Util\CND\Scanner;
 
-use PHPCR\Util\CND\Helper\AbstractDebuggable,
-    PHPCR\Util\CND\Reader\ReaderInterface;
+use PHPCR\Util\CND\Reader\ReaderInterface;
 
 /**
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  */
-abstract class AbstractScanner extends AbstractDebuggable implements ScannerInterface
+abstract class AbstractScanner
 {
+    /**
+     * @var TokenQueue
+     */
     private $queue;
 
     protected $context;
@@ -52,17 +54,9 @@ abstract class AbstractScanner extends AbstractDebuggable implements ScannerInte
     {
         $token->setLine($reader->getCurrentLine());
         $token->setRow($reader->getCurrentColumn());
-        
-        $this->debugToken($token);
+
         if ($token = $this->applyFilters($token)) {
             $this->queue->add($token);
-        } else {
-            $this->debug("  -- Token rejected");
         }
-    }
-
-    protected function debugToken(Token $token)
-    {
-        $this->debugRes($token);
     }
 }

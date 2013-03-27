@@ -49,7 +49,7 @@ class ScannerContext
     protected $symbols = array();
 
     /**
-     * @var array
+     * @var TokenFilterInterface[]
      */
     protected $tokenFilters = array();
 
@@ -142,8 +142,7 @@ class ScannerContext
     }
 
     /**
-     * @param \LazyGuy\PhpParse\Scanner\TokenFilter\TokenFilterInterface $filter
-     * @return void
+     * @param TokenFilterInterface $filter
      */
     public function addTokenFilter(TokenFilterInterface $filter)
     {
@@ -151,7 +150,7 @@ class ScannerContext
     }
 
     /**
-     * @return array
+     * @return TokenFilterInterface[]
      */
     public function getTokenFilters()
     {

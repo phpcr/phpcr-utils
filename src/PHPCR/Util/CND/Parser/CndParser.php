@@ -2,52 +2,113 @@
 
 namespace PHPCR\Util\CND\Parser;
 
-use PHPCR\Util\CND\Scanner\GenericToken as Token,
-    PHPCR\Util\CND\Scanner\TokenQueue,
-    PHPCR\Util\CND\Exception\ParserException;
+use PHPCR\NodeType\NodeDefinitionTemplateInterface;
+use PHPCR\NodeType\NodeTypeManagerInterface;
+use PHPCR\NodeType\NodeTypeTemplateInterface;
+use PHPCR\NodeType\PropertyDefinitionTemplateInterface;
+use PHPCR\PropertyType;
+use PHPCR\Util\CND\Reader\BufferReader;
+use PHPCR\Util\CND\Scanner\Context\DefaultScannerContextWithoutSpacesAndComments;
+use PHPCR\Util\CND\Scanner\GenericScanner;
+use PHPCR\Util\CND\Scanner\GenericToken as Token;
+use PHPCR\Util\CND\Exception\ParserException;
+use PHPCR\Version\OnParentVersionAction;
 
 /**
  * Parser for JCR-2.0 CND files.
+ *
+ * Implementation:
+ * Builds a TokenQueue containing CND statements. The parser does not expect
+ * any whitespaces, new lines or comments in the queue. It uses the CndScanner
+ * to be sure to generate a valid TokenQueue.
  *
  * @see http://www.day.com/specs/jcr/2.0/25_Appendix.html#25.2.3 CND Grammar
  * @see http://jackrabbit.apache.org/node-type-notation.html
  *
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
+ * @author David Buchmann <david@liip.ch>
  */
 class CndParser extends AbstractParser
 {
-    /**
-     * Parse a TokenQueue containing CND statements. This parser does not expect any whitespaces, new lines
-     * or comments in the queue. Please use the CndScanner to be sure to generate a valid TokenQueue.
-     *
-     * This function returns an array of node type definition in array representation.
-     * It does not actually return and array of PHPCR\NodeType !
-     *
-     * @return SyntaxTreeNode
-     */
-    public function parse()
-    {
-        $root = new SyntaxTreeNode('root');
-        $nsMapping = new SyntaxTreeNode('nsMappings');
-        $nodeTypes = new SyntaxTreeNode('nodeTypes');
-        $root->addChild($nsMapping);
-        $root->addChild($nodeTypes);
+    // node type attributes
+    private $ORDERABLE = array('o', 'ord', 'orderable');//, 'variant' => true);
+    private $MIXIN     = array('m', 'mix', 'mixin');//, 'variant' => true);
+    private $ABSTRACT  = array('a', 'abs', 'abstract');//, 'variant' => true);
+    private $NOQUERY   = array('noquery', 'nq');//, 'variant' => false);
+    private $QUERY      = array('query', 'q');//, 'variant' => false);
+    private $PRIMARYITEM = array('primaryitem', '!');//, 'variant' => false);
 
+    // common for properties and child definitions
+    private $AUTOCREATED = array('a', 'aut', 'autocreated'); //, 'variant' => true),
+    private $MANDATORY = array('m', 'man', 'mandatory'); //, 'variant' => true),
+    private $PROTECTED = array('p', 'pro', 'protected'); //, 'variant' => true),
+    private $OPV = array('COPY', 'VERSION', 'INITIALIZE', 'COMPUTE', 'IGNORE', 'ABORT');
+
+    // property type attributes
+    private $MULTIPLE = array('*', 'mul', 'multiple'); //, 'variant' => true),
+    private $QUERYOPS = array('qop', 'queryops'); //, 'variant' => true), // Needs special handling !
+    private $NOFULLTEXT = array('nof', 'nofulltext'); //, 'variant' => true),
+    private $NOQUERYORDER = array('nqord', 'noqueryorder'); //, 'variant' => true),
+
+    // child node attributes
+    private $SNS = array('*', 'sns'); //, 'variant' => true),
+
+    /**
+     * @var NodeTypeManagerInterface
+     */
+    private $ntm;
+
+    /**
+     * @var array
+     */
+    protected $namespaces = array();
+
+    /**
+     * @var array
+     */
+    protected $nodeTypes = array();
+
+    /**
+     * @param NodeTypeManagerInterface $ntm
+     */
+    public function __construct(NodeTypeManagerInterface $ntm)
+    {
+        $this->ntm = $ntm;
+    }
+
+    /**
+     * Parse a string of CND statements.
+     *
+     * @return array with the namespaces map and the nodeTypes which is a list
+     *      of NodeTypeDefinitionInterface
+     */
+    public function parseString($cnd)
+    {
+        $reader = new BufferReader($cnd);
+        $scanner = new GenericScanner(new DefaultScannerContextWithoutSpacesAndComments());
+        $this->tokenQueue = $scanner->scan($reader);
+
+        return $this->parse();
+    }
+
+    private function parse()
+    {
         while (!$this->tokenQueue->isEof()) {
 
-            $this->debugSection('PARSER CYCLE');
-
             while ($this->checkToken(Token::TK_SYMBOL, '<')) {
-                $nsMapping->addChild($this->parseNamespaceMapping());
+                $this->parseNamespaceMapping();
             }
 
             if (!$this->tokenQueue->isEof()) {
-                $nodeTypes->addChild($this->parseNodeTypeDef());
+                $this->parseNodeType();
             }
 
         }
 
-        return $root;
+        return array(
+            'namespaces' => $this->namespaces,
+            'nodeTypes' => $this->nodeTypes,
+        );
     }
 
     /**
@@ -59,77 +120,55 @@ class CndParser extends AbstractParser
      * NamespaceMapping ::= '<' Prefix '=' Uri '>'
      * Prefix ::= String
      * Uri ::= String
-     *
-     * @return SyntaxTreeNode
      */
     protected function parseNamespaceMapping()
     {
-        $this->debug('parseNamespaceMapping');
-
         $this->expectToken(Token::TK_SYMBOL, '<');
         $prefix = $this->parseCndString();
         $this->expectToken(Token::TK_SYMBOL, '=');
         $uri = substr($this->expectToken(Token::TK_STRING)->getData(), 1, -1);
         $this->expectToken(Token::TK_SYMBOL, '>');
 
-        $this->debugRes("nsmapping: $prefix => $uri");
-
-        return new SyntaxTreeNode('nsMapping', array('prefix' => $prefix, 'uri' => $uri));
+        $this->namespaces[$prefix] = $uri;
     }
 
     /**
      * A node type definition consists of a node type name followed by an optional
      * supertypes block, an optional node type attributes block and zero or more
      * blocks, each of which is either a property or child node definition.
-     * 
+     *
      *      NodeTypeDef ::= NodeTypeName [Supertypes]
      *          [NodeTypeAttribute {NodeTypeAttribute}]
      *          {PropertyDef | ChildNodeDef}
-     *
-     * @return SyntaxTreeNode
      */
-    protected function parseNodeTypeDef()
+    protected function parseNodeType()
     {
-        $this->debug('parseNodeTypeDef');
-
-        $node = new SyntaxTreeNode('nodeTypeDef');
-        $node->addChild($this->parseNodeTypeName());
+        $nodeType = $this->ntm->createNodeTypeTemplate();
+        $this->parseNodeTypeName($nodeType);
 
         if ($this->checkToken(Token::TK_SYMBOL, '>')) {
-            $node->addChild($this->parseSupertypes());
+            $this->parseSupertypes($nodeType);
         }
 
-        if ($attrNode = $this->parseNodeTypeAttribues()){
-            $node->addChild($attrNode);
-        }
+        $this->parseNodeTypeAttributes($nodeType);
 
-        if ($children = $this->parseChildDefs()) {
-            foreach($children as $child) {
-                $node->addChild($child);
-            }
-        }
+        $this->parseChildrenAndAttributes($nodeType);
 
-        return $node;
+        $this->nodeTypes[] = $nodeType;
     }
 
     /**
      * The node type name is delimited by square brackets and must be a valid JCR name.
-     * 
+     *
      *      NodeTypeName ::= '[' String ']'
-     * 
-     * @return SyntaxTreeNode
      */
-    protected function parseNodeTypeName()
+    protected function parseNodeTypeName(NodeTypeTemplateInterface $nodeType)
     {
-        $this->debug('parseNodeTypeName');
-
         $this->expectToken(Token::TK_SYMBOL, '[');
         $name = $this->parseCndString();
         $this->expectToken(Token::TK_SYMBOL, ']');
 
-        $this->debugRes("nodeTypeName: $name");
-
-        return new SyntaxTreeNode('nodeTypeName', array('value' => $name));
+        $nodeType->setName($name);
     }
 
     /**
@@ -139,29 +178,16 @@ class CndParser extends AbstractParser
      * is absent. A question mark indicates that the supertypes list is a variant.
      *
      *      Supertypes ::= '>' (StringList | '?')
-     * 
-     * @return SyntaxTreeNode
      */
-    protected function parseSupertypes()
+    protected function parseSupertypes(NodeTypeTemplateInterface $nodeType)
     {
-        $this->debug('parseSupertypes');
-
         $this->expectToken(Token::TK_SYMBOL, '>');
 
-        $supertypes = new SyntaxTreeNode('supertypes');
-
         if ($this->checkAndExpectToken(Token::TK_SYMBOL, '?')) {
-            $supertypes->setProperty('value', '?');
-            $display = '?';
+            $nodeType->setDeclaredSuperTypeNames('?');
         } else {
-            $list = $this->parseCndStringList();
-            $supertypes->setProperty('value', $list);
-            $display = join(', ', $list);
+            $nodeType->setDeclaredSuperTypeNames($this->parseCndStringList());
         }
-
-        $this->debugRes(sprintf('supertypes: (%s)', $display));
-
-        return $supertypes;
     }
 
     /**
@@ -195,51 +221,59 @@ class CndParser extends AbstractParser
      *      Abstract ::= ('abstract' | 'abs' | 'a') ['?']
      *      Query ::= ('noquery' | 'nq') | ('query' | 'q' )
      *      PrimaryItem ::= ('primaryitem'| '!')(String | '?')
-     *
-     * @return SyntaxTreeNode
      */
-    protected function parseNodeTypeAttribues()
+    protected function parseNodeTypeAttributes(NodeTypeTemplateInterface $nodeType)
     {
-        $this->debug('parseNodeTypeAttributes');
-        return $this->parseAttributes('nodeTypeAttributes', $this->getNodeTypeAttributes());
+        while (true) {
+            if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->ORDERABLE)) {
+                $nodeType->setOrderableChildNodes(true);
+            } else if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->MIXIN)) {
+                $nodeType->setMixin(true);
+            } else if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->ABSTRACT)) {
+                $nodeType->setAbstract(true);
+            } else if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->NOQUERY)) {
+                $nodeType->setQueryable(false);
+            } else if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->QUERY)) {
+                $nodeType->setQueryable(true);
+            } else if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->PRIMARYITEM)) {
+                /*
+                 * If 'primaryitem' is present without a '?' then the string following it is
+                 * the name of the primary item of the node type.
+                 * If 'primaryitem' is present with a '?' then the primary item is a variant.
+                 * If 'primaryitem' is absent then the node type has no primary item.
+                 *
+                 *      PrimaryItem ::= ('primaryitem'| '!')(String | '?')
+                 */
+                if ($this->checkAndExpectToken(Token::TK_SYMBOL, '?')) {
+                    $nodeType->setPrimaryItemName('?');
+                } else {
+                    $this->tokenQueue->next();
+                    $nodeType->setPrimaryItemName($this->parseCndString());
+                    continue;
+                }
+            } else {
+                return;
+            }
+            $this->tokenQueue->next();
+        }
     }
 
     /**
      * Parse both the children propery and nodes definitions
      *
      *      {PropertyDef | ChildNodeDef}
-     *
-     * @return SyntaxTreeNode
      */
-    protected function parseChildDefs()
+    protected function parseChildrenAndAttributes(NodeTypeTemplateInterface $nodeType)
     {
-        $this->debug('parseChildDefs');
-
-        $propDefs = new SyntaxTreeNode('propertyDefs');
-        $childNodeDef = new SyntaxTreeNode('childNodeDefs');
-
         while (true) {
-
             if ($this->checkToken(Token::TK_SYMBOL, '-')) {
-                $propDefs->addChild($this->parsePropDef());
+                $this->parsePropDef($nodeType);
             } elseif ($this->checkToken(Token::TK_SYMBOL, '+')) {
-                $childNodeDef->addChild($this->parseChildNodeDef());
+                $this->parseChildNodeDef($nodeType);
             } else {
-                break;
+                return;
             }
         }
-
-        // Only return the nodes that actually have children
-        $children = array();
-
-        if ($propDefs->hasChildren()) {
-            $children[] = $propDefs;
-        }
-        if ($childNodeDef->hasChildren()) {
-            $children[] = $childNodeDef;
-        }
-
-        return $children;
     }
 
     /**
@@ -254,48 +288,48 @@ class CndParser extends AbstractParser
      *          [PropertyAttribute {PropertyAttribute}]
      *          [ValueConstraints]
      *      PropertyName ::= '-' String
-     * 
-     * @return SyntaxTreeNode
      */
-    protected function parsePropDef()
+    protected function parsePropDef(NodeTypeTemplateInterface $nodeType)
     {
-        $this->debug('parsePropDef');
+        $this->expectToken(Token::TK_SYMBOL, '-');
 
-        $node = new SyntaxTreeNode('propertyDef');
+        $property = $this->ntm->createPropertyDefinitionTemplate();
+        $property->setAutoCreated(false);
+        $property->setMandatory(false);
+        $property->setMultiple(false);
+        $property->setOnParentVersion(OnParentVersionAction::COPY);
+        $property->setProtected(false);
+        $property->setRequiredType(PropertyType::STRING);
+        $property->setFullTextSearchable(true);
+        $property->setQueryOrderable(true);
+        $nodeType->getPropertyDefinitionTemplates()->append($property);
 
         // Parse the property name
-        $this->expectToken(Token::TK_SYMBOL, '-');
         if ($this->checkAndExpectToken(Token::TK_SYMBOL, '*')) {
-            $name = '*';
+            $property->setName('*');
         } else {
-            $name = $this->parseCndString();
+            $property->setName($this->parseCndString());
         }
-        $node->addChild(new SyntaxTreeNode('propertyName', array('value' => $name)));
 
         // Parse the property type
-        if ($this->checkToken(Token::TK_SYMBOL, '(')) {
-            $node->addChild($this->parsePropertyType());
+        if ($this->checkAndExpectToken(Token::TK_SYMBOL, '(')) {
+            $this->parsePropertyType($property);
         }
 
         // Parse default value
-        if ($this->checkToken(Token::TK_SYMBOL, '=')) {
-            $node->addChild($this->parseDefaultValue());
+        if ($this->checkAndExpectToken(Token::TK_SYMBOL, '=')) {
+            $this->parseDefaultValue($property);
         }
 
-        if ($attrNode = $this->parsePropertyAttributes()) {
-            $node->addChild($attrNode);
-        }
+        $this->parsePropertyAttributes($property);
+
         // Check if there is a constraint (and not another namespace def)
         // Next token is '<' and two token later it's not '=', i.e. not '<ident='
         $next1 = $this->tokenQueue->peek();
         $next2 = $this->tokenQueue->peek(2);
         if ($next1 && $next1->getData() === '<' && (!$next2 || $next2->getData() !== '=')) {
-            $node->addChild($this->parseValueConstraints());
+            $this->parseValueConstraints($property);
         }
-
-        $this->debugRes('propertyName: ' . $name);
-        
-        return $node;
     }
 
     /**
@@ -308,29 +342,21 @@ class CndParser extends AbstractParser
      *          'REFERENCE' | 'WEAKREFERENCE' |
      *          'DECIMAL' | 'URI' | 'UNDEFINED' | '*' |
      *          '?') ')'
-     *
-     * @return SyntaxTreeNode
      */
-    protected function parsePropertyType()
+    protected function parsePropertyType(PropertyDefinitionTemplateInterface $property)
     {
-        $this->debug('parsePropertyType');
-
-        // TODO: can the property be lowercase or camelcase as in old spec?
         $types = array("STRING", "BINARY", "LONG", "DOUBLE", "BOOLEAN",  "DATE", "NAME", "PATH",
                        "REFERENCE", "WEAKREFERENCE", "DECIMAL", "URI", "UNDEFINED", "*", "?");
 
-        $this->expectToken(Token::TK_SYMBOL, '(');
+        if (! $this->checkTokenIn(Token::TK_IDENTIFIER, $types)) {
+            throw new ParserException($this->tokenQueue, sprintf("Invalid property type: %s", $this->tokenQueue->get()->getData()));
+        }
 
         $data = $this->tokenQueue->get()->getData();
-        if (!in_array($data, $types)) {
-            throw new ParserException($this->tokenQueue, sprintf("Invalid property type: %s", $data));
-        }
 
         $this->expectToken(Token::TK_SYMBOL, ')');
 
-        $this->debugRes('propertyType: ' . $data);
-
-        return new SyntaxTreeNode('propertyType', array('value' => $data));
+        $property->setRequiredType(PropertyType::valueFromName($data));
     }
 
     /**
@@ -340,25 +366,16 @@ class CndParser extends AbstractParser
      * indicates that this attribute is a variant
      *
      *      DefaultValues ::= '=' (StringList | '?')
-     *
-     * @return SyntaxTreeNode
      */
-    protected function parseDefaultValue()
+    protected function parseDefaultValue(PropertyDefinitionTemplateInterface $property)
     {
-        $this->debug('parseDefaultValues');
-
-        // TODO: parse ?
-        $this->expectToken(Token::TK_SYMBOL, '=');
-
         if ($this->checkAndExpectToken(Token::TK_SYMBOL, '?')) {
             $list = array('?');
         } else {
             $list = $this->parseCndStringList();
         }
 
-        $this->debugRes(sprintf('defaultValues: (%s)', join(', ', $list)));
-
-        return new SyntaxTreeNode('defaultValues', array('value' => $list));
+        $property->setDefaultValues($list);
     }
 
     /**
@@ -367,13 +384,9 @@ class CndParser extends AbstractParser
      * value constraint syntax. A '?' indicates that this attribute is a variant
      *
      *      ValueConstraints ::= '<' (StringList | '?')
-     *
-     * @return SyntaxTreeNode
      */
-    protected function parseValueConstraints()
+    protected function parseValueConstraints(PropertyDefinitionTemplateInterface $property)
     {
-        $this->debug('parseValueConstraints');
-
         $this->expectToken(Token::TK_SYMBOL, '<');
 
         if ($this->checkAndExpectToken(Token::TK_SYMBOL, '?')) {
@@ -382,9 +395,7 @@ class CndParser extends AbstractParser
             $list = $this->parseCndStringList();
         }
 
-        $this->debugRes(sprintf('valueConstraints: (%s)', join(', ', $list)));
-
-        return new SyntaxTreeNode('valueConstraints', array('value' => $list));
+        $property->setValueConstraints($list);
     }
 
     /**
@@ -425,7 +436,7 @@ class CndParser extends AbstractParser
      * by this property.
      * If 'noqueryorder' is present with a '?' then this attribute is a variant.
      * If 'noqueryorder' is absent then query results can be ordered by this property.
-     * 
+     *
      *      PropertyAttribute ::= Autocreated | Mandatory | Protected |
      *          Opv | Multiple | QueryOps | NoFullText |
      *          NoQueryOrder
@@ -440,18 +451,92 @@ class CndParser extends AbstractParser
      *      Operator ::= '=' | '<>' | '<' | '<=' | '>' | '>=' | 'LIKE'
      *      NoFullText ::= ('nofulltext' | 'nof') ['?']
      *      NoQueryOrder ::= ('noqueryorder' | 'nqord') ['?']
-     *
-     * @return SyntaxTreeNode
      */
-    protected function parsePropertyAttributes()
+    protected function parsePropertyAttributes(PropertyDefinitionTemplateInterface $property)
     {
-        $this->debug('parsePropertyAttributes');
-        return $this->parseAttributes('propertyTypeAttributes', $this->getPropertyTypeAttributes());
+        $opvSeen = false;
+        while (true) {
+            if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->AUTOCREATED)) {
+                $property->setAutoCreated(true);
+            } else if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->MANDATORY)) {
+                $property->setMandatory(true);
+            } else if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->PROTECTED)) {
+                $property->setProtected(true);
+            } else if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->MULTIPLE)) {
+                $property->setMultiple(true);
+            } else if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->QUERYOPS)) {
+                $property->setAvailableQueryOperators($this->parseQueryOpsAttribute());
+            } else if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->NOFULLTEXT)) {
+                $property->setFullTextSearchable(false);
+            } else if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->NOQUERYORDER)) {
+                $property->setQueryOrderable(false);
+            } else if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->OPV)) {
+                if ($opvSeen) {
+                    throw new ParserException($this->tokenQueue, 'More than one on parent version action specified on property ' . $property->getName());
+                }
+                $token = $this->tokenQueue->get();
+                $property->setOnParentVersion(OnParentVersionAction::valueFromName($token->getData()));
+                $opvSeen = true;
+                continue;
+            } else {
+                return;
+            }
+            $this->tokenQueue->next();
+        }
+    }
+
+    /**
+     * A child node definition consists of a node name element followed by optional
+     * required node types, default node types  and node attributes elements.
+     *
+     * The node name, or '*' to indicate a residual property definition, is prefixed
+     * with a '+'.
+     *
+     * The required primary node type list is delimited by parentheses. If this
+     * element is missing then a required  primary node type of nt:base is assumed.
+     * A '?' indicates that the this attribute is a variant.
+     *
+     *      ChildNodeDef ::= NodeName [RequiredTypes] [DefaultType]
+     *          [NodeAttribute {NodeAttribute}]
+     *      NodeName ::= '+' String
+     *      RequiredTypes ::= '(' (StringList | '?') ')'
+     *      DefaultType ::= '=' (String | '?')
+     */
+    protected function parseChildNodeDef(NodeTypeTemplateInterface $nodeType)
+    {
+        $this->expectToken(Token::TK_SYMBOL, '+');
+        $childType = $this->ntm->createNodeDefinitionTemplate();
+        $nodeType->getNodeDefinitionTemplates()->append($childType);
+
+        // Parse the property name
+        if ($this->checkAndExpectToken(Token::TK_SYMBOL, '*')) {
+            $childType->setName('*');
+        } else {
+            $childType->setName($this->parseCndString());
+        }
+
+        // Parse the required types
+        if ($this->checkAndExpectToken(Token::TK_SYMBOL, '(')) {
+            if ($this->checkAndExpectToken(Token::TK_SYMBOL, '?')) {
+                $list = '?';
+            } else {
+                $list = $this->parseCndStringList();
+            }
+            $this->expectToken(Token::TK_SYMBOL, ')');
+            $childType->setRequiredPrimaryTypeNames($list);
+        }
+
+        // Parse the default type
+        if ($this->checkAndExpectToken(Token::TK_SYMBOL, '=')) {
+            $childType->setDefaultPrimaryTypeName($this->parseCndString());
+        }
+
+        $this->parseChildNodeAttributes($nodeType, $childType);
     }
 
     /**
      * The node attributes are indicated by the presence or absence of keywords.
-     * 
+     *
      * If 'autocreated' is present without a '?' then the item is autocreated.
      * If 'autocreated' is present with a '?' then the autocreated status is a variant.
      * If 'autocreated' is absent then the item is not autocreated.
@@ -482,11 +567,11 @@ class CndParser extends AbstractParser
      *      Opv ::= 'COPY' | 'VERSION' | 'INITIALIZE' | 'COMPUTE' |
      *          'IGNORE' | 'ABORT' | ('OPV' '?')
      *      Sns ::= ('sns' | '*') ['?']
-     *
-     * @return SyntaxTreeNode
      */
-    protected function parseNodeAttributes()
-    {
+    protected function parseChildNodeAttributes(
+        NodeTypeTemplateInterface $parentType,
+        NodeDefinitionTemplateInterface $childType
+    ) {
         /**
          * TODO: Clarify this problem
          *
@@ -499,69 +584,27 @@ class CndParser extends AbstractParser
          * or there is an error in the spec that says that a node attribute cannot be
          * "multiple".
          */
-        $this->debug('parseNodeAttributes');
-        return $this->parseAttributes('nodeAttributes', $this->getNodeAttributes());
-    }
-
-    /**
-     * A child node definition consists of a node name element followed by optional
-     * required node types, default node types  and node attributes elements.
-     *
-     * The node name, or '*' to indicate a residual property definition, is prefixed
-     * with a '+'.
-     *
-     * The required primary node type list is delimited by parentheses. If this
-     * element is missing then a required  primary node type of nt:base is assumed.
-     * A '?' indicates that the this attribute is a variant.
-     * 
-     *      ChildNodeDef ::= NodeName [RequiredTypes] [DefaultType]
-     *          [NodeAttribute {NodeAttribute}]
-     *      NodeName ::= '+' String
-     *      RequiredTypes ::= '(' (StringList | '?') ')'
-     *      DefaultType ::= '=' (String | '?')
-     *
-     * @return SyntaxTreeNode
-     */
-    protected function parseChildNodeDef()
-    {
-        $this->debug('parseChildNodeDef');
-
-        $node = new SyntaxTreeNode('childNodeDef');
-
-        $this->expectToken(Token::TK_SYMBOL, '+');
-
-        // Parse the property name
-        if ($this->checkAndExpectToken(Token::TK_SYMBOL, '*')) {
-            $name = '*';
-        } else {
-            $name = $this->parseCndString();
-        }
-        $node->addChild(new SyntaxTreeNode('nodeName', array('value' => $name)));
-
-        // Parse the required types
-        if ($this->checkAndExpectToken(Token::TK_SYMBOL, '(')) {
-            if ($this->checkAndExpectToken(Token::TK_SYMBOL, '?')) {
-                $list = '?';
+        while(true) {
+            if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->PRIMARYITEM)) {
+                $parentType->setPrimaryItemName($childType->getName());
+            } else if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->AUTOCREATED)) {
+                $childType->setAutoCreated(true);
+            } else if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->MANDATORY)) {
+                $childType->setMandatory(true);
+            } else if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->PROTECTED)) {
+                $childType->setProtected(true);
+            } else if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->SNS)) {
+                $childType->setSameNameSiblings(true);
+            } else if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->OPV)) {
+                $token = $this->tokenQueue->get();
+                $childType->setOnParentVersion(OnParentVersionAction::valueFromName($token->getData()));
+                continue;
             } else {
-                $list = $this->parseCndStringList();
+                return;
             }
-            $this->expectToken(Token::TK_SYMBOL, ')');
 
-            $node->addChild(new SyntaxTreeNode('requiredTypes', array('value' => $list)));
+            $this->tokenQueue->next();
         }
-
-        // Parse the default type
-        if ($this->checkAndExpectToken(Token::TK_SYMBOL, '=')) {
-            $node->addChild(new SyntaxTreeNode('defaultType', array('value' => $this->parseCndString())));
-        }
-
-        if ($attrNode = $this->parseNodeAttributes()) {
-            $node->addChild($attrNode);
-        }
-
-        $this->debugRes('childNodeName: ' . $name);
-
-        return $node;
     }
 
     /**
@@ -573,16 +616,12 @@ class CndParser extends AbstractParser
      */
     protected function parseCndStringList()
     {
-        $this->debug('parseCndStringList');
-
         $strings = array();
 
         $strings[] = $this->parseCndString();
         while ($this->checkAndExpectToken(Token::TK_SYMBOL, ',')) {
             $strings[] = $this->parseCndString();
         }
-
-        $this->debugRes(sprintf('string-list: (%s)', join(', ', $strings)));
 
         return $strings;
     }
@@ -610,20 +649,15 @@ class CndParser extends AbstractParser
      */
     protected function parseCndString()
     {
-        $this->debug('parseCndString');
-
-        // TODO: adapt
-        
         $string = '';
         $lastType = null;
 
         while (true) {
-
             $token = $this->tokenQueue->peek();
             $type = $token->getType();
             $data = $token->getData();
 
-            IF ($type === Token::TK_STRING) {
+            if ($type === Token::TK_STRING) {
                 $string = substr($data, 1, -1);
                 $this->tokenQueue->next();
                 return $string;
@@ -650,210 +684,7 @@ class CndParser extends AbstractParser
             throw new ParserException($this->tokenQueue, sprintf("Expected CND string, found '%s': ", $this->tokenQueue->peek()->getData()));
         }
 
-        $this->debugRes(sprintf('string: %s', $string));
-
         return $string;
-    }
-
-    /**
-     * Return an array representing the allowed node type attributes.
-     * The values are the aliases for the attribute.
-     * Variant indicates if the attribute can be variant (followed by a ?)
-     * Some attributes will need special handling in the parsing function.
-     *
-     * @return array
-     */
-    protected function getNodeTypeAttributes()
-    {
-        return array(
-            'orderable' => array('values' => array('o', 'ord', 'orderable'), 'variant' => true),
-            'mixin' => array('values' => array('m', 'mix', 'mixin'), 'variant' => true),
-            'abstract' => array('values' => array('a', 'abs', 'abstract'), 'variant' => true),
-            'noquery' => array('values' => array('noquery', 'nq'), 'variant' => false),
-            'query' => array('values' => array('query', 'q'), 'variant' => false),
-            'primaryitem' => array('values' => array('primaryitem', '!'), 'variant' => false), // Needs special handling !
-        );
-    }
-
-    /**
-     * Return an array representing the commonly allowed attributes for nodes and property types.
-     * The values are the aliases for the attribute.
-     * Variant indicates if the attribute can be variant (followed by a ?)
-     * Some attributes will need special handling in the parsing function.
-     *
-     * @return array
-     */
-    protected function getCommonAttributes()
-    {
-        return array(
-            'autocreated' => array('values' => array('a', 'aut', 'autocreated'), 'variant' => true),
-            'mandatory' => array('values' => array('m', 'man', 'mandatory'), 'variant' => true),
-            'protected' => array('values' => array('p', 'pro', 'protected'), 'variant' => true),
-            'COPY' => array('values' => array('COPY'), 'variant' => false),
-            'VERSION' => array('values' => array('VERSION'), 'variant' => false),
-            'INITIALIZE' => array('values' => array('INITIALIZE'), 'variant' => false),
-            'COMPUTE' => array('values' => array('COMPUTE'), 'variant' => false),
-            'IGNORE' => array('values' => array('IGNORE'), 'variant' => false),
-            'ABORT' => array('values' => array('ABORT'), 'variant' => false),
-            'OPV' => array('values' => array('OPV'), 'variant' => true),
-        );
-    }
-
-    /**
-     * Return an array representing the allowed property type attributes.
-     * The values are the aliases for the attribute.
-     * Variant indicates if the attribute can be variant (followed by a ?)
-     * Some attributes will need special handling in the parsing function.
-     *
-     * @return array
-     */
-    protected function getPropertyTypeAttributes()
-    {
-        return array_merge(
-            $this->getCommonAttributes(),
-            array(
-                'multiple' => array('values' => array('*', 'mul', 'multiple'), 'variant' => true),
-                'queryops' => array('values' => array('qop', 'queryops'), 'variant' => true), // Needs special handling !
-                'nofulltext' => array('values' => array('nof', 'nofulltext'), 'variant' => true),
-                'noqueryorder' => array('values' => array('nqord', 'noqueryorder'), 'variant' => true),
-            )
-        );
-    }
-
-    /**
-     * Return an array representing the allowed node attributes.
-     * The values are the aliases for the attribute.
-     * Variant indicates if the attribute can be variant (followed by a ?)
-     * Some attributes will need special handling in the parsing function.
-     *
-     * @return array
-     */
-    protected function getNodeAttributes()
-    {
-        return array_merge(
-            $this->getCommonAttributes(),
-            array(
-                'sns' => array('values' => array('*', 'sns'), 'variant' => true),
-            )
-        );
-    }
-
-    /**
-     * Parse a list of attributes.
-     * The allowed attributes must be specified in $attributes.
-     * The type of the list must be given (node type attributes, property type attributes or node attributes).
-     *
-     * @param string $type
-     * @param array $attributes
-     * @return SyntaxTreeNode
-     */
-    protected function parseAttributes($type, $attributes)
-    {
-        $this->debug('parseAttributes');
-
-        $node = new SyntaxTreeNode($type);
-
-        $options = array();
-
-        while ($attrNode = $this->parseAttribute($attributes)) {
-            $node->addChild($attrNode);
-            $options[] = $attrNode->getType();
-        }
-
-        $this->debugRes(sprintf('%s: (%s)', $type, join(', ', $options)));
-
-        if (empty($options)) {
-            return false;
-        }
-
-        return $node;
-    }
-
-    /**
-     * Parse a single attribute.
-     * The allowed attributes must be given in $attributes.
-     * Return the attribute if any was found or false.
-     *
-     * @param array $attributes
-     * @return bool|SyntaxTreeNode
-     */
-    protected function parseAttribute($attributes)
-    {
-        $this->debug('parseAttribute');
-
-        $token = $this->tokenQueue->peek();
-        if (!$token) {
-            return false;
-        }
-        $data = $token->getData();
-        
-        foreach ($attributes as $name => $def) {
-
-            if (in_array($data, $def['values'])) {
-
-                // Node type attribute found
-                $this->tokenQueue->next();
-
-                // Handle special cases
-                if ($attribute = $this->parseSpecialCaseAttribute($name)) {
-                    return $attribute;
-                }
-
-                // If this attribute can ba variant
-                if ($def['variant']) {
-                    if ($this->checkAndExpectToken(Token::TK_SYMBOL, '?')) {
-                        $variant = true;
-                    }
-                }
-
-                $node = new SyntaxTreeNode($name);
-                if (isset($variant)) {
-                    $node->setProperty('variant', true);
-                }
-                return $node;
-            }
-
-        }
-
-        return false;
-    }
-
-    /**
-     * Some attributes need special handling to be parsed, they are managed in
-     * this function. Return the attribute if any was found or false.
-     *
-     * At this point the attribute token has already been removed from the queue.
-     *
-     * @param string $attributeName
-     * @return bool|SyntaxTreeNode
-     */
-    protected function parseSpecialCaseAttribute($attributeName)
-    {
-        $this->debug('parseSpecialCaseAttribute');
-
-        if ($attributeName === 'primaryitem') {
-
-            /**
-             * If 'primaryitem' is present without a '?' then the string following it is
-             * the name of the primary item of the node type.
-             * If 'primaryitem' is present with a '?' then the primary item is a variant.
-             * If 'primaryitem' is absent then the node type has no primary item.
-             *
-             *      PrimaryItem ::= ('primaryitem'| '!')(String | '?')
-             */
-
-            if ($this->checkAndExpectToken(Token::TK_SYMBOL, '?')) {
-                return new SyntaxTreeNode('primaryitem', array('value' => '?'));
-            }
-            return new SyntaxTreeNode('primaryitem', array('value' => $this->parseCndString()));
-        }
-
-        if ($attributeName === 'queryops') {
-
-            return $this->parseQueryOpsAttribute();
-        }
-
-        return false;
     }
 
     /**
@@ -865,12 +696,13 @@ class CndParser extends AbstractParser
      *          (('''Operator {','Operator}''') | '?')
      *      Operator ::= '=' | '<>' | '<' | '<=' | '>' | '>=' | 'LIKE'
      *
-     * @return SyntaxTreeNode
+     * @return array
      */
     protected function parseQueryOpsAttribute()
     {
         if ($this->checkAndExpectToken(Token::TK_SYMBOL, '?')) {
-            return new SyntaxTreeNode('queryops', array('variant' => true));
+            // this denotes a variant, whatever that is
+            throw new ParserException($this->tokenQueue, 'TODO: understand what "variant" means');
         }
 
         $ops = array();
@@ -886,14 +718,11 @@ class CndParser extends AbstractParser
             throw new ParserException($this->tokenQueue, 'Operator expected');
         }
 
-        return new SyntaxTreeNode('queryops', array('value' => $ops));
+        return $ops;
     }
 
     /**
      * Parse a query operator.
-     *
-     * This is quite complicated for not so much... Idealy this should be implemented
-     * in a specialized Scanner.
      *
      * @return bool|string
      */

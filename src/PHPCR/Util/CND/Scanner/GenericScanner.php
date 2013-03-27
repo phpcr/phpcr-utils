@@ -2,9 +2,8 @@
 
 namespace PHPCR\Util\CND\Scanner;
 
-use PHPCR\Util\CND\Reader\ReaderInterface,
-    PHPCR\Util\CND\Scanner\Token,
-    PHPCR\Util\CND\Exception\ScannerException;
+use PHPCR\Util\CND\Reader\ReaderInterface;
+use PHPCR\Util\CND\Exception\ScannerException;
 
 /**
  * Generic scanner detecting GenericTokens.
@@ -19,19 +18,14 @@ class GenericScanner extends AbstractScanner
     /**
      * Scan the given reader and construct a TokenQueue composed of GenericToken.
      *
-     * @param \LazyGuy\PhpParse\Reader\ReaderInterface $reader
+     * @param ReaderInterface $reader
      * @return TokenQueue
      */
     public function scan(ReaderInterface $reader)
     {
-        $this->debugSection("SCANNER CYCLE");
-
         $this->resetQueue();
 
         while (!$reader->isEof()) {
-
-            $this->debug(sprintf('Loop on: [%s]', str_replace("\n", '<NL>', $reader->currentChar())));
-
             $tokenFound = false;
 
             $tokenFound = $tokenFound || $this->consumeComments($reader);
@@ -53,21 +47,17 @@ class GenericScanner extends AbstractScanner
 
         }
 
-        $this->debug('== EOF ==');
-
         return $this->getQueue();
     }
 
     /**
      * Detect and consume whitespaces
      *
-     * @param \LazyGuy\PhpParse\Reader\ReaderInterface $reader
+     * @param ReaderInterface $reader
      * @return bool
      */
     protected function consumeSpaces(ReaderInterface $reader)
     {
-//        $this->debug('consumeSpaces');
-
         if (in_array($reader->currentChar(), $this->context->getWhitespaces())) {
 
             $char = $reader->forwardChar();
@@ -82,18 +72,18 @@ class GenericScanner extends AbstractScanner
 
             return true;
         }
+
+        return false;
     }
 
     /**
      * Detect and consume newlines
      *
-     * @param \LazyGuy\PhpParse\Reader\ReaderInterface $reader
+     * @param ReaderInterface $reader
      * @return bool
      */
     protected function consumeNewLine(ReaderInterface $reader)
     {
-//        $this->debug('consumeNewline');
-
         if ($reader->currentChar() === PHP_EOL) {
 
             $token = new GenericToken(GenericToken::TK_NEWLINE, PHP_EOL);
@@ -115,14 +105,12 @@ class GenericScanner extends AbstractScanner
     /**
      * Detect and consume strings
      *
-     * @throws \LazyGuy\PhpParse\Exception\ScannerException
-     * @param \LazyGuy\PhpParse\Reader\ReaderInterface $reader
+     * @throws ScannerException
+     * @param ReaderInterface $reader
      * @return bool
      */
     protected function consumeString(ReaderInterface $reader)
     {
-//        $this->debug('consumeStrings');
-
         $curDelimiter = $reader->currentChar();
         if (in_array($curDelimiter, $this->context->getStringDelimiters())) {
 
@@ -141,12 +129,14 @@ class GenericScanner extends AbstractScanner
             $this->addToken($reader, $token);
             return true;
         }
+
+        return false;
     }
 
     /**
      * Detect and consume comments
      *
-     * @param \LazyGuy\PhpParse\Reader\ReaderInterface $reader
+     * @param ReaderInterface $reader
      * @return bool
      */
     protected function consumeComments(ReaderInterface $reader)
@@ -161,20 +151,14 @@ class GenericScanner extends AbstractScanner
     /**
      * Detect and consume block comments
      *
-     * @throws \LazyGuy\PhpParse\Exception\ScannerException
-     * @param \LazyGuy\PhpParse\Reader\ReaderInterface $reader
+     * @throws ScannerException
+     * @param ReaderInterface $reader
      * @return bool
      */
     protected function consumeBlockComments(ReaderInterface $reader)
     {
-//        $this->debug('consumeBlockComments');
-
         $nextChar = $reader->currentChar();
         foreach($this->context->getBlockCommentDelimiters() as $beginDelim => $endDelim) {
-
-            if (!$beginDelim || !$endDelim) {
-                continue;
-            }
 
             if ($nextChar === $beginDelim[0]) {
 
@@ -220,18 +204,18 @@ class GenericScanner extends AbstractScanner
 
         }
 
+        return false;
+
     }
 
     /**
      * Detect and consume line comments
      *
-     * @param \LazyGuy\PhpParse\Reader\ReaderInterface $reader
+     * @param ReaderInterface $reader
      * @return bool
      */
     protected function consumeLineComments(ReaderInterface $reader)
     {
-//        $this->debug('consumeLineComments');
-
         $nextChar = $reader->currentChar();
         foreach($this->context->getLineCommentDelimiters() as $delimiter) {
 
@@ -262,18 +246,18 @@ class GenericScanner extends AbstractScanner
 
             }
         }
+
+        return false;
     }
 
     /**
      * Detect and consume identifiers
      *
-     * @param \LazyGuy\PhpParse\Reader\ReaderInterface $reader
+     * @param ReaderInterface $reader
      * @return bool
      */
     protected function consumeIdentifiers(ReaderInterface $reader)
     {
-//        $this->debug('consumeIdentifiers');
-
         $nextChar = $reader->currentChar();
 
         if (preg_match('/[a-zA-Z]/', $nextChar)) {
@@ -285,18 +269,18 @@ class GenericScanner extends AbstractScanner
             $this->addToken($reader, $token);
             return true;
         }
+
+        return false;
     }
 
     /**
      * Detect and consume symbols
      *
-     * @param \LazyGuy\PhpParse\Reader\ReaderInterface $reader
+     * @param ReaderInterface $reader
      * @return bool
      */
     protected function consumeSymbols(ReaderInterface $reader)
     {
-//        $this->debug('consumeSymbols');
-
         $found = false;
         $nextChar = $reader->currentChar();
         while (in_array($nextChar, $this->context->getSymbols())) {
@@ -312,5 +296,4 @@ class GenericScanner extends AbstractScanner
 
         return $found;
     }
-
 }

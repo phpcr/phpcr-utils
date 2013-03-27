@@ -49,6 +49,7 @@ class TokenQueue implements \IteratorAggregate
 
     public function get($count = 1)
     {
+        $item = null;
         for ($i = 1; $i <= $count; $i++) {
             $item = $this->peek();
             $this->next();
@@ -65,13 +66,5 @@ class TokenQueue implements \IteratorAggregate
     public function getIterator()
     {
         return new \ArrayIterator($this->tokens);
-    }
-
-    public function debug()
-    {
-        foreach($this->tokens as $token)
-        {
-            echo $token . "\n";
-        }
     }
 }
