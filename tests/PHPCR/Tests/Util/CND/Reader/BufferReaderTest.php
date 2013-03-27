@@ -41,11 +41,6 @@ class BufferReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(' r', $reader->forward());
         $reader->rewind();
         $this->assertEquals(' ', $reader->forward());
-        $reader->unget();
-        $this->assertEquals(' ', $reader->forward());
-        $reader->unget();
-        $reader->unget();
-        $this->assertEquals(' ', $reader->forward());
         $this->assertEquals(' ', $reader->consume());
 
         $this->assertEquals(6, $reader->getCurrentColumn());

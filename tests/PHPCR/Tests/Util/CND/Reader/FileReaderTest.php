@@ -40,11 +40,6 @@ class FileReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->filename, $this->reader->getFileName());
     }
 
-    public function testGetBuffer()
-    {
-        $this->assertEquals(file_get_contents($this->filename) . $this->reader->getEofMarker(), $this->reader->getBuffer());
-    }
-
     public function testGetNextChar()
     {
         $curLine = 1;
