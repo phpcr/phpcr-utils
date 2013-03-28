@@ -41,6 +41,7 @@ class CndParser extends AbstractParser
     private $PRIMARYITEM = array('primaryitem', '!');//, 'variant' => false);
 
     // common for properties and child definitions
+    private $PRIMARY = array('!', 'pri', 'primary'); //, 'variant' => true),
     private $AUTOCREATED = array('a', 'aut', 'autocreated'); //, 'variant' => true),
     private $MANDATORY = array('m', 'man', 'mandatory'); //, 'variant' => true),
     private $PROTECTED = array('p', 'pro', 'protected'); //, 'variant' => true),
@@ -343,7 +344,7 @@ class CndParser extends AbstractParser
             $this->parseDefaultValue($property);
         }
 
-        $this->parsePropertyAttributes($property);
+        $this->parsePropertyAttributes($nodeType, $property);
 
         // Check if there is a constraint (and not another namespace def)
         // Next token is '<' and two token later it's not '=', i.e. not '<ident='
@@ -370,7 +371,7 @@ class CndParser extends AbstractParser
         $types = array("STRING", "BINARY", "LONG", "DOUBLE", "BOOLEAN",  "DATE", "NAME", "PATH",
                        "REFERENCE", "WEAKREFERENCE", "DECIMAL", "URI", "UNDEFINED", "*", "?");
 
-        if (! $this->checkTokenIn(Token::TK_IDENTIFIER, $types)) {
+        if (! $this->checkTokenIn(Token::TK_IDENTIFIER, $types, true)) {
             throw new ParserException($this->tokenQueue, sprintf("Invalid property type: %s", $this->tokenQueue->get()->getData()));
         }
 
@@ -474,11 +475,13 @@ class CndParser extends AbstractParser
      *      NoFullText ::= ('nofulltext' | 'nof') ['?']
      *      NoQueryOrder ::= ('noqueryorder' | 'nqord') ['?']
      */
-    protected function parsePropertyAttributes(PropertyDefinitionTemplateInterface $property)
+    protected function parsePropertyAttributes(NodeTypeTemplateInterface $parentType, PropertyDefinitionTemplateInterface $property)
     {
         $opvSeen = false;
         while (true) {
-            if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->AUTOCREATED)) {
+            if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->PRIMARY)) {
+                $parentType->setPrimaryItemName($property->getName());
+            } else if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->AUTOCREATED)) {
                 $property->setAutoCreated(true);
             } else if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->MANDATORY)) {
                 $property->setMandatory(true);
@@ -597,7 +600,7 @@ class CndParser extends AbstractParser
         NodeDefinitionTemplateInterface $childType
     ) {
         while(true) {
-            if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->PRIMARYITEM)) {
+            if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->PRIMARY)) {
                 $parentType->setPrimaryItemName($childType->getName());
             } else if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->AUTOCREATED)) {
                 $childType->setAutoCreated(true);

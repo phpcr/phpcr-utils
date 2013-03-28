@@ -32,10 +32,11 @@ abstract class AbstractParser
      *
      * @param int $type The expected token type
      * @param null|string $data The expected data or null
+     * @param bool $ignoreCase whether to do string comparisons case insensitive or sensitive
      *
      * @return bool
      */
-    protected function checkToken($type, $data = null)
+    protected function checkToken($type, $data = null, $ignoreCase = false)
     {
         if ($this->tokenQueue->isEof()) {
             return false;
@@ -48,6 +49,10 @@ abstract class AbstractParser
         }
 
         if ($data && $token->getData() !== $data) {
+            if ($ignoreCase && is_string($data) && is_string($token->getData())) {
+                return strcasecmp($data, $token->getData());
+            }
+
             return false;
         }
 
@@ -62,10 +67,10 @@ abstract class AbstractParser
      *
      * @return bool
      */
-    protected function checkTokenIn($type, array $data)
+    protected function checkTokenIn($type, array $data, $ignoreCase = false)
     {
         foreach ($data as $d) {
-            if ($this->checkToken($type, $d)) {
+            if ($this->checkToken($type, $d, $ignoreCase)) {
                 return true;
             }
         }
