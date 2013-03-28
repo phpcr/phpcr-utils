@@ -53,7 +53,9 @@ class CndParser extends AbstractParser
     private $NOQUERYORDER = array('nqord', 'noqueryorder'); //, 'variant' => true),
 
     // child node attributes
-    private $SNS = array('*', 'sns'); //, 'variant' => true),
+    // multiple is actually a jackrabbit specific synonym for sns
+    // http://www.mail-archive.com/users@jackrabbit.apache.org/msg19268.html
+    private $SNS = array('*', 'sns', 'multiple'); //, 'variant' => true),
 
     /**
      * @var NodeTypeManagerInterface
@@ -594,18 +596,6 @@ class CndParser extends AbstractParser
         NodeTypeTemplateInterface $parentType,
         NodeDefinitionTemplateInterface $childType
     ) {
-        /**
-         * TODO: Clarify this problem
-         *
-         * Either there is a bug in the Jackrabbit builtin nodetypes CND file here:
-         *
-         * [rep:Group] > rep:Authorizable
-         *   + rep:members (rep:Members) = rep:Members multiple protected VERSION
-         *   - rep:members (WEAKREFERENCE) protected multiple < 'rep:Authorizable'
-         *
-         * or there is an error in the spec that says that a node attribute cannot be
-         * "multiple".
-         */
         while(true) {
             if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->PRIMARYITEM)) {
                 $parentType->setPrimaryItemName($childType->getName());
