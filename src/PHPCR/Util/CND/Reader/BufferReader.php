@@ -78,6 +78,7 @@ class BufferReader implements ReaderInterface
     public function isEof()
     {
         return $this->currentChar() === $this->getEofMarker()
+            || $this->currentChar() === false
             || $this->startPos > strlen($this->buffer)
             || $this->forwardPos > strlen($this->buffer);
     }

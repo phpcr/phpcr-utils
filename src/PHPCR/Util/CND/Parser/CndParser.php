@@ -8,6 +8,8 @@ use PHPCR\NodeType\NodeTypeTemplateInterface;
 use PHPCR\NodeType\PropertyDefinitionTemplateInterface;
 use PHPCR\PropertyType;
 use PHPCR\Util\CND\Reader\BufferReader;
+use PHPCR\Util\CND\Reader\FileReader;
+use PHPCR\Util\CND\Reader\ReaderInterface;
 use PHPCR\Util\CND\Scanner\Context\DefaultScannerContextWithoutSpacesAndComments;
 use PHPCR\Util\CND\Scanner\GenericScanner;
 use PHPCR\Util\CND\Scanner\GenericToken as Token;
@@ -77,22 +79,40 @@ class CndParser extends AbstractParser
     }
 
     /**
+     * Parse a file with CND statements.
+     *
+     * @param string $filename absolute path to the CND file to read
+     *
+     * @return array with the namespaces map and the nodeTypes which is a
+     *      hashmap of typename = > NodeTypeDefinitionInterface
+     */
+    public function parseFile($filename)
+    {
+        $reader = new FileReader($filename);
+
+        return $this->parse($reader);
+    }
+
+    /**
      * Parse a string of CND statements.
      *
-     * @return array with the namespaces map and the nodeTypes which is a list
-     *      of NodeTypeDefinitionInterface
+     * @param string $cnd string with CND content
+     *
+     * @return array with the namespaces map and the nodeTypes which is a
+     *      hashmap of typename = > NodeTypeDefinitionInterface
      */
     public function parseString($cnd)
     {
         $reader = new BufferReader($cnd);
+
+        return $this->parse($reader);
+    }
+
+    private function parse(ReaderInterface $reader)
+    {
         $scanner = new GenericScanner(new DefaultScannerContextWithoutSpacesAndComments());
         $this->tokenQueue = $scanner->scan($reader);
 
-        return $this->parse();
-    }
-
-    private function parse()
-    {
         while (!$this->tokenQueue->isEof()) {
 
             while ($this->checkToken(Token::TK_SYMBOL, '<')) {
@@ -154,7 +174,7 @@ class CndParser extends AbstractParser
 
         $this->parseChildrenAndAttributes($nodeType);
 
-        $this->nodeTypes[] = $nodeType;
+        $this->nodeTypes[$nodeType->getName()] = $nodeType;
     }
 
     /**
@@ -184,7 +204,7 @@ class CndParser extends AbstractParser
         $this->expectToken(Token::TK_SYMBOL, '>');
 
         if ($this->checkAndExpectToken(Token::TK_SYMBOL, '?')) {
-            $nodeType->setDeclaredSuperTypeNames('?');
+            $nodeType->setDeclaredSuperTypeNames(array('?'));
         } else {
             $nodeType->setDeclaredSuperTypeNames($this->parseCndStringList());
         }
@@ -463,6 +483,8 @@ class CndParser extends AbstractParser
             } else if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->PROTECTED)) {
                 $property->setProtected(true);
             } else if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->MULTIPLE)) {
+                $property->setMultiple(true);
+            } else if ($this->checkTokenIn(Token::TK_SYMBOL, $this->MULTIPLE)) {
                 $property->setMultiple(true);
             } else if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->QUERYOPS)) {
                 $property->setAvailableQueryOperators($this->parseQueryOpsAttribute());

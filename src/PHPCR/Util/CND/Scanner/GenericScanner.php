@@ -27,7 +27,6 @@ class GenericScanner extends AbstractScanner
 
         while (!$reader->isEof()) {
             $tokenFound = false;
-
             $tokenFound = $tokenFound || $this->consumeComments($reader);
             $tokenFound = $tokenFound || $this->consumeNewLine($reader);
             $tokenFound = $tokenFound || $this->consumeSpaces($reader);
@@ -166,12 +165,12 @@ class GenericScanner extends AbstractScanner
                 for ($i = 1; $i <= strlen($beginDelim); $i++) {
                     $reader->forward();
                 }
-
                 if ($reader->current() === $beginDelim) {
 
                     // Start delimiter found, let's try to find the end delimiter
                     $nextChar = $reader->forwardChar();
-                    while ($nextChar !== $reader->getEofMarker()) {
+
+                    while (! $reader->isEof()) {
 
                         if ($nextChar === $endDelim[0]) {
 
