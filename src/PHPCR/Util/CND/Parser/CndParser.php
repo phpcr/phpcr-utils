@@ -532,14 +532,14 @@ class CndParser extends AbstractParser
         $childType = $this->ntm->createNodeDefinitionTemplate();
         $nodeType->getNodeDefinitionTemplates()->append($childType);
 
-        // Parse the property name
+        // Parse the child name
         if ($this->checkAndExpectToken(Token::TK_SYMBOL, '*')) {
             $childType->setName('*');
         } else {
             $childType->setName($this->parseCndString());
         }
 
-        // Parse the required types
+        // Parse the required primary types
         if ($this->checkAndExpectToken(Token::TK_SYMBOL, '(')) {
             if ($this->checkAndExpectToken(Token::TK_SYMBOL, '?')) {
                 $list = '?';
@@ -550,7 +550,7 @@ class CndParser extends AbstractParser
             $childType->setRequiredPrimaryTypeNames($list);
         }
 
-        // Parse the default type
+        // Parse the default primary type
         if ($this->checkAndExpectToken(Token::TK_SYMBOL, '=')) {
             $childType->setDefaultPrimaryTypeName($this->parseCndString());
         }
