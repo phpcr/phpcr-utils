@@ -135,6 +135,12 @@ class CndWriter
 
     private function writeProperties($properties)
     {
+        if (null === $properties) {
+            // getDeclaredPropertyDefinitions is allowed to return null on
+            // newly created node type definitions
+            return '';
+        }
+
         $s = '';
 
         /** @var $property PropertyDefinitionInterface */
@@ -190,6 +196,12 @@ class CndWriter
 
     private function writeChildren($children)
     {
+        if (null === $children) {
+            // getDeclaredChildNodeDefinitions is allowed to return null on
+            // newly created node type definitions
+            return '';
+        }
+
         $s = '';
 
         /** @var $child NodeDefinitionInterface */
