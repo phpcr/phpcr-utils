@@ -6,9 +6,19 @@ use PHPCR\Util\CND\Reader\BufferReader;
 
 class BufferReaderTest extends \PHPUnit_Framework_TestCase
 {
-    public function test__construct()
+    public function testWindowsLineEndings()
     {
-        $buffer = "Some random\nstring";
+        $this->test__construct("\r\n");
+    }
+
+    public function testUnixLineEndings()
+    {
+        $this->test__construct("\n");
+    }
+
+    public function test__construct($eolMarker = PHP_EOL)
+    {
+        $buffer = "Some random{$eolMarker}string";
         $reader = new BufferReader($buffer);
 
         $this->assertInstanceOf('\PHPCR\Util\CND\Reader\BufferReader', $reader);
@@ -55,8 +65,8 @@ class BufferReaderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(12, $reader->getCurrentColumn());
 
-        $this->assertEquals(PHP_EOL, $reader->forward());
-        $this->assertEquals(PHP_EOL, $reader->consume());
+        $this->assertEquals($eolMarker, $reader->forward());
+        $this->assertEquals($eolMarker, $reader->consume());
 
         $this->assertEquals(2, $reader->getCurrentLine());
         $this->assertEquals(1, $reader->getCurrentColumn());
