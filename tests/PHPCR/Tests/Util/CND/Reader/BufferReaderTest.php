@@ -8,11 +8,11 @@ class BufferReaderTest extends \PHPUnit_Framework_TestCase
 {
     public function test__construct()
     {
-        $buffer = "Some random\nstring";
+        $buffer = "Some random\nor\r\nstring";
         $reader = new BufferReader($buffer);
 
         $this->assertInstanceOf('\PHPCR\Util\CND\Reader\BufferReader', $reader);
-        $this->assertAttributeEquals($buffer . $reader->getEofMarker(), 'buffer', $reader);
+        $this->assertAttributeEquals(str_replace("\r\n", "\n", $buffer) . $reader->getEofMarker(), 'buffer', $reader);
         $this->assertAttributeEquals(0, 'startPos', $reader);
         $this->assertAttributeEquals(0, 'forwardPos', $reader);
 
@@ -55,10 +55,18 @@ class BufferReaderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(12, $reader->getCurrentColumn());
 
-        $this->assertEquals(PHP_EOL, $reader->forward());
-        $this->assertEquals(PHP_EOL, $reader->consume());
+        $this->assertEquals("\n", $reader->forward());
+        $this->assertEquals("\n", $reader->consume());
 
         $this->assertEquals(2, $reader->getCurrentLine());
+        $this->assertEquals(1, $reader->getCurrentColumn());
+        $this->assertEquals('o', $reader->forward());
+        $this->assertEquals('or', $reader->forward());
+        $this->assertEquals('or', $reader->consume());
+        $this->assertEquals("\n", $reader->forward());
+        $this->assertEquals("\n", $reader->consume());
+
+        $this->assertEquals(3, $reader->getCurrentLine());
         $this->assertEquals(1, $reader->getCurrentColumn());
 
         $this->assertEquals('s', $reader->forward());
@@ -69,7 +77,7 @@ class BufferReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('string', $reader->forward());
         $this->assertEquals('string', $reader->consume());
 
-        $this->assertEquals(2, $reader->getCurrentLine());
+        $this->assertEquals(3, $reader->getCurrentLine());
         $this->assertEquals(7, $reader->getCurrentColumn());
 
         $this->assertEquals($reader->getEofMarker(), $reader->forward());

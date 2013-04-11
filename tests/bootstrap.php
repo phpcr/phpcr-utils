@@ -16,11 +16,13 @@ if (!class_exists('PHPUnit_Framework_MockObject_MockBuilder')) {
     die('PHPUnit MockObject plugin is required, at least 1.0.8 version');
 }
 
-$vendorDir = __DIR__.'/../vendor';
-
-$file = $vendorDir.'/autoload.php';
+// $file2 for run tests if phpcr-utils lib inside of vendor directory.
+$file = __DIR__.'/../vendor/autoload.php';
+$file2 = __DIR__.'/../../../autoload.php';
 if (file_exists($file)) {
     $autoload = require_once $file;
+} elseif (file_exists($file2)) {
+    $autoload = require_once $file2;
 } else {
     throw new RuntimeException('Install dependencies to run test suite.');
 }

@@ -149,8 +149,6 @@ class GenericScannerTest extends \PHPUnit_Framework_TestCase
 
             $this->assertFalse($queue->isEof(), 'There is no more tokens, expected = ' . $expectedToken[1]);
 
-            //var_dump("Expected: {$expectedToken[1]}, Found: {$token->getData()}");
-
             $this->assertToken($expectedToken[0], $expectedToken[1], $token);
 
             $token = $queue->next();
@@ -162,7 +160,6 @@ class GenericScannerTest extends \PHPUnit_Framework_TestCase
 
     protected function assertToken($type, $data, Token $token)
     {
-        //var_dump($token);
         $this->assertEquals($type, $token->getType(),
             sprintf('Expected token [%s, %s], found [%s, %s]', Token::getTypeName($type), $data, Token::getTypeName($token->getType()), $token->getData()));
 

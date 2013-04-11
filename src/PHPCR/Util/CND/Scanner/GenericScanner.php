@@ -12,6 +12,7 @@ use PHPCR\Util\CND\Exception\ScannerException;
  * the token generation to your needs.
  *
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
+ * @author Nikola Petkanski <nikola@petkanski.com>
  */
 class GenericScanner extends AbstractScanner
 {
@@ -83,13 +84,13 @@ class GenericScanner extends AbstractScanner
      */
     protected function consumeNewLine(ReaderInterface $reader)
     {
-        if ($reader->currentChar() === PHP_EOL) {
+        if ($reader->currentChar() === "\n") {
 
-            $token = new GenericToken(GenericToken::TK_NEWLINE, PHP_EOL);
+            $token = new GenericToken(GenericToken::TK_NEWLINE, "\n");
             $this->addToken($reader, $token);
 
 
-            while ($reader->forward() === PHP_EOL) {
+            while ($reader->forward() === "\n") {
                 $reader->consume();
                 $reader->forward();
             }
@@ -116,7 +117,7 @@ class GenericScanner extends AbstractScanner
             $char = $reader->forwardChar();
             while ($char !== $curDelimiter) {
 
-                if ($char === PHP_EOL) {
+                if ($char === "\n") {
                     throw new ScannerException($reader, "Newline detected in string");
                 }
 
@@ -228,7 +229,7 @@ class GenericScanner extends AbstractScanner
 
                     // consume to end of line
                     $char = $reader->currentChar();
-                    while (!$reader->isEof() && $char !== PHP_EOL) {
+                    while (!$reader->isEof() && $char !== "\n") {
                         $char = $reader->forwardChar();
                     }
                     $token = new GenericToken(GenericToken::TK_COMMENT, $reader->consume());
