@@ -6,10 +6,35 @@ use PHPCR\Util\CND\Reader\FileReader;
 
 class FileReaderTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var string
+     */
+    protected $filepath;
+
+    /**
+     * @var \PHPCR\Util\CND\Reader\FileReader
+     */
+    protected $reader;
+
+    /**
+     * @var array
+     */
+    protected $lines;
+
+    /**
+     * @var string
+     */
+    protected $content;
+
+    /**
+     * @var array
+     */
+    protected $chars;
+
     public function setUp()
     {
-        $this->filename = __DIR__ . '/../Fixtures/files/TestFile.txt';
-        $this->reader = new FileReader($this->filename);
+        $this->filepath = __DIR__ . '/../Fixtures/files/TestFile.txt';
+        $this->reader = new FileReader($this->filepath);
 
         $this->lines = array(
             'This is a test file...',
@@ -18,7 +43,7 @@ class FileReaderTest extends \PHPUnit_Framework_TestCase
             ''
         );
 
-        $this->content = file_get_contents($this->filename);
+        $this->content = file_get_contents($this->filepath);
         $this->chars = array_merge(
             preg_split('//', $this->lines[0], -1, PREG_SPLIT_NO_EMPTY),
             array("\n", "\n"),
@@ -35,9 +60,17 @@ class FileReaderTest extends \PHPUnit_Framework_TestCase
         $reader = new FileReader('unexisting_file');
     }
 
+    /**
+     * @deprecated
+     */
     public function testGetFileName()
     {
-        $this->assertEquals($this->filename, $this->reader->getFileName());
+        $this->assertEquals($this->filepath, $this->reader->getFileName());
+    }
+
+    public function testGetFilePath()
+    {
+        $this->assertEquals($this->filepath, $this->reader->getFilePath());
     }
 
     public function testGetNextChar()
