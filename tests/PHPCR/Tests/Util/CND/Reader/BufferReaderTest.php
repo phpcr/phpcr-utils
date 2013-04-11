@@ -26,6 +26,15 @@ class BufferReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertAttributeEquals(0, 'startPos', $reader);
         $this->assertAttributeEquals(0, 'forwardPos', $reader);
 
+        // test whether the current EOL marker is correctly set
+        $this->assertAttributeEquals(PHP_EOL, 'eolMarker', $reader);
+
+        // swap the EOL marker with the one for the current platform being tested
+        $reflection = new \ReflectionObject($reader);
+        $property = $reflection->getProperty('eolMarker');
+        $property->setAccessible(true);
+        $property->setValue($reader, $eolMarker);
+
         $this->assertEquals(1, $reader->getCurrentLine());
         $this->assertEquals(1, $reader->getCurrentColumn());
 
