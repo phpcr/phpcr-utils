@@ -8,7 +8,7 @@ namespace PHPCR\Util\CND\Reader;
 interface ReaderInterface
 {
     /**
-     * @return bool
+     * @return string
      */
     public function getEofMarker();
 
@@ -17,6 +17,9 @@ interface ReaderInterface
      */
     public function currentChar();
 
+    /**
+     * @return bool
+     */
     public function isEof();
 
     /**

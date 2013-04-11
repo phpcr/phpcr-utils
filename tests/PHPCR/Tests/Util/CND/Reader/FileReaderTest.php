@@ -8,8 +8,8 @@ class FileReaderTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
     {
-        $this->filename = __DIR__ . '/../Fixtures/files/TestFile.txt';
-        $this->reader = new FileReader($this->filename);
+        $this->filepath = __DIR__ . '/../Fixtures/files/TestFile.txt';
+        $this->reader = new FileReader($this->filepath);
 
         $this->lines = array(
             'This is a test file...',
@@ -18,7 +18,6 @@ class FileReaderTest extends \PHPUnit_Framework_TestCase
             ''
         );
 
-        $this->content = file_get_contents($this->filename);
         $this->chars = array_merge(
             preg_split('//', $this->lines[0], -1, PREG_SPLIT_NO_EMPTY),
             array("\n", "\n"),
@@ -35,9 +34,9 @@ class FileReaderTest extends \PHPUnit_Framework_TestCase
         $reader = new FileReader('unexisting_file');
     }
 
-    public function testGetFileName()
+    public function testGetPath()
     {
-        $this->assertEquals($this->filename, $this->reader->getFileName());
+        $this->assertEquals($this->filepath, $this->reader->getPath());
     }
 
     public function testGetNextChar()
@@ -53,8 +52,6 @@ class FileReaderTest extends \PHPUnit_Framework_TestCase
                 $this->assertEquals(count($this->chars) - 1, $i);
                 break;
             }
-
-            //var_dump('Expected:' . $this->chars[$i] . ', found: ' . $peek);
 
             $this->assertEquals($curLine, $this->reader->getCurrentLine());
             $this->assertEquals($curCol, $this->reader->getCurrentColumn());

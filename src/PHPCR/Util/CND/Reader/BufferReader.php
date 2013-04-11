@@ -4,29 +4,57 @@ namespace PHPCR\Util\CND\Reader;
 
 /**
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
+ * @author Nikola Petkanski <nikola@petkanski.com>
  */
 class BufferReader implements ReaderInterface
 {
+    /**
+     * @var string
+     */
     protected $eofMarker;
 
+    /**
+     * @var string
+     */
     protected $buffer;
 
+    /**
+     * @var int
+     */
     protected $startPos;
 
+    /**
+     * @var int
+     */
     protected $forwardPos;
 
+    /**
+     * @var int
+     */
     protected $curLine;
 
+    /**
+     * @var int
+     */
     protected $curCol;
 
+    /**
+     * @var int
+     */
     protected $nextCurLine;
 
+    /**
+     * @var int
+     */
     protected $nextCurCol;
 
+    /**
+     * @param string $buffer
+     */
     public function __construct($buffer)
     {
         $this->eofMarker = chr(1);
-        $this->buffer = $buffer . $this->eofMarker;
+        $this->buffer = str_replace("\r\n", "\n", $buffer) . $this->eofMarker;
 
         $this->reset();
     }
@@ -40,6 +68,9 @@ class BufferReader implements ReaderInterface
         $this->nextCurLine = $this->nextCurCol = 1;
     }
 
+    /**
+     * @return string
+     */
     public function getEofMarker()
     {
         return $this->eofMarker;
@@ -48,7 +79,7 @@ class BufferReader implements ReaderInterface
     /**
      * @return int
      */
-    function getCurrentLine()
+    public function getCurrentLine()
     {
         return $this->curLine;
     }
@@ -56,7 +87,7 @@ class BufferReader implements ReaderInterface
     /**
      * @return int
      */
-    function getCurrentColumn()
+    public function getCurrentColumn()
     {
         return $this->curCol;
     }
@@ -75,6 +106,9 @@ class BufferReader implements ReaderInterface
         return substr($this->buffer, $this->forwardPos, 1);
     }
 
+    /**
+     * @return bool
+     */
     public function isEof()
     {
         return $this->currentChar() === $this->getEofMarker()
@@ -94,7 +128,7 @@ class BufferReader implements ReaderInterface
             $this->nextCurCol++;
         }
 
-        if ($this->current() === PHP_EOL) {
+        if ($this->current() === "\n") {
             $this->nextCurLine++;
             $this->nextCurCol = 1;
         }
