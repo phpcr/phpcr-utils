@@ -8,16 +8,29 @@ namespace PHPCR\Util\CND\Reader;
 interface ReaderInterface
 {
     /**
-     * @return bool
+     * @return string
      */
     public function getEofMarker();
+
+    /**
+     * @return string
+     */
+    public function getEolMarker();
 
     /**
      * @return string with just one character
      */
     public function currentChar();
 
+    /**
+     * @return bool
+     */
     public function isEof();
+
+    /**
+     * @return bool
+     */
+    public function isEol();
 
     /**
      * @return int
