@@ -137,9 +137,15 @@ class BufferReader implements ReaderInterface
     public function isEol()
     {
         $current = $this->current();
+        $eolMarkerLength = strlen($this->getEolMarker());
+
+        // look ahead as far as the length of the EOL marker
+        $lookAhead = substr($this->buffer, $this->startPos, $this->forwardPos - $this->startPos + ($eolMarkerLength - 1));
         $marker = $this->getEolMarker();
 
         $result = preg_match('#'. preg_quote($marker) .'$#', $current) === 1;
+        $result = $result || preg_match('#'. preg_quote($marker) .'$#', $lookAhead) === 1;
+
         return $result;
     }
 
@@ -155,6 +161,8 @@ class BufferReader implements ReaderInterface
         }
 
         if ($this->isEol()) {
+            $eolMarkerLength = strlen($this->getEolMarker());
+            $this->forwardPos += ($eolMarkerLength - 1); // we already incremented with one
             $this->nextCurLine++;
             $this->nextCurCol = 1;
         }

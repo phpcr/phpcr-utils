@@ -75,16 +75,9 @@ class BufferReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(12, $reader->getCurrentColumn());
 
         $this->assertFalse($reader->isEol());
-
-        // EOL can be more than one symbol.
-        // Cycle till we reach the needed length.
-        $current = '';
-        while (strlen($current) < strlen($eolMarker)) {
-            $current = $reader->forward();
-        }
-
+        $this->assertEquals($eolMarker, $reader->forward());
         $this->assertTrue($reader->isEol());
-        $this->assertEquals($eolMarker, $current);
+
         $this->assertEquals($eolMarker, $reader->consume());
 
         $this->assertEquals(2, $reader->getCurrentLine());
