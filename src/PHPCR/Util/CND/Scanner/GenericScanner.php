@@ -105,9 +105,9 @@ class GenericScanner extends AbstractScanner
             $reader->rewind();
 
             return true;
-        } else {
-            $reader->rewind();
         }
+
+        $reader->rewind();
 
         return false;
     }
