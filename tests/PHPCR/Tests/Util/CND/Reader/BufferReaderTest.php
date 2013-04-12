@@ -8,15 +8,18 @@ class BufferReaderTest extends \PHPUnit_Framework_TestCase
 {
     public function testWindowsLineEndings()
     {
-        $this->test__construct("\r\n");
+        $this->doTestReader("\r\n");
     }
 
     public function testUnixLineEndings()
     {
-        $this->test__construct("\n");
+        $this->doTestReader("\n");
     }
 
-    public function test__construct($eolMarker = PHP_EOL)
+    /**
+     * @param string $eolMarker
+     */
+    protected function doTestReader($eolMarker)
     {
         $buffer = "Some random{$eolMarker}string";
         $reader = new BufferReader($buffer);
