@@ -14,34 +14,25 @@ class FileReader extends BufferReader
     protected $filePath;
 
     /**
-     * @param string $filePath
+     * @param string $path
      * @throws \InvalidArgumentException
      */
-    public function __construct($filePath)
+    public function __construct($path)
     {
-        if (!file_exists($filePath)) {
-            throw new \InvalidArgumentException(sprintf("Invalid file '%s'", $filePath));
+        if (!file_exists($path)) {
+            throw new \InvalidArgumentException(sprintf("Invalid file '%s'", $path));
         }
 
-        $this->filePath = $filePath;
+        $this->path = $path;
 
-        parent::__construct(file_get_contents($filePath));
-    }
-
-    /**
-     * @deprecated use getFilePath() instead
-     * @return string
-     */
-    public function getFileName()
-    {
-        return $this->filePath;
+        parent::__construct(file_get_contents($path));
     }
 
     /**
      * @return string
      */
-    public function getFilePath()
+    public function getPath()
     {
-        return $this->filePath;
+        return $this->path;
     }
 }
