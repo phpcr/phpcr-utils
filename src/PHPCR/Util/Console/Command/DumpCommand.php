@@ -61,6 +61,7 @@ class DumpCommand extends Command
             ->addOption('props', null, InputOption::VALUE_NONE, 'Use to dump the node properties')
             ->addOption('depth', null, InputOption::VALUE_OPTIONAL, 'Set to a number to limit how deep into the tree to recurse', "-1")
             ->addOption('identifiers', null, InputOption::VALUE_NONE, 'Use to also output node UUID')
+            ->addOption('expand-references', null, InputOption::VALUE_NONE, 'Use to also output node references')
             ->addArgument('identifier', InputArgument::OPTIONAL, 'Path of the node to dump', '/')
             ->setDescription('Dump the content repository')
             ->setHelp(<<<EOF
@@ -104,7 +105,10 @@ EOF
 
         $propVisitor = null;
         if ($input->hasParameterOption('--props')) {
-            $propVisitor = new ConsoleDumperPropertyVisitor($output);
+            $options = array(
+                'expand_references' => $input->hasParameterOption('--expand-references')
+            );
+            $propVisitor = new ConsoleDumperPropertyVisitor($output, $options);
         }
 
         $walker = new TreeWalker($nodeVisitor, $propVisitor);
