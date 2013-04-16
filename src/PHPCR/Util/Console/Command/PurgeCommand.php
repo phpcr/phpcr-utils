@@ -49,7 +49,8 @@ class PurgeCommand extends Command
             ->setName('phpcr:purge')
             ->setDescription('Remove content from the repository')
             ->addArgument('path', InputArgument::OPTIONAL, 'Path of the node to purge', '/')
-            ->addOption('force', null, InputOption::VALUE_OPTIONAL, 'Set to "yes" to bypass the confirmation dialog', "no")
+            ->addOption('force', null, InputOption::VALUE_NONE, 'Use to bypass the confirmation dialog')
+            ->addOption('only-children', null, InputOption::VALUE_NONE, 'Use to only purge children of specified path')
             ->setHelp(<<<EOF
 The <info>phpcr:purge</info> command remove all the non-standard nodes from the content repository
 EOF
@@ -65,25 +66,51 @@ EOF
         $session = $this->getHelper('phpcr')->getSession();
 
         $path = $input->getArgument('path');
-        $force = $input->hasParameterOption('--force');
+        $force = $input->getOption('force');
+        $onlyChildren = $input->getOption('only-children');
 
-        if (! $force) {
+        if (!$force) {
             $dialog = new DialogHelper();
             $workspaceName = $session->getWorkspace()->getName();
-            $force = $dialog->askConfirmation($output, "Are you sure you want to purge path '$path' and all its children from the workspace '$workspaceName'? [yes|no]: ", false);
+
+            if ($onlyChildren) {
+                $question = 
+                    'Are you sure you want to recursively delete the children of path "%s" '.
+                    'from workspace "%s"';
+            } else {
+                $question = 
+                    'Are you sure you want to recursively delete the path "%s" '.
+                    'from workspace "%s"';
+            }
+
+            $force = $dialog->askConfirmation($output, sprintf(
+                '<question>'.$question.' Y/N ?</question>', $path, $workspaceName, false
+            ));
         }
 
         if ($force) {
-            if ('/' === $path) {
-                NodeHelper::purgeWorkspace($this->getHelper('phpcr')->getSession());
+            $message = '<comment>></comment> <info>Purging: </info> %s';
+
+            if ($onlyChildren) {
+                $baseNode = $session->getNode($path, 0);
+
+                foreach ($baseNode->getNodes() as $childNode) {
+                    $output->writeln(sprintf($message, $childNode->getPath()));
+                    $childNode->remove();
+                }
             } else {
-                $session->removeItem($path);
+                $output->writeln(sprintf($message, $path));
+
+                if ('/' === $path) {
+                    NodeHelper::purgeWorkspace($this->getHelper('phpcr')->getSession());
+                } else {
+                    $session->removeItem($path);
+                }
             }
 
             $session->save();
-            $output->writeln("Done purging '$path' and all its children\n");
         } else {
-            $output->writeln("Aborted\n");
+            $output->writeln('<error>Aborted</error>');
         }
 
         return 0;
