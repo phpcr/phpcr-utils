@@ -50,7 +50,7 @@ class PurgeCommand extends Command
             ->setDescription('Remove content from the repository')
             ->addArgument('path', InputArgument::OPTIONAL, 'Path of the node to purge', '/')
             ->addOption('force', null, InputOption::VALUE_NONE, 'Use to bypass the confirmation dialog')
-            ->addOption('children', null, InputOption::VALUE_NONE, 'Use to only purge children of specified path')
+            ->addOption('only-children', null, InputOption::VALUE_NONE, 'Use to only purge children of specified path')
             ->setHelp(<<<EOF
 The <info>phpcr:purge</info> command remove all the non-standard nodes from the content repository
 EOF
@@ -67,7 +67,7 @@ EOF
 
         $path = $input->getArgument('path');
         $force = $input->getOption('force');
-        $onlyChildren = $input->getOption('children');
+        $onlyChildren = $input->getOption('only-children');
 
         if (!$force) {
             $dialog = new DialogHelper();
@@ -75,12 +75,12 @@ EOF
 
             if ($onlyChildren) {
                 $question = 
-                    'Are you sure you want to purge all the children of path "%s" '.
+                    'Are you sure you want to recursively delete the children of path "%s" '.
                     'from workspace "%s"';
             } else {
                 $question = 
-                    'Are you sure you want to purge the path "%s"  and all of its '.
-                    'children from workspace "%s"';
+                    'Are you sure you want to recursively delete the path "%s" '.
+                    'from workspace "%s"';
             }
 
             $force = $dialog->askConfirmation($output, sprintf(
@@ -93,9 +93,6 @@ EOF
 
             if ($onlyChildren) {
                 $baseNode = $session->getNode($path, 0);
-                if (!$baseNode) {
-                    throw new \Exception(sprintf('Could not find node at path "%s"', $path));
-                }
 
                 foreach ($baseNode->getNodes() as $childNode) {
                     $output->writeln(sprintf($message, $childNode->getPath()));
