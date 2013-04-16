@@ -99,18 +99,13 @@ EOF
                     $childNode->remove();
                 }
             } else {
-                $output->writeln(sprintf($message, $path));
-
-                if ('/' === $path) {
-                    NodeHelper::purgeWorkspace($this->getHelper('phpcr')->getSession());
-                } else {
-                    $session->removeItem($path);
-                }
+                $session->removeItem($path);
             }
 
             $session->save();
+            $output->writeln("Done purging '$path' and all its children\n");
         } else {
-            $output->writeln('<error>Aborted</error>');
+            $output->writeln("Aborted\n");
         }
 
         return 0;
