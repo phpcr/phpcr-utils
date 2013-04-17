@@ -4,12 +4,46 @@ namespace PHPCR\Tests\Util\CND\Reader;
 
 use PHPCR\Util\CND\Reader\FileReader;
 
-class FileReaderTest extends \PHPUnit_Framework_TestCase
+class FileReaderUnixTest extends \PHPUnit_Framework_TestCase
 {
+    const PHP_EOL = "\n";
+    const FILEPATH = "../Fixtures/files/UnixTestFile.txt";
+
+    /**
+     * @var string
+     */
+    protected $filepath;
+
+    /**
+     * @var \PHPCR\Util\CND\Reader\FileReader
+     */
+    protected $reader;
+
+    /**
+     * @var array
+     */
+    protected $lines;
+
+    /**
+     * @var string
+     */
+    protected $content;
+
+    /**
+     * @var array
+     */
+    protected $chars;
+
     public function setUp()
     {
-        $this->filename = __DIR__ . '/../Fixtures/files/TestFile.txt';
-        $this->reader = new FileReader($this->filename);
+        $this->filepath = __DIR__ . '/' . self::FILEPATH;
+        $this->reader = new FileReader($this->filepath);
+
+        // swap the EOL marker with the one for the current platform being tested
+        $reflection = new \ReflectionObject($this->reader);
+        $property = $reflection->getProperty('eolMarker');
+        $property->setAccessible(true);
+        $property->setValue($this->reader, self::PHP_EOL); // forcing unix line ending as the file specified is using one
 
         $this->lines = array(
             'This is a test file...',
@@ -18,12 +52,12 @@ class FileReaderTest extends \PHPUnit_Framework_TestCase
             ''
         );
 
-        $this->content = file_get_contents($this->filename);
+        $this->content = file_get_contents($this->filepath);
         $this->chars = array_merge(
             preg_split('//', $this->lines[0], -1, PREG_SPLIT_NO_EMPTY),
-            array("\n", "\n"),
+            array(self::PHP_EOL, self::PHP_EOL),
             preg_split('//', $this->lines[2], -1, PREG_SPLIT_NO_EMPTY),
-            array("\n", "\n")
+            array(self::PHP_EOL, self::PHP_EOL)
         );
     }
 
@@ -35,9 +69,9 @@ class FileReaderTest extends \PHPUnit_Framework_TestCase
         $reader = new FileReader('unexisting_file');
     }
 
-    public function testGetFileName()
+    public function testGetPath()
     {
-        $this->assertEquals($this->filename, $this->reader->getFileName());
+        $this->assertEquals($this->filepath, $this->reader->getPath());
     }
 
     public function testGetNextChar()
@@ -54,7 +88,7 @@ class FileReaderTest extends \PHPUnit_Framework_TestCase
                 break;
             }
 
-            //var_dump('Expected:' . $this->chars[$i] . ', found: ' . $peek);
+//            var_dump('Expected:' . $this->chars[$i] . ', found: ' . $peek);
 
             $this->assertEquals($curLine, $this->reader->getCurrentLine());
             $this->assertEquals($curCol, $this->reader->getCurrentColumn());
@@ -63,7 +97,7 @@ class FileReaderTest extends \PHPUnit_Framework_TestCase
             $this->assertFalse($this->reader->isEof());
 
             // Assert isEol is true at end of the lines
-            if ($peek === "\n") {
+            if ($peek === self::PHP_EOL) {
                 $curLine++;
                 $curCol = 1;
             } else {

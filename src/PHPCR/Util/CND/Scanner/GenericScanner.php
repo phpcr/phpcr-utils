@@ -12,6 +12,7 @@ use PHPCR\Util\CND\Exception\ScannerException;
  * the token generation to your needs.
  *
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
+ * @author Nikola Petkanski <nikola@petkanski.com>
  */
 class GenericScanner extends AbstractScanner
 {
@@ -83,20 +84,30 @@ class GenericScanner extends AbstractScanner
      */
     protected function consumeNewLine(ReaderInterface $reader)
     {
-        if ($reader->currentChar() === PHP_EOL) {
+        $current = '';
+        while (strlen($current) < strlen($reader->getEolMarker())) {
+            $current = $reader->forward();
+        }
 
-            $token = new GenericToken(GenericToken::TK_NEWLINE, PHP_EOL);
+        if ($reader->isEol()) {
+            $token = new GenericToken(GenericToken::TK_NEWLINE, $reader->getEolMarker());
             $this->addToken($reader, $token);
 
-
-            while ($reader->forward() === PHP_EOL) {
+            while ($reader->isEol()) {
                 $reader->consume();
-                $reader->forward();
+
+                $current = '';
+                while (strlen($current) < strlen($reader->getEolMarker())) {
+                    $current = $reader->forward();
+                }
             }
+
             $reader->rewind();
 
             return true;
         }
+
+        $reader->rewind();
 
         return false;
     }
@@ -116,7 +127,7 @@ class GenericScanner extends AbstractScanner
             $char = $reader->forwardChar();
             while ($char !== $curDelimiter) {
 
-                if ($char === PHP_EOL) {
+                if ($reader->isEol()) {
                     throw new ScannerException($reader, "Newline detected in string");
                 }
 
@@ -226,10 +237,8 @@ class GenericScanner extends AbstractScanner
 
                 if ($reader->current() === $delimiter) {
 
-                    // consume to end of line
-                    $char = $reader->currentChar();
-                    while (!$reader->isEof() && $char !== PHP_EOL) {
-                        $char = $reader->forwardChar();
+                    while (!$reader->isEof() && !$reader->isEol()) {
+                        $reader->forward();
                     }
                     $token = new GenericToken(GenericToken::TK_COMMENT, $reader->consume());
                     $this->addToken($reader, $token);

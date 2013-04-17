@@ -4,28 +4,62 @@ namespace PHPCR\Util\CND\Reader;
 
 /**
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
+ * @author Nikola Petkanski <nikola@petkanski.com>
  */
 class BufferReader implements ReaderInterface
 {
+    /**
+     * @var string
+     */
     protected $eofMarker;
 
+    /**
+     * @var string
+     */
+    protected $eolMarker;
+
+    /**
+     * @var string
+     */
     protected $buffer;
 
+    /**
+     * @var int
+     */
     protected $startPos;
 
+    /**
+     * @var int
+     */
     protected $forwardPos;
 
+    /**
+     * @var int
+     */
     protected $curLine;
 
+    /**
+     * @var int
+     */
     protected $curCol;
 
+    /**
+     * @var int
+     */
     protected $nextCurLine;
 
+    /**
+     * @var int
+     */
     protected $nextCurCol;
 
+    /**
+     * @param string $buffer
+     */
     public function __construct($buffer)
     {
         $this->eofMarker = chr(1);
+        $this->eolMarker = PHP_EOL;
         $this->buffer = $buffer . $this->eofMarker;
 
         $this->reset();
@@ -40,9 +74,20 @@ class BufferReader implements ReaderInterface
         $this->nextCurLine = $this->nextCurCol = 1;
     }
 
+    /**
+     * @return string
+     */
     public function getEofMarker()
     {
         return $this->eofMarker;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEolMarker()
+    {
+        return $this->eolMarker;
     }
 
     /**
@@ -75,12 +120,33 @@ class BufferReader implements ReaderInterface
         return substr($this->buffer, $this->forwardPos, 1);
     }
 
+    /**
+     * @return bool
+     */
     public function isEof()
     {
         return $this->currentChar() === $this->getEofMarker()
             || $this->currentChar() === false
             || $this->startPos > strlen($this->buffer)
             || $this->forwardPos > strlen($this->buffer);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEol()
+    {
+        $current = $this->current();
+        $eolMarkerLength = strlen($this->getEolMarker());
+
+        // look ahead as far as the length of the EOL marker
+        $lookAhead = substr($this->buffer, $this->startPos, $this->forwardPos - $this->startPos + ($eolMarkerLength - 1));
+        $marker = $this->getEolMarker();
+
+        $result = preg_match('#'. preg_quote($marker) .'$#', $current) === 1;
+        $result = $result || preg_match('#'. preg_quote($marker) .'$#', $lookAhead) === 1;
+
+        return $result;
     }
 
     /**
@@ -94,7 +160,9 @@ class BufferReader implements ReaderInterface
             $this->nextCurCol++;
         }
 
-        if ($this->current() === PHP_EOL) {
+        if ($this->isEol()) {
+            $eolMarkerLength = strlen($this->getEolMarker());
+            $this->forwardPos += ($eolMarkerLength - 1); // we already incremented with one
             $this->nextCurLine++;
             $this->nextCurCol = 1;
         }

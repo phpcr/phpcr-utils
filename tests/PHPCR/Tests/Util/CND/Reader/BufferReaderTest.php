@@ -6,15 +6,37 @@ use PHPCR\Util\CND\Reader\BufferReader;
 
 class BufferReaderTest extends \PHPUnit_Framework_TestCase
 {
-    public function test__construct()
+    public function testWindowsLineEndings()
     {
-        $buffer = "Some random\nstring";
+        $this->doTestReader("\r\n");
+    }
+
+    public function testUnixLineEndings()
+    {
+        $this->doTestReader("\n");
+    }
+
+    /**
+     * @param string $eolMarker
+     */
+    protected function doTestReader($eolMarker)
+    {
+        $buffer = "Some random{$eolMarker}string";
         $reader = new BufferReader($buffer);
 
         $this->assertInstanceOf('\PHPCR\Util\CND\Reader\BufferReader', $reader);
         $this->assertAttributeEquals($buffer . $reader->getEofMarker(), 'buffer', $reader);
         $this->assertAttributeEquals(0, 'startPos', $reader);
         $this->assertAttributeEquals(0, 'forwardPos', $reader);
+
+        // test whether the current EOL marker is correctly set
+        $this->assertAttributeEquals(PHP_EOL, 'eolMarker', $reader);
+
+        // swap the EOL marker with the one for the current platform being tested
+        $reflection = new \ReflectionObject($reader);
+        $property = $reflection->getProperty('eolMarker');
+        $property->setAccessible(true);
+        $property->setValue($reader, $eolMarker);
 
         $this->assertEquals(1, $reader->getCurrentLine());
         $this->assertEquals(1, $reader->getCurrentColumn());
@@ -55,8 +77,11 @@ class BufferReaderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(12, $reader->getCurrentColumn());
 
-        $this->assertEquals(PHP_EOL, $reader->forward());
-        $this->assertEquals(PHP_EOL, $reader->consume());
+        $this->assertFalse($reader->isEol());
+        $this->assertEquals($eolMarker, $reader->forward());
+        $this->assertTrue($reader->isEol());
+
+        $this->assertEquals($eolMarker, $reader->consume());
 
         $this->assertEquals(2, $reader->getCurrentLine());
         $this->assertEquals(1, $reader->getCurrentColumn());
