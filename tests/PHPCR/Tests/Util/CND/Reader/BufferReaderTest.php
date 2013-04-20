@@ -77,7 +77,7 @@ class BufferReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('string', $reader->forward());
         $this->assertEquals('string', $reader->consume());
 
-        $this->assertEquals(2, $reader->getCurrentLine());
+        $this->assertEquals(3, $reader->getCurrentLine());
         $this->assertEquals(7, $reader->getCurrentColumn());
 
         $this->assertEquals($reader->getEofMarker(), $reader->forward());
