@@ -12,7 +12,7 @@ class BufferReaderTest extends \PHPUnit_Framework_TestCase
         $reader = new BufferReader($buffer);
 
         $this->assertInstanceOf('\PHPCR\Util\CND\Reader\BufferReader', $reader);
-        $this->assertAttributeEquals($buffer . $reader->getEofMarker(), 'buffer', $reader);
+        $this->assertAttributeEquals(str_replace("\r\n", "\n", $buffer) . $reader->getEofMarker(), 'buffer', $reader);
         $this->assertAttributeEquals(0, 'startPos', $reader);
         $this->assertAttributeEquals(0, 'forwardPos', $reader);
 
