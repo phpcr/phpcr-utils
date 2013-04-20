@@ -4,46 +4,12 @@ namespace PHPCR\Tests\Util\CND\Reader;
 
 use PHPCR\Util\CND\Reader\FileReader;
 
-class FileReaderUnixTest extends \PHPUnit_Framework_TestCase
+class FileReaderTest extends \PHPUnit_Framework_TestCase
 {
-    const PHP_EOL = "\n";
-    const FILEPATH = "../Fixtures/files/UnixTestFile.txt";
-
-    /**
-     * @var string
-     */
-    protected $filepath;
-
-    /**
-     * @var \PHPCR\Util\CND\Reader\FileReader
-     */
-    protected $reader;
-
-    /**
-     * @var array
-     */
-    protected $lines;
-
-    /**
-     * @var string
-     */
-    protected $content;
-
-    /**
-     * @var array
-     */
-    protected $chars;
-
     public function setUp()
     {
-        $this->filepath = __DIR__ . '/' . self::FILEPATH;
+        $this->filepath = __DIR__ . '/../Fixtures/files/TestFile.txt';
         $this->reader = new FileReader($this->filepath);
-
-        // swap the EOL marker with the one for the current platform being tested
-        $reflection = new \ReflectionObject($this->reader);
-        $property = $reflection->getProperty('eolMarker');
-        $property->setAccessible(true);
-        $property->setValue($this->reader, self::PHP_EOL); // forcing unix line ending as the file specified is using one
 
         $this->lines = array(
             'This is a test file...',
@@ -52,12 +18,11 @@ class FileReaderUnixTest extends \PHPUnit_Framework_TestCase
             ''
         );
 
-        $this->content = file_get_contents($this->filepath);
         $this->chars = array_merge(
             preg_split('//', $this->lines[0], -1, PREG_SPLIT_NO_EMPTY),
-            array(self::PHP_EOL, self::PHP_EOL),
+            array("\n", "\n"),
             preg_split('//', $this->lines[2], -1, PREG_SPLIT_NO_EMPTY),
-            array(self::PHP_EOL, self::PHP_EOL)
+            array("\n", "\n")
         );
     }
 
@@ -88,8 +53,6 @@ class FileReaderUnixTest extends \PHPUnit_Framework_TestCase
                 break;
             }
 
-//            var_dump('Expected:' . $this->chars[$i] . ', found: ' . $peek);
-
             $this->assertEquals($curLine, $this->reader->getCurrentLine());
             $this->assertEquals($curCol, $this->reader->getCurrentColumn());
 
@@ -97,7 +60,7 @@ class FileReaderUnixTest extends \PHPUnit_Framework_TestCase
             $this->assertFalse($this->reader->isEof());
 
             // Assert isEol is true at end of the lines
-            if ($peek === self::PHP_EOL) {
+            if ($peek === "\n") {
                 $curLine++;
                 $curCol = 1;
             } else {

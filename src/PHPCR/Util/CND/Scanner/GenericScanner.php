@@ -84,30 +84,20 @@ class GenericScanner extends AbstractScanner
      */
     protected function consumeNewLine(ReaderInterface $reader)
     {
-        $current = '';
-        while (strlen($current) < strlen($reader->getEolMarker())) {
-            $current = $reader->forward();
-        }
+        if ($reader->currentChar() === "\n") {
 
-        if ($reader->isEol()) {
-            $token = new GenericToken(GenericToken::TK_NEWLINE, $reader->getEolMarker());
+            $token = new GenericToken(GenericToken::TK_NEWLINE, "\n");
             $this->addToken($reader, $token);
 
-            while ($reader->isEol()) {
+
+            while ($reader->forward() === "\n") {
                 $reader->consume();
-
-                $current = '';
-                while (strlen($current) < strlen($reader->getEolMarker())) {
-                    $current = $reader->forward();
-                }
+                $reader->forward();
             }
-
             $reader->rewind();
 
             return true;
         }
-
-        $reader->rewind();
 
         return false;
     }
@@ -127,7 +117,7 @@ class GenericScanner extends AbstractScanner
             $char = $reader->forwardChar();
             while ($char !== $curDelimiter) {
 
-                if ($reader->isEol()) {
+                if ($char === "\n") {
                     throw new ScannerException($reader, "Newline detected in string");
                 }
 
@@ -237,8 +227,10 @@ class GenericScanner extends AbstractScanner
 
                 if ($reader->current() === $delimiter) {
 
-                    while (!$reader->isEof() && !$reader->isEol()) {
-                        $reader->forward();
+                    // consume to end of line
+                    $char = $reader->currentChar();
+                    while (!$reader->isEof() && $char !== "\n") {
+                        $char = $reader->forwardChar();
                     }
                     $token = new GenericToken(GenericToken::TK_COMMENT, $reader->consume());
                     $this->addToken($reader, $token);

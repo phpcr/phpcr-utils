@@ -16,11 +16,6 @@ class BufferReader implements ReaderInterface
     /**
      * @var string
      */
-    protected $eolMarker;
-
-    /**
-     * @var string
-     */
     protected $buffer;
 
     /**
@@ -59,8 +54,7 @@ class BufferReader implements ReaderInterface
     public function __construct($buffer)
     {
         $this->eofMarker = chr(1);
-        $this->eolMarker = PHP_EOL;
-        $this->buffer = $buffer . $this->eofMarker;
+        $this->buffer = str_replace("\r\n", "\n", $buffer) . $this->eofMarker;
 
         $this->reset();
     }
@@ -83,17 +77,9 @@ class BufferReader implements ReaderInterface
     }
 
     /**
-     * @return string
-     */
-    public function getEolMarker()
-    {
-        return $this->eolMarker;
-    }
-
-    /**
      * @return int
      */
-    function getCurrentLine()
+    public function getCurrentLine()
     {
         return $this->curLine;
     }
@@ -101,7 +87,7 @@ class BufferReader implements ReaderInterface
     /**
      * @return int
      */
-    function getCurrentColumn()
+    public function getCurrentColumn()
     {
         return $this->curCol;
     }
@@ -132,24 +118,6 @@ class BufferReader implements ReaderInterface
     }
 
     /**
-     * @return bool
-     */
-    public function isEol()
-    {
-        $current = $this->current();
-        $eolMarkerLength = strlen($this->getEolMarker());
-
-        // look ahead as far as the length of the EOL marker
-        $lookAhead = substr($this->buffer, $this->startPos, $this->forwardPos - $this->startPos + ($eolMarkerLength - 1));
-        $marker = $this->getEolMarker();
-
-        $result = preg_match('#'. preg_quote($marker) .'$#', $current) === 1;
-        $result = $result || preg_match('#'. preg_quote($marker) .'$#', $lookAhead) === 1;
-
-        return $result;
-    }
-
-    /**
      * Advance the forward position and return the literal delimited by start and end position
      * @return string
      */
@@ -160,9 +128,7 @@ class BufferReader implements ReaderInterface
             $this->nextCurCol++;
         }
 
-        if ($this->isEol()) {
-            $eolMarkerLength = strlen($this->getEolMarker());
-            $this->forwardPos += ($eolMarkerLength - 1); // we already incremented with one
+        if ($this->current() === "\n") {
             $this->nextCurLine++;
             $this->nextCurCol = 1;
         }

@@ -13,11 +13,6 @@ interface ReaderInterface
     public function getEofMarker();
 
     /**
-     * @return string
-     */
-    public function getEolMarker();
-
-    /**
      * @return string with just one character
      */
     public function currentChar();
@@ -26,11 +21,6 @@ interface ReaderInterface
      * @return bool
      */
     public function isEof();
-
-    /**
-     * @return bool
-     */
-    public function isEol();
 
     /**
      * @return int
