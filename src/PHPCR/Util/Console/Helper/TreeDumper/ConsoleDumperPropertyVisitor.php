@@ -56,13 +56,13 @@ class ConsoleDumperPropertyVisitor extends ConsoleDumperItemVisitor
     {
         $options = array_merge(array(
             'max_line_length' => 120,
-            'expand_references' => false,
+            'ref_format' => 'uuid',
         ), $options);
 
         parent::__construct($output);
 
         $this->maxLineLength = $options['max_line_length'];
-        $this->expandReferences = $options['expand_references'];
+        $this->refFormat = $options['ref_format'];
     }
 
     /**
@@ -88,26 +88,43 @@ class ConsoleDumperPropertyVisitor extends ConsoleDumperItemVisitor
 
         $referrers = array();
 
-        if (true === $this->expandReferences) {
-            if (in_array($item->getType(), array(
-                PropertyType::WEAKREFERENCE, 
-                PropertyType::REFERENCE
-            ))) {
-                $referrers = $item->getValue();
+        if (in_array($item->getType(), array(
+            PropertyType::WEAKREFERENCE, 
+            PropertyType::REFERENCE
+        ))) {
+            $referrerStrings = array();
+
+            $referrers = $item->getValue();
+            if ('path' == $this->refFormat) {
                 if (!is_array($referrers)) {
                     $referrers = array($referrers);
                 }
-                $value = '';
-            }
-        }
 
+                foreach ($referrers as $referrer) {
+                    $referrerStrings[] = $referrer->getPath();
+                }
+
+            } else {
+                $referrerStrings = array_keys($referrers);
+            }
+
+            $value = '';
+        }
 
         $value = str_replace(array("\n", "\t"), '', $value);
 
         $this->output->writeln(str_repeat('  ', $this->level + 1) . '- <info>' . $item->getName() . '</info> = ' . $value);
 
-        foreach ($referrers as $referrer) {
-            $this->output->writeln(str_repeat('  ', $this->level + 1). '   - <info>ref</info>: '.$referrer->getPath().'');
+        if (isset($referrerStrings)) {
+            foreach ($referrerStrings as $referrerString) {
+                $this->output->writeln(sprintf(
+                    '%s - <info>%s</info>: %s',
+                    str_repeat('  ', $this->level + 1),
+                    $this->refFormat,
+                    $referrerString
+                ));
+            }
         }
-    }
+        }
+
 }

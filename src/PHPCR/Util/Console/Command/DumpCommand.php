@@ -61,7 +61,7 @@ class DumpCommand extends Command
             ->addOption('props', null, InputOption::VALUE_NONE, 'Use to dump the node properties')
             ->addOption('depth', null, InputOption::VALUE_OPTIONAL, 'Set to a number to limit how deep into the tree to recurse', "-1")
             ->addOption('identifiers', null, InputOption::VALUE_NONE, 'Use to also output node UUID')
-            ->addOption('expand-references', null, InputOption::VALUE_NONE, 'Use to also output node references')
+            ->addOption('ref-format', 'uuid', InputOption::VALUE_REQUIRED, 'Set the way references should be displayed when dumping reference properties - either "uuid" (default) or "path"')
             ->addArgument('identifier', InputArgument::OPTIONAL, 'Path of the node to dump', '/')
             ->setDescription('Dump the content repository')
             ->setHelp(<<<EOF
@@ -70,9 +70,9 @@ by the <info>identifier</info> argument and its subnodes in a yaml-like style.
 
 If the <info>props</info> option is used the nodes properties are
 displayed as yaml arrays.
+
 By default the command filters out system nodes and properties (i.e. nodes and
 properties with names starting with 'jcr:'), the <info>sys_nodes</info> option
-allows to turn this filter off.
 allows to turn this filter off.
 EOF
             )
@@ -104,10 +104,17 @@ EOF
         $nodeVisitor = new ConsoleDumperNodeVisitor($output, $identifiers);
 
         $propVisitor = null;
+        $refFormat = $input->getOption('ref-format');
+
+        if (null !== $refFormat && !in_array($refFormat, array('uuid', 'path'))) {
+            throw new \Exception('The ref-format option must be set to either "path" or "uuid"');
+        }
+
         if ($input->hasParameterOption('--props')) {
-            $options = array(
-                'expand_references' => $input->hasParameterOption('--expand-references')
-            );
+            $options = array();
+            if ($refFormat) {
+                $options['ref_format'] = $refFormat;
+            }
             $propVisitor = new ConsoleDumperPropertyVisitor($output, $options);
         }
 
