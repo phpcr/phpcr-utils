@@ -96,20 +96,13 @@ class ConsoleDumperPropertyVisitor extends ConsoleDumperItemVisitor
 
 
             if ('path' == $this->refFormat) {
-                $references = $item->getValue();
-                if (!is_array($references)) {
-                    $references = array($references);
-                }
+                $references = (array) $item->getValue();
 
                 foreach ($references as $reference) {
                     $referenceStrings[] = $reference->getPath();
                 }
-
             } else {
-                $referenceStrings = $item->getString();
-                if (!is_array($referenceStrings)) {
-                    $referenceStrings = array($referenceStrings);
-                }
+                $referenceStrings = (array) $item->getString();
             }
 
             $value = '';
