@@ -92,20 +92,24 @@ class ConsoleDumperPropertyVisitor extends ConsoleDumperItemVisitor
             PropertyType::WEAKREFERENCE, 
             PropertyType::REFERENCE
         ))) {
-            $referrerStrings = array();
+            $referenceStrings = array();
 
-            $referrers = $item->getValue();
+
             if ('path' == $this->refFormat) {
-                if (!is_array($referrers)) {
-                    $referrers = array($referrers);
+                $references = $item->getValue();
+                if (!is_array($references)) {
+                    $references = array($references);
                 }
 
-                foreach ($referrers as $referrer) {
-                    $referrerStrings[] = $referrer->getPath();
+                foreach ($references as $reference) {
+                    $referenceStrings[] = $reference->getPath();
                 }
 
             } else {
-                $referrerStrings = array_keys($referrers);
+                $referenceStrings = $item->getString();
+                if (!is_array($referenceStrings)) {
+                    $referenceStrings = array($referenceStrings);
+                }
             }
 
             $value = '';
@@ -115,16 +119,16 @@ class ConsoleDumperPropertyVisitor extends ConsoleDumperItemVisitor
 
         $this->output->writeln(str_repeat('  ', $this->level + 1) . '- <info>' . $item->getName() . '</info> = ' . $value);
 
-        if (isset($referrerStrings)) {
-            foreach ($referrerStrings as $referrerString) {
+        if (isset($referenceStrings)) {
+            foreach ($referenceStrings as $referenceString) {
                 $this->output->writeln(sprintf(
                     '%s - <info>%s</info>: %s',
                     str_repeat('  ', $this->level + 1),
                     $this->refFormat,
-                    $referrerString
+                    $referenceString
                 ));
             }
         }
-        }
+    }
 
 }
