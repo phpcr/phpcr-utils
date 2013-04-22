@@ -25,6 +25,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 use PHPCR\ItemInterface;
 use PHPCR\PropertyInterface;
+use PHPCR\PropertyType;
 
 /**
  * TODO: this should base on the TraversingItemVisitor
@@ -38,7 +39,12 @@ class ConsoleDumperPropertyVisitor extends ConsoleDumperItemVisitor
      *
      * @var int
      */
-    protected $maxLineLength = 120;
+    protected $maxLineLength;
+
+    /**
+     * Show the full path for each reference
+     */
+    protected $expandReferences;
 
     /**
      * Instantiate property visitor
@@ -46,13 +52,17 @@ class ConsoleDumperPropertyVisitor extends ConsoleDumperItemVisitor
      * @param OutputInterface $output
      * @param int             $maxLineLength
      */
-    public function __construct(OutputInterface $output, $maxLineLength = null)
+    public function __construct(OutputInterface $output, $options = array())
     {
+        $options = array_merge(array(
+            'max_line_length' => 120,
+            'ref_format' => 'uuid',
+        ), $options);
+
         parent::__construct($output);
 
-        if (null !== $maxLineLength) {
-            $this->maxLineLength = $maxLineLength;
-        }
+        $this->maxLineLength = $options['max_line_length'];
+        $this->refFormat = $options['ref_format'];
     }
 
     /**
@@ -76,8 +86,42 @@ class ConsoleDumperPropertyVisitor extends ConsoleDumperItemVisitor
             $value = substr($value, 0, $this->maxLineLength) . '...';
         }
 
+        $referrers = array();
+
+        if (in_array($item->getType(), array(
+            PropertyType::WEAKREFERENCE, 
+            PropertyType::REFERENCE
+        ))) {
+            $referenceStrings = array();
+
+
+            if ('path' == $this->refFormat) {
+                $references = (array) $item->getValue();
+
+                foreach ($references as $reference) {
+                    $referenceStrings[] = $reference->getPath();
+                }
+            } else {
+                $referenceStrings = (array) $item->getString();
+            }
+
+            $value = '';
+        }
+
         $value = str_replace(array("\n", "\t"), '', $value);
 
         $this->output->writeln(str_repeat('  ', $this->level + 1) . '- <info>' . $item->getName() . '</info> = ' . $value);
+
+        if (isset($referenceStrings)) {
+            foreach ($referenceStrings as $referenceString) {
+                $this->output->writeln(sprintf(
+                    '%s - <info>%s</info>: %s',
+                    str_repeat('  ', $this->level + 1),
+                    $this->refFormat,
+                    $referenceString
+                ));
+            }
+        }
     }
+
 }
