@@ -236,4 +236,11 @@ class PathHelperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('', PathHelper::getNodeName('/'));
     }
 
+    public function testGetPathDepth()
+    {
+        $this->assertEquals(0, PathHelper::getPathDepth('/'));
+        $this->assertEquals(1, PathHelper::getPathDepth('/foo'));
+        $this->assertEquals(2, PathHelper::getPathDepth('/foo/bar'));
+        $this->assertEquals(2, PathHelper::getPathDepth('/foo/bar/'));
+    }
 }
