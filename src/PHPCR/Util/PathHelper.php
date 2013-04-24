@@ -254,4 +254,16 @@ class PathHelper
     {
         return substr($path, strrpos($path, '/') + 1);
     }
+
+    /**
+     * Get the depth of the path, ignore trailing slashes, root starts counting at 0
+     *
+     * @param string $path a valid absolute path, like /content/jobs/data
+     *
+     * @return integer with the path depth
+     */
+    public static function getPathDepth($path)
+    {
+        return substr_count(rtrim($path, '/'), '/');
+    }
 }
