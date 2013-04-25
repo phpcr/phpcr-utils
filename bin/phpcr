@@ -46,6 +46,7 @@ $cli->addCommands(array(
     new \PHPCR\Util\Console\Command\PurgeCommand(),
     new \PHPCR\Util\Console\Command\RegisterNodeTypesCommand(),
     new \PHPCR\Util\Console\Command\QueryCommand(),
+    new \PHPCR\Util\Console\Command\MoveCommand(),
 ));
 $cli->run();
 
