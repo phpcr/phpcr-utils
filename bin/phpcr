@@ -48,6 +48,7 @@ $cli->addCommands(array(
     new \PHPCR\Util\Console\Command\ListNodeTypesCommand(),
     new \PHPCR\Util\Console\Command\QueryCommand(),
     new \PHPCR\Util\Console\Command\MoveCommand(),
+    new \PHPCR\Util\Console\Command\TouchCommand(),
 ));
 $cli->run();
 
