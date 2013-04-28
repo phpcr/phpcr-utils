@@ -67,6 +67,14 @@ class TouchCommand extends Command
                 InputOption::VALUE_NONE, 
                 'Dump a string reperesentation of the created / modified node.'
             )
+            ->addOption('add-mixin', null,
+                InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
+                'Add a mixin to the node'
+            )
+            ->addOption('remove-mixin', null,
+                InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
+                'Add a mixin to the node'
+            )
             ->setDescription('Create or modify a node')
             ->setHelp(<<<HERE
 This command allows you to create or modify a node at the specified path.
@@ -98,6 +106,8 @@ HERE
         $sets = $input->getOption('set');
         $unsets = $input->getOption('unset');
         $dump = $input->getOption('dump');
+        $addMixins = $input->getOption('add-mixin');
+        $removeMixins = $input->getOption('remove-mixin');
 
         try {
             $node = $session->getNode($path);
@@ -156,6 +166,14 @@ HERE
                 $unset
             ));
             $node->setProperty($unset, null);
+        }
+
+        foreach ($addMixins as $addMixin) {
+            $node->addMixin($addMixin);
+        }
+
+        foreach ($removeMixins as $removeMixin) {
+            $node->removeMixin($removeMixin);
         }
 
         if ($dump) {
