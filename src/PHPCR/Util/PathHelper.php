@@ -140,8 +140,12 @@ class PathHelper
      */
     public static function normalizePath($path, $destination = false, $throw = true)
     {
-        if (! is_string($path) || strlen($path) === 0) {
+        if (!is_string($path)) {
             throw new RepositoryException('Expected string but got ' . gettype($path));
+        }
+
+        if (strlen($path) === 0) {
+            throw new RepositoryException('Path must not be of zero length');
         }
 
         if ('/' === $path) {
