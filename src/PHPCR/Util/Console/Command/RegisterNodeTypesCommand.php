@@ -47,7 +47,7 @@ class RegisterNodeTypesCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('phpcr:register-node-types')
+            ->setName('phpcr:type:register')
             ->setDescription('Register node types in the PHPCR repository')
             ->setDefinition(array(
                 new InputArgument(
