@@ -59,7 +59,7 @@ class TouchCommand extends Command
                 InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 
                 'Set node property, use foo=bar'
             )
-            ->addOption('remove-prop', 'd', 
+            ->addOption('remove-prop', 'r', 
                 InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 
                 'Remove node property'
             )
