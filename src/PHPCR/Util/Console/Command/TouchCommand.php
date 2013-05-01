@@ -55,11 +55,11 @@ class TouchCommand extends Command
                 'Node type, default nt:unstructured', 
                 'nt:unstructured'
             )
-            ->addOption('set', 's', 
+            ->addOption('set-prop', 'p', 
                 InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 
                 'Set node property, use foo=bar'
             )
-            ->addOption('unset', 'r', 
+            ->addOption('remove-prop', 'd', 
                 InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 
                 'Remove node property'
             )
