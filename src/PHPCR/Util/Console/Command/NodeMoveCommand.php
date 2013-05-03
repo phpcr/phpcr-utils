@@ -22,15 +22,16 @@
 namespace PHPCR\Util\Console\Command;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * A command to list all workspaces visible through the current session
+ * Command to move a node from one path to another
  *
- * @author Lukas Kahwe Smith <smith@pooteeweet.org>
+ * @author Daniel Leech <daniel@dantleech.com>
  */
-class ListWorkspacesCommand extends Command
+class NodeMoveCommand extends Command
 {
     /**
      * {@inheritDoc}
@@ -38,11 +39,19 @@ class ListWorkspacesCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('phpcr:workspace:list')
-            ->setDescription('List all available workspaces in the configured repository')
-            ->setHelp(<<<EOT
-The <info>workspace:list</info> command lists all avaialable workspaces.
-EOT
+            ->setName('phpcr:node:move')
+            ->addArgument('source', InputArgument::REQUIRED, 'Path of node to move')
+            ->addArgument('destination', InputArgument::REQUIRED, 'Destination for node')
+            ->setDescription('Moves a node from one path to another')
+            ->setHelp(<<<EOF
+This command simply moves a node from one path (the source path) 
+to another (the destination path), it can also be considered
+as a rename command.
+
+    $ php bin/phpcr phpcr:move /foobar /barfoo
+
+Note that the parent node of the destination path must already exist.
+EOF
             )
         ;
     }
@@ -54,13 +63,16 @@ EOT
     {
         $session = $this->getHelper('phpcr')->getSession();
 
-        $workspaces = $session->getWorkspace()->getAccessibleWorkspaceNames();
+        $sourcePath = $input->getArgument('source');
+        $destPath = $input->getArgument('destination');
 
-        $output->writeln("The following ".count($workspaces)." workspaces are available:");
-        foreach ($workspaces as $workspace) {
-            $output->writeln($workspace);
-        }
+        $output->writeln(sprintf(
+            '<info>Moving </info>%s<info> to </info>%s',
+            $sourcePath, $destPath
+        ));
 
-        return 0;
+        $session->move($sourcePath, $destPath);
+        $session->save();
     }
+
 }

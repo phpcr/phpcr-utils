@@ -39,7 +39,7 @@ use PHPCR\NodeType\NodeTypeExistsException;
  *
  * @author Uwe Jäger <uwej711@googlemail.com>
  */
-class RegisterNodeTypesCommand extends Command
+class NodeTypeRegisterCommand extends Command
 {
     /**
      * {@inheritDoc}
@@ -47,7 +47,7 @@ class RegisterNodeTypesCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('phpcr:type:register')
+            ->setName('phpcr:node-type:register')
             ->setDescription('Register node types in the PHPCR repository')
             ->setDefinition(array(
                 new InputArgument(

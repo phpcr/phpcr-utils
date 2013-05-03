@@ -22,17 +22,15 @@
 namespace PHPCR\Util\Console\Command;
 
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * A command to create a workspace in the PHPCR repository
+ * A command to list all node types
  *
- * @author Lukas Kahwe Smith <smith@pooteeweet.org>
- * @author David Buchmann <david@liip.ch>
+ * @author Daniel Leech <daniel@dantleech.com>
  */
-class CreateWorkspaceCommand extends Command
+class NodeTypeListCommand extends Command
 {
     /**
      * {@inheritDoc}
@@ -40,13 +38,11 @@ class CreateWorkspaceCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('phpcr:workspace:create')
-            ->addArgument('name', InputArgument::REQUIRED, 'Name of the workspace to create')
-            ->setDescription('Create a workspace in the configured repository')
+            ->setName('phpcr:node-type:list')
+            ->setDescription('List all available node types in the repository')
             ->setHelp(<<<EOT
-The <info>workspace:create</info> command creates a workspace with the specified name.
-It will fail if a workspace with that name already exists or if the repository implementation
-does not support this operation.
+This command lists all of the available node types and their subtypes
+in the PHPCR repository.
 EOT
             )
         ;
@@ -58,20 +54,21 @@ EOT
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $session = $this->getHelper('phpcr')->getSession();
+        $ntm = $session->getWorkspace()->getNodeTypeManager();
 
-        $name = $input->getArgument('name');
+        $nodeTypes = $ntm->getAllNodeTypes();
 
-        $workspace = $session->getWorkspace();
+        foreach ($nodeTypes as $name => $nodeType) {
+            $output->writeln('<info>'.$name.'</info>');
 
-        if (! $session->getRepository()->getDescriptor(\PHPCR\RepositoryInterface::OPTION_WORKSPACE_MANAGEMENT_SUPPORTED)) {
-            $output->writeln('<error>Your PHPCR implementation does not support workspace management. Please refer to the documentation of your PHPCR implementation to learn how to create a workspace.</error>');
-
-            return 1;
+            $superTypes = $nodeType->getSupertypeNames();
+            if (count($superTypes)) {
+                $output->writeln('  <comment>Supertypes:</comment>');
+                foreach ($superTypes as $stName) {
+                    $output->writeln('    <comment>></comment> '.$stName);
+                }
+            }
         }
-
-        $workspace->createWorkspace($name);
-
-        $output->writeln("Created workspace '$name'.");
 
         return 0;
     }

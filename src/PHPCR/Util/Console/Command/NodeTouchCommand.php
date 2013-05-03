@@ -34,7 +34,7 @@ use PHPCR\PathNotFoundException;
  *
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class TouchCommand extends Command
+class NodeTouchCommand extends Command
 {
     /**
      * {@inheritDoc}
@@ -43,7 +43,7 @@ class TouchCommand extends Command
     {
         parent::configure();
 
-        $this->setName('phpcr:touch')
+        $this->setName('phpcr:node:touch')
             ->addArgument(
                 'path', 
                 InputArgument::REQUIRED, 
