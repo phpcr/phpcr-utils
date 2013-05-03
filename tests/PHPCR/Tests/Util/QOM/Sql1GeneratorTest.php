@@ -3,6 +3,7 @@
 namespace PHPCR\Tests\Util\QOM;
 
 use PHPCR\Util\QOM\Sql1Generator;
+use PHPCR\Util\ValueConverter;
 
 class Sql1GeneratorTest extends \PHPUnit_Framework_TestCase
 {
@@ -10,7 +11,7 @@ class Sql1GeneratorTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->generator = new Sql1Generator();
+        $this->generator = new Sql1Generator(new ValueConverter());
     }
 
     public function testLiteral()

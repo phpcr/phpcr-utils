@@ -32,6 +32,16 @@ use PHPCR\Util\ValueConverter;
 abstract class BaseSqlGenerator
 {
     /**
+     * @var ValueConverter
+     */
+    protected $valueConverter;
+
+    public function __construct(ValueConverter $valueConverter)
+    {
+        $this->valueConverter = $valueConverter;
+    }
+
+    /**
      * Query ::= 'SELECT' columns
      *     'FROM' Source
      *     ['WHERE' Constraint]
@@ -229,13 +239,10 @@ abstract class BaseSqlGenerator
      *
      * @return string
      */
-    public function evalLiteral($literal, ValueConverter $valueConverter = null)
+    public function evalLiteral($literal)
     {
-        if (! $valueConverter) {
-            $valueConverter = new ValueConverter;
-        }
         if ($literal instanceof \DateTime) {
-            $string = $valueConverter->convertType($literal, PropertyType::STRING);
+            $string = $this->valueConverter->convertType($literal, PropertyType::STRING);
 
             return $this->evalCastLiteral($string, 'DATE');
         }
@@ -245,12 +252,12 @@ abstract class BaseSqlGenerator
             return $this->evalCastLiteral($string, 'BOOLEAN');
         }
         if (is_int($literal)) {
-            $string = $valueConverter->convertType($literal, PropertyType::STRING);
+            $string = $this->valueConverter->convertType($literal, PropertyType::STRING);
 
             return $this->evalCastLiteral($string, 'LONG');
         }
         if (is_float($literal)) {
-            $string = $valueConverter->convertType($literal, PropertyType::STRING);
+            $string = $this->valueConverter->convertType($literal, PropertyType::STRING);
 
             return $this->evalCastLiteral($string, 'DOUBLE');
         }

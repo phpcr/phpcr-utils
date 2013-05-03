@@ -1,5 +1,5 @@
 <?php
-namespace PHPCR\Tests;
+namespace PHPCR\Tests\Util;
 
 use PHPCR\PropertyType;
 use PHPCR\Util\ValueConverter;
@@ -7,7 +7,7 @@ use PHPCR\Util\ValueConverter;
 /**
  * a test for the PHPCR\PropertyType class
  */
-class PropertyTypesTest extends \PHPUnit_Framework_TestCase
+class ValueConverterTest extends \PHPUnit_Framework_TestCase
 {
     /** @var  ValueConverter */
     private $valueConverter;
@@ -42,7 +42,7 @@ class PropertyTypesTest extends \PHPUnit_Framework_TestCase
         $datetimeLong = new \DateTime();
         $datetimeLong->setTimestamp(123);
 
-        $nodemock = $this->getMock('PHPCR\\Tests\\NodeMock');
+        $nodemock = $this->getMock('PHPCR\\Tests\\Util\\NodeMock');
         $nodemock
             ->expects($this->any())
             ->method('getIdentifier')
@@ -383,7 +383,7 @@ class PropertyTypesTest extends \PHPUnit_Framework_TestCase
      */
     public function testConvertNewNode()
     {
-        $nodemock = $this->getMock('PHPCR\\Tests\\NodeMock');
+        $nodemock = $this->getMock('PHPCR\\Tests\\Util\\NodeMock');
         $nodemock
             ->expects($this->once())
             ->method('isNew')
@@ -396,7 +396,7 @@ class PropertyTypesTest extends \PHPUnit_Framework_TestCase
      */
     public function testConvertNonrefNode()
     {
-        $nodemock = $this->getMock('PHPCR\\Tests\\NodeMock');
+        $nodemock = $this->getMock('PHPCR\\Tests\\Util\\NodeMock');
         $nodemock
             ->expects($this->once())
             ->method('isNew')
