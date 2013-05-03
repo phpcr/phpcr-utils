@@ -24,12 +24,23 @@ namespace PHPCR\Util\QOM;
 use PHPCR\Query\QOM;
 use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants;
 use PHPCR\PropertyType;
+use PHPCR\Util\ValueConverter;
 
 /**
  * Common base class for SQL(1) and SQL2 generators
  */
 abstract class BaseSqlGenerator
 {
+    /**
+     * @var ValueConverter
+     */
+    protected $valueConverter;
+
+    public function __construct(ValueConverter $valueConverter)
+    {
+        $this->valueConverter = $valueConverter;
+    }
+
     /**
      * Query ::= 'SELECT' columns
      *     'FROM' Source
@@ -231,7 +242,7 @@ abstract class BaseSqlGenerator
     public function evalLiteral($literal)
     {
         if ($literal instanceof \DateTime) {
-            $string = PropertyType::convertType($literal, PropertyType::STRING);
+            $string = $this->valueConverter->convertType($literal, PropertyType::STRING);
 
             return $this->evalCastLiteral($string, 'DATE');
         }
@@ -241,12 +252,12 @@ abstract class BaseSqlGenerator
             return $this->evalCastLiteral($string, 'BOOLEAN');
         }
         if (is_int($literal)) {
-            $string = PropertyType::convertType($literal, PropertyType::STRING);
+            $string = $this->valueConverter->convertType($literal, PropertyType::STRING);
 
             return $this->evalCastLiteral($string, 'LONG');
         }
         if (is_float($literal)) {
-            $string = PropertyType::convertType($literal, PropertyType::STRING);
+            $string = $this->valueConverter->convertType($literal, PropertyType::STRING);
 
             return $this->evalCastLiteral($string, 'DOUBLE');
         }
