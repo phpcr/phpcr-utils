@@ -34,7 +34,7 @@ use PHPCR\ImportUUIDBehaviorInterface;
  *
  * @author David Buchmann <david@liip.ch>
  */
-class ImportXmlCommand extends Command
+class WorkspaceImportCommand extends Command
 {
     /**
      * {@inheritDoc}
@@ -44,7 +44,7 @@ class ImportXmlCommand extends Command
         parent::configure();
 
         $this
-            ->setName('phpcr:import')
+            ->setName('phpcr:workspace:import')
             ->addArgument('filename', null, 'The xml file to import')
             ->addOption('parentpath', 'p', InputOption::VALUE_OPTIONAL, 'Repository path to the parent where to import the file contents', '/')
             ->setDescription('Import xml data into the repository, either in JCR system view format or arbitrary xml')

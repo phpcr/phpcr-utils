@@ -30,7 +30,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  */
-class ListWorkspacesCommand extends Command
+class WorkspaceListCommand extends Command
 {
     /**
      * {@inheritDoc}

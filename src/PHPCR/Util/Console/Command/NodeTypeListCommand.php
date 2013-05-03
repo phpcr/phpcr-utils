@@ -30,7 +30,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class ListNodeTypesCommand extends Command
+class NodeTypeListCommand extends Command
 {
     /**
      * {@inheritDoc}
@@ -38,7 +38,7 @@ class ListNodeTypesCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('phpcr:type:list')
+            ->setName('phpcr:node-type:list')
             ->setDescription('List all available node types in the repository')
             ->setHelp(<<<EOT
 This command lists all of the available node types and their subtypes

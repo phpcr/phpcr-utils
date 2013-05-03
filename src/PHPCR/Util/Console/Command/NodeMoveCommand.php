@@ -31,7 +31,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class MoveCommand extends Command
+class NodeMoveCommand extends Command
 {
     /**
      * {@inheritDoc}
@@ -39,7 +39,7 @@ class MoveCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('phpcr:move')
+            ->setName('phpcr:node:move')
             ->addArgument('source', InputArgument::REQUIRED, 'Path of node to move')
             ->addArgument('destination', InputArgument::REQUIRED, 'Destination for node')
             ->setDescription('Moves a node from one path to another')

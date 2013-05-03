@@ -36,7 +36,7 @@ use PHPCR\Util\NodeHelper;
  *
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  */
-class PurgeCommand extends Command
+class NodeRemoveCommand extends Command
 {
     /**
      * {@inheritDoc}
@@ -46,13 +46,22 @@ class PurgeCommand extends Command
         parent::configure();
 
         $this
-            ->setName('phpcr:purge')
+            ->setName('phpcr:node:remove')
             ->setDescription('Remove content from the repository')
             ->addArgument('path', InputArgument::OPTIONAL, 'Path of the node to purge', '/')
             ->addOption('force', null, InputOption::VALUE_NONE, 'Use to bypass the confirmation dialog')
             ->addOption('only-children', null, InputOption::VALUE_NONE, 'Use to only purge children of specified path')
             ->setHelp(<<<EOF
-The <info>phpcr:purge</info> command remove all the non-standard nodes from the content repository
+The <info>phpcr:node:remove</info> command will remove the given node or the 
+children of the given node according to the options given.
+
+Remove specified node and its children:
+
+    $ php bin/phpcr phpcr:node:remove /cms/content/blog
+
+Remove only the children of the specified node
+
+    $ php bin/phpcr phpcr:node:remove /cms/content/blog --only-children
 EOF
             )
         ;
@@ -89,7 +98,7 @@ EOF
         }
 
         if ($force) {
-            $message = '<comment>></comment> <info>Purging: </info> %s';
+            $message = '<comment>></comment> <info>Purging: </info>%s';
 
             if ($onlyChildren) {
                 $baseNode = $session->getNode($path, 0);
@@ -102,7 +111,10 @@ EOF
                 $output->writeln(sprintf($message, $path));
 
                 if ('/' === $path) {
-                    NodeHelper::purgeWorkspace($this->getHelper('phpcr')->getSession());
+                    throw new \Exception(
+                        'Will not purge path entire workspace ("/"), use the '.
+                        'workspace:purge method instead.'
+                    );
                 } else {
                     $session->removeItem($path);
                 }

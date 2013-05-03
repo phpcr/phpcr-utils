@@ -34,7 +34,7 @@ use PHPCR\RepositoryInterface;
  *
  * @author David Buchmann <david@liip.ch>
  */
-class ExportXmlCommand extends Command
+class WorkspaceExportCommand extends Command
 {
     /**
      * {@inheritDoc}
@@ -44,7 +44,7 @@ class ExportXmlCommand extends Command
         parent::configure();
 
         $this
-            ->setName('phpcr:export')
+            ->setName('phpcr:workspace:export')
             ->addArgument('filename', InputArgument::REQUIRED, 'The xml file to export to')
             ->addOption('path', 'p', InputOption::VALUE_OPTIONAL, 'Path of the node to export', '/')
             ->addOption('skip_binary', null, InputOption::VALUE_OPTIONAL, 'Set to "yes" to skip binaries', "no")

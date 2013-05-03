@@ -32,7 +32,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  * @author David Buchmann <david@liip.ch>
  */
-class CreateWorkspaceCommand extends Command
+class WorkspaceCreateCommand extends Command
 {
     /**
      * {@inheritDoc}

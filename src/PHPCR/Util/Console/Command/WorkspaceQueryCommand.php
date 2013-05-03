@@ -33,7 +33,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  */
-class QueryCommand extends Command
+class WorkspaceQueryCommand extends Command
 {
     /**
      * {@inheritDoc}
@@ -42,7 +42,7 @@ class QueryCommand extends Command
     {
         parent::configure();
 
-        $this->setName('phpcr:query')
+        $this->setName('phpcr:workspace:query')
             ->addArgument('query', InputArgument::REQUIRED, 'A query statement to execute')
             ->addOption('language', 'l', InputOption::VALUE_OPTIONAL, 'The query language (sql, jcr_sql2', 'jcr_sql2')
             ->addOption('limit', null, InputOption::VALUE_OPTIONAL, 'The query limit', 0)
