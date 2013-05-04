@@ -21,6 +21,7 @@
 
 namespace PHPCR\Util\Console\Command;
 
+use PHPCR\SessionInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -31,8 +32,8 @@ use Symfony\Component\Console\Helper\DialogHelper;
 use PHPCR\Util\NodeHelper;
 
 /**
- * Command to remove all nodes from a path in the workspace of the configured
- * session.
+ * Command to remove all non-system nodes and properties in the workspace of
+ * the configured session.
  *
  * @author Daniel Leech <daniel@dantleech.com>
  */
@@ -50,7 +51,8 @@ class WorkspacePurgeCommand extends Command
             ->setDescription('Remove all nodes from a workspace')
             ->addOption('force', null, InputOption::VALUE_NONE, 'Use to bypass the confirmation dialog')
             ->setHelp(<<<EOF
-The <info>phpcr:purge</info> command remove all the non-standard nodes from the workspace.
+The <info>phpcr:workspace:purge</info> command removes all nodes except the
+system nodes and all non-system properties of the root node from the workspace.
 EOF
             )
         ;
@@ -61,26 +63,28 @@ EOF
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        /** @var $session SessionInterface */
         $session = $this->getHelper('phpcr')->getSession();
         $force = $input->getOption('force');
 
+        $workspaceName = $session->getWorkspace()->getName();
         if (!$force) {
             $dialog = new DialogHelper();
-            $workspaceName = $session->getWorkspace()->getName();
             $force = $dialog->askConfirmation($output, sprintf(
-                '<question>Are you sure you want to purge workspace "%s" Y/N ?</question>', 
+                '<question>Are you sure you want to purge workspace "%s" Y/N ?</question>',
                 $workspaceName
             ), false);
         }
 
-        if ($force) {
-            $message = '';
-            $output->writeln(sprintf('<info>Purging workspace:</info> %s', $path));
-            NodeHelper::purgeWorkspace($session);
-            $session->save();
-        } else {
+        if (!$force) {
             $output->writeln('<error>Aborted</error>');
+
+            return 1;
         }
+
+        $output->writeln(sprintf('<info>Purging workspace:</info> %s', $workspaceName));
+        NodeHelper::purgeWorkspace($session);
+        $session->save();
 
         return 0;
     }

@@ -21,6 +21,8 @@
 
 namespace PHPCR\Util\Console\Command;
 
+use PHPCR\NodeInterface;
+use PHPCR\SessionInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -35,6 +37,7 @@ use PHPCR\Util\NodeHelper;
  * session.
  *
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
+ * @author Daniel Leech <daniel@dantleech.com>
  */
 class NodeRemoveCommand extends Command
 {
@@ -48,11 +51,11 @@ class NodeRemoveCommand extends Command
         $this
             ->setName('phpcr:node:remove')
             ->setDescription('Remove content from the repository')
-            ->addArgument('path', InputArgument::OPTIONAL, 'Path of the node to purge', '/')
+            ->addArgument('path', InputArgument::REQUIRED, 'Path of the node to purge')
             ->addOption('force', null, InputOption::VALUE_NONE, 'Use to bypass the confirmation dialog')
             ->addOption('only-children', null, InputOption::VALUE_NONE, 'Use to only purge children of specified path')
             ->setHelp(<<<EOF
-The <info>phpcr:node:remove</info> command will remove the given node or the 
+The <info>phpcr:node:remove</info> command will remove the given node or the
 children of the given node according to the options given.
 
 Remove specified node and its children:
@@ -72,22 +75,33 @@ EOF
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        /** @var $session SessionInterface*/
         $session = $this->getHelper('phpcr')->getSession();
 
         $path = $input->getArgument('path');
         $force = $input->getOption('force');
         $onlyChildren = $input->getOption('only-children');
 
+
+        if ('/' === $path) {
+            // even if we have only children, this will not work as we would
+            // try to remove system nodes.
+            throw new \InvalidArgumentException(
+                'Can not delete root node (path "/"), please use the '.
+                    'workspace:purge command instead to purge the whole workspace.'
+            );
+        }
+
         if (!$force) {
             $dialog = new DialogHelper();
             $workspaceName = $session->getWorkspace()->getName();
 
             if ($onlyChildren) {
-                $question = 
+                $question =
                     'Are you sure you want to recursively delete the children of path "%s" '.
                     'from workspace "%s"';
             } else {
-                $question = 
+                $question =
                     'Are you sure you want to recursively delete the path "%s" '.
                     'from workspace "%s"';
             }
@@ -97,33 +111,28 @@ EOF
             ));
         }
 
-        if ($force) {
-            $message = '<comment>></comment> <info>Purging: </info>%s';
-
-            if ($onlyChildren) {
-                $baseNode = $session->getNode($path, 0);
-
-                foreach ($baseNode->getNodes() as $childNode) {
-                    $output->writeln(sprintf($message, $childNode->getPath()));
-                    $childNode->remove();
-                }
-            } else {
-                $output->writeln(sprintf($message, $path));
-
-                if ('/' === $path) {
-                    throw new \Exception(
-                        'Will not purge path entire workspace ("/"), use the '.
-                        'workspace:purge method instead.'
-                    );
-                } else {
-                    $session->removeItem($path);
-                }
-            }
-
-            $session->save();
-        } else {
+        if (!$force) {
             $output->writeln('<error>Aborted</error>');
+
+            return 1;
         }
+
+        $message = '<comment>></comment> <info>Removing: </info>%s';
+
+        if ($onlyChildren) {
+            $baseNode = $session->getNode($path, 0);
+
+            /** @var $childNode NodeInterface */
+            foreach ($baseNode->getNodes() as $childNode) {
+                $childNode->remove();
+                $output->writeln(sprintf($message, $childNode->getPath()));
+            }
+        } else {
+            $session->removeItem($path);
+            $output->writeln(sprintf($message, $path));
+        }
+
+        $session->save();
 
         return 0;
     }

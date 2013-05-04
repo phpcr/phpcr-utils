@@ -37,9 +37,10 @@ use PHPCR\Util\Console\Helper\TreeDumper\ConsoleDumperPropertyVisitor;
 use PHPCR\Util\Console\Helper\TreeDumper\SystemNodeFilter;
 
 /**
- * Command to dump all nodes under a path to the console
+ * Command subtrees under a path to the console
  *
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
+ * @author Daniel Leech <daniel@dantleech.com>
  */
 class NodeDumpCommand extends Command
 {
@@ -57,13 +58,13 @@ class NodeDumpCommand extends Command
     {
         $this
             ->setName('phpcr:node:dump')
-            ->addOption('sys_nodes', null, InputOption::VALUE_NONE, 'Use to dump the system nodes')
-            ->addOption('props', null, InputOption::VALUE_NONE, 'Use to dump the node properties')
-            ->addOption('depth', null, InputOption::VALUE_OPTIONAL, 'Set to a number to limit how deep into the tree to recurse', "-1")
-            ->addOption('identifiers', null, InputOption::VALUE_NONE, 'Use to also output node UUID')
+            ->addOption('sys_nodes', null, InputOption::VALUE_NONE, 'Also dump system nodes')
+            ->addOption('props', null, InputOption::VALUE_NONE, 'Also dump properties of the nodes')
+            ->addOption('identifiers', null, InputOption::VALUE_NONE, 'Also output node UUID')
+            ->addOption('depth', null, InputOption::VALUE_OPTIONAL, 'Limit how many level of children to show', "-1")
             ->addOption('ref-format', 'uuid', InputOption::VALUE_REQUIRED, 'Set the way references should be displayed when dumping reference properties - either "uuid" (default) or "path"')
-            ->addArgument('identifier', InputArgument::OPTIONAL, 'Path of the node to dump', '/')
-            ->setDescription('Dump the content repository')
+            ->addArgument('identifier', InputArgument::OPTIONAL, 'Root path to dump', '/')
+            ->setDescription('Dump subtrees of the content repository')
             ->setHelp(<<<EOF
 The <info>dump</info> command recursively outputs the name of the node specified
 by the <info>identifier</info> argument and its subnodes in a yaml-like style.

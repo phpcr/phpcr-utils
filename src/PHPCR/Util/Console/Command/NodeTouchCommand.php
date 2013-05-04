@@ -21,6 +21,8 @@
 
 namespace PHPCR\Util\Console\Command;
 
+use PHPCR\PropertyInterface;
+use PHPCR\SessionInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
@@ -45,26 +47,26 @@ class NodeTouchCommand extends Command
 
         $this->setName('phpcr:node:touch')
             ->addArgument(
-                'path', 
-                InputArgument::REQUIRED, 
+                'path',
+                InputArgument::REQUIRED,
                 'Path at which to create the new node'
             )
             ->addOption(
-                'type', 't', 
-                InputOption::VALUE_OPTIONAL, 
-                'Node type, default nt:unstructured', 
+                'type', 't',
+                InputOption::VALUE_OPTIONAL,
+                'Node type, default nt:unstructured',
                 'nt:unstructured'
             )
-            ->addOption('set-prop', 'p', 
-                InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 
+            ->addOption('set-prop', 'p',
+                InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
                 'Set node property, use foo=bar'
             )
-            ->addOption('remove-prop', 'r', 
-                InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 
+            ->addOption('remove-prop', 'r',
+                InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
                 'Remove node property'
             )
-            ->addOption('dump', 'd', 
-                InputOption::VALUE_NONE, 
+            ->addOption('dump', 'd',
+                InputOption::VALUE_NONE,
                 'Dump a string reperesentation of the created / modified node.'
             )
             ->addOption('add-mixin', null,
@@ -81,7 +83,7 @@ This command allows you to create or modify a node at the specified path.
 
 For example::
 
-  $ ./bin/phpcr phpcr:touch /foobar --type=my:nodetype --set=foo=bar
+  $ ./bin/phpcr phpcr:touch /foobar --type=my:nodetype --set-prop=foo=bar
 
 Will create the node "/foobar" and set (or create) the "foo" property
 with a value of "bar".
@@ -90,7 +92,7 @@ You can execute the command again to further modify the node. Here we add
 the property "bar" and remove the property "foo". We also add the dump option
 to output a string reperesentation of the node.
 
-  $ ./bin/phpcr phpcr:touch /foobar --type=my:nodetype --set=bar=myvalue --unset=foo --dump
+  $ ./bin/phpcr phpcr:touch /foobar --type=my:nodetype --set-prop=bar=myvalue --remove-prop=foo --dump
 HERE
 );
     }
@@ -100,11 +102,13 @@ HERE
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        /** @var $session SessionInterface */
         $session = $this->getHelper('phpcr')->getSession();
+
         $path = $input->getArgument('path');
         $type = $input->getOption('type');
-        $sets = $input->getOption('set');
-        $unsets = $input->getOption('unset');
+        $setProp = $input->getOption('set-prop');
+        $removeProp = $input->getOption('remove-prop');
         $dump = $input->getOption('dump');
         $addMixins = $input->getOption('add-mixin');
         $removeMixins = $input->getOption('remove-mixin');
@@ -118,7 +122,7 @@ HERE
         if ($node) {
             $nodeType = $node->getPrimaryNodeType()->getName();
             $output->writeln(sprintf(
-                '<info>Node at path </info>%s <info>already exists and has primary type</info> %s.', 
+                '<info>Node at path </info>%s <info>already exists and has primary type</info> %s.',
                 $path,
                 $nodeType
             ));
@@ -148,10 +152,10 @@ HERE
                 '<info>Creating node: </info> %s [%s]', $path, $type
             ));
 
-            $node = $parentNode->addNode($nodeName, $type); 
+            $node = $parentNode->addNode($nodeName, $type);
         }
 
-        foreach ($sets as $set) {
+        foreach ($setProp as $set) {
             $parts = explode('=', $set);
             $output->writeln(sprintf(
                 '<comment> > Setting property </comment>%s<comment> to </comment>%s',
@@ -160,7 +164,7 @@ HERE
             $node->setProperty($parts[0], $parts[1]);
         }
 
-        foreach ($unsets as $unset) {
+        foreach ($removeProp as $unset) {
             $output->writeln(sprintf(
                 '<comment> > Unsetting property </comment>%s',
                 $unset
@@ -178,6 +182,7 @@ HERE
 
         if ($dump) {
             $output->writeln('<info>Node dump: </info>');
+            /** @var $property PropertyInterface */
             foreach ($node->getProperties() as $property) {
                 $value = $property->getValue();
                 if (!is_string($value)) {
