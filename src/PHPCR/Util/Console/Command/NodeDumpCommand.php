@@ -96,36 +96,23 @@ EOF
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $session = $this->getHelper('phpcr')->getSession();
+        $dumperHelper = $this->getHelper('phpcr_console_dumper');
 
         // node to dump
         $identifier = $input->getArgument('identifier');
 
         // whether to dump node uuid
-        $identifiers = $input->hasParameterOption('--identifiers');
-        $nodeVisitor = new ConsoleDumperNodeVisitor($output, $identifiers);
+        $options = array();
+        $options['dump_uuids'] = $input->hasParameterOption('--identifiers');
+        $options['ref_format'] = $input->getOption('ref-format');
+        $options['show_props'] = $input->hasParameterOption('--props');
+        $options['show_sys_nodes'] = $input->hasParameterOption('--sys-nodes');
 
-        $propVisitor = null;
-        $refFormat = $input->getOption('ref-format');
-
-        if (null !== $refFormat && !in_array($refFormat, array('uuid', 'path'))) {
+        if (null !== $options['ref_format']&& !in_array($options['ref_format'], array('uuid', 'path'))) {
             throw new \Exception('The ref-format option must be set to either "path" or "uuid"');
         }
 
-        if ($input->hasParameterOption('--props')) {
-            $options = array();
-            if ($refFormat) {
-                $options['ref_format'] = $refFormat;
-            }
-            $propVisitor = new ConsoleDumperPropertyVisitor($output, $options);
-        }
-
-        $walker = new TreeWalker($nodeVisitor, $propVisitor);
-
-        if (!$input->hasParameterOption('--sys_nodes')) {
-            $filter = new SystemNodeFilter();
-            $walker->addNodeFilter($filter);
-            $walker->addPropertyFilter($filter);
-        }
+        $walker = $dumperHelper->getTreeWalker($output, $options);
 
         try {
             if (UUIDHelper::isUUID($identifier)) {
@@ -133,6 +120,7 @@ EOF
             } else {
                 $node = $session->getNode($identifier);
             }
+
             $walker->traverse($node, $input->getOption('depth'));
         } catch (RepositoryException $e) {
             if ($e instanceof PathNotFoundException || $e instanceof ItemNotFoundException) {

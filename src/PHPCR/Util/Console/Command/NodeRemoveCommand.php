@@ -88,7 +88,7 @@ EOF
             // try to remove system nodes.
             throw new \InvalidArgumentException(
                 'Can not delete root node (path "/"), please use the '.
-                    'workspace:purge command instead to purge the whole workspace.'
+                'workspace:purge command instead to purge the whole workspace.'
             );
         }
 
