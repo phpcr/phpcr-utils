@@ -22,19 +22,19 @@
 namespace PHPCR\Util\Console\Command;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 use PHPCR\RepositoryInterface;
-use PHPCR\ImportUUIDBehaviorInterface;
 
 /**
- * Command to import a system or document view XML into the repository.
+ * Command to export a workspace to an XML file.
  *
  * @author David Buchmann <david@liip.ch>
  */
-class ImportXmlCommand extends Command
+class WorkspaceExportCommand extends Command
 {
     /**
      * {@inheritDoc}
@@ -44,19 +44,18 @@ class ImportXmlCommand extends Command
         parent::configure();
 
         $this
-            ->setName('phpcr:import')
-            ->addArgument('filename', null, 'The xml file to import')
-            ->addOption('parentpath', 'p', InputOption::VALUE_OPTIONAL, 'Repository path to the parent where to import the file contents', '/')
-            ->setDescription('Import xml data into the repository, either in JCR system view format or arbitrary xml')
+            ->setName('phpcr:workspace:export')
+            ->addArgument('filename', InputArgument::REQUIRED, 'The xml file to export to')
+            ->addOption('path', 'p', InputOption::VALUE_OPTIONAL, 'Path of the node to export', '/')
+            ->addOption('skip_binary', null, InputOption::VALUE_OPTIONAL, 'Set to "yes" to skip binaries', "no")
+            ->addOption('recurse', null, InputOption::VALUE_OPTIONAL, 'Set to "no" to prevent recursion', "yes")
+            ->setDescription('Export nodes from the repository, either to the JCR system view format or the document view format')
             ->setHelp(<<<EOF
-The <info>import</info> command uses the PHPCR SessionInterface::importXml method
-to import an XML document into the repository. If the document is in the JCR
-system view format, it is interpreted according to the spec, otherwise it is
-treated as document view format, meaning XML elements are translated to nodes
-and XML attributes into properties.
+The <info>export</info> command uses the PHPCR SessionInterface::exportSystemView
+method to export parts of the repository into an XML document.
 
-If the <info>parentpath</info> option is set, the document is imported to that
-path. Otherwise the document is imported at the repository root.
+If the <info>path</info> option is set, given path is exported.
+Otherwise the entire repository is exported.
 EOF
             )
         ;
@@ -69,15 +68,15 @@ EOF
     {
         /** @var $session \PHPCR\SessionInterface */
         $session = $this->getHelper('phpcr')->getSession();
-        if (! $session->getRepository()->getDescriptor(RepositoryInterface::OPTION_XML_IMPORT_SUPPORTED)) {
-            $output->writeln('<error>This repository does not support xml import</error>');
+        if (! $session->getRepository()->getDescriptor(RepositoryInterface::OPTION_XML_EXPORT_SUPPORTED)) {
+            $output->writeln('<error>This repository does not support xml export</error>');
 
             return 1;
         }
 
-        $parentpath = $input->getOption('parentpath');
-        $session->importXml($parentpath, $input->getArgument('filename'), ImportUUIDBehaviorInterface::IMPORT_UUID_CREATE_NEW);
-        $session->save();
+        $path = $input->getOption('path');
+        $stream = fopen($input->getArgument('filename'), 'w');
+        $session->exportSystemView($path, $stream, $input->getOption('skip_binary') === 'yes', $input->getOption('recurse') === 'no');
 
         return 0;
     }

@@ -41,7 +41,7 @@ use PHPCR\Util\Console\Helper\TreeDumper\SystemNodeFilter;
  *
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  */
-class DumpCommand extends Command
+class NodeDumpCommand extends Command
 {
     /**
      * Limit after which to cut lines when dumping properties
@@ -56,7 +56,7 @@ class DumpCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('phpcr:dump')
+            ->setName('phpcr:node:dump')
             ->addOption('sys_nodes', null, InputOption::VALUE_NONE, 'Use to dump the system nodes')
             ->addOption('props', null, InputOption::VALUE_NONE, 'Use to dump the node properties')
             ->addOption('depth', null, InputOption::VALUE_OPTIONAL, 'Set to a number to limit how deep into the tree to recurse', "-1")
