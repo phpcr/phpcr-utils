@@ -25,6 +25,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use PHPCR\RepositoryInterface;
 
 /**
  * A command to create a workspace in the PHPCR repository
@@ -62,9 +63,14 @@ EOT
         $name = $input->getArgument('name');
 
         $workspace = $session->getWorkspace();
+        $repo = $session->getRepository();
 
-        if (! $session->getRepository()->getDescriptor(\PHPCR\RepositoryInterface::OPTION_WORKSPACE_MANAGEMENT_SUPPORTED)) {
-            $output->writeln('<error>Your PHPCR implementation does not support workspace management. Please refer to the documentation of your PHPCR implementation to learn how to create a workspace.</error>');
+        if (!$repo->getDescriptor(RepositoryInterface::OPTION_WORKSPACE_MANAGEMENT_SUPPORTED)) {
+            $output->writeln(
+                '<error>Your PHPCR implementation does not support '.
+                'workspace management. Please refer to the documentation '.
+                'of your PHPCR implementation to learn how to create a workspace.</error>'
+            );
 
             return 1;
         }

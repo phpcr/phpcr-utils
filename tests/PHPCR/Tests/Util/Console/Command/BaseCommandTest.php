@@ -45,6 +45,8 @@ abstract class BaseCommandTest extends \PHPUnit_Framework_TestCase
         $this->workspace->expects($this->any())
             ->method('getName')
             ->will($this->returnValue('test'));
+
+        $this->repository = $this->getMock('PHPCR\RepositoryInterface');
     }
 
     public function executeCommand($name, $args)
