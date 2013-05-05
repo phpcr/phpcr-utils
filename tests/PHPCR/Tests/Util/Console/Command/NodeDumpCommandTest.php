@@ -23,12 +23,6 @@ class NodeDumpCommandTest extends BaseCommandTest
         $this->session->expects($this->once())
             ->method('getNode')
             ->will($this->returnValue($this->node1));
-        $this->node1->expects($this->any())
-            ->method('getNodes')
-            ->will($this->returnValue(array(
-                $this->node1,
-                $this->node2,
-            )));
 
         $this->application->add(new NodeDumpCommand());
 

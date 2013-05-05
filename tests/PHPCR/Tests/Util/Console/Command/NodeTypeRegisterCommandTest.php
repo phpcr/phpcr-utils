@@ -32,6 +32,3 @@ class NodeTypeRegisterCommandTest extends BaseCommandTest
         ));
     }
 }
-
-
-

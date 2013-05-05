@@ -3,15 +3,15 @@
 namespace PHPCR\Tests\Util\Console\Command;
 
 use Symfony\Component\Console\Application;
-use PHPCR\Util\Console\Command\WorkspaceExportCommand;
+use PHPCR\Util\Console\Command\WorkspaceImportCommand;
 use PHPCR\RepositoryInterface;
 
-class WorkspaceExportCommandTest extends BaseCommandTest
+class WorkspaceImportCommandTest extends BaseCommandTest
 {
     public function setUp()
     {
         parent::setUp();
-        $this->application->add(new WorkspaceExportCommand());
+        $this->application->add(new WorkspaceImportCommand());
     }
 
     public function testNodeTypeList()
@@ -21,13 +21,15 @@ class WorkspaceExportCommandTest extends BaseCommandTest
             ->will($this->returnValue($this->repository));
         $this->repository->expects($this->once())
             ->method('getDescriptor')
-            ->with(RepositoryInterface::OPTION_XML_EXPORT_SUPPORTED)
+            ->with(RepositoryInterface::OPTION_XML_IMPORT_SUPPORTED)
             ->will($this->returnValue(true));
         $this->session->expects($this->once())
-            ->method('exportSystemView');
+            ->method('importXml');
 
-        $ct = $this->executeCommand('phpcr:workspace:export', array(
-            'filename' => 'test'
+        $ct = $this->executeCommand('phpcr:workspace:import', array(
+            'filename' => 'test_import.xml'
         ));
+
+        $this->assertEmpty($ct->getDisplay());
     }
 }

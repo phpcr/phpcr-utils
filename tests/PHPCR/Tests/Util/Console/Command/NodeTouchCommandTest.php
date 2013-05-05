@@ -19,13 +19,14 @@ class NodeTouchCommandTest extends BaseCommandTest
 
     public function testTouch()
     {
-        $test = $this;
+        $node = $this->node1;
+
         $this->session->expects($this->exactly(2))
             ->method('getNode')
-            ->will($this->returnCallback(function ($path) use ($test) {
+            ->will($this->returnCallback(function ($path) use ($node) {
                 switch ($path) {
                     case '/':
-                        return $this->node1;
+                        return $node;
                     case '/cms':
                         return null;
                 }
@@ -42,4 +43,3 @@ class NodeTouchCommandTest extends BaseCommandTest
         ));
     }
 }
-

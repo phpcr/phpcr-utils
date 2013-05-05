@@ -67,8 +67,9 @@ EOF
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $session = $this->getHelper('phpcr')->getSession();
+        $repo = $session->getRepository();
 
-        if (!$session->getRepository()->getDescriptor(RepositoryInterface::OPTION_XML_EXPORT_SUPPORTED)) {
+        if (!$repo->getDescriptor(RepositoryInterface::OPTION_XML_EXPORT_SUPPORTED)) {
             $output->writeln('<error>This repository does not support xml export</error>');
 
             return 1;

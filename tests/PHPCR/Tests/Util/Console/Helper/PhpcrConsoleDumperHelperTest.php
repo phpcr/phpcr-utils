@@ -12,28 +12,10 @@ class PhpcrConsoleDumperHelperTest extends PHPUnit_Framework_TestCase
 
     public function testHelper()
     {
-        $nv = $this->helper->getNodeVisitor($this->output, array());
-        $this->assertInstanceOf(
-            'PHPCR\Util\Console\Helper\TreeDumper\ConsoleDumperNodeVisitor',
-            $nv
-        );
-
-        $pv = $this->helper->getPropertyVisitor($this->output, array());
-        $this->assertInstanceOf(
-            'PHPCR\Util\Console\Helper\TreeDumper\ConsoleDumperPropertyVisitor',
-            $pv
-        );
-
-        $tw = $this->helper->getTreeWalker($nv, $pv);
+        $tw = $this->helper->getTreeWalker($this->output, array());
         $this->assertInstanceOf(
             'PHPCR\Util\TreeWalker',
             $tw
-        );
-
-        $snf = $this->helper->getSystemNodeFilter();
-        $this->assertInstanceOf(
-            'PHPCR\Util\Console\Helper\TreeDumper\SystemNodeFilter',
-            $snf
         );
     }
 }

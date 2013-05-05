@@ -13,30 +13,21 @@ abstract class BaseCommandTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->session = $this->getMock('PHPCR\SessionInterface');
-        $this->dumperHelper = $this->getMockBuilder('PHPCR\Util\Console\Helper\PhpcrConsoleDumperHelper')
+        $this->workspace = $this->getMock('PHPCR\WorkspaceInterface');
+        $this->repository = $this->getMock('PHPCR\RepositoryInterface');
+
+        $this->node1 = $this->getMockBuilder('Jackalope\Node')
             ->disableOriginalConstructor()
             ->getMock();
+
+        $this->dumperHelper = $this->getMockBuilder(
+            'PHPCR\Util\Console\Helper\PhpcrConsoleDumperHelper'
+        )->disableOriginalConstructor()->getMock();
+
         $this->helperSet = new HelperSet(array(
             'session' => new PhpcrHelper($this->session),
             'phpcr_console_dumper' => $this->dumperHelper,
         ));
-
-        $this->application = new Application();
-        $this->application->setHelperSet($this->helperSet);
-
-        for ($i = 1; $i <= 3; $i++) {
-            $varName = 'node'.$i;
-            $this->$varName = $this->getMockBuilder('Jackalope\Node')
-                ->disableOriginalConstructor()
-                ->getMock();
-            if ($i > 1) {
-                $this->$varName->expects($this->any())
-                    ->method('getNodes')
-                    ->will($this->returnValue(array()));
-            }
-        }
-
-        $this->workspace = $this->getMock('PHPCR\WorkspaceInterface');
 
         $this->session->expects($this->any())
             ->method('getWorkspace')
@@ -46,7 +37,8 @@ abstract class BaseCommandTest extends \PHPUnit_Framework_TestCase
             ->method('getName')
             ->will($this->returnValue('test'));
 
-        $this->repository = $this->getMock('PHPCR\RepositoryInterface');
+        $this->application = new Application();
+        $this->application->setHelperSet($this->helperSet);
     }
 
     public function executeCommand($name, $args)
