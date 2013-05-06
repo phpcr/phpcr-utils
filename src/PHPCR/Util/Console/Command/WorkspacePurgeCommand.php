@@ -84,11 +84,7 @@ EOF
 
         $output->writeln(sprintf('<info>Purging workspace:</info> %s', $workspaceName));
 
-        // Note that this is bad for testing purposes, we HAVE to
-        // use the concrete implementation of NodeHelper and mocking it
-        // is spreading behvioral dependencies. Even if we move it to
-        // the CommandHelper class, we need to test that class and have
-        // the same problem again.
+        // Using the static NodeHelper is bad for testing as we cannot mock it.
         NodeHelper::purgeWorkspace($session);
         $session->save();
 

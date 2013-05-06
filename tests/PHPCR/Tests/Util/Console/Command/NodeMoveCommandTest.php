@@ -15,9 +15,6 @@ class NodeMoveCommandTest extends BaseCommandTest
     }
 
     /**
-     * Note that this test isn't very conclusive. This should
-     * be a functional test.
-     *
      * @dataProvider provideCommand
      */
     public function testCommand($args)
