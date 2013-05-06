@@ -5,6 +5,8 @@ namespace PHPCR\Tests\Util\Console\Command;
 use Symfony\Component\Console\Application;
 use PHPCR\Util\Console\Command\NodeTypeRegisterCommand;
 
+require_once(__DIR__.'/Stubb/MockNodeTypeManager.php');
+
 class NodeTypeRegisterCommandTest extends BaseCommandTest
 {
     public function setUp()
@@ -12,7 +14,7 @@ class NodeTypeRegisterCommandTest extends BaseCommandTest
         parent::setUp();
         $this->application->add(new NodeTypeRegisterCommand());
         $this->nodeTypeManager = $this->getMockBuilder(
-            'Jackalope\NodeType\NodeTypeManager'
+            'PHPCR\Tests\Util\Console\Command\Stubb\MockNodeTypeManager'
         )->disableOriginalConstructor()->getMock();
     }
 
