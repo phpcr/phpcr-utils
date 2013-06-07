@@ -67,16 +67,22 @@ EOF
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /** @var $session \PHPCR\SessionInterface */
+        $filename = $input->getArgument('filename');
+        $parentPath = $input->getOption('parentpath');
         $session = $this->getHelper('phpcr')->getSession();
-        if (! $session->getRepository()->getDescriptor(RepositoryInterface::OPTION_XML_IMPORT_SUPPORTED)) {
+        $repo = $session->getRepository();
+
+        if (!$repo->getDescriptor(RepositoryInterface::OPTION_XML_IMPORT_SUPPORTED)) {
             $output->writeln('<error>This repository does not support xml import</error>');
 
             return 1;
         }
 
-        $parentpath = $input->getOption('parentpath');
-        $session->importXml($parentpath, $input->getArgument('filename'), ImportUUIDBehaviorInterface::IMPORT_UUID_CREATE_NEW);
+        $session->importXml(
+            $parentPath, 
+            $filename, 
+            ImportUUIDBehaviorInterface::IMPORT_UUID_CREATE_NEW
+        );
         $session->save();
 
         return 0;

@@ -83,6 +83,8 @@ EOF
         }
 
         $output->writeln(sprintf('<info>Purging workspace:</info> %s', $workspaceName));
+
+        // Using the static NodeHelper is bad for testing as we cannot mock it.
         NodeHelper::purgeWorkspace($session);
         $session->save();
 

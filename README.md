@@ -87,3 +87,4 @@ constistent behaviour.
 
 Move tests about the query converter from phpcr-api-tests tests/06_Query/QOM to
 the tests folder. How to do the tests without a QOM factory implementation?
+
