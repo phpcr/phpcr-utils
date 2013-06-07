@@ -57,20 +57,26 @@ class WorkspaceQueryCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $sql = $input->getArgument('query');
-
-        $session = $this->getHelper('phpcr')->getSession();
-        $qm = $session->getWorkspace()->getQueryManager();
         $language = strtoupper($input->getOption('language'));
         $limit = $input->getOption('limit');
         $offset = $input->getOption('offset');
+
+        $session = $this->getHelper('phpcr')->getSession();
+        $qm = $session->getWorkspace()->getQueryManager();
+
         if (!defined('\PHPCR\Query\QueryInterface::'.$language)) {
-            throw new \RuntimeException("Query language '\\PHPCR\\Query\\QueryInterface::$language' not defined.");
+            throw new \RuntimeException(sprintf(
+                "Query language '\\PHPCR\\Query\\QueryInterface::%s' not defined.",
+                $language
+            ));
         }
 
         $query = $qm->createQuery($sql, constant('\PHPCR\Query\QueryInterface::'.$language));
+
         if ($limit) {
             $query->setLimit($limit);
         }
+
         if ($offset) {
             $query->setOffset($offset);
         }
