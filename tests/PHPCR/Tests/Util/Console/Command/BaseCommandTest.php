@@ -8,7 +8,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Console\Helper\HelperSet;
 use PHPCR\Util\Console\Helper\PhpcrHelper;
 
-require_once(__DIR__.'/Stubb/MockNode.php');
+require_once(__DIR__.'/Stubs/MockNode.php');
 
 abstract class BaseCommandTest extends \PHPUnit_Framework_TestCase
 {
@@ -18,7 +18,7 @@ abstract class BaseCommandTest extends \PHPUnit_Framework_TestCase
         $this->workspace = $this->getMock('PHPCR\WorkspaceInterface');
         $this->repository = $this->getMock('PHPCR\RepositoryInterface');
 
-        $this->node1 = $this->getMock('PHPCR\Tests\Util\Console\Command\Stubb\MockNode');
+        $this->node1 = $this->getMock('PHPCR\Tests\Util\Console\Command\Stubs\MockNode');
 
         $this->dumperHelper = $this->getMockBuilder(
             'PHPCR\Util\Console\Helper\PhpcrConsoleDumperHelper'

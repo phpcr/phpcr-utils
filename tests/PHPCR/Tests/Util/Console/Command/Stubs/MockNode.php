@@ -1,6 +1,6 @@
 <?php
 
-namespace PHPCR\Tests\Util\Console\Command\Stubb;
+namespace PHPCR\Tests\Util\Console\Command\Stubs;
 
 use PHPCR\NodeInterface;
 
