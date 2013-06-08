@@ -12,7 +12,7 @@ class NodeTypeListCommandTest extends BaseCommandTest
         parent::setUp();
         $this->application->add(new NodeTypeListCommand());
         $this->nodeTypeManager = $this->getMockBuilder(
-            'PHPCR\Tests\Util\Console\Command\Stubs\MockNodeTypeManager'
+            'PHPCR\Tests\Stubs\MockNodeTypeManager'
         )->disableOriginalConstructor()->getMock();
     }
 

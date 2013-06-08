@@ -102,8 +102,8 @@ HERE
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /** @var $session SessionInterface */
-        $session = $this->getHelper('phpcr')->getSession();
+        $helper = $this->getHelper('phpcr');
+        $session = $helper->getSession();
 
         $path = $input->getArgument('path');
         $type = $input->getOption('type');
@@ -155,45 +155,13 @@ HERE
             $node = $parentNode->addNode($nodeName, $type);
         }
 
-        foreach ($setProp as $set) {
-            $parts = explode('=', $set);
-            $output->writeln(sprintf(
-                '<comment> > Setting property </comment>%s<comment> to </comment>%s',
-                $parts[0], $parts[1]
-            ));
-            $node->setProperty($parts[0], $parts[1]);
-        }
-
-        foreach ($removeProp as $unset) {
-            $output->writeln(sprintf(
-                '<comment> > Unsetting property </comment>%s',
-                $unset
-            ));
-            $node->setProperty($unset, null);
-        }
-
-        foreach ($addMixins as $addMixin) {
-            $node->addMixin($addMixin);
-        }
-
-        foreach ($removeMixins as $removeMixin) {
-            $node->removeMixin($removeMixin);
-        }
-
-        if ($dump) {
-            $output->writeln('<info>Node dump: </info>');
-            /** @var $property PropertyInterface */
-            foreach ($node->getProperties() as $property) {
-                $value = $property->getValue();
-                if (!is_string($value)) {
-                    $value = print_r($value, true);
-                }
-                $output->writeln(sprintf('<comment> - %s = </comment>%s',
-                    $property->getName(),
-                    $value
-                ));
-            }
-        }
+        $helper->processNode($output, $node, array(
+            'setProps' => $setProp,
+            'removeProps' => $removeProp,
+            'addMixins' => $addMixins,
+            'removeMixins' => $removeMixins,
+            'dump' => $dump,
+        ));
 
         $session->save();
     }

@@ -65,7 +65,7 @@ class NodeDumpCommand extends Command
             ->addOption('ref-format', 'uuid', InputOption::VALUE_REQUIRED, 'Set the way references should be displayed when dumping reference properties - either "uuid" (default) or "path"')
             ->addArgument('identifier', InputArgument::OPTIONAL, 'Root path to dump', '/')
             ->setDescription('Dump subtrees of the content repository')
-            ->setHelp(<<<EOF
+            ->setHelp(<<<HERE
 The <info>dump</info> command recursively outputs the name of the node specified
 by the <info>identifier</info> argument and its subnodes in a yaml-like style.
 
@@ -75,7 +75,7 @@ displayed as yaml arrays.
 By default the command filters out system nodes and properties (i.e. nodes and
 properties with names starting with 'jcr:'), the <info>sys_nodes</info> option
 allows to turn this filter off.
-EOF
+HERE
             )
         ;
     }
