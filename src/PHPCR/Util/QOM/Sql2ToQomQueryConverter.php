@@ -704,9 +704,9 @@ class Sql2ToQomQueryConverter
         } else if (is_numeric($token)){
             $token = strpos($token, '.') === false ? (int) $token : (float) $token;
         } else if ($token == 'true') {
-            $token = '1';
+            $token = true;
         } else if ($token == 'false') {
-            $token = '0';
+            $token = false;
         }
 
         return $this->factory->literal($token);
