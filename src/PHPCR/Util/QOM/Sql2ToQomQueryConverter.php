@@ -699,8 +699,7 @@ class Sql2ToQomQueryConverter
             if (substr($token, -1) !== $quoteString) {
                 throw new \Exception("Syntax error: unterminated quoted string $token in '{$this->sql2}'");
             }
-
-           $token = substr($token, 1, -1);
+            $token = substr($token, 1, -1);
         } else if (is_numeric($token)){
             $token = strpos($token, '.') === false ? (int) $token : (float) $token;
         } else if ($token == 'true') {
