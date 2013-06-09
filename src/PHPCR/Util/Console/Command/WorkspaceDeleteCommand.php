@@ -24,17 +24,18 @@ namespace PHPCR\Util\Console\Command;
 use PHPCR\RepositoryInterface;
 use PHPCR\SessionInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\DialogHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * A command to create a workspace in the PHPCR repository
+ * A command to delete a workspace in the PHPCR repository
  *
- * @author Lukas Kahwe Smith <smith@pooteeweet.org>
- * @author David Buchmann <david@liip.ch>
+ * @author David Buchmann <mail@davidbu.ch>
  */
-class WorkspaceCreateCommand extends Command
+class WorkspaceDeleteCommand extends Command
 {
     /**
      * {@inheritDoc}
@@ -42,13 +43,15 @@ class WorkspaceCreateCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('phpcr:workspace:create')
-            ->addArgument('name', InputArgument::REQUIRED, 'Name of the workspace to create')
-            ->setDescription('Create a workspace in the configured repository')
+            ->setName('phpcr:workspace:delete')
+            ->addArgument('name', InputArgument::REQUIRED, 'Name of the workspace to delete')
+            ->addOption('force', null, InputOption::VALUE_NONE, 'Use to bypass the confirmation dialog')
+            ->setDescription('Delete a workspace from the configured repository')
             ->setHelp(<<<EOT
-The <info>workspace:create</info> command creates a workspace with the specified name.
-It will fail if a workspace with that name already exists or if the repository implementation
-does not support the workspace creation operation.
+The <info>workspace:delete</info> command deletes the workspace with the specified name if it
+exists. If the workspace with that name does not yet exist, the command will not fail.
+However, if the workspace does exist but the repository implementation does not support
+the delete operation, the command will fail.
 EOT
             )
         ;
@@ -67,19 +70,38 @@ EOT
         $workspace = $session->getWorkspace();
         $repo = $session->getRepository();
 
+        if (! in_array($workspaceName, $workspace->getAccessibleWorkspaceNames())) {
+            $output->writeln("Workspace '$workspaceName' does not exist.");
+            return 0;
+        }
+
         if (!$repo->getDescriptor(RepositoryInterface::OPTION_WORKSPACE_MANAGEMENT_SUPPORTED)) {
             $output->writeln(
                 '<error>Your PHPCR implementation does not support '.
                 'workspace management. Please refer to the documentation '.
-                'of your PHPCR implementation to learn how to create a workspace.</error>'
+                'of your PHPCR implementation to learn how to remove a workspace.</error>'
             );
 
             return 1;
         }
 
-        $workspace->createWorkspace($workspaceName);
+        $force = $input->getOption('force');
+        if (!$force) {
+            $dialog = new DialogHelper();
+            $force = $dialog->askConfirmation($output, sprintf(
+                '<question>Are you sure you want to delete workspace "%s" Y/N ?</question>',
+                $workspaceName
+            ), false);
+        }
+        if (!$force) {
+            $output->writeln('<error>Aborted</error>');
 
-        $output->writeln("Created workspace '$workspaceName'.");
+            return 1;
+        }
+
+        $workspace->deleteWorkspace($workspaceName);
+
+        $output->writeln("Deleted workspace '$workspaceName'.");
 
         return 0;
     }
