@@ -73,7 +73,7 @@ class ConsoleDumperPropertyVisitor extends ConsoleDumperItemVisitor
     public function visit(ItemInterface $item)
     {
         if (! $item instanceof PropertyInterface) {
-            throw new \Exception("Internal error: did not expect to visit a non-node object: $item");
+            throw new \Exception(sprintf('Internal error: did not expect to visit a non-property object: %s', is_object($item) ? get_class($item) : $item));
         }
 
         $value = $item->getString();
@@ -89,7 +89,7 @@ class ConsoleDumperPropertyVisitor extends ConsoleDumperItemVisitor
         $referrers = array();
 
         if (in_array($item->getType(), array(
-            PropertyType::WEAKREFERENCE, 
+            PropertyType::WEAKREFERENCE,
             PropertyType::REFERENCE
         ))) {
             $referenceStrings = array();
