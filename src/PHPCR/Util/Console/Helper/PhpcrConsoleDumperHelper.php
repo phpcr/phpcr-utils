@@ -46,7 +46,7 @@ class PhpcrConsoleDumperHelper extends Helper
         $nodeVisitor = new ConsoleDumperNodeVisitor($output, $options['dump_uuids']);
 
         if (true === $options['show_props']) {
-            new ConsoleDumperPropertyVisitor($output, $options);
+            $propVisitor = new ConsoleDumperPropertyVisitor($output, $options);
         }
 
         $treeWalker = new TreeWalker($nodeVisitor, $propVisitor);
