@@ -98,19 +98,19 @@ class PhpcrCliHelper extends Helper
         }
 
         foreach ($options['addMixins'] as $addMixin) {
-            $output->writeln(
+            $output->writeln(sprintf(
                 '<comment> > Adding mixin </comment>%s<comment>',
                 $addMixin
-            );
+            ));
 
             $node->addMixin($addMixin);
         }
 
         foreach ($options['removeMixins'] as $removeMixin) {
-            $output->writeln(
+            $output->writeln(sprintf(
                 '<comment> > Removing mixin </comment>%s<comment>',
                 $removeMixin
-            );
+            ));
 
             $node->removeMixin($removeMixin);
         }

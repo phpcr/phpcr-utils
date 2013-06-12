@@ -111,6 +111,7 @@ HERE
         $noInteraction = $input->getOption('no-interaction');
         $helper = $this->getPhpcrCliHelper();
         $session = $this->getPhpcrSession();
+
         $this->dialog = new DialogHelper();
 
         if (!$type) {
@@ -152,6 +153,8 @@ HERE
                 'removeMixins' => $removeMixins,
             ));
         }
+
+        $session->save();
 
         $output->writeln(sprintf('<info>%.2f seconds</info>', $elapsed));
 
