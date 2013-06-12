@@ -32,8 +32,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  * resulting nodes.
  *
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
+ * @author Daniel Leech <daniel@dantleech.com>
  */
-class WorkspaceQueryCommand extends Command
+class WorkspaceQueryCommand extends BaseCommand
 {
     /**
      * {@inheritDoc}
@@ -44,7 +45,7 @@ class WorkspaceQueryCommand extends Command
 
         $this->setName('phpcr:workspace:query')
             ->addArgument('query', InputArgument::REQUIRED, 'A query statement to execute')
-            ->addOption('language', 'l', InputOption::VALUE_OPTIONAL, 'The query language (sql, jcr_sql2', 'jcr_sql2')
+            ->addOption('language', 'l', InputOption::VALUE_OPTIONAL, 'The query language (e.g. jcr-sql2', 'jcr-sql2')
             ->addOption('limit', null, InputOption::VALUE_OPTIONAL, 'The query limit', 0)
             ->addOption('offset', null, InputOption::VALUE_OPTIONAL, 'The query offset', 0)
             ->setDescription('Execute a JCR SQL2 statement')
@@ -61,17 +62,10 @@ class WorkspaceQueryCommand extends Command
         $limit = $input->getOption('limit');
         $offset = $input->getOption('offset');
 
-        $session = $this->getHelper('phpcr')->getSession();
-        $qm = $session->getWorkspace()->getQueryManager();
+        $helper = $this->getPhpcrCliHelper();
+        $session = $this->getPhpcrSession();
 
-        if (!defined('\PHPCR\Query\QueryInterface::'.$language)) {
-            throw new \RuntimeException(sprintf(
-                "Query language '\\PHPCR\\Query\\QueryInterface::%s' not defined.",
-                $language
-            ));
-        }
-
-        $query = $qm->createQuery($sql, constant('\PHPCR\Query\QueryInterface::'.$language));
+        $query = $helper->createQuery($language, $sql);
 
         if ($limit) {
             $query->setLimit($limit);

@@ -22,7 +22,6 @@
 namespace PHPCR\Util\Console\Command;
 
 use PHPCR\Util\UUIDHelper;
-use Symfony\Component\Console\Command\Command;
 use PHPCR\ItemNotFoundException;
 use PHPCR\RepositoryException;
 use PHPCR\PathNotFoundException;
@@ -42,7 +41,7 @@ use PHPCR\Util\Console\Helper\TreeDumper\SystemNodeFilter;
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class NodeDumpCommand extends Command
+class NodeDumpCommand extends BaseCommand
 {
     /**
      * Limit after which to cut lines when dumping properties
@@ -65,7 +64,7 @@ class NodeDumpCommand extends Command
             ->addOption('ref-format', 'uuid', InputOption::VALUE_REQUIRED, 'Set the way references should be displayed when dumping reference properties - either "uuid" (default) or "path"')
             ->addArgument('identifier', InputArgument::OPTIONAL, 'Root path to dump', '/')
             ->setDescription('Dump subtrees of the content repository')
-            ->setHelp(<<<EOF
+            ->setHelp(<<<HERE
 The <info>dump</info> command recursively outputs the name of the node specified
 by the <info>identifier</info> argument and its subnodes in a yaml-like style.
 
@@ -75,7 +74,7 @@ displayed as yaml arrays.
 By default the command filters out system nodes and properties (i.e. nodes and
 properties with names starting with 'jcr:'), the <info>sys_nodes</info> option
 allows to turn this filter off.
-EOF
+HERE
             )
         ;
     }
@@ -95,7 +94,7 @@ EOF
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $session = $this->getHelper('phpcr')->getSession();
+        $session = $this->getPhpcrSession();
         $dumperHelper = $this->getHelper('phpcr_console_dumper');
 
         // node to dump

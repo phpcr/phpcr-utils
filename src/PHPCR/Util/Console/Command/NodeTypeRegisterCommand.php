@@ -39,7 +39,7 @@ use PHPCR\NodeType\NodeTypeExistsException;
  *
  * @author Uwe Jäger <uwej711@googlemail.com>
  */
-class NodeTypeRegisterCommand extends Command
+class NodeTypeRegisterCommand extends BaseCommand
 {
     /**
      * {@inheritDoc}
@@ -91,7 +91,7 @@ EOT
 
         $cnd = file_get_contents($cnd_file);
         $allowUpdate = $input->getOption('allow-update');
-        $session = $this->getHelper('phpcr')->getSession();
+        $session = $this->getPhpcrSession();
 
         try {
             $this->updateFromCnd($output, $session, $cnd, $allowUpdate);
