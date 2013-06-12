@@ -36,6 +36,7 @@ abstract class BaseCommandTest extends \PHPUnit_Framework_TestCase
         $this->session = $this->getMock('PHPCR\SessionInterface');
         $this->workspace = $this->getMock('PHPCR\WorkspaceInterface');
         $this->repository = $this->getMock('PHPCR\RepositoryInterface');
+        $this->queryManager = $this->getMock('PHPCR\Query\QueryManagerInterface');
 
         $this->row1 = $this->getMock('PHPCR\Tests\Stubs\MockRow');
         $this->node1 = $this->getMock('PHPCR\Tests\Stubs\MockNode');
@@ -56,6 +57,14 @@ abstract class BaseCommandTest extends \PHPUnit_Framework_TestCase
         $this->workspace->expects($this->any())
             ->method('getName')
             ->will($this->returnValue('test'));
+
+        $this->workspace->expects($this->any())
+            ->method('getQueryManager')
+            ->will($this->returnValue($this->queryManager));
+
+        $this->queryManager->expects($this->any())
+            ->method('getSupportedQueryLanguages')
+            ->will($this->returnValue(array('JCR-SQL2')));
 
         $this->application = new Application();
         $this->application->setHelperSet($this->helperSet);

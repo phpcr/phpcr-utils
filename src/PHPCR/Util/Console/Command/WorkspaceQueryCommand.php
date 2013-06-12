@@ -45,7 +45,7 @@ class WorkspaceQueryCommand extends BaseCommand
 
         $this->setName('phpcr:workspace:query')
             ->addArgument('query', InputArgument::REQUIRED, 'A query statement to execute')
-            ->addOption('language', 'l', InputOption::VALUE_OPTIONAL, 'The query language (sql, jcr_sql2', 'jcr_sql2')
+            ->addOption('language', 'l', InputOption::VALUE_OPTIONAL, 'The query language (e.g. jcr-sql2', 'jcr-sql2')
             ->addOption('limit', null, InputOption::VALUE_OPTIONAL, 'The query limit', 0)
             ->addOption('offset', null, InputOption::VALUE_OPTIONAL, 'The query offset', 0)
             ->setDescription('Execute a JCR SQL2 statement')

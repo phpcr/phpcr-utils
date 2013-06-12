@@ -12,9 +12,6 @@ class NodesUpdateCommandTest extends BaseCommandTest
     {
         parent::setUp();
         $this->application->add(new NodesUpdateCommand());
-        $this->queryManager = $this->getMock(
-            'PHPCR\Query\QueryManagerInterface'
-        );
         $this->query = $this->getMock('PHPCR\Query\QueryInterface');
     }
 

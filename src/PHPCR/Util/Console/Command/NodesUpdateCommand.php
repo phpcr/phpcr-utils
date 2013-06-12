@@ -42,7 +42,7 @@ class NodesUpdateCommand extends BaseCommand
     {
         parent::configure();
 
-        $this->configureNodeManipulationInput($this);
+        $this->configureNodeManipulationInput();
 
         $this->setName('phpcr:nodes:update')
             ->addOption(
@@ -54,20 +54,24 @@ class NodesUpdateCommand extends BaseCommand
                 'query-language', 'l', 
                 InputOption::VALUE_OPTIONAL, 
                 'The query language (e.g. sql, jcr_sql2)',
-                'jcr_sql2'
+                'jcr-sql2'
             )
             ->setDescription('Command to manipulate the nodes in the workspace.')
             ->setHelp(<<<HERE
-The <info>nodes:update</info> command updates properties of nodes of type x matching
-the given select criteria.
+The <info>phpcr:nodes:update</info> can manipulate the properties of nodes 
+found using the given query.
 
-    php bin/phpcr nodes:update --type="nt:unstructured" --where="foo='bar'" --set-prop=foo=bar
+For example, to set the property "foo" to "bar" on all unstructured nodes:
+
+    php bin/phpcr phpcr:nodes:update --query="SELECT * FROM [nt:unstructured]" --set-prop=foo=bar
+
+Or to update only nodes matching a certain criteria:
+
+    php bin/phpcr nodes:update --query="SELECT * FROM [nt:unstructured] WHERE [phpcr:class]=\"Some\\Class\\Here\" --add-mixin=mix:mimetype
 
 The options for manipulating nodes are the same as with the 
 <info>node:touch</info> command and
 can be repeated to update multiple properties.
-
-The <info>--where</info> option corresponds to the "where" part of a standard query.
 HERE
 );
     }
@@ -77,6 +81,8 @@ HERE
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->dialog = new DialogHelper();
+
         $query = $input->getOption('query');
         $queryLanguage = strtoupper($input->getOption('query-language'));
         $setProp = $input->getOption('set-prop');
@@ -86,8 +92,6 @@ HERE
         $noInteraction = $input->getOption('no-interaction');
         $helper = $this->getPhpcrCliHelper();
         $session = $this->getPhpcrSession();
-
-        $this->dialog = new DialogHelper();
 
         if (!$query) {
             throw new \InvalidArgumentException(

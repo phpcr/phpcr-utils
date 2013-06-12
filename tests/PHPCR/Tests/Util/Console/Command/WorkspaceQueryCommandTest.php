@@ -12,18 +12,18 @@ class WorkspaceQueryCommandTest extends BaseCommandTest
     {
         parent::setUp();
         $this->application->add(new WorkspaceQueryCommand());
-        $this->queryManager = $this->getMock(
-            'PHPCR\Query\QueryManagerInterface'
-        );
         $this->query = $this->getMock('PHPCR\Query\QueryInterface');
     }
 
-    public function testNodeTypeQuery()
+    public function testQuery()
     {
-        $this->session->expects($this->once())
+        $this->queryManager->expects($this->any())
+            ->method('getSupportedQueryLanguages')
+            ->will($this->returnValue(array('JCR-SQL2')));
+        $this->session->expects($this->any())
             ->method('getWorkspace')
             ->will($this->returnValue($this->workspace));
-        $this->workspace->expects($this->once())
+        $this->workspace->expects($this->any())
             ->method('getQueryManager')
             ->will($this->returnValue($this->queryManager));
         $this->queryManager->expects($this->once())

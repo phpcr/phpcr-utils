@@ -142,20 +142,32 @@ class PhpcrCliHelper extends Helper
      */
     public function createQuery($language, $sql)
     {
+        $this->validateQueryLanguage($language);
+
         $session = $this->getSession();
         $qm = $session->getWorkspace()->getQueryManager();
         $language = strtoupper($language);
-
-        $constantName = '\PHPCR\Query\QueryInterface::'.$language;
-        if (!defined($constantName)) {
-            throw new \RuntimeException(sprintf(
-                "Query language '\\PHPCR\\Query\\QueryInterface::%s' not defined.",
-                $language
-            ));
-        }
-
-        $query = $qm->createQuery($sql, constant($constantName));
+        $query = $qm->createQuery($sql, $language);
 
         return $query;
+    }
+
+    /**
+     * Validate the given query language.
+     *
+     * @param string Language type
+     *
+     * @return null
+     */
+    protected function validateQueryLanguage($language)
+    {
+        $qm = $this->getSession()->getWorkspace()->getQueryManager();
+        $langs = $qm->getSupportedQueryLanguages();
+        if (!in_array($language, $langs)) {
+            throw new \Exception(sprintf(
+                'Query language "%s" not supported, available query languages: %s',
+                $language, implode(',', $langs)
+            ));
+        }
     }
 }
