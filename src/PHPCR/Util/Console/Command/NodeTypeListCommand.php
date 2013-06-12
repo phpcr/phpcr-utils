@@ -30,7 +30,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class NodeTypeListCommand extends Command
+class NodeTypeListCommand extends BaseCommand
 {
     /**
      * {@inheritDoc}
@@ -53,7 +53,7 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $session = $this->getHelper('phpcr')->getSession();
+        $session = $this->getPhpcrSession();
         $ntm = $session->getWorkspace()->getNodeTypeManager();
 
         $nodeTypes = $ntm->getAllNodeTypes();
