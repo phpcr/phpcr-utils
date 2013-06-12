@@ -22,33 +22,23 @@ class NodesUpdateCommandTest extends BaseCommandTest
     {
         return array(
 
-            // no type specified
+            // no query specified
             array(array(
                 'exception' => 'InvalidArgumentException',
             )),
 
-            // select with no WHERE
+            // specify query
             array(array(
-                'type' => 'nt:unstructured',
-                'expectedSql' => 'SELECT * FROM nt:unstructured',
-            )),
-
-            // select with WHERE
-            array(array(
-                'type' => 'nt:unstructured',
-                'where' => 'foo="bar"',
-                'expectedSql' => 'SELECT * FROM nt:unstructured WHERE foo="bar"',
+                'query' => 'SELECT * FROM nt:unstructured WHERE foo="bar"',
             )),
 
             // set, remote properties and mixins
             array(array(
-                'type' => 'nt:unstructured',
                 'setProp' => array(array('foo', 'bar')),
                 'removeProp' => array('bar'),
                 'addMixin' => array('mixin1'),
                 'removeMixin' => array('mixin1'),
-
-                'expectedSql' => 'SELECT * FROM nt:unstructured',
+                'query' => 'SELECT * FROM nt:unstructured',
             )),
         );
     }
@@ -59,13 +49,11 @@ class NodesUpdateCommandTest extends BaseCommandTest
     public function testNodeUpdate($options)
     {
         $options = array_merge(array(
-            'type' => null,
-            'where' => null,
+            'query' => null,
             'setProp' => array(),
             'removeProp' => array(),
             'addMixin' => array(),
             'removeMixin' => array(),
-            'expectedSql' => null,
             'exception' => null,
         ), $options);
 
@@ -82,7 +70,7 @@ class NodesUpdateCommandTest extends BaseCommandTest
 
         $this->queryManager->expects($this->any())
             ->method('createQuery')
-            ->with($options['expectedSql'], 'sql')
+            ->with($options['query'], 'JCR-SQL2')
             ->will($this->returnValue($this->query));
 
         $this->query->expects($this->any())
@@ -96,17 +84,13 @@ class NodesUpdateCommandTest extends BaseCommandTest
 
         $args = array(
             '--query-language' => null,
-            '--where' => $options['where'],
-            '--force' => true,
+            '--query' => $options['query'],
+            '--no-interaction' => true,
             '--set-prop' => array(),
             '--remove-prop' => array(),
             '--add-mixin' => array(),
             '--remove-mixin' => array(),
         );
-
-        if ($options['type']) {
-            $args['--type'] = $options['type'];
-        }
 
         foreach ($options['setProp'] as $setProp)
         {

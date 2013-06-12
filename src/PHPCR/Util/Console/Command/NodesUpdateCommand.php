@@ -42,43 +42,19 @@ class NodesUpdateCommand extends BaseCommand
     {
         parent::configure();
 
+        $this->configureNodeManipulationInput($this);
+
         $this->setName('phpcr:nodes:update')
             ->addOption(
-                'type', 't',
+                'query', null,
                 InputOption::VALUE_REQUIRED,
-                'Update nodes of given node type, e.g. nt:unstructured'
-            )
-            ->addOption(
-                'where', 'w',
-                InputOption::VALUE_OPTIONAL,
-                'Specify the update criteria in SQL, e.g. "foobar = \'foo\' AND barfoo = \'bar\'"'
+                'Query used to select the nodes'
             )
             ->addOption(
                 'query-language', 'l', 
                 InputOption::VALUE_OPTIONAL, 
-                'The query language (sql, jcr_sql2',
+                'The query language (e.g. sql, jcr_sql2)',
                 'jcr_sql2'
-            )
-
-            ->addOption('set-prop', 'p',
-                InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
-                'Set node property on nodes use foo=bar'
-            )
-            ->addOption('remove-prop', 'r',
-                InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
-                'Remove property from nodes'
-            )
-            ->addOption('add-mixin', null,
-                InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
-                'Add a mixin to the nodes'
-            )
-            ->addOption('remove-mixin', null,
-                InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
-                'Remove mixin from the nodes'
-            )
-            ->addOption('force', null, 
-                InputOption::VALUE_NONE, 
-                'Use to bypass the confirmation dialog'
             )
             ->setDescription('Command to manipulate the nodes in the workspace.')
             ->setHelp(<<<HERE
@@ -101,8 +77,7 @@ HERE
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $type = $input->getOption('type');
-        $where = $input->getOption('where');
+        $query = $input->getOption('query');
         $queryLanguage = strtoupper($input->getOption('query-language'));
         $setProp = $input->getOption('set-prop');
         $removeProp = $input->getOption('remove-prop');
@@ -114,22 +89,21 @@ HERE
 
         $this->dialog = new DialogHelper();
 
-        if (!$type) {
-            throw new \InvalidArgumentException('You must provide the "type" option, to select all nodes specify the type "nt:base"');
+        if (!$query) {
+            throw new \InvalidArgumentException(
+                'You must provide a SELECT query, e.g. --select="SELECT * FROM [nt:unstructured]"'
+            );
         }
 
-        if ($where) {
-            $sql = sprintf('SELECT * FROM [%s] WHERE %s', $type, $where);
-        } else {
-            $sql = sprintf('SELECT * FROM [%s]', $type);
+        if (strtoupper(substr($query, 0, 6) != 'SELECT')) {
+            throw new \InvalidArgumentException(sprintf(
+                'Query doesn\'t look like a SELECT query: "%s"',
+                $query
+            ));
         }
 
-        $output->writeln($sql);
-        $query = $helper->createQuery($queryLanguage, $sql);
-
-        $start = microtime(true);
+        $query = $helper->createQuery($queryLanguage, $query);
         $result = $query->execute();
-        $elapsed = microtime(true) - $start;
 
         if (!$noInteraction) {
             if (false === $this->getAction($output, $result)) {
@@ -139,7 +113,7 @@ HERE
 
         foreach ($result as $i => $row) {
             $output->writeln(sprintf(
-                "<info>Updating node:</info>[%d] %s.",
+                "<info>Updating node:</info> [%d] %s.",
                 $i,
                 $row->getPath()
             ));
@@ -154,9 +128,9 @@ HERE
             ));
         }
 
+        $output->writeln('<info>Saving session...</info>');
         $session->save();
-
-        $output->writeln(sprintf('<info>%.2f seconds</info>', $elapsed));
+        $output->writeln('<info>Done.</info>');
 
         return 0;
     }

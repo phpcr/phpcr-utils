@@ -45,6 +45,8 @@ class NodeTouchCommand extends BaseCommand
     {
         parent::configure();
 
+        $this->configureNodeManipulationInput();
+
         $this->setName('phpcr:node:touch')
             ->addArgument(
                 'path',
@@ -57,25 +59,9 @@ class NodeTouchCommand extends BaseCommand
                 'Node type, default nt:unstructured',
                 'nt:unstructured'
             )
-            ->addOption('set-prop', 'p',
-                InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
-                'Set node property, use foo=bar'
-            )
-            ->addOption('remove-prop', 'r',
-                InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
-                'Remove node property'
-            )
             ->addOption('dump', 'd',
                 InputOption::VALUE_NONE,
                 'Dump a string reperesentation of the created / modified node.'
-            )
-            ->addOption('add-mixin', null,
-                InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
-                'Add a mixin to the node'
-            )
-            ->addOption('remove-mixin', null,
-                InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
-                'Add a mixin to the node'
             )
             ->setDescription('Create or modify a node')
             ->setHelp(<<<HERE
@@ -107,9 +93,10 @@ HERE
 
         $path = $input->getArgument('path');
         $type = $input->getOption('type');
+        $dump = $input->getOption('dump');
+
         $setProp = $input->getOption('set-prop');
         $removeProp = $input->getOption('remove-prop');
-        $dump = $input->getOption('dump');
         $addMixins = $input->getOption('add-mixin');
         $removeMixins = $input->getOption('remove-mixin');
 
