@@ -22,7 +22,6 @@
 namespace PHPCR\Util\Console\Command;
 
 use PHPCR\Util\UUIDHelper;
-use Symfony\Component\Console\Command\Command;
 use PHPCR\ItemNotFoundException;
 use PHPCR\RepositoryException;
 use PHPCR\PathNotFoundException;
@@ -42,7 +41,7 @@ use PHPCR\Util\Console\Helper\TreeDumper\SystemNodeFilter;
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class NodeDumpCommand extends Command
+class NodeDumpCommand extends BaseCommand
 {
     /**
      * Limit after which to cut lines when dumping properties
@@ -95,7 +94,7 @@ HERE
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $session = $this->getHelper('phpcr')->getSession();
+        $session = $this->getPhpcrSession();
         $dumperHelper = $this->getHelper('phpcr_console_dumper');
 
         // node to dump

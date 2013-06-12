@@ -36,7 +36,7 @@ use PHPCR\PathNotFoundException;
  *
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class NodeTouchCommand extends Command
+class NodeTouchCommand extends BaseCommand
 {
     /**
      * {@inheritDoc}
@@ -102,8 +102,8 @@ HERE
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $helper = $this->getHelper('phpcr');
-        $session = $helper->getSession();
+        $helper = $this->getPhpcrCliHelper();
+        $session = $this->getPhpcrSession();
 
         $path = $input->getArgument('path');
         $type = $input->getOption('type');

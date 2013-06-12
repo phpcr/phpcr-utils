@@ -4,14 +4,14 @@ namespace PHPCR\Tests\Util\Console\Command;
 
 use Symfony\Component\Console\Application;
 use PHPCR\RepositoryInterface;
-use PHPCR\Util\Console\Command\WorkspaceNodeUpdateCommand;
+use PHPCR\Util\Console\Command\NodesUpdateCommand;
 
-class WorkspaceNodeUpdateCommandTest extends BaseCommandTest
+class NodesUpdateCommandTest extends BaseCommandTest
 {
     public function setUp()
     {
         parent::setUp();
-        $this->application->add(new WorkspaceNodeUpdateCommand());
+        $this->application->add(new NodesUpdateCommand());
         $this->queryManager = $this->getMock(
             'PHPCR\Query\QueryManagerInterface'
         );
@@ -21,11 +21,34 @@ class WorkspaceNodeUpdateCommandTest extends BaseCommandTest
     public function provideNodeUpdate()
     {
         return array(
+
+            // no type specified
             array(array(
+                'exception' => 'InvalidArgumentException',
+            )),
+
+            // select with no WHERE
+            array(array(
+                'type' => 'nt:unstructured',
+                'expectedSql' => 'SELECT * FROM nt:unstructured',
+            )),
+
+            // select with WHERE
+            array(array(
+                'type' => 'nt:unstructured',
+                'where' => 'foo="bar"',
+                'expectedSql' => 'SELECT * FROM nt:unstructured WHERE foo="bar"',
+            )),
+
+            // set, remote properties and mixins
+            array(array(
+                'type' => 'nt:unstructured',
                 'setProp' => array(array('foo', 'bar')),
                 'removeProp' => array('bar'),
                 'addMixin' => array('mixin1'),
                 'removeMixin' => array('mixin1'),
+
+                'expectedSql' => 'SELECT * FROM nt:unstructured',
             )),
         );
     }
@@ -36,40 +59,54 @@ class WorkspaceNodeUpdateCommandTest extends BaseCommandTest
     public function testNodeUpdate($options)
     {
         $options = array_merge(array(
+            'type' => null,
+            'where' => null,
             'setProp' => array(),
             'removeProp' => array(),
             'addMixin' => array(),
             'removeMixin' => array(),
+            'expectedSql' => null,
+            'exception' => null,
         ), $options);
 
-        $this->session->expects($this->once())
+        if ($options['exception']) {
+            $this->setExpectedException($options['exception']);
+        }
+
+        $this->session->expects($this->any())
             ->method('getWorkspace')
             ->will($this->returnValue($this->workspace));
-        $this->workspace->expects($this->once())
+        $this->workspace->expects($this->any())
             ->method('getQueryManager')
             ->will($this->returnValue($this->queryManager));
-        $this->queryManager->expects($this->once())
+
+        $this->queryManager->expects($this->any())
             ->method('createQuery')
-            ->with('SELECT foo FROM foo', 'sql')
+            ->with($options['expectedSql'], 'sql')
             ->will($this->returnValue($this->query));
-        $this->query->expects($this->once())
+
+        $this->query->expects($this->any())
             ->method('execute')
             ->will($this->returnValue(array(
                 $this->row1,
             )));
-        $this->row1->expects($this->once())
+        $this->row1->expects($this->any())
             ->method('getNode')
             ->will($this->returnValue($this->node1));
 
         $args = array(
-            'query' => 'SELECT foo FROM foo',
-            '--language' => 'sql',
+            '--query-language' => null,
+            '--where' => $options['where'],
             '--force' => true,
             '--set-prop' => array(),
             '--remove-prop' => array(),
             '--add-mixin' => array(),
             '--remove-mixin' => array(),
         );
+
+        if ($options['type']) {
+            $args['--type'] = $options['type'];
+        }
 
         foreach ($options['setProp'] as $setProp)
         {
@@ -108,6 +145,6 @@ class WorkspaceNodeUpdateCommandTest extends BaseCommandTest
             $args['--remove-mixin'][] = $mixin;
         }
 
-        $ct = $this->executeCommand('phpcr:workspace:node:update', $args);
+        $ct = $this->executeCommand('phpcr:nodes:update', $args);
     }
 }

@@ -21,12 +21,11 @@
 
 namespace PHPCR\Util\Console\Command;
 
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Helper\DialogHelper;
+use PHPCR\Util\Console\Command\BaseCommand;
 
 /**
  * Command which can update the properties of nodes found
@@ -34,7 +33,7 @@ use Symfony\Component\Console\Helper\DialogHelper;
  *
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class WorkspaceNodeUpdateCommand extends Command
+class NodesUpdateCommand extends BaseCommand
 {
     /**
      * {@inheritDoc}
@@ -43,19 +42,23 @@ class WorkspaceNodeUpdateCommand extends Command
     {
         parent::configure();
 
-        $this->setName('phpcr:workspace:node:update')
-            ->addArgument(
-                'query', 
-                InputArgument::REQUIRED, 
-                'A query statement to execute')
-            ->addOption('force', null, 
-                InputOption::VALUE_NONE, 
-                'Use to bypass the confirmation dialog'
+        $this->setName('phpcr:nodes:update')
+            ->addOption(
+                'type', 't',
+                InputOption::VALUE_REQUIRED,
+                'Update nodes of given node type, e.g. nt:unstructured'
             )
             ->addOption(
-                'language', 'l', 
+                'where', 'w',
+                InputOption::VALUE_OPTIONAL,
+                'Specify the update criteria in SQL, e.g. "foobar = \'foo\' AND barfoo = \'bar\'"'
+            )
+            ->addOption(
+                'query-language', 'l', 
                 InputOption::VALUE_OPTIONAL, 
-                'The query language (sql, jcr_sql2')
+                'The query language (sql, jcr_sql2',
+                'jcr_sql2'
+            )
 
             ->addOption('set-prop', 'p',
                 InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
@@ -73,16 +76,22 @@ class WorkspaceNodeUpdateCommand extends Command
                 InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
                 'Remove mixin from the nodes'
             )
+            ->addOption('force', null, 
+                InputOption::VALUE_NONE, 
+                'Use to bypass the confirmation dialog'
+            )
             ->setDescription('Command to manipulate the nodes in the workspace.')
             ->setHelp(<<<HERE
-The <info>workspace:node:update</info> command updates properties of nodes found
-by the given JCR query.
+The <info>nodes:update</info> command updates properties of nodes of type x matching
+the given select criteria.
 
-    php bin/phpcr workspace:node:update "SELECT FROM nt:unstructured" --set-prop=foo=bar
+    php bin/phpcr nodes:update --type="nt:unstructured" --where="foo='bar'" --set-prop=foo=bar
 
 The options for manipulating nodes are the same as with the 
 <info>node:touch</info> command and
 can be repeated to update multiple properties.
+
+The <info>--where</info> option corresponds to the "where" part of a standard query.
 HERE
 );
     }
@@ -92,34 +101,45 @@ HERE
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $sql = $input->getArgument('query');
-        $language = strtoupper($input->getOption('language'));
+        $type = $input->getOption('type');
+        $where = $input->getOption('where');
+        $queryLanguage = strtoupper($input->getOption('query-language'));
         $setProp = $input->getOption('set-prop');
         $removeProp = $input->getOption('remove-prop');
         $addMixins = $input->getOption('add-mixin');
         $removeMixins = $input->getOption('remove-mixin');
-        $force = $input->getOption('force');
+        $noInteraction = $input->getOption('no-interaction');
+        $helper = $this->getPhpcrCliHelper();
+        $session = $this->getPhpcrSession();
+        $this->dialog = new DialogHelper();
 
-        $helper = $this->getHelper('phpcr');
-        $session = $helper->getSession();
+        if (!$type) {
+            throw new \InvalidArgumentException('You must provide the "type" option, to select all nodes specify the type "nt:base"');
+        }
 
-        $query = $helper->createQuery($language, $sql);
+        if ($where) {
+            $sql = sprintf('SELECT * FROM [%s] WHERE %s', $type, $where);
+        } else {
+            $sql = sprintf('SELECT * FROM [%s]', $type);
+        }
+
+        $output->writeln($sql);
+        $query = $helper->createQuery($queryLanguage, $sql);
 
         $start = microtime(true);
         $result = $query->execute();
         $elapsed = microtime(true) - $start;
 
-        if (!$force) {
-            $dialog = new DialogHelper();
-            $force = $dialog->askConfirmation($output, sprintf(
-                '<question>About to update %d nodes, do you want to continue Y/N ?</question>',
-                count($result)
-            ), false);
+        if (!$noInteraction) {
+            if (false === $this->getAction($output, $result)) {
+                return 0;
+            }
         }
 
         foreach ($result as $i => $row) {
             $output->writeln(sprintf(
-                "<info>Updating node</info> %s.",
+                "<info>Updating node:</info>[%d] %s.",
+                $i,
                 $row->getPath()
             ));
 
@@ -136,5 +156,31 @@ HERE
         $output->writeln(sprintf('<info>%.2f seconds</info>', $elapsed));
 
         return 0;
+    }
+
+    protected function getAction($output, $result)
+    {
+        $response = strtoupper($this->dialog->ask($output, sprintf(
+            '<question>About to update %d nodes. Enter "Y" to continue, "N" to cancel or "L" to list.</question>',
+            count($result->getRows())
+        ), false));
+
+        if ($response == 'L') {
+            foreach ($result as $i => $row) {
+                $output->writeln(sprintf(' - [%d] %s', $i, $row->getPath()));
+            }
+
+            return $this->getAction($output, $result);
+        }
+
+        if ($response == 'N') {
+            return false;
+        }
+
+        if ($response == 'Y') {
+            return true;
+        }
+
+        return $this->getAction($output, $result);
     }
 }

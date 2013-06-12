@@ -32,8 +32,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  * resulting nodes.
  *
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
+ * @author Daniel Leech <daniel@dantleech.com>
  */
-class WorkspaceQueryCommand extends Command
+class WorkspaceQueryCommand extends BaseCommand
 {
     /**
      * {@inheritDoc}
@@ -61,8 +62,8 @@ class WorkspaceQueryCommand extends Command
         $limit = $input->getOption('limit');
         $offset = $input->getOption('offset');
 
-        $helper = $this->getHelper('phpcr');
-        $session = $helper->getSession();
+        $helper = $this->getPhpcrCliHelper();
+        $session = $this->getPhpcrSession();
 
         $query = $helper->createQuery($language, $sql);
 

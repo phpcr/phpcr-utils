@@ -16,7 +16,6 @@ require_once(__DIR__.'/../../../Stubs/MockNode.php');
 require_once(__DIR__.'/../../../Stubs/MockNodeTypeManager.php');
 require_once(__DIR__.'/../../../Stubs/MockRow.php');
 
-
 abstract class BaseCommandTest extends \PHPUnit_Framework_TestCase
 {
     /** @var SessionInterface|\PHPUnit_Framework_MockObject_MockObject */
@@ -75,7 +74,7 @@ abstract class BaseCommandTest extends \PHPUnit_Framework_TestCase
     {
         $command = $this->application->find($name);
         $commandTester = new CommandTester($command);
-        $args = $args = array_merge(array(
+        $args = array_merge(array(
             'command' => $command->getName(),
         ), $args);
         $this->assertEquals(0, $commandTester->execute($args));
