@@ -89,6 +89,7 @@ HERE
         $removeProp = $input->getOption('remove-prop');
         $addMixins = $input->getOption('add-mixin');
         $removeMixins = $input->getOption('remove-mixin');
+        $applyClosures = $input->getOption('apply-closure');
         $noInteraction = $input->getOption('no-interaction');
         $helper = $this->getPhpcrCliHelper();
         $session = $this->getPhpcrSession();
@@ -129,6 +130,7 @@ HERE
                 'removeProp' => $removeProp,
                 'addMixins' => $addMixins,
                 'removeMixins' => $removeMixins,
+                'applyClosures' => $applyClosures,
             ));
         }
 

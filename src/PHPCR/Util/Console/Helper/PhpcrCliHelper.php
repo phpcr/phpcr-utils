@@ -77,6 +77,7 @@ class PhpcrCliHelper extends Helper
             'removeProp' => array(),
             'addMixins' => array(),
             'removeMixins' => array(),
+            'applyClosures' => array(),
             'dump' => false,
         ), $options);
 
@@ -113,6 +114,12 @@ class PhpcrCliHelper extends Helper
             ));
 
             $node->removeMixin($removeMixin);
+        }
+
+        foreach ($options['applyClosures'] as $closureString) {
+            $evalCode = sprintf('$closure = %s;', $closureString);
+            eval($evalCode);
+            $closure($this->session, $node);
         }
 
         if ($options['dump']) {
