@@ -23,6 +23,7 @@ namespace PHPCR\Util;
 
 use PHPCR\ItemInterface;
 use PHPCR\NodeInterface;
+use PHPCR\PropertyInterface;
 use PHPCR\PropertyType;
 use PHPCR\SessionInterface;
 use PHPCR\RepositoryException;
@@ -50,7 +51,7 @@ class NodeHelper
      * @param SessionInterface $session the PHPCR session to create the path
      * @param string           $path    full path, like /content/jobs/data
      *
-     * @return \PHPCR\NodeInterface the last node of the path, i.e. data
+     * @return NodeInterface the last node of the path, i.e. data
      */
     public static function createPath(SessionInterface $session, $path)
     {
@@ -87,12 +88,14 @@ class NodeHelper
     {
         $root = $session->getRootNode();
 
+        /** @var $property PropertyInterface */
         foreach ($root->getProperties() as $property) {
             if (! self::isSystemItem($property)) {
                 $property->remove();
             }
         }
 
+        /** @var $node NodeInterface */
         foreach ($root->getNodes() as $node) {
             if (! self::isSystemItem($node)) {
                 $node->remove();
@@ -111,13 +114,17 @@ class NodeHelper
     }
 
     /**
-     * Determine whether this item has a namespace that is to be considered
-     * a system namespace
+     * Determine whether this item is to be considered a system item that you
+     * usually want to hide and that should not be removed when purging the
+     * repository.
      *
      * @param ItemInterface $item
      */
     public static function isSystemItem(ItemInterface $item)
     {
+        if ($item->getDepth() > 1) {
+            return false;
+        }
         $name = $item->getName();
 
         return strpos($name, 'jcr:') === 0 || strpos($name, 'rep:') === 0;

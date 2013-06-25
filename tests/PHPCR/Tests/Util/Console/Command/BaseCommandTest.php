@@ -2,6 +2,9 @@
 
 namespace PHPCR\Tests\Util\Console\Command;
 
+use PHPCR\NodeInterface;
+use PHPCR\Query\QueryManagerInterface;
+use PHPCR\Query\RowInterface;
 use PHPCR\RepositoryInterface;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -24,6 +27,12 @@ abstract class BaseCommandTest extends \PHPUnit_Framework_TestCase
     protected $workspace;
     /** @var RepositoryInterface|\PHPUnit_Framework_MockObject_MockObject */
     protected $repository;
+    /** @var NodeInterface|\PHPUnit_Framework_MockObject_MockObject */
+    protected $node1;
+    /** @var RowInterface|\PHPUnit_Framework_MockObject_MockObject */
+    protected $row1;
+    /** @var QueryManagerInterface|\PHPUnit_Framework_MockObject_MockObject */
+    protected $queryManager;
     /** @var PhpcrConsoleDumperHelper|\PHPUnit_Framework_MockObject_MockObject */
     protected $dumperHelper;
     /** @var HelperSet */
@@ -86,7 +95,7 @@ abstract class BaseCommandTest extends \PHPUnit_Framework_TestCase
         $args = array_merge(array(
             'command' => $command->getName(),
         ), $args);
-        $this->assertEquals(0, $commandTester->execute($args));
+        $this->assertEquals($status, $commandTester->execute($args));
 
         return $commandTester;
     }
