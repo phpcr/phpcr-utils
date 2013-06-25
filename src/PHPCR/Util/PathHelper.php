@@ -36,9 +36,11 @@ class PathHelper
     /**
      * Do not create an instance of this class
      */
+    // @codeCoverageIgnoreStart
     private function __construct()
     {
     }
+    // @codeCoverageIgnoreEnd
 
     /**
      * Check whether this is a syntactically valid absolute path.
@@ -141,15 +143,21 @@ class PathHelper
     public static function normalizePath($path, $destination = false, $throw = true)
     {
         if (!is_string($path)) {
-            throw new RepositoryException('Expected string but got ' . gettype($path));
-        }
+            if ($throw) {
+                throw new RepositoryException('Expected string but got ' . gettype($path));
+            }
 
+            return false;
+        }
         if (strlen($path) === 0) {
-            throw new RepositoryException('Path must not be of zero length');
+            if ($throw) {
+                throw new RepositoryException('Path must not be of zero length');
+            }
+
+            return false;
         }
 
         if ('/' === $path) {
-
             return '/';
         }
 
@@ -211,9 +219,28 @@ class PathHelper
      */
     public static function absolutizePath($path, $context, $destination = false, $throw = true)
     {
-        if (! $path) {
-            throw new RepositoryException('empty path');
+        if (!is_string($path)) {
+            if ($throw) {
+                throw new RepositoryException('Expected string path but got ' . gettype($path));
+            }
+
+            return false;
         }
+        if (!is_string($context)) {
+            if ($throw) {
+                throw new RepositoryException('Expected string context but got ' . gettype($context));
+            }
+
+            return false;
+        }
+        if (strlen($path) === 0) {
+            if ($throw) {
+                throw new RepositoryException('Path must not be of zero length');
+            }
+
+            return false;
+        }
+
         if ('/' !== $path[0]) {
             $path = ('/' === $context) ? "/$path" : "$context/$path";
         }
