@@ -19,5 +19,7 @@ $credentials = new \PHPCR\SimpleCredentials($user, $pass);
 $session = $repository->login($credentials, $workspace);
 
 $helperSet = new \Symfony\Component\Console\Helper\HelperSet(array(
-    'session' => new \PHPCR\Util\Console\Helper\PhpcrHelper($session)
+    'phpcr' => new \PHPCR\Util\Console\Helper\PhpcrHelper($session),
+    'phpcr_cli' => new \PHPCR\Util\Console\Helper\PhpcrCliHelper($session),
+    'phpcr_console_dumper' => new \PHPCR\Util\Console\Helper\PhpcrConsoleDumperHelper(),
 ));
