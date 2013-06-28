@@ -143,8 +143,8 @@ HERE
         }
 
         $helper->processNode($output, $node, array(
-            'setProps' => $setProp,
-            'removeProps' => $removeProp,
+            'setProp' => $setProp,
+            'removeProp' => $removeProp,
             'addMixins' => $addMixins,
             'removeMixins' => $removeMixins,
             'dump' => $dump,
