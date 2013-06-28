@@ -11,6 +11,8 @@ use PHPCR\Util\Console\Helper\PhpcrCliHelper;
 
 abstract class BaseCommand extends Command
 {
+    protected $phpcrCliHelper;
+
     /**
      * @return SessionInterface
      */
@@ -24,8 +26,19 @@ abstract class BaseCommand extends Command
      */
     protected function getPhpcrCliHelper()
     {
-        $phpcrCliHelper = new PhpcrCliHelper($this->getPhpcrSession());
-        return $phpcrCliHelper;
+        if (!$this->phpcrCliHelper) {
+            $this->phpcrCliHelper = new PhpcrCliHelper($this->getPhpcrSession());
+        }
+
+        return $this->phpcrCliHelper;
+    }
+
+    /**
+     * Hack to enable overriding for unit tests.
+     */
+    public function setPhpcrCliHelper(PhpcrCliHelper $helper)
+    {
+        $this->phpcrCliHelper = $helper;
     }
 
     public function configureNodeManipulationInput()

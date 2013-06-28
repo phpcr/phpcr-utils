@@ -21,24 +21,50 @@ require_once(__DIR__.'/../../../Stubs/MockRow.php');
 
 abstract class BaseCommandTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var SessionInterface|\PHPUnit_Framework_MockObject_MockObject */
-    protected $session;
-    /** @var WorkspaceInterface|\PHPUnit_Framework_MockObject_MockObject */
-    protected $workspace;
-    /** @var RepositoryInterface|\PHPUnit_Framework_MockObject_MockObject */
-    protected $repository;
-    /** @var NodeInterface|\PHPUnit_Framework_MockObject_MockObject */
+    /**
+     * @var SessionInterface|\PHPUnit_Framework_MockObject_MockObject
+     * */
+    public $session;
+
+    /**
+     * @var WorkspaceInterface|\PHPUnit_Framework_MockObject_MockObject
+     */
+    public $workspace;
+
+    /**
+     * @var RepositoryInterface|\PHPUnit_Framework_MockObject_MockObject
+     */
+    public $repository;
+
+    /**
+     * @var PhpcrConsoleDumperHelper|\PHPUnit_Framework_MockObject_MockObject
+     */
+    public $dumperHelper;
+
+    /**
+     * @var NodeInterface|\PHPUnit_Framework_MockObject_MockObject
+     */
     protected $node1;
-    /** @var RowInterface|\PHPUnit_Framework_MockObject_MockObject */
+
+    /**
+     * @var RowInterface|\PHPUnit_Framework_MockObject_MockObject
+     */
     protected $row1;
-    /** @var QueryManagerInterface|\PHPUnit_Framework_MockObject_MockObject */
+
+    /**
+     * @var QueryManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+     */
     protected $queryManager;
-    /** @var PhpcrConsoleDumperHelper|\PHPUnit_Framework_MockObject_MockObject */
-    protected $dumperHelper;
-    /** @var HelperSet */
-    protected $helperSet;
-    /** @var Application */
-    protected $application;
+
+    /**
+     * @var HelperSet
+     */
+    public $helperSet;
+
+    /**
+     * @var Application
+     */
+    public $application;
 
     public function setUp()
     {
@@ -58,6 +84,10 @@ abstract class BaseCommandTest extends \PHPUnit_Framework_TestCase
             'session' => new PhpcrHelper($this->session),
             'phpcr_console_dumper' => $this->dumperHelper,
         ));
+
+        $this->phpcrCliHelper = $this->getMockBuilder('PHPCR\Util\Console\Helper\PhpcrCliHelper')
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $this->session->expects($this->any())
             ->method('getWorkspace')
