@@ -2,18 +2,19 @@
 
 namespace PHPCR\Util\Console\Command;
 
+use PHPCR\SessionInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use PHPCR\Util\Console\Helper\PhpcrCliHelper;
-use Symfony\Component\Console\Input\InputOption;
 
 abstract class BaseCommand extends Command
 {
     protected $phpcrCliHelper;
 
     /**
-     * @return PHPCR\SessionInterface
+     * @return SessionInterface
      */
     protected function getPhpcrSession()
     {
@@ -21,7 +22,7 @@ abstract class BaseCommand extends Command
     }
 
     /**
-     * @return PHPCR\Util\Console\Helper\PhpcrCliHelper
+     * @return PhpcrCliHelper
      */
     protected function getPhpcrCliHelper()
     {

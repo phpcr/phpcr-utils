@@ -21,19 +21,17 @@
 
 namespace PHPCR\Util\Console\Command;
 
-use PHPCR\Util\UUIDHelper;
 use PHPCR\ItemNotFoundException;
 use PHPCR\RepositoryException;
 use PHPCR\PathNotFoundException;
+
+use PHPCR\Util\UUIDHelper;
+use PHPCR\Util\Console\Helper\PhpcrConsoleDumperHelper;
+
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-
-use PHPCR\Util\TreeWalker;
-use PHPCR\Util\Console\Helper\TreeDumper\ConsoleDumperNodeVisitor;
-use PHPCR\Util\Console\Helper\TreeDumper\ConsoleDumperPropertyVisitor;
-use PHPCR\Util\Console\Helper\TreeDumper\SystemNodeFilter;
 
 /**
  * Command subtrees under a path to the console
@@ -44,20 +42,13 @@ use PHPCR\Util\Console\Helper\TreeDumper\SystemNodeFilter;
 class NodeDumpCommand extends BaseCommand
 {
     /**
-     * Limit after which to cut lines when dumping properties
-     *
-     * @var int
-     */
-    private $dump_max_line_length = 120;
-
-    /**
      * {@inheritDoc}
      */
     protected function configure()
     {
         $this
             ->setName('phpcr:node:dump')
-            ->addOption('sys_nodes', null, InputOption::VALUE_NONE, 'Also dump system nodes')
+            ->addOption('sys-nodes', null, InputOption::VALUE_NONE, 'Also dump system nodes (recommended to use with a depth limit)')
             ->addOption('props', null, InputOption::VALUE_NONE, 'Also dump properties of the nodes')
             ->addOption('identifiers', null, InputOption::VALUE_NONE, 'Also output node UUID')
             ->addOption('depth', null, InputOption::VALUE_OPTIONAL, 'Limit how many level of children to show', "-1")
@@ -72,21 +63,11 @@ If the <info>props</info> option is used the nodes properties are
 displayed as yaml arrays.
 
 By default the command filters out system nodes and properties (i.e. nodes and
-properties with names starting with 'jcr:'), the <info>sys_nodes</info> option
+properties with names starting with 'jcr:'), the <info>--sys-nodes</info> option
 allows to turn this filter off.
 HERE
             )
         ;
-    }
-
-    /**
-     * Change at which length lines in the dump get cut.
-     *
-     * @param int $length maximum line length after which to cut the output.
-     */
-    public function setDumpMaxLineLength($length)
-    {
-        $this->dump_max_line_length = $length;
     }
 
     /**
@@ -95,6 +76,7 @@ HERE
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $session = $this->getPhpcrSession();
+        /** @var $dumperHelper PhpcrConsoleDumperHelper */
         $dumperHelper = $this->getHelper('phpcr_console_dumper');
 
         // node to dump

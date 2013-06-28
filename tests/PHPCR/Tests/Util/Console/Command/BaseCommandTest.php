@@ -2,6 +2,9 @@
 
 namespace PHPCR\Tests\Util\Console\Command;
 
+use PHPCR\NodeInterface;
+use PHPCR\Query\QueryManagerInterface;
+use PHPCR\Query\RowInterface;
 use PHPCR\RepositoryInterface;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -18,33 +21,48 @@ require_once(__DIR__.'/../../../Stubs/MockRow.php');
 
 abstract class BaseCommandTest extends \PHPUnit_Framework_TestCase
 {
-    /** 
-     * @var SessionInterface|\PHPUnit_Framework_MockObject_MockObject 
+    /**
+     * @var SessionInterface|\PHPUnit_Framework_MockObject_MockObject
      * */
     public $session;
 
-    /** 
-     * @var WorkspaceInterface|\PHPUnit_Framework_MockObject_MockObject 
+    /**
+     * @var WorkspaceInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     public $workspace;
 
-    /** 
-     * @var RepositoryInterface|\PHPUnit_Framework_MockObject_MockObject 
+    /**
+     * @var RepositoryInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     public $repository;
 
-    /** 
-     * @var PhpcrConsoleDumperHelper|\PHPUnit_Framework_MockObject_MockObject 
+    /**
+     * @var PhpcrConsoleDumperHelper|\PHPUnit_Framework_MockObject_MockObject
      */
     public $dumperHelper;
 
-    /** 
-     * @var HelperSet 
+    /**
+     * @var NodeInterface|\PHPUnit_Framework_MockObject_MockObject
+     */
+    public $node1;
+
+    /**
+     * @var RowInterface|\PHPUnit_Framework_MockObject_MockObject
+     */
+    public $row1;
+
+    /**
+     * @var QueryManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+     */
+    public $queryManager;
+
+    /**
+     * @var HelperSet
      */
     public $helperSet;
 
-    /** 
-     * @var Application 
+    /**
+     * @var Application
      */
     public $application;
 
@@ -107,7 +125,7 @@ abstract class BaseCommandTest extends \PHPUnit_Framework_TestCase
         $args = array_merge(array(
             'command' => $command->getName(),
         ), $args);
-        $this->assertEquals(0, $commandTester->execute($args));
+        $this->assertEquals($status, $commandTester->execute($args));
 
         return $commandTester;
     }
