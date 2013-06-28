@@ -68,19 +68,10 @@ class PathHelper
             || strlen($path) > 1 && '/' === $path[strlen($path) - 1]
             || preg_match('-//|/\./|/\.\./-', $path)
         ) {
-            if ($throw) {
-                throw new RepositoryException("Invalid path $path");
-            }
-
-            return false;
+            return self::error("Invalid path $path", $throw);
         }
         if ($destination && ']' === $path[strlen($path) - 1]) {
-            if ($throw) {
-                throw new RepositoryException("Destination path may not end with index $path");
-            }
-
-            return false;
-
+            return self::error("Destination path may not end with index $path", $throw);
         }
 
         return true;
@@ -97,7 +88,8 @@ class PathHelper
      * encode and decode characters that are not natively allowed by a storage
      * engine.
      *
-     * @param string $name The name to check
+     * @param string  $name  The name to check
+     * @param boolean $throw whether to throw an exception on validation errors.
      *
      * @return bool true if valid, false if not valid and $throw was false
      *
@@ -108,11 +100,11 @@ class PathHelper
     public static function assertValidLocalName($name, $throw = true)
     {
         if ('.' == $name || '..' == $name) {
-            throw new RepositoryException('Name may not be parent or self identifier: ' . $name);
+            return self::error("Name may not be parent or self identifier: $name", $throw);
         }
 
         if (preg_match('/\\/|:|\\[|\\]|\\||\\*/', $name)) {
-            throw new RepositoryException('Name contains illegal characters: '.$name);
+            return self::error("Name contains illegal characters: $name", $throw);
         }
 
         return true;
@@ -143,18 +135,10 @@ class PathHelper
     public static function normalizePath($path, $destination = false, $throw = true)
     {
         if (!is_string($path)) {
-            if ($throw) {
-                throw new RepositoryException('Expected string but got ' . gettype($path));
-            }
-
-            return false;
+            return self::error('Expected string but got ' . gettype($path), $throw);
         }
         if (strlen($path) === 0) {
-            if ($throw) {
-                throw new RepositoryException('Path must not be of zero length');
-            }
-
-            return false;
+            return self::error('Path must not be of zero length', $throw);
         }
 
         if ('/' === $path) {
@@ -162,11 +146,7 @@ class PathHelper
         }
 
         if ('/' !== $path[0]) {
-            if ($throw) {
-                throw new RepositoryException("Not an absolute path '$path'");
-            }
-
-            return false;
+            return self::error("Not an absolute path '$path'", $throw);
         }
 
         $finalParts= array();
@@ -220,25 +200,13 @@ class PathHelper
     public static function absolutizePath($path, $context, $destination = false, $throw = true)
     {
         if (!is_string($path)) {
-            if ($throw) {
-                throw new RepositoryException('Expected string path but got ' . gettype($path));
-            }
-
-            return false;
+            return self::error('Expected string path but got ' . gettype($path), $throw);
         }
         if (!is_string($context)) {
-            if ($throw) {
-                throw new RepositoryException('Expected string context but got ' . gettype($context));
-            }
-
-            return false;
+            return self::error('Expected string context but got ' . gettype($context), $throw);
         }
         if (strlen($path) === 0) {
-            if ($throw) {
-                throw new RepositoryException('Path must not be of zero length');
-            }
-
-            return false;
+            return self::error('Path must not be of zero length', $throw);
         }
 
         if ('/' !== $path[0]) {
@@ -296,5 +264,25 @@ class PathHelper
     public static function getPathDepth($path)
     {
         return substr_count(rtrim($path, '/'), '/');
+    }
+
+    /**
+     * If $throw is true, throw a RepositoryException with $msg. Otherwise
+     * return false.
+     *
+     * @param string  $msg   the exception message to use in case of throw being true
+     * @param boolean $throw whether to throw the exception or return false
+     *
+     * @return boolean false
+     *
+     * @throws RepositoryException
+     */
+    private static function error($msg, $throw)
+    {
+        if ($throw) {
+            throw new RepositoryException($msg);
+        }
+
+        return false;
     }
 }

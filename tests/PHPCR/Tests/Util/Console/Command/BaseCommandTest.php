@@ -44,17 +44,17 @@ abstract class BaseCommandTest extends \PHPUnit_Framework_TestCase
     /**
      * @var NodeInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected $node1;
+    public $node1;
 
     /**
      * @var RowInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected $row1;
+    public $row1;
 
     /**
      * @var QueryManagerInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    protected $queryManager;
+    public $queryManager;
 
     /**
      * @var HelperSet
