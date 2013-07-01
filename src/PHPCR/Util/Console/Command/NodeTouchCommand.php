@@ -29,6 +29,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use PHPCR\PathNotFoundException;
+use PHPCR\Util\PathHelper;
 
 /**
  * Command to create a PHPCR node of a specified type from
@@ -122,8 +123,8 @@ HERE
             }
         } else {
 
-            $nodeName = basename($path);
-            $parentPath = dirname($path);
+            $nodeName = PathHelper::getNodeName($path);
+            $parentPath = PathHelper::getParentPath($path);
 
             try {
                 $parentNode = $session->getNode($parentPath);
