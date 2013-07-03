@@ -8,10 +8,12 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use PHPCR\Util\Console\Helper\PhpcrCliHelper;
+use PHPCR\Util\Console\Helper\PhpcrConsoleDumperHelper;
 
 abstract class BaseCommand extends Command
 {
     protected $phpcrCliHelper;
+    protected $phpcrConsoleDumperHelper;
 
     /**
      * @return SessionInterface
@@ -31,6 +33,23 @@ abstract class BaseCommand extends Command
         }
 
         return $this->phpcrCliHelper;
+    }
+
+    /** 
+     * @return PhpcrConsoleDumperHelper 
+     */
+    protected function getPhpcrConsoleDumperHelper()
+    {
+        if (!$this->phpcrConsoleDumperHelper) {
+            $this->phpcrConsoleDumperHelper = new PhpcrConsoleDumperHelper();
+        }
+
+        return $this->phpcrConsoleDumperHelper;
+    }
+
+    public function setPhpcrConsoleDumperHelper($consoleDumperHelper)
+    {
+        $this->phpcrConsoleDumperHelper = $consoleDumperHelper;
     }
 
     /**
