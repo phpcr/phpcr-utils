@@ -22,6 +22,13 @@ class NodeDumpCommandTest extends BaseCommandTest
         )->disableOriginalConstructor()->getMock();
     }
 
+    protected function addCommand()
+    {
+        $ndCommand = new NodeDumpCommand();
+        $ndCommand->setPhpcrConsoleDumperHelper($this->dumperHelper);
+        $this->application->add($ndCommand);
+    }
+
     public function testCommand()
     {
         $this->dumperHelper
@@ -41,8 +48,7 @@ class NodeDumpCommandTest extends BaseCommandTest
             ->with($this->node1)
         ;
 
-        $this->application->add(new NodeDumpCommand());
-
+        $this->addCommand();
         $this->executeCommand('phpcr:node:dump', array());
     }
 
@@ -67,14 +73,13 @@ class NodeDumpCommandTest extends BaseCommandTest
             ->with($this->node1)
         ;
 
-        $this->application->add(new NodeDumpCommand());
-
+        $this->addCommand();
         $this->executeCommand('phpcr:node:dump', array('identifier' => $uuid));
     }
 
     public function testInvalidRefFormat()
     {
-        $this->application->add(new NodeDumpCommand());
+        $this->addCommand();
 
         try {
             $this->executeCommand('phpcr:node:dump', array('--ref-format' => 'xy'));
@@ -93,7 +98,8 @@ class NodeDumpCommandTest extends BaseCommandTest
             ->will($this->throwException(new ItemNotFoundException()))
         ;
 
-        $this->application->add(new NodeDumpCommand());
+
+        $this->addCommand();
 
         $ct = $this->executeCommand('phpcr:node:dump', array(), 1);
         $this->assertContains('does not exist', $ct->getDisplay());

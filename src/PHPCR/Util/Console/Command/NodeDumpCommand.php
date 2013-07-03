@@ -76,8 +76,7 @@ HERE
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $session = $this->getPhpcrSession();
-        /** @var $dumperHelper PhpcrConsoleDumperHelper */
-        $dumperHelper = $this->getHelper('phpcr_console_dumper');
+        $dumperHelper = $this->getPhpcrConsoleDumperHelper();
 
         // node to dump
         $identifier = $input->getArgument('identifier');
