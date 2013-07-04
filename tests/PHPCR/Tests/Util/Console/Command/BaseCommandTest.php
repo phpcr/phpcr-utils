@@ -82,7 +82,6 @@ abstract class BaseCommandTest extends \PHPUnit_Framework_TestCase
 
         $this->helperSet = new HelperSet(array(
             'session' => new PhpcrHelper($this->session),
-            'phpcr_console_dumper' => $this->dumperHelper,
         ));
 
         $this->phpcrCliHelper = $this->getMockBuilder('PHPCR\Util\Console\Helper\PhpcrCliHelper')
