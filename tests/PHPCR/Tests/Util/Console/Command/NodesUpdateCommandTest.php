@@ -40,6 +40,33 @@ class NodesUpdateCommandTest extends BaseCommandTest
         );
     }
 
+    protected function setupQueryManager($options)
+    {
+        $options = array_merge(array(
+            'query' => '',
+        ), $options);
+
+        $this->session->expects($this->any())
+            ->method('getWorkspace')
+            ->will($this->returnValue($this->workspace));
+        $this->workspace->expects($this->any())
+            ->method('getQueryManager')
+            ->will($this->returnValue($this->queryManager));
+
+        $this->queryManager->expects($this->any())
+            ->method('createQuery')
+            ->with($options['query'], 'JCR-SQL2')
+            ->will($this->returnValue($this->query));
+        $this->query->expects($this->any())
+            ->method('execute')
+            ->will($this->returnValue(array(
+                $this->row1,
+            )));
+        $this->row1->expects($this->any())
+            ->method('getNode')
+            ->will($this->returnValue($this->node1));
+    }
+
     /**
      * @dataProvider provideNodeUpdate
      */
@@ -58,26 +85,7 @@ class NodesUpdateCommandTest extends BaseCommandTest
             $this->setExpectedException($options['exception']);
         }
 
-        $this->session->expects($this->any())
-            ->method('getWorkspace')
-            ->will($this->returnValue($this->workspace));
-        $this->workspace->expects($this->any())
-            ->method('getQueryManager')
-            ->will($this->returnValue($this->queryManager));
-
-        $this->queryManager->expects($this->any())
-            ->method('createQuery')
-            ->with($options['query'], 'JCR-SQL2')
-            ->will($this->returnValue($this->query));
-
-        $this->query->expects($this->any())
-            ->method('execute')
-            ->will($this->returnValue(array(
-                $this->row1,
-            )));
-        $this->row1->expects($this->any())
-            ->method('getNode')
-            ->will($this->returnValue($this->node1));
+        $this->setupQueryManager($options);
 
         $args = array(
             '--query-language' => null,
@@ -125,6 +133,29 @@ class NodesUpdateCommandTest extends BaseCommandTest
 
             $args['--remove-mixin'][] = $mixin;
         }
+
+        $ct = $this->executeCommand('phpcr:nodes:update', $args);
+    }
+
+    public function testApplyClosure()
+    {
+        $args = array(
+            '--query' => "SELECT foo FROM bar",
+            '--no-interaction' => true,
+            '--apply-closure' => array(
+                '$session->getNodeByIdentifier("/foo"); $node->setProperty("foo", "bar");'
+            ),
+        );
+
+        $this->setupQueryManager(array('query' => 'SELECT foo FROM bar'));
+
+        $this->node1->expects($this->once())
+            ->method('setProperty')
+            ->with('foo', 'bar');
+
+        $this->session->expects($this->once())
+            ->method('getNodeByIdentifier')
+            ->with('/foo');
 
         $ct = $this->executeCommand('phpcr:nodes:update', $args);
     }

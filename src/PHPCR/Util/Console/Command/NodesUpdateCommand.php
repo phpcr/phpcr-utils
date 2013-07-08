@@ -61,17 +61,28 @@ class NodesUpdateCommand extends BaseCommand
 The <info>phpcr:nodes:update</info> can manipulate the properties of nodes 
 found using the given query.
 
-For example, to set the property "foo" to "bar" on all unstructured nodes:
+For example, to set the property <comment>foo</comment> to <comment>bar</comment> on all unstructured nodes:
 
-    php bin/phpcr phpcr:nodes:update --query="SELECT * FROM [nt:unstructured]" --set-prop=foo=bar
+    <info>php bin/phpcr phpcr:nodes:update --query="SELECT * FROM [nt:unstructured]" --set-prop=foo=bar</info>
 
 Or to update only nodes matching a certain criteria:
 
-    php bin/phpcr nodes:update --query="SELECT * FROM [nt:unstructured] WHERE [phpcr:class]=\"Some\\Class\\Here\" --add-mixin=mix:mimetype
+    <info>php bin/phpcr phpcr:nodes:update \
+        --query="SELECT * FROM [nt:unstructured] WHERE [phpcr:class]=\"Some\\Class\\Here\"" \
+        --add-mixin=mix:mimetype</info>
 
 The options for manipulating nodes are the same as with the 
 <info>node:touch</info> command and
 can be repeated to update multiple properties.
+
+If you have an advanced use case you can use the <comment>--apply-closure</comment> option:
+
+    <info>php bin/phpcr phpcr:nodes:update \
+        --query="SELECT * FROM [nt:unstructured] WHERE [phpcr:class]=\"Some\\Class\\Here\"" \
+        --apply-closure="\\\$session->doSomething(); \\\$node->setProperty('foo', 'bar');"</info>
+
+For each node in the result set, the closure will be passed the current 
+<comment>PHPCR\SessionInterface</comment> implementation and the node (<comment>PHPCR\NodeInterface</comment>) as <comment>\$session</comment> and <comment>\$node</comment>.
 HERE
 );
     }
@@ -89,6 +100,7 @@ HERE
         $removeProp = $input->getOption('remove-prop');
         $addMixins = $input->getOption('add-mixin');
         $removeMixins = $input->getOption('remove-mixin');
+        $applyClosures = $input->getOption('apply-closure');
         $noInteraction = $input->getOption('no-interaction');
         $helper = $this->getPhpcrCliHelper();
         $session = $this->getPhpcrSession();
@@ -129,6 +141,7 @@ HERE
                 'removeProp' => $removeProp,
                 'addMixins' => $addMixins,
                 'removeMixins' => $removeMixins,
+                'applyClosures' => $applyClosures,
             ));
         }
 
