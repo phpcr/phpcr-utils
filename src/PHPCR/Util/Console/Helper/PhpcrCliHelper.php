@@ -117,8 +117,11 @@ class PhpcrCliHelper extends Helper
         }
 
         foreach ($options['applyClosures'] as $closureString) {
-            $evalCode = sprintf('$closure = %s;', $closureString);
-            eval($evalCode);
+            $closure = create_function('$session, $node', $closureString);
+            $output->writeln(sprintf(
+                '<comment> > Applying closure: %s</comment>',
+                strlen($closureString) > 75 ? substr($closureString, 0, 72).'...' : $closureString
+            ));
             $closure($this->session, $node);
         }
 
