@@ -78,5 +78,9 @@ abstract class BaseCommand extends Command
             InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
             'Remove mixin from the nodes'
         );
+        $this->addOption('apply-closure', null,
+            InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
+            'Apply a closure to each node, closures are passed PHPCR\Session and PHPCR\NodeInterface'
+        );
     }
 }

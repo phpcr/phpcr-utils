@@ -77,6 +77,7 @@ class PhpcrCliHelper extends Helper
             'removeProp' => array(),
             'addMixins' => array(),
             'removeMixins' => array(),
+            'applyClosures' => array(),
             'dump' => false,
         ), $options);
 
@@ -113,6 +114,15 @@ class PhpcrCliHelper extends Helper
             ));
 
             $node->removeMixin($removeMixin);
+        }
+
+        foreach ($options['applyClosures'] as $closureString) {
+            $closure = create_function('$session, $node', $closureString);
+            $output->writeln(sprintf(
+                '<comment> > Applying closure: %s</comment>',
+                strlen($closureString) > 75 ? substr($closureString, 0, 72).'...' : $closureString
+            ));
+            $closure($this->session, $node);
         }
 
         if ($options['dump']) {
