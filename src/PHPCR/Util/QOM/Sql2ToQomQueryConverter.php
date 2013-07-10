@@ -340,17 +340,20 @@ class Sql2ToQomQueryConverter
                 $nextop = strtoupper($this->scanner->lookupNextToken());
             }
 
-            if ($op == 'AND') {
-                $lhs = $this->factory->andConstraint($lhs, $rhs);
-            } elseif ($op == 'OR') {
-                $lhs = $this->factory->orConstraint($lhs, $rhs);
-            } else {
-                // this only happens if the operator is
-                // in the $opprec-array but there is no
-                // "elseif"-branch here for this operator.
-                throw new \Exception(
-                    "Internal error: No action is defined for operator '$op'"
-                );
+            switch ($op) {
+                case 'AND':
+                    $lhs = $this->factory->andConstraint($lhs, $rhs);
+                    break;
+                case 'OR':
+                    $lhs = $this->factory->orConstraint($lhs, $rhs);
+                    break;
+                default:
+                    // this only happens if the operator is
+                    // in the $opprec-array but there is no
+                    // "elseif"-branch here for this operator.
+                    throw new \Exception(
+                        "Internal error: No action is defined for operator '$op'"
+                    );
             }
 
             $op = strtoupper($this->scanner->lookupNextToken());
