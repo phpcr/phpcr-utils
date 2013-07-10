@@ -311,13 +311,60 @@ class Sql2ToQomQueryConverter
     }
 
     /**
-     * 6.7.12 Constraint
      * 6.7.13 And
      * 6.7.14 Or
      *
      * @return \PHPCR\Query\QOM\ConstraintInterface
      */
-    protected function parseConstraint()
+    protected function parseConstraint($lhs = null, $minprec = 0)
+    {
+        if ($lhs === null) {
+            $lhs = $this->parsePrimaryConstraint();
+        }
+
+        $opprec = array(
+            'OR' => 1,
+            'AND' => 2,
+        );
+
+        $op = strtoupper($this->scanner->lookupNextToken());
+        while (isset($opprec[$op]) && $opprec[$op] >= $minprec) {
+            $this->scanner->fetchNextToken();
+
+            $rhs = $this->parsePrimaryConstraint();
+
+            $nextop = strtoupper($this->scanner->lookupNextToken());
+
+            while (isset($opprec[$nextop]) && $opprec[$nextop] > $opprec[$op]) {
+                $rhs = $this->parseConstraint($rhs, $opprec[$nextop]);
+                $nextop = strtoupper($this->scanner->lookupNextToken());
+            }
+
+            if ($op == 'AND') {
+                $lhs = $this->factory->andConstraint($lhs, $rhs);
+            } elseif ($op == 'OR') {
+                $lhs = $this->factory->orConstraint($lhs, $rhs);
+            } else {
+                // this only happens if the operator is
+                // in the $opprec-array but there is no
+                // "elseif"-branch here for this operator.
+                throw new \Exception(
+                    "Internal error: No action is defined for operator '$op'"
+                );
+            }
+
+            $op = strtoupper($this->scanner->lookupNextToken());
+        }
+
+        return $lhs;
+    }
+
+    /**
+     * 6.7.12 Constraint
+     *
+     * @return \PHPCR\Query\QOM\ConstraintInterface
+     */
+    protected function parsePrimaryConstraint()
     {
         $constraint = null;
         $token = $this->scanner->lookupNextToken();
@@ -365,18 +412,6 @@ class Sql2ToQomQueryConverter
             throw new \Exception("Syntax error: constraint expected in '{$this->sql2}'");
         }
 
-        // Is it a composed contraint?
-        $token = $this->scanner->lookupNextToken();
-        if (in_array(strtoupper($token), array('AND', 'OR'))) {
-            $this->scanner->fetchNextToken();
-            $constraint2 = $this->parseConstraint();
-            if ($this->scanner->tokenIs($token, 'AND')) {
-                return $this->factory->andConstraint($constraint, $constraint2);
-            }
-
-            return $this->factory->orConstraint($constraint, $constraint2);
-        }
-
         return $constraint;
     }
 
@@ -389,7 +424,7 @@ class Sql2ToQomQueryConverter
     {
         $this->scanner->expectToken('NOT');
 
-        return $this->factory->notConstraint($this->parseConstraint());
+        return $this->factory->notConstraint($this->parsePrimaryConstraint());
     }
 
     /**
