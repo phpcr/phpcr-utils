@@ -152,7 +152,6 @@ class Sql2Scanner
         $tokens = array();
         $token = strtok($sql2, " \n\t");
         while ($token !== false) {
-
             $this->tokenize($tokens, $token);
             $token = strtok(" \n\t");
         }

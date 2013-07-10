@@ -731,7 +731,12 @@ class Sql2ToQomQueryConverter
                 if ('' === $nextToken) {
                     break;
                 }
-                $token .= $nextToken;
+                // TODO: the scanner kills spaces, tabs and newlines
+                // So adding a space here is just a hack for the most common token separator we can expect.
+                // The proper way would require that the scanner tracks the token separators so that we
+                // could fetch the separator between the last fetched token and the token before that token
+                // so that we can append it instead of this hardcoded single space, ie. ' '
+                $token .= ' '.$nextToken;
             }
 
             if (substr($token, -1) !== $quoteString) {
