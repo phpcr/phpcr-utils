@@ -41,6 +41,13 @@ class Sql2Scanner
     protected $tokens;
 
     /**
+     * Delimiters between tokens
+     *
+     * @var array
+     */
+    protected $delimiters;
+
+    /**
      * Parsing position in the SQL string
      *
      * @var int
@@ -73,6 +80,16 @@ class Sql2Scanner
         }
 
         return '';
+    }
+
+    /**
+     * Get the delimiter that separated the two previous tokens
+     *
+     * @return string
+     */
+    public function getPreviousDelimiter()
+    {
+        return $this->delimiters[$this->curpos - 1];
     }
 
     /**
@@ -155,6 +172,15 @@ class Sql2Scanner
             $this->tokenize($tokens, $token);
             $token = strtok(" \n\t");
         }
+
+        $regexp = '';
+        foreach ($tokens as $token) {
+            $regexp[] = preg_quote($token, '/');
+        }
+
+        $regexp = '/^'.implode('([ \t\n]+)', $regexp).'$/';
+        preg_match($regexp, $sql2, $this->delimiters);
+        $this->delimiters[0] = '';
 
         return $tokens;
     }
