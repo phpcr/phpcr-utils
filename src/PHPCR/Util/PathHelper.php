@@ -62,7 +62,7 @@ class PathHelper
      */
     public static function assertValidAbsolutePath($path, $destination = false, $throw = true)
     {
-        if (! is_string($path)
+        if ((!is_string($path) && !is_numeric($path))
             || strlen($path) == 0
             || '/' !== $path[0]
             || strlen($path) > 1 && '/' === $path[strlen($path) - 1]
@@ -134,7 +134,7 @@ class PathHelper
      */
     public static function normalizePath($path, $destination = false, $throw = true)
     {
-        if (!is_string($path)) {
+        if (!is_string($path) && !is_numeric($path)) {
             return self::error('Expected string but got ' . gettype($path), $throw);
         }
         if (strlen($path) === 0) {
@@ -199,7 +199,7 @@ class PathHelper
      */
     public static function absolutizePath($path, $context, $destination = false, $throw = true)
     {
-        if (!is_string($path)) {
+        if (!is_string($path) && !is_numeric($path)) {
             return self::error('Expected string path but got ' . gettype($path), $throw);
         }
         if (!is_string($context)) {
