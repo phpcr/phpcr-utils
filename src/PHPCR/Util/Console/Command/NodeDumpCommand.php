@@ -105,8 +105,9 @@ HERE
         } catch (RepositoryException $e) {
             if ($e instanceof PathNotFoundException || $e instanceof ItemNotFoundException) {
                 $output->writeln("<error>Path '$identifier' does not exist</error>");
+            } else {
+                throw $e;
             }
-            $output->writeln('<error>Error: '.$e->getMessage().'</error>');
 
             return 1;
         }
