@@ -93,13 +93,7 @@ EOT
         $allowUpdate = $input->getOption('allow-update');
         $session = $this->getPhpcrSession();
 
-        try {
-            $this->updateFromCnd($output, $session, $cnd, $allowUpdate);
-        } catch (\Exception $e) {
-            $output->writeln('<error>'.$e->getMessage().'</error>');
-
-            return 1;
-        }
+        $this->updateFromCnd($output, $session, $cnd, $allowUpdate);
 
         $output->write(PHP_EOL.sprintf('Successfully registered node types from "<info>%s</info>"', $cnd_file) . PHP_EOL);
 
