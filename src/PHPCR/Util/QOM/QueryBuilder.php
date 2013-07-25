@@ -352,16 +352,16 @@ class QueryBuilder
      * Identifies a property in the specified or default selector to include in the tabular view of query results.
      * Replaces any previously specified columns to be selected if any.
      *
+     * @param string $selectorName
      * @param string $propertyName
      * @param string $columnName
-     * @param string $selectorName
      *
      * @return QueryBuilder This QueryBuilder instance.
      */
-    public function select($propertyName, $columnName = null, $selectorName = null)
+    public function select($selectorName, $propertyName, $columnName = null)
     {
         $this->state = self::STATE_DIRTY;
-        $this->columns = array($this->qomFactory->column($propertyName, $columnName, $selectorName));
+        $this->columns = array($this->qomFactory->column($selectorName, $propertyName, $columnName));
 
         return $this;
     }
@@ -369,16 +369,16 @@ class QueryBuilder
     /**
      * Adds a property in the specified or default selector to include in the tabular view of query results.
      *
+     * @param string $selectorName
      * @param string $propertyName
      * @param string $columnName
-     * @param string $selectorName
      *
      * @return QueryBuilder This QueryBuilder instance.
      */
-    public function addSelect($propertyName, $columnName = null, $selectorName = null)
+    public function addSelect($selectorName, $propertyName, $columnName = null)
     {
         $this->state = self::STATE_DIRTY;
-        $this->columns[] = $this->qomFactory->column($propertyName, $columnName, $selectorName);
+        $this->columns[] = $this->qomFactory->column($selectorName, $propertyName, $columnName);
 
         return $this;
     }

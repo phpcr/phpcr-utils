@@ -136,9 +136,9 @@ class QueryBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $qb = new QueryBuilder($this->qf);
         $this->assertEquals(0, count($qb->getColumns()));
-        $qb->select('propertyName', 'columnName', 'selectorName');
+        $qb->select('selectorName', 'propertyName', 'columnName');
         $this->assertEquals(1, count($qb->getColumns()));
-        $qb->select('propertyName', 'columnName', 'selectorName');
+        $qb->select('selectorName', 'propertyName', 'columnName');
         $this->assertEquals(1, count($qb->getColumns()));
     }
 
@@ -146,9 +146,9 @@ class QueryBuilderTest extends \PHPUnit_Framework_TestCase
     {
         $qb = new QueryBuilder($this->qf);
         $this->assertEquals(0, count($qb->getColumns()));
-        $qb->addSelect('propertyName', 'columnName', 'selectorName');
+        $qb->addSelect('selectorName', 'propertyName', 'columnName');
         $this->assertEquals(1, count($qb->getColumns()));
-        $qb->addSelect('propertyName', 'columnName', 'selectorName');
+        $qb->addSelect('selectorName', 'propertyName', 'columnName');
         $this->assertEquals(2, count($qb->getColumns()));
     }
 

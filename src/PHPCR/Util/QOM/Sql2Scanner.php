@@ -2,6 +2,8 @@
 
 namespace PHPCR\Util\QOM;
 
+use PHPCR\Query\InvalidQueryException;
+
 /**
  * Split an SQL2 statement into string tokens. Allows lookup and fetching of tokens.
  *
@@ -104,7 +106,7 @@ class Sql2Scanner
     {
         $nextToken = $this->fetchNextToken();
         if (! $this->tokenIs($nextToken, $token, $case_insensitive)) {
-            throw new \Exception("Syntax error: Expected $token, found $nextToken");
+            throw new InvalidQueryException("Syntax error: Expected '$token', found '$nextToken' in {$this->sql2}");
         }
     }
 

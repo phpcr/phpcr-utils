@@ -26,9 +26,9 @@ class Sql2Generator extends BaseSqlGenerator
     {
         $sql2 = $this->addBracketsIfNeeded($nodeTypeName);
 
-        $name = $selectorName;
-        if (! is_null($name)) {
-            $sql2 .= ' AS ' . $name;
+        if (! is_null($selectorName) && $nodeTypeName !== $selectorName) {
+            // if the selector name is the same as the type name, this is implicit for sql2
+            $sql2 .= ' AS ' . $selectorName;
         }
 
         return $sql2;
@@ -344,7 +344,10 @@ class Sql2Generator extends BaseSqlGenerator
             $sql2 .= $this->addBracketsIfNeeded($selectorName) . '.*';
         } else {
             $sql2 .= $this->evalPropertyValue($propertyName, $selectorName);
-            $sql2 .= ! is_null($colname) ? ' AS ' . $colname : '';
+            if (!is_null($colname) && $colname !== $propertyName) {
+                // if the column name is the same as the property name, this is implicit for sql2
+                $sql2 .=  ' AS ' . $colname;
+            }
         }
 
         return $sql2;
