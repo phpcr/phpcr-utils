@@ -4,6 +4,8 @@ namespace PHPCR\Tests\Util;
 
 use PHPCR\Util\NodeHelper;
 
+require_once(__DIR__.'/../Stubs/MockNode.php');
+
 class NodeHelperTest extends \PHPUnit_Framework_TestCase
 {
     private $namespaces = array('a' => 'http://phpcr', 'b' => 'http://jcr');
@@ -27,7 +29,10 @@ class NodeHelperTest extends \PHPUnit_Framework_TestCase
             array('a'), // no colon
             array('a:foo:'),
             array('{foo'),
-            array('x'), // not an existing namespace
+            array('x:'), // not an existing namespace prefix
+            array('{http://xy}'), // not an existing namespace uri
+            array('x:a'), // not an existing namespace prefix with a local name prefix
+            array('{http://xy}a'), // not an existing namespace uri with a local name prefix
         );
     }
 
@@ -57,6 +62,49 @@ class NodeHelperTest extends \PHPUnit_Framework_TestCase
     public function testGenerateAutoNodeNameInvalid($hint)
     {
         NodeHelper::generateAutoNodeName($this->usedNames, $this->namespaces, 'a', $hint);
+    }
+
+    public function testIsSystemItem()
+    {
+        $sys = $this->getMock('PHPCR\Tests\Stubs\MockNode');
+        $sys->expects($this->once())
+            ->method('getDepth')
+            ->will($this->returnValue(0))
+        ;
+        $sys->expects($this->once())
+            ->method('getName')
+            ->will($this->returnValue('jcr:root'))
+        ;
+        $this->assertTrue(NodeHelper::isSystemItem($sys));
+
+        $sys = $this->getMock('PHPCR\Tests\Stubs\MockNode');
+        $sys->expects($this->once())
+            ->method('getDepth')
+            ->will($this->returnValue(1))
+        ;
+        $sys->expects($this->once())
+            ->method('getName')
+            ->will($this->returnValue('jcr:system'))
+        ;
+        $this->assertTrue(NodeHelper::isSystemItem($sys));
+
+        $top = $this->getMock('PHPCR\Tests\Stubs\MockNode');
+        $top->expects($this->once())
+            ->method('getDepth')
+            ->will($this->returnValue(1))
+        ;
+        $top->expects($this->once())
+            ->method('getName')
+            ->will($this->returnValue('jcrname')) // this is NOT in the jcr namespace
+        ;
+        $this->assertFalse(NodeHelper::isSystemItem($top));
+
+        $deep = $this->getMock('PHPCR\Tests\Stubs\MockNode');
+        $deep->expects($this->once())
+            ->method('getDepth')
+            ->will($this->returnValue(2))
+        ;
+        $this->assertFalse(NodeHelper::isSystemItem($deep));
     }
 
     public function testCalculateOrderBeforeSwapLast()
@@ -101,6 +149,21 @@ class NodeHelperTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals($expected, $reorders);
     }
+
+    public function testCalculateOrderBeforeDeleted()
+    {
+        $old = array('one', 'two', 'three', 'four');
+        $new = array('one', 'three', 'two');
+
+        $reorders = NodeHelper::calculateOrderBefore($old, $new);
+
+        $expected = array(
+            'two' => null,
+            'one'   => 'three', // TODO: this is an unnecessary but harmless NOOP. we should try to eliminate
+        );
+        $this->assertEquals($expected, $reorders);
+    }
+
 
     /**
      * @group benchmark
