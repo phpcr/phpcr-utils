@@ -172,7 +172,6 @@ class Sql2ToQomQueryConverter
      */
     protected function parseName()
     {
-        // TODO: check it's the correct way to parse a JCR name
         return $this->scanner->fetchNextToken();
     }
 

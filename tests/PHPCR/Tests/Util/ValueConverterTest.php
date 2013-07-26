@@ -272,7 +272,7 @@ class ValueConverterTest extends \PHPUnit_Framework_TestCase
      */
     public function testConvertType($value, $srctype, $expected, $targettype)
     {
-        if (is_null($expected)) {
+        if (null === $expected) {
             try {
                 $this->valueConverter->convertType($value, $targettype, $srctype);
                 $this->fail('Excpected that this conversion would throw an exception');

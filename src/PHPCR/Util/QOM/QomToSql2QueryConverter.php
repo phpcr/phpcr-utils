@@ -116,7 +116,7 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
         return $this->generator->evalSameNodeJoinCondition(
             $condition->getSelector1Name(),
             $condition->getSelector2Name(),
-            ! is_null($condition->getSelector2Path()) ? $this->convertPath($condition->getSelector2Path()) : null);
+            null !== $condition->getSelector2Path() ? $this->convertPath($condition->getSelector2Path()) : null);
     }
 
     /**

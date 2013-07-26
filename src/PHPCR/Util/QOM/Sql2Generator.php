@@ -17,8 +17,11 @@ class Sql2Generator extends BaseSqlGenerator
      * Selector ::= nodeTypeName ['AS' selectorName]
      * nodeTypeName ::= Name
      *
-     * @param string $nodeTypeName The node type of the selector. If it does not contain starting and ending brackets ([]) they will be added automatically
-     * @param string $selectorName
+     * @param string      $nodeTypeName The node type of the selector. If it
+     *      does not contain starting and ending brackets ([]) they will be
+     *      added automatically.
+     * @param string|null $selectorName The selector name. If it is different than
+     *      the nodeTypeName, the alias is declared.
      *
      * @return string
      */
@@ -26,7 +29,7 @@ class Sql2Generator extends BaseSqlGenerator
     {
         $sql2 = $this->addBracketsIfNeeded($nodeTypeName);
 
-        if (! is_null($selectorName) && $nodeTypeName !== $selectorName) {
+        if (null !== $selectorName && $nodeTypeName !== $selectorName) {
             // if the selector name is the same as the type name, this is implicit for sql2
             $sql2 .= ' AS ' . $selectorName;
         }
@@ -112,7 +115,9 @@ class Sql2Generator extends BaseSqlGenerator
             . $this->addBracketsIfNeeded($sel1Name) . ', '
             . $this->addBracketsIfNeeded($sel2Name)
         ;
-        $sql2 .= ! is_null($sel2Path) ? ', ' . $sel2Path : '';
+        if (null !== $sel2Path) {
+            $sql2 .= ', ' . $sel2Path;
+        }
         $sql2 .= ')';
 
         return $sql2;
@@ -165,7 +170,7 @@ class Sql2Generator extends BaseSqlGenerator
     public function evalSameNode($path, $selectorName = null)
     {
         $sql2 = 'ISSAMENODE(';
-        $sql2 .= is_null($selectorName) ? $path : $this->addBracketsIfNeeded($selectorName) . ', ' . $path;
+        $sql2 .= null === $selectorName ? $path : $this->addBracketsIfNeeded($selectorName) . ', ' . $path;
         $sql2 .= ')';
 
         return $sql2;
@@ -180,7 +185,7 @@ class Sql2Generator extends BaseSqlGenerator
     public function evalChildNode($path, $selectorName = null)
     {
         $sql2 = 'ISCHILDNODE(';
-        $sql2 .= is_null($selectorName) ? $path : $this->addBracketsIfNeeded($selectorName) . ', ' . $path;
+        $sql2 .= null === $selectorName ? $path : $this->addBracketsIfNeeded($selectorName) . ', ' . $path;
         $sql2 .= ')';
 
         return $sql2;
@@ -195,7 +200,7 @@ class Sql2Generator extends BaseSqlGenerator
     public function evalDescendantNode($path, $selectorName = null)
     {
         $sql2 = 'ISDESCENDANTNODE(';
-        $sql2 .= is_null($selectorName) ? $path : $this->addBracketsIfNeeded($selectorName) . ', ' . $path;
+        $sql2 .= null === $selectorName ? $path : $this->addBracketsIfNeeded($selectorName) . ', ' . $path;
         $sql2 .= ')';
 
         return $sql2;
@@ -289,7 +294,7 @@ class Sql2Generator extends BaseSqlGenerator
      */
     public function evalPropertyValue($propertyName, $selectorName = null)
     {
-        $sql2 = ! is_null($selectorName) ? $this->addBracketsIfNeeded($selectorName) . '.' : '';
+        $sql2 = null !== $selectorName ? $this->addBracketsIfNeeded($selectorName) . '.' : '';
         if (false !== strpos($propertyName, ':')) {
             $propertyName = "[$propertyName]";
         }
@@ -340,11 +345,11 @@ class Sql2Generator extends BaseSqlGenerator
     public function evalColumn($selectorName, $propertyName = null, $colname = null)
     {
         $sql2 = '';
-        if (! is_null($selectorName) && is_null($propertyName) && is_null($colname)) {
+        if (null !== $selectorName && null === $propertyName && null === $colname) {
             $sql2 .= $this->addBracketsIfNeeded($selectorName) . '.*';
         } else {
             $sql2 .= $this->evalPropertyValue($propertyName, $selectorName);
-            if (!is_null($colname) && $colname !== $propertyName) {
+            if (null !== $colname && $colname !== $propertyName) {
                 // if the column name is the same as the property name, this is implicit for sql2
                 $sql2 .=  ' AS ' . $colname;
             }
