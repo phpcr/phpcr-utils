@@ -143,13 +143,16 @@ class NodesUpdateCommandTest extends BaseCommandTest
             '--query' => "SELECT foo FROM bar",
             '--no-interaction' => true,
             '--apply-closure' => array(
-                '$session->getNodeByIdentifier("/foo"); $node->setProperty("foo", "bar");'
+                '$session->getNodeByIdentifier("/foo"); $node->setProperty("foo", "bar");',
+                function ($session, $node) {
+                    $node->setProperty('foo', 'bar');
+                }
             ),
         );
 
         $this->setupQueryManager(array('query' => 'SELECT foo FROM bar'));
 
-        $this->node1->expects($this->once())
+        $this->node1->expects($this->exactly(2))
             ->method('setProperty')
             ->with('foo', 'bar');
 
