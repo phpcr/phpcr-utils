@@ -4,7 +4,10 @@
     "description": "PHP Content Repository implementation independant utilities",
     "keywords": ["phpcr", "contentrepository", "cli"],
     "homepage": "http://phpcr.github.com",
-    "license": "Apache-2.0",
+    "license": [
+        "MIT",
+        "Apache-2.0"
+    ],
     "authors": [
         {
             "name": "David Buchmann",

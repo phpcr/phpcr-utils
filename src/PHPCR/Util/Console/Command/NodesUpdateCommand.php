@@ -1,24 +1,5 @@
 <?php
 
-/**
- * This file is part of the PHPCR Utils
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * @license http://www.apache.org/licenses/LICENSE-2.0 Apache Software License 2.0
- * @link http://phpcr.github.com/
- */
-
 namespace PHPCR\Util\Console\Command;
 
 use Symfony\Component\Console\Input\InputOption;
@@ -30,6 +11,9 @@ use PHPCR\Util\Console\Command\BaseCommand;
 /**
  * Command which can update the properties of nodes found
  * using the given JCR query.
+ *
+ * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
+ * @license http://opensource.org/licenses/MIT MIT License
  *
  * @author Daniel Leech <daniel@dantleech.com>
  */
@@ -51,14 +35,14 @@ class NodesUpdateCommand extends BaseCommand
                 'Query used to select the nodes'
             )
             ->addOption(
-                'query-language', 'l', 
-                InputOption::VALUE_OPTIONAL, 
+                'query-language', 'l',
+                InputOption::VALUE_OPTIONAL,
                 'The query language (e.g. sql, jcr_sql2)',
                 'jcr-sql2'
             )
             ->setDescription('Command to manipulate the nodes in the workspace.')
             ->setHelp(<<<HERE
-The <info>phpcr:nodes:update</info> can manipulate the properties of nodes 
+The <info>phpcr:nodes:update</info> can manipulate the properties of nodes
 found using the given query.
 
 For example, to set the property <comment>foo</comment> to <comment>bar</comment> on all unstructured nodes:
@@ -71,7 +55,7 @@ Or to update only nodes matching a certain criteria:
         --query="SELECT * FROM [nt:unstructured] WHERE [phpcr:class]=\"Some\\Class\\Here\"" \
         --add-mixin=mix:mimetype</info>
 
-The options for manipulating nodes are the same as with the 
+The options for manipulating nodes are the same as with the
 <info>node:touch</info> command and
 can be repeated to update multiple properties.
 
@@ -81,7 +65,7 @@ If you have an advanced use case you can use the <comment>--apply-closure</comme
         --query="SELECT * FROM [nt:unstructured] WHERE [phpcr:class]=\"Some\\Class\\Here\"" \
         --apply-closure="\\\$session->doSomething(); \\\$node->setProperty('foo', 'bar');"</info>
 
-For each node in the result set, the closure will be passed the current 
+For each node in the result set, the closure will be passed the current
 <comment>PHPCR\SessionInterface</comment> implementation and the node (<comment>PHPCR\NodeInterface</comment>) as <comment>\$session</comment> and <comment>\$node</comment>.
 HERE
 );

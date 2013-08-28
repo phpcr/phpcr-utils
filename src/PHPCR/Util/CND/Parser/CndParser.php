@@ -27,6 +27,9 @@ use PHPCR\Version\OnParentVersionAction;
  * @see http://www.day.com/specs/jcr/2.0/25_Appendix.html#25.2.3 CND Grammar
  * @see http://jackrabbit.apache.org/node-type-notation.html
  *
+ * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
+ * @license http://opensource.org/licenses/MIT MIT License
+ *
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  * @author David Buchmann <david@liip.ch>
  */

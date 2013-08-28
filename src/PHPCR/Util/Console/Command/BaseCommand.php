@@ -10,6 +10,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 use PHPCR\Util\Console\Helper\PhpcrCliHelper;
 use PHPCR\Util\Console\Helper\PhpcrConsoleDumperHelper;
 
+/**
+ * Common base class to help with the helpers.
+ *
+ * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
+ * @license http://opensource.org/licenses/MIT MIT License
+ */
 abstract class BaseCommand extends Command
 {
     protected $phpcrCliHelper;
@@ -35,8 +41,8 @@ abstract class BaseCommand extends Command
         return $this->phpcrCliHelper;
     }
 
-    /** 
-     * @return PhpcrConsoleDumperHelper 
+    /**
+     * @return PhpcrConsoleDumperHelper
      */
     protected function getPhpcrConsoleDumperHelper()
     {

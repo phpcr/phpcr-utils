@@ -11,6 +11,9 @@ use PHPCR\Util\CND\Exception\ScannerException;
  * This class can be extended and the class properties redefined in order to adapt
  * the token generation to your needs.
  *
+ * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
+ * @license http://opensource.org/licenses/MIT MIT License
+ *
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  * @author Nikola Petkanski <nikola@petkanski.com>
  */

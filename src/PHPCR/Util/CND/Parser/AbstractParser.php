@@ -15,6 +15,9 @@ use PHPCR\Util\CND\Exception\ParserException;
  *      - expectToken           - expect the next token to match
  *      - checkAndExpectToken   - check and then expect the next token to match
  *
+ * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
+ * @license http://opensource.org/licenses/MIT MIT License
+ *
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  */
 abstract class AbstractParser

@@ -6,8 +6,12 @@ If you are using or implementing [PHPCR](https://github.com/phpcr/phpcr) you
 probably want some of the things in here.
 
 PHPCR Users: Note that your PHPCR implementation probably already bundles the
-utils. Jackalope for example depends on them and they are found in its
-lib/phpcr-utils folder.
+utils.
+
+## License
+
+This code is dual licensed under the MIT license and the Apache License Version
+2.0. Please see the file LICENSE in this folder.
 
 
 # Documentation
@@ -18,7 +22,7 @@ classes for common tasks.
 
 ## Commands
 
-There are a couple of useful commands to interact with a phpcr repository.
+There are a couple of useful commands to interact with a PHPCR repository.
 
 To use the console, make sure you have initialized the git submodules of
 phpcr-utils, then copy cli-config.php.dist to cli-config.php and adjust it
@@ -76,4 +80,3 @@ into QOM . ``QomToSql2QueryConverter`` generates SQL2 out of a QOM.
 This ``ItemVisitorInterface`` implementation is a basic implementation of crawling
 a PHPCR tree. You can extend it to define what it should do while crawling the
 tree.
-
