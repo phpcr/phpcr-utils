@@ -13,7 +13,7 @@ class GenericScannerTest extends \PHPUnit_Framework_TestCase
 {
     protected $expectedTokens = array(
 
-        // <? php
+        // <?php php
         array(Token::TK_SYMBOL, '<'),
         array(Token::TK_SYMBOL, '?'),
         array(Token::TK_IDENTIFIER, 'php'),
@@ -104,7 +104,7 @@ class GenericScannerTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->expectedTokensNoEmptyToken = array();
-        foreach($this->expectedTokens as $token) {
+        foreach ($this->expectedTokens as $token) {
             if ($token[0] !== Token::TK_NEWLINE && $token[0] !== Token::TK_WHITESPACE) {
                 $this->expectedTokensNoEmptyToken[] = $token;
             }
@@ -138,7 +138,7 @@ class GenericScannerTest extends \PHPUnit_Framework_TestCase
     protected function assertTokens($tokens, TokenQueue $queue)
     {
         $queue->reset();
-        
+
         $it = new \ArrayIterator($tokens);
 
         $token = $queue->peek();

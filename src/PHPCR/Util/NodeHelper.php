@@ -5,7 +5,6 @@ namespace PHPCR\Util;
 use PHPCR\ItemInterface;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
-use PHPCR\PropertyType;
 use PHPCR\SessionInterface;
 use PHPCR\RepositoryException;
 use PHPCR\ItemNotFoundException;
@@ -315,15 +314,14 @@ class NodeHelper
         return $reorders;
     }
 
-
     /**
      * Move the element $name of $list to right before $destination,
      * validating existence of all elements.
      *
-     * @param string $name  name of the element to move
+     * @param string $name        name of the element to move
      * @param string $destination name of the element $srcChildRelPath has
      *      to be ordered before, null to move to the end
-     * @param array  $list            the array of names
+     * @param array $list the array of names
      *
      * @return array The updated $nodes array with new order
      *
@@ -358,6 +356,7 @@ class NodeHelper
             unset($list[$oldpos]);
             array_splice($list, $newpos, 0, $name);
         }
+
         return $list;
     }
 }

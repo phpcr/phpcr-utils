@@ -56,6 +56,7 @@ EOT
 
         if (! in_array($workspaceName, $workspace->getAccessibleWorkspaceNames())) {
             $output->writeln("Workspace '$workspaceName' does not exist.");
+
             return 0;
         }
 

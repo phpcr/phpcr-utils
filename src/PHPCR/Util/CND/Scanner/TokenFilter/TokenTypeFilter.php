@@ -24,10 +24,10 @@ class TokenTypeFilter implements TokenFilterInterface
     }
 
     /**
-     * @param Token $token
+     * @param  Token $token
      * @return Token | null
      */
-    function filter(Token $token)
+    public function filter(Token $token)
     {
         if ($token->getType() === $this->type) {
             return null;

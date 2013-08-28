@@ -11,7 +11,8 @@ class NodeHelperTest extends \PHPUnit_Framework_TestCase
     private $namespaces = array('a' => 'http://phpcr', 'b' => 'http://jcr');
     private $usedNames = array('a:x', 'b:y', 'c');
 
-    public static function hints() {
+    public static function hints()
+    {
         return array(
             array('', true),
             array(':', true),
@@ -23,7 +24,8 @@ class NodeHelperTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public static function invalidHints() {
+    public static function invalidHints()
+    {
         return array(
             array('::'),
             array('a'), // no colon
@@ -163,7 +165,6 @@ class NodeHelperTest extends \PHPUnit_Framework_TestCase
         );
         $this->assertEquals($expected, $reorders);
     }
-
 
     /**
      * @group benchmark

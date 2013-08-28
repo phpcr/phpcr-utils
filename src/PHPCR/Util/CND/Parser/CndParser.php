@@ -253,15 +253,15 @@ class CndParser extends AbstractParser
         while (true) {
             if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->ORDERABLE)) {
                 $nodeType->setOrderableChildNodes(true);
-            } else if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->MIXIN)) {
+            } elseif ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->MIXIN)) {
                 $nodeType->setMixin(true);
-            } else if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->ABSTRACT)) {
+            } elseif ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->ABSTRACT)) {
                 $nodeType->setAbstract(true);
-            } else if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->NOQUERY)) {
+            } elseif ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->NOQUERY)) {
                 $nodeType->setQueryable(false);
-            } else if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->QUERY)) {
+            } elseif ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->QUERY)) {
                 $nodeType->setQueryable(true);
-            } else if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->PRIMARYITEM)) {
+            } elseif ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->PRIMARYITEM)) {
                 /*
                  * If 'primaryitem' is present without a '?' then the string following it is
                  * the name of the primary item of the node type.
@@ -484,23 +484,23 @@ class CndParser extends AbstractParser
         while (true) {
             if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->PRIMARY)) {
                 $parentType->setPrimaryItemName($property->getName());
-            } else if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->AUTOCREATED)) {
+            } elseif ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->AUTOCREATED)) {
                 $property->setAutoCreated(true);
-            } else if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->MANDATORY)) {
+            } elseif ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->MANDATORY)) {
                 $property->setMandatory(true);
-            } else if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->PROTECTED)) {
+            } elseif ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->PROTECTED)) {
                 $property->setProtected(true);
-            } else if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->MULTIPLE)) {
+            } elseif ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->MULTIPLE)) {
                 $property->setMultiple(true);
-            } else if ($this->checkTokenIn(Token::TK_SYMBOL, $this->MULTIPLE)) {
+            } elseif ($this->checkTokenIn(Token::TK_SYMBOL, $this->MULTIPLE)) {
                 $property->setMultiple(true);
-            } else if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->QUERYOPS)) {
+            } elseif ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->QUERYOPS)) {
                 $property->setAvailableQueryOperators($this->parseQueryOpsAttribute());
-            } else if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->NOFULLTEXT)) {
+            } elseif ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->NOFULLTEXT)) {
                 $property->setFullTextSearchable(false);
-            } else if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->NOQUERYORDER)) {
+            } elseif ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->NOQUERYORDER)) {
                 $property->setQueryOrderable(false);
-            } else if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->OPV)) {
+            } elseif ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->OPV)) {
                 if ($opvSeen) {
                     throw new ParserException($this->tokenQueue, 'More than one on parent version action specified on property ' . $property->getName());
                 }
@@ -602,18 +602,18 @@ class CndParser extends AbstractParser
         NodeTypeTemplateInterface $parentType,
         NodeDefinitionTemplateInterface $childType
     ) {
-        while(true) {
+        while (true) {
             if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->PRIMARY)) {
                 $parentType->setPrimaryItemName($childType->getName());
-            } else if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->AUTOCREATED)) {
+            } elseif ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->AUTOCREATED)) {
                 $childType->setAutoCreated(true);
-            } else if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->MANDATORY)) {
+            } elseif ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->MANDATORY)) {
                 $childType->setMandatory(true);
-            } else if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->PROTECTED)) {
+            } elseif ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->PROTECTED)) {
                 $childType->setProtected(true);
-            } else if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->SNS)) {
+            } elseif ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->SNS)) {
                 $childType->setSameNameSiblings(true);
-            } else if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->OPV)) {
+            } elseif ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->OPV)) {
                 $token = $this->tokenQueue->get();
                 $childType->setOnParentVersion(OnParentVersionAction::valueFromName($token->getData()));
                 continue;
@@ -678,6 +678,7 @@ class CndParser extends AbstractParser
             if ($type === Token::TK_STRING) {
                 $string = substr($data, 1, -1);
                 $this->tokenQueue->next();
+
                 return $string;
             }
 

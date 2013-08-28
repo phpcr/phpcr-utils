@@ -3,7 +3,6 @@
 namespace PHPCR\Tests\Util\Console\Command;
 
 use Symfony\Component\Console\Application;
-use PHPCR\RepositoryInterface;
 use PHPCR\Util\Console\Command\NodesUpdateCommand;
 
 class NodesUpdateCommandTest extends BaseCommandTest
@@ -97,8 +96,7 @@ class NodesUpdateCommandTest extends BaseCommandTest
             '--remove-mixin' => array(),
         );
 
-        foreach ($options['setProp'] as $setProp)
-        {
+        foreach ($options['setProp'] as $setProp) {
             list($prop, $value) = $setProp;
             $this->node1->expects($this->at(0))
                 ->method('setProperty')
@@ -107,8 +105,7 @@ class NodesUpdateCommandTest extends BaseCommandTest
             $args['--set-prop'][] = $prop.'='.$value;
         }
 
-        foreach ($options['removeProp'] as $prop)
-        {
+        foreach ($options['removeProp'] as $prop) {
             $this->node1->expects($this->at(1))
                 ->method('setProperty')
                 ->with($prop, null);
@@ -116,8 +113,7 @@ class NodesUpdateCommandTest extends BaseCommandTest
             $args['--remove-prop'][] = $prop;
         }
 
-        foreach ($options['addMixin'] as $mixin)
-        {
+        foreach ($options['addMixin'] as $mixin) {
             $this->node1->expects($this->once())
                 ->method('addMixin')
                 ->with($mixin);
@@ -125,8 +121,7 @@ class NodesUpdateCommandTest extends BaseCommandTest
             $args['--add-mixin'][] = $mixin;
         }
 
-        foreach ($options['removeMixin'] as $mixin)
-        {
+        foreach ($options['removeMixin'] as $mixin) {
             $this->node1->expects($this->once())
                 ->method('removeMixin')
                 ->with($mixin);

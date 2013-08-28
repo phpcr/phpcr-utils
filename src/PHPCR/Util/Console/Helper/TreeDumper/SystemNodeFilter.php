@@ -18,7 +18,7 @@ class SystemNodeFilter implements TreeWalkerFilterInterface
      *
      * @param ItemInterface $item
      *
-     * @return bool
+     * @return boolean
      */
     public function mustVisit(ItemInterface $item)
     {

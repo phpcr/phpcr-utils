@@ -24,6 +24,7 @@ abstract class AbstractParser
 {
     /**
      * The token queue
+     *
      * @var TokenQueue
      */
     protected $tokenQueue;
@@ -33,11 +34,11 @@ abstract class AbstractParser
      * If the data is not provided (equal to null) then only the token type is checked.
      * Return false otherwise.
      *
-     * @param int $type The expected token type
-     * @param null|string $data The expected data or null
-     * @param bool $ignoreCase whether to do string comparisons case insensitive or sensitive
+     * @param int         $type       The expected token type
+     * @param null|string $data       The expected data or null
+     * @param bool        $ignoreCase whether to do string comparisons case insensitive or sensitive
      *
-     * @return bool
+     * @return boolean
      */
     protected function checkToken($type, $data = null, $ignoreCase = false)
     {
@@ -68,7 +69,7 @@ abstract class AbstractParser
      * @param int   $type
      * @param array $data
      *
-     * @return bool
+     * @return boolean
      */
     protected function checkTokenIn($type, array $data, $ignoreCase = false)
     {
@@ -85,7 +86,7 @@ abstract class AbstractParser
      * Check if the next token matches the expected type and data. If it does, then consume and return it,
      * otherwise throw an exception.
      *
-     * @param int $type The expected token type
+     * @param int         $type The expected token type
      * @param null|string $data The expected token data or null
      *
      * @return Token
@@ -109,15 +110,17 @@ abstract class AbstractParser
      * Check if the next token matches the expected type and data. If it does, then consume it, otherwise
      * return false.
      *
-     * @param int $type The expected token type
+     * @param int         $type The expected token type
      * @param null|string $data The expected token data or null
-     * @return bool|Token
+     *
+     * @return boolean|Token
      */
     protected function checkAndExpectToken($type, $data = null)
     {
         if ($this->checkToken($type, $data)) {
             $token = $this->tokenQueue->peek();
             $this->tokenQueue->next();
+
             return $token;
         }
 

@@ -42,7 +42,6 @@ class NodeTouchCommandTest extends BaseCommandTest
         $this->session->expects($this->once())
             ->method('save');
 
-
         $ct = $this->executeCommand('phpcr:node:touch', array(
             'path' => '/cms',
         ));
@@ -60,7 +59,6 @@ class NodeTouchCommandTest extends BaseCommandTest
         $this->nodeType->expects($this->once())
             ->method('getName')
             ->will($this->returnValue('nt:unstructured'));
-
 
         $me = $this;
         $this->phpcrCliHelper->expects($this->once())

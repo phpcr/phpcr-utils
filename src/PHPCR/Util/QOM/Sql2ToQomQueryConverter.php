@@ -724,11 +724,11 @@ class Sql2ToQomQueryConverter
             }
             $token = substr($token, 1, -1);
             $token = str_replace('\\'.$quoteString, $quoteString, $token);
-        } else if (is_numeric($token)){
+        } elseif (is_numeric($token)) {
             $token = strpos($token, '.') === false ? (int) $token : (float) $token;
-        } else if ($token == 'true') {
+        } elseif ($token == 'true') {
             $token = true;
-        } else if ($token == 'false') {
+        } elseif ($token == 'false') {
             $token = false;
         }
 

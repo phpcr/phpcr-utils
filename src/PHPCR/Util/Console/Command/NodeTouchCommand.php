@@ -2,8 +2,6 @@
 
 namespace PHPCR\Util\Console\Command;
 
-use PHPCR\PropertyInterface;
-use PHPCR\SessionInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
@@ -117,6 +115,7 @@ HERE
                     '<error>Parent path "%s" does not exist</error>',
                     $parentPath
                 ));
+
                 return;
             }
 

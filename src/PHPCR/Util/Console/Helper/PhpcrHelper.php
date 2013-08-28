@@ -4,7 +4,6 @@ namespace PHPCR\Util\Console\Helper;
 
 use Symfony\Component\Console\Helper\Helper;
 use PHPCR\SessionInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Helper class to make the session instance available to console commands.

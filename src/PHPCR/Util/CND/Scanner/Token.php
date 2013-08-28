@@ -42,14 +42,13 @@ class Token
      */
     protected $row;
 
-
     /**
      * Constructor
      *
-     * @param int $type
+     * @param int    $type
      * @param string $data
-     * @param int $line
-     * @param int $row
+     * @param int    $line
+     * @param int    $row
      */
     public function __construct($type = 0, $data = '', $line = 0, $row = 0)
     {

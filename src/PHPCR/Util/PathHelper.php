@@ -2,10 +2,7 @@
 
 namespace PHPCR\Util;
 
-use PHPCR\SessionInterface;
-use PHPCR\ItemInterface;
 use PHPCR\RepositoryException;
-use PHPCR\NamespaceException;
 
 /**
  * Static methods to handle path operations for PHPCR implementations
@@ -34,8 +31,8 @@ class PathHelper
      *
      * Non-normalized paths are considered invalid, i.e. /node/. is /node and /my/node/.. is /my
      *
-     * @param string $path The path to validate
-     * @param bool $destination whether this is a destination path (by copy or
+     * @param string $path        The path to validate
+     * @param bool   $destination whether this is a destination path (by copy or
      *      move), meaning [] is not allowed. If your implementation does not
      *      support same name siblings, just always pass true for this
      * @param bool $throw whether to throw an exception on validation errors
@@ -105,8 +102,8 @@ class PathHelper
      *
      * Note: A well-formed input path implies a well-formed and normalized path returned.
      *
-     * @param string $path The path to normalize.
-     * @param bool $destination whether this is a destination path (by copy or
+     * @param string $path        The path to normalize.
+     * @param bool   $destination whether this is a destination path (by copy or
      *      move), meaning [] is not allowed in validation.
      * @param bool $throw whether to throw an exception if validation fails or
      *      just to return false.
@@ -157,7 +154,6 @@ class PathHelper
         ;
 
         if (! self::assertValidAbsolutePath($normalizedPath, $destination, $throw)) {
-
             return false;
         }
 
@@ -168,9 +164,9 @@ class PathHelper
      * In addition to normalizing and validating, this method combines the path
      * with a context if it is not absolute.
      *
-     * @param string $path      A relative or absolute path
-     * @param string $context   The absolute path context to make $path absolute if needed
-     * @param bool $destination whether this is a destination path (by copy or
+     * @param string $path        A relative or absolute path
+     * @param string $context     The absolute path context to make $path absolute if needed
+     * @param bool   $destination whether this is a destination path (by copy or
      *      move), meaning [] is not allowed in validation.
      * @param bool $throw whether to throw an exception if validation fails or
      *      just to return false.
@@ -210,14 +206,12 @@ class PathHelper
     public static function getParentPath($path)
     {
         if ('/' === $path) {
-
             return '/';
         }
 
         $pos = strrpos($path, '/');
 
         if (0 === $pos) {
-
             return '/';
         }
 

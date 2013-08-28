@@ -98,7 +98,6 @@ class NodeDumpCommandTest extends BaseCommandTest
             ->will($this->throwException(new ItemNotFoundException()))
         ;
 
-
         $this->addCommand();
 
         $ct = $this->executeCommand('phpcr:node:dump', array(), 1);

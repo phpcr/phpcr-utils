@@ -4,7 +4,6 @@ namespace PHPCR\Tests\Util\Console\Command;
 
 use Symfony\Component\Console\Application;
 use PHPCR\Util\Console\Command\WorkspaceListCommand;
-use PHPCR\RepositoryInterface;
 
 class WorkspaceListCommandTest extends BaseCommandTest
 {

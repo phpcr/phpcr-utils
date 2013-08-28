@@ -57,7 +57,6 @@ class WorkspaceDeleteCommandTest extends BaseCommandTest
             ->will($this->returnValue(array('default', 'other')))
         ;
 
-
         $ct = $this->executeCommand('phpcr:workspace:delete', array(
             'name' => 'test_workspace',
             '--force' => 'true',

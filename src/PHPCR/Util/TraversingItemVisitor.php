@@ -115,8 +115,6 @@ abstract class TraversingItemVisitor implements ItemVisitorInterface
      * @param integer $depth hierarchy level of this node (the root node starts
      *      at depth 0).
      *
-     * @return void
-     *
      * @throws RepositoryException if an error occurs.
      *
      * @api
@@ -131,8 +129,6 @@ abstract class TraversingItemVisitor implements ItemVisitorInterface
      *      visitor.
      * @param integer $depth hierarchy level of this property (the root node
      *      starts at depth 0).
-     *
-     * @return void
      *
      * @throws RepositoryException if an error occurs.
      *
@@ -151,8 +147,6 @@ abstract class TraversingItemVisitor implements ItemVisitorInterface
      *
      * @param ItemInterface $item the Node or Property that is accepting
      *      this visitor.
-     *
-     * @return void
      *
      * @throws RepositoryException if an error occurs.
      *

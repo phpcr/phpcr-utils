@@ -110,7 +110,7 @@ class BufferReader implements ReaderInterface
     }
 
     /**
-     * @return bool
+     * @return boolean
      */
     public function isEof()
     {
@@ -122,6 +122,7 @@ class BufferReader implements ReaderInterface
 
     /**
      * Advance the forward position and return the literal delimited by start and end position
+     *
      * @return string
      */
     public function forward()
@@ -142,6 +143,7 @@ class BufferReader implements ReaderInterface
     public function forwardChar()
     {
         $this->forward();
+
         return $this->currentChar();
     }
 

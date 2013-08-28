@@ -12,7 +12,7 @@ use PHPCR\Util\CND\Scanner\GenericToken;
  */
 class NoWhitespacesFilter extends TokenTypeFilter
 {
-    function __construct()
+    public function __construct()
     {
         parent::__construct(GenericToken::TK_WHITESPACE);
     }

@@ -11,8 +11,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Helper\DialogHelper;
 
-use PHPCR\Util\NodeHelper;
-
 /**
  * Command to remove all nodes from a path in the workspace of the configured
  * session.
@@ -65,7 +63,6 @@ EOF
         $path = $input->getArgument('path');
         $force = $input->getOption('force');
         $onlyChildren = $input->getOption('only-children');
-
 
         if ('/' === $path) {
             // even if we have only children, this will not work as we would

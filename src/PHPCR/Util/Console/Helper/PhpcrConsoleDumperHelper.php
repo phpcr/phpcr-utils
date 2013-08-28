@@ -52,4 +52,3 @@ class PhpcrConsoleDumperHelper extends Helper
         return 'phpcr_console_dumper';
     }
 }
-

@@ -4,7 +4,6 @@ namespace PHPCR\Tests\Util\Console\Command;
 
 use Symfony\Component\Console\Application;
 use PHPCR\Util\Console\Command\WorkspacePurgeCommand;
-use PHPCR\RepositoryInterface;
 
 class WorkspacePurgeCommandTest extends BaseCommandTest
 {

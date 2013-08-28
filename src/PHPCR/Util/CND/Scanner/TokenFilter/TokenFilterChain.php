@@ -23,10 +23,10 @@ class TokenFilterChain implements TokenFilterInterface
     }
 
     /**
-     * @param Token $token
+     * @param  Token $token
      * @return Token | null
      */
-    function filter(Token $token)
+    public function filter(Token $token)
     {
         foreach ($this->filters as $filter) {
 

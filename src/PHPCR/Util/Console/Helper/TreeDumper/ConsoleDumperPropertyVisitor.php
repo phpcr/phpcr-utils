@@ -75,7 +75,6 @@ class ConsoleDumperPropertyVisitor extends ConsoleDumperItemVisitor
         ))) {
             $referenceStrings = array();
 
-
             if ('path' == $this->refFormat) {
                 $references = (array) $item->getValue();
 

@@ -32,7 +32,8 @@ abstract class AbstractScanner
 
     /**
      * @param Token $token
-     * @return Token | void
+     *
+     * @return Token|void
      */
     public function applyFilters(Token $token)
     {

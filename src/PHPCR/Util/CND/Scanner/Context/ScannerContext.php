@@ -56,7 +56,6 @@ class ScannerContext
      */
     protected $tokenFilters = array();
 
-
     /**
      * @param string $startDelim
      * @param string $endDelim

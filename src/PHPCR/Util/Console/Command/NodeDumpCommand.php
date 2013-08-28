@@ -7,7 +7,6 @@ use PHPCR\RepositoryException;
 use PHPCR\PathNotFoundException;
 
 use PHPCR\Util\UUIDHelper;
-use PHPCR\Util\Console\Helper\PhpcrConsoleDumperHelper;
 
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;

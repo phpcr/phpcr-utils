@@ -18,6 +18,7 @@ class FileReader extends BufferReader
 
     /**
      * @param string $path
+     *
      * @throws \InvalidArgumentException
      */
     public function __construct($path)

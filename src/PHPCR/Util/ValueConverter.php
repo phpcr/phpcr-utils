@@ -196,6 +196,7 @@ class ValueConverter
                             throw new RepositoryException('something weird');
                         }
                         /** @var $value \DateTime */
+
                         return $value->getTimestamp();
                 }
                 if (is_object($value)) {
@@ -217,6 +218,7 @@ class ValueConverter
                         }
 
                         /** @var $value \DateTime */
+
                         return (double) $value->getTimestamp();
                 }
                 if (is_object($value)) {
@@ -258,6 +260,7 @@ class ValueConverter
                         return (boolean) $value;
                     case PropertyType::DATE:
                         /** @var $value \DateTime */
+
                         return (boolean) $value->getTimestamp();
                     case PropertyType::DECIMAL:
                         return (boolean) ((double) $value); // '0' is false too
@@ -354,6 +357,7 @@ class ValueConverter
                         return (string) $value;
                     case PropertyType::DATE:
                         /** @var $value \DateTime */
+
                         return (string) $value->getTimestamp();
                 }
                 if (is_object($value)) {
