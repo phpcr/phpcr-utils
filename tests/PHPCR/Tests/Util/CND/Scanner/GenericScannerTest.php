@@ -13,14 +13,14 @@ class GenericScannerTest extends \PHPUnit_Framework_TestCase
 {
     protected $expectedTokens = array(
 
-        // <?php php
+        // <opening php tag>
         array(Token::TK_SYMBOL, '<'),
         array(Token::TK_SYMBOL, '?'),
         array(Token::TK_IDENTIFIER, 'php'),
         array(Token::TK_NEWLINE, ''),
         array(Token::TK_NEWLINE, ''),
 
-        // namespace Test\Foobar
+        // namespace Test\Foobar;
         array(Token::TK_IDENTIFIER, 'namespace'),
         array(Token::TK_WHITESPACE, ''),
         array(Token::TK_IDENTIFIER, 'Test'),
@@ -73,6 +73,9 @@ class GenericScannerTest extends \PHPUnit_Framework_TestCase
         array(Token::TK_WHITESPACE, ''),
         array(Token::TK_STRING, '\'This is a "Test // string"\''),
         array(Token::TK_SYMBOL, ';'),
+        array(Token::TK_NEWLINE, ''),
+
+        // empty line before return
         array(Token::TK_NEWLINE, ''),
 
         // return "Test string";
