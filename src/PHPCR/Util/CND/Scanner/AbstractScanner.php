@@ -41,7 +41,7 @@ abstract class AbstractScanner
 
             $token = $filter->filter($token);
 
-            if (is_null($token)) {
+            if (null === $token) {
                 break;
             }
         }
