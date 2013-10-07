@@ -215,7 +215,6 @@ class NodeHelper
          * may vary across implementations.
          */
         $matches = array();
-        //if (preg_match('#^\\{([^\\}]+)\\}([a-zA-Z][a-zA-Z0-9]*)$}#', $nameHint, $matches)) {
         if (preg_match('#^\\{([^\\}]+)\\}([a-zA-Z][a-zA-Z0-9]*)$#', $nameHint, $matches)) {
             $ns = $matches[1];
             $name = $matches[2];
