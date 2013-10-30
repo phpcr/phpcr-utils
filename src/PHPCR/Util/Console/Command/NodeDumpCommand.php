@@ -35,6 +35,7 @@ class NodeDumpCommand extends BaseCommand
             ->addOption('props', null, InputOption::VALUE_NONE, 'Also dump properties of the nodes')
             ->addOption('identifiers', null, InputOption::VALUE_NONE, 'Also output node UUID')
             ->addOption('depth', null, InputOption::VALUE_OPTIONAL, 'Limit how many level of children to show', "-1")
+            ->addOption('max_line_length', null, InputOption::VALUE_OPTIONAL, 'Limit the maximum characters per property', "120")
             ->addOption('ref-format', 'uuid', InputOption::VALUE_REQUIRED, 'Set the way references should be displayed when dumping reference properties - either "uuid" (default) or "path"')
             ->addArgument('identifier', InputArgument::OPTIONAL, 'Root path to dump', '/')
             ->setDescription('Dump subtrees of the content repository')
@@ -70,8 +71,9 @@ HERE
         $options['ref_format'] = $input->getOption('ref-format');
         $options['show_props'] = $input->hasParameterOption('--props');
         $options['show_sys_nodes'] = $input->hasParameterOption('--sys-nodes');
+        $options['max_line_length'] = $input->getOption('max_line_length');
 
-        if (null !== $options['ref_format']&& !in_array($options['ref_format'], array('uuid', 'path'))) {
+        if (null !== $options['ref_format'] && !in_array($options['ref_format'], array('uuid', 'path'))) {
             throw new \Exception('The ref-format option must be set to either "path" or "uuid"');
         }
 
