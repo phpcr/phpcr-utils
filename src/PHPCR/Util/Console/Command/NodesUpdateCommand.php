@@ -40,6 +40,12 @@ class NodesUpdateCommand extends BaseCommand
                 'The query language (e.g. sql, jcr_sql2)',
                 'jcr-sql2'
             )
+            ->addOption(
+                'persist-counter', 'c',
+                InputOption::VALUE_OPTIONAL,
+                'Save the session every x requests',
+                '100'
+            )
             ->setDescription('Command to manipulate the nodes in the workspace.')
             ->setHelp(<<<HERE
 The <info>phpcr:nodes:update</info> can manipulate the properties of nodes
@@ -80,6 +86,7 @@ HERE
 
         $query = $input->getOption('query');
         $queryLanguage = strtoupper($input->getOption('query-language'));
+        $persistCounter = intval($input->getOption('persist-counter'));
         $setProp = $input->getOption('set-prop');
         $removeProp = $input->getOption('remove-prop');
         $addMixins = $input->getOption('add-mixin');
@@ -111,6 +118,8 @@ HERE
             }
         }
 
+        $persistIn = $persistCounter;
+
         foreach ($result as $i => $row) {
             $output->writeln(sprintf(
                 "<info>Updating node:</info> [%d] %s.",
@@ -127,6 +136,13 @@ HERE
                 'removeMixins' => $removeMixins,
                 'applyClosures' => $applyClosures,
             ));
+
+            $persistIn--;
+            if (0 === $persistIn) {
+                $output->writeln('<info>Saving nodes processed so far...</info>');
+                $session->save();
+                $persistIn = $persistCounter;
+            }
         }
 
         $output->writeln('<info>Saving session...</info>');
