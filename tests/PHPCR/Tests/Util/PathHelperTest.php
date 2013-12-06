@@ -249,21 +249,30 @@ class PathHelperTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('/', PathHelper::getParentPath('/'));
     }
 
-    // getNodeName tests
-
-    public function testGetNodeName()
+    public function provideGetNodeName()
     {
-        $this->assertEquals('child', PathHelper::getNodeName('/parent/child'));
+        return array(
+            array('/parent/child', 'child'),
+            array('/parent/ns:child', 'ns:child'),
+            array('/', ''),
+        );
     }
 
-    public function testGetNodeNameNamespaced()
+    /**
+     * @dataProvider provideGetNodeName
+     */
+    public function testGetNodeName($path, $expected = null)
     {
-        $this->assertEquals('ns:child', PathHelper::getNodeName('/parent/ns:child'));
+        $this->assertEquals($expected, PathHelper::getNodeName($path));
     }
 
-    public function testGetNodeNameRoot()
+    /**
+     * @expectedException PHPCR\RepositoryException
+     * @expectedExceptionMessage must be an absolute path
+     */
+    public function testGetNodeNameMustBeAbsolute()
     {
-        $this->assertEquals('', PathHelper::getNodeName('/'));
+        PathHelper::getNodeName('foobar');
     }
 
     public function testGetPathDepth()

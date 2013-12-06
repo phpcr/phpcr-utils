@@ -229,7 +229,15 @@ class PathHelper
      */
     public static function getNodeName($path)
     {
-        return substr($path, strrpos($path, '/') + 1);
+        $strrpos = strrpos($path, '/');
+
+        if (false === $strrpos) {
+            self::error(sprintf(
+                'Path "%s" must be an absolute path', $path
+            ), true);
+        }
+
+        return substr($path, $strrpos + 1);
     }
 
     /**
