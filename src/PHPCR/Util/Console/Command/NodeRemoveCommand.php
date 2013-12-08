@@ -105,8 +105,9 @@ EOF
 
             /** @var $childNode NodeInterface */
             foreach ($baseNode->getNodes() as $childNode) {
+                $childNodePath = $childNode->getPath();
                 $childNode->remove();
-                $output->writeln(sprintf($message, $childNode->getPath()));
+                $output->writeln(sprintf($message, $childNodePath));
             }
         } else {
             $session->removeItem($path);
