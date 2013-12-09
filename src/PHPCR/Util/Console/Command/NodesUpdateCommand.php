@@ -98,7 +98,7 @@ HERE
 
         if (!$query) {
             throw new \InvalidArgumentException(
-                'You must provide a SELECT query, e.g. --select="SELECT * FROM [nt:unstructured]"'
+                'You must provide a SELECT query, e.g. --query="SELECT * FROM [nt:unstructured]"'
             );
         }
 
