@@ -2,11 +2,15 @@
 
 namespace PHPCR\Util\CND\Exception;
 
-use PHPCR\Util\CND\Scanner\TokenQueue,
-    PHPCR\Util\CND\Scanner\GenericToken;
+use PHPCR\Util\CND\Scanner\TokenQueue;
+use PHPCR\Util\CND\Scanner\GenericToken;
 
 /**
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
+ *
+ * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
+ * @license http://opensource.org/licenses/MIT MIT License
+ *
  */
 class ParserException extends \Exception
 {
@@ -17,7 +21,7 @@ class ParserException extends \Exception
 
         // construct a lookup of the next tokens
         $lookup = '';
-        for($i = 1; $i <= 5; $i++) {
+        for ($i = 1; $i <= 5; $i++) {
             if ($queue->isEof()) {
                 break;
             }

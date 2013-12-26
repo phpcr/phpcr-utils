@@ -1,23 +1,5 @@
 <?php
 
-/**
- * This file is part of the PHPCR Utils
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * @license http://www.apache.org/licenses/LICENSE-2.0 Apache Software License 2.0
- * @link http://phpcr.github.com/
- */
 namespace PHPCR\Util;
 
 use PHPCR\NodeInterface;
@@ -31,6 +13,9 @@ use PHPCR\ValueFormatException;
  *
  * This class also proxies the determineType method to allow extending classes
  * to handle custom types.
+ *
+ * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
+ * @license http://opensource.org/licenses/MIT MIT License
  *
  * @author David Buchmann <mail@davidbu.ch>
  *
@@ -211,6 +196,7 @@ class ValueConverter
                             throw new RepositoryException('something weird');
                         }
                         /** @var $value \DateTime */
+
                         return $value->getTimestamp();
                 }
                 if (is_object($value)) {
@@ -232,6 +218,7 @@ class ValueConverter
                         }
 
                         /** @var $value \DateTime */
+
                         return (double) $value->getTimestamp();
                 }
                 if (is_object($value)) {
@@ -273,6 +260,7 @@ class ValueConverter
                         return (boolean) $value;
                     case PropertyType::DATE:
                         /** @var $value \DateTime */
+
                         return (boolean) $value->getTimestamp();
                     case PropertyType::DECIMAL:
                         return (boolean) ((double) $value); // '0' is false too
@@ -369,6 +357,7 @@ class ValueConverter
                         return (string) $value;
                     case PropertyType::DATE:
                         /** @var $value \DateTime */
+
                         return (string) $value->getTimestamp();
                 }
                 if (is_object($value)) {

@@ -7,6 +7,9 @@ namespace PHPCR\Util\CND\Scanner;
  *
  * Unless you want to redefine the token type constants, you should rather use GenericToken.
  *
+ * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
+ * @license http://opensource.org/licenses/MIT MIT License
+ *
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  */
 class Token
@@ -39,14 +42,13 @@ class Token
      */
     protected $row;
 
-
     /**
      * Constructor
      *
-     * @param int $type
+     * @param int    $type
      * @param string $data
-     * @param int $line
-     * @param int $row
+     * @param int    $line
+     * @param int    $row
      */
     public function __construct($type = 0, $data = '', $line = 0, $row = 0)
     {

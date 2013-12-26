@@ -7,4 +7,3 @@ use PHPCR\Query\RowInterface;
 abstract class MockRow implements \Iterator, RowInterface
 {
 }
-

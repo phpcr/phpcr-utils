@@ -11,6 +11,7 @@ class TestClass
     {
         // Line comment
         $string = 'This is a "Test // string"';
+
         return "Test string";
     }
 

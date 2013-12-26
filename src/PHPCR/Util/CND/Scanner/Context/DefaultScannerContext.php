@@ -2,9 +2,10 @@
 
 namespace PHPCR\Util\CND\Scanner\Context;
 
-use PHPCR\Util\CND\Scanner\TokenFilter\TokenFilterInterface;
-
 /**
+ * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
+ * @license http://opensource.org/licenses/MIT MIT License
+ *
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  */
 class DefaultScannerContext extends ScannerContext
@@ -25,7 +26,7 @@ class DefaultScannerContext extends ScannerContext
             '<', '>', '+', '*', '%', '&', '/', '(', ')', '=', '?', '#', '|', '!', '~',
             '[', ']', '{', '}', '$', ',', ';', ':', '.', '-', '_', '\\',
         );
-        foreach($symbols as $symbol) {
+        foreach ($symbols as $symbol) {
             $this->addSymbol($symbol);
         }
     }

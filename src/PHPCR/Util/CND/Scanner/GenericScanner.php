@@ -11,6 +11,9 @@ use PHPCR\Util\CND\Exception\ScannerException;
  * This class can be extended and the class properties redefined in order to adapt
  * the token generation to your needs.
  *
+ * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
+ * @license http://opensource.org/licenses/MIT MIT License
+ *
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  * @author Nikola Petkanski <nikola@petkanski.com>
  */
@@ -20,6 +23,7 @@ class GenericScanner extends AbstractScanner
      * Scan the given reader and construct a TokenQueue composed of GenericToken.
      *
      * @param ReaderInterface $reader
+     *
      * @return TokenQueue
      */
     public function scan(ReaderInterface $reader)
@@ -54,7 +58,8 @@ class GenericScanner extends AbstractScanner
      * Detect and consume whitespaces
      *
      * @param ReaderInterface $reader
-     * @return bool
+     *
+     * @return boolean
      */
     protected function consumeSpaces(ReaderInterface $reader)
     {
@@ -80,7 +85,8 @@ class GenericScanner extends AbstractScanner
      * Detect and consume newlines
      *
      * @param ReaderInterface $reader
-     * @return bool
+     *
+     * @return boolean
      */
     protected function consumeNewLine(ReaderInterface $reader)
     {
@@ -88,7 +94,6 @@ class GenericScanner extends AbstractScanner
 
             $token = new GenericToken(GenericToken::TK_NEWLINE, "\n");
             $this->addToken($reader, $token);
-
 
             while ($reader->forward() === "\n") {
                 $reader->consume();
@@ -105,9 +110,11 @@ class GenericScanner extends AbstractScanner
     /**
      * Detect and consume strings
      *
+     * @param ReaderInterface  $reader
+     *
+     * @return boolean
+     *
      * @throws ScannerException
-     * @param ReaderInterface $reader
-     * @return bool
      */
     protected function consumeString(ReaderInterface $reader)
     {
@@ -127,6 +134,7 @@ class GenericScanner extends AbstractScanner
 
             $token = new GenericToken(GenericToken::TK_STRING, $reader->consume());
             $this->addToken($reader, $token);
+
             return true;
         }
 
@@ -137,7 +145,8 @@ class GenericScanner extends AbstractScanner
      * Detect and consume comments
      *
      * @param ReaderInterface $reader
-     * @return bool
+     *
+     * @return boolean
      */
     protected function consumeComments(ReaderInterface $reader)
     {
@@ -151,14 +160,16 @@ class GenericScanner extends AbstractScanner
     /**
      * Detect and consume block comments
      *
+     * @param ReaderInterface  $reader
+     *
+     * @return boolean
+     *
      * @throws ScannerException
-     * @param ReaderInterface $reader
-     * @return bool
      */
     protected function consumeBlockComments(ReaderInterface $reader)
     {
         $nextChar = $reader->currentChar();
-        foreach($this->context->getBlockCommentDelimiters() as $beginDelim => $endDelim) {
+        foreach ($this->context->getBlockCommentDelimiters() as $beginDelim => $endDelim) {
 
             if ($nextChar === $beginDelim[0]) {
 
@@ -197,6 +208,7 @@ class GenericScanner extends AbstractScanner
 
                     // Start delimiter not found, rewind the looked up characters
                     $reader->rewind();
+
                     return false;
                 }
 
@@ -212,12 +224,13 @@ class GenericScanner extends AbstractScanner
      * Detect and consume line comments
      *
      * @param ReaderInterface $reader
-     * @return bool
+     *
+     * @return boolean
      */
     protected function consumeLineComments(ReaderInterface $reader)
     {
         $nextChar = $reader->currentChar();
-        foreach($this->context->getLineCommentDelimiters() as $delimiter) {
+        foreach ($this->context->getLineCommentDelimiters() as $delimiter) {
 
             if ($delimiter && $nextChar === $delimiter[0]) {
 
@@ -241,6 +254,7 @@ class GenericScanner extends AbstractScanner
 
                     // Rewind the looked up characters
                     $reader->rewind();
+
                     return false;
                 }
 
@@ -254,7 +268,8 @@ class GenericScanner extends AbstractScanner
      * Detect and consume identifiers
      *
      * @param ReaderInterface $reader
-     * @return bool
+     *
+     * @return boolean
      */
     protected function consumeIdentifiers(ReaderInterface $reader)
     {
@@ -267,6 +282,7 @@ class GenericScanner extends AbstractScanner
             }
             $token = new GenericToken(GenericToken::TK_IDENTIFIER, $reader->consume());
             $this->addToken($reader, $token);
+
             return true;
         }
 
@@ -277,7 +293,8 @@ class GenericScanner extends AbstractScanner
      * Detect and consume symbols
      *
      * @param ReaderInterface $reader
-     * @return bool
+     *
+     * @return boolean
      */
     protected function consumeSymbols(ReaderInterface $reader)
     {

@@ -3,6 +3,9 @@
 namespace PHPCR\Util\CND\Scanner;
 
 /**
+ * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
+ * @license http://opensource.org/licenses/MIT MIT License
+ *
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  */
 class GenericToken extends Token
@@ -35,6 +38,5 @@ class GenericToken extends Token
     {
         return sprintf("TOKEN(%s, '%s', %s, %s)", self::getTypeName($this->getType()), trim($this->data), $this->line, $this->row);
     }
-
 
 }

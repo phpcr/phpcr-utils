@@ -44,6 +44,7 @@ $cli->addCommands(array(
     new \PHPCR\Util\Console\Command\NodeMoveCommand(),
     new \PHPCR\Util\Console\Command\NodeRemoveCommand(),
     new \PHPCR\Util\Console\Command\NodeTouchCommand(),
+    new \PHPCR\Util\Console\Command\NodesUpdateCommand(),
     new \PHPCR\Util\Console\Command\NodeTypeListCommand(),
     new \PHPCR\Util\Console\Command\NodeTypeRegisterCommand(),
     new \PHPCR\Util\Console\Command\WorkspaceCreateCommand(),

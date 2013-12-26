@@ -1,29 +1,10 @@
 <?php
 
-/**
- * This file is part of the PHPCR Utils
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * @license http://www.apache.org/licenses/LICENSE-2.0 Apache Software License 2.0
- * @link http://phpcr.github.com/
- */
-
 namespace PHPCR\Util;
 
 use PHPCR\ItemInterface;
 use PHPCR\NodeInterface;
-use PHPCR\PropertyType;
+use PHPCR\PropertyInterface;
 use PHPCR\SessionInterface;
 use PHPCR\RepositoryException;
 use PHPCR\ItemNotFoundException;
@@ -31,6 +12,9 @@ use PHPCR\NamespaceException;
 
 /**
  * Helper with only static methods to work with PHPCR nodes
+ *
+ * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
+ * @license http://opensource.org/licenses/MIT MIT License
  *
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  * @author David Buchmann <david@liip.ch>
@@ -50,7 +34,7 @@ class NodeHelper
      * @param SessionInterface $session the PHPCR session to create the path
      * @param string           $path    full path, like /content/jobs/data
      *
-     * @return \PHPCR\NodeInterface the last node of the path, i.e. data
+     * @return NodeInterface the last node of the path, i.e. data
      */
     public static function createPath(SessionInterface $session, $path)
     {
@@ -87,12 +71,14 @@ class NodeHelper
     {
         $root = $session->getRootNode();
 
+        /** @var $property PropertyInterface */
         foreach ($root->getProperties() as $property) {
             if (! self::isSystemItem($property)) {
                 $property->remove();
             }
         }
 
+        /** @var $node NodeInterface */
         foreach ($root->getNodes() as $node) {
             if (! self::isSystemItem($node)) {
                 $node->remove();
@@ -111,13 +97,17 @@ class NodeHelper
     }
 
     /**
-     * Determine whether this item has a namespace that is to be considered
-     * a system namespace
+     * Determine whether this item is to be considered a system item that you
+     * usually want to hide and that should not be removed when purging the
+     * repository.
      *
      * @param ItemInterface $item
      */
     public static function isSystemItem(ItemInterface $item)
     {
+        if ($item->getDepth() > 1) {
+            return false;
+        }
         $name = $item->getName();
 
         return strpos($name, 'jcr:') === 0 || strpos($name, 'rep:') === 0;
@@ -225,7 +215,6 @@ class NodeHelper
          * may vary across implementations.
          */
         $matches = array();
-        //if (preg_match('#^\\{([^\\}]+)\\}([a-zA-Z][a-zA-Z0-9]*)$}#', $nameHint, $matches)) {
         if (preg_match('#^\\{([^\\}]+)\\}([a-zA-Z][a-zA-Z0-9]*)$#', $nameHint, $matches)) {
             $ns = $matches[1];
             $name = $matches[2];
@@ -324,15 +313,14 @@ class NodeHelper
         return $reorders;
     }
 
-
     /**
      * Move the element $name of $list to right before $destination,
      * validating existence of all elements.
      *
-     * @param string $name  name of the element to move
+     * @param string $name        name of the element to move
      * @param string $destination name of the element $srcChildRelPath has
      *      to be ordered before, null to move to the end
-     * @param array  $list            the array of names
+     * @param array $list the array of names
      *
      * @return array The updated $nodes array with new order
      *
@@ -367,6 +355,7 @@ class NodeHelper
             unset($list[$oldpos]);
             array_splice($list, $newpos, 0, $name);
         }
+
         return $list;
     }
 }

@@ -3,6 +3,9 @@
 namespace PHPCR\Util\CND\Reader;
 
 /**
+ * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
+ * @license http://opensource.org/licenses/MIT MIT License
+ *
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  * @author Nikola Petkanski <nikola@petkanski.com>
  */
@@ -107,7 +110,7 @@ class BufferReader implements ReaderInterface
     }
 
     /**
-     * @return bool
+     * @return boolean
      */
     public function isEof()
     {
@@ -119,6 +122,7 @@ class BufferReader implements ReaderInterface
 
     /**
      * Advance the forward position and return the literal delimited by start and end position
+     *
      * @return string
      */
     public function forward()
@@ -139,6 +143,7 @@ class BufferReader implements ReaderInterface
     public function forwardChar()
     {
         $this->forward();
+
         return $this->currentChar();
     }
 

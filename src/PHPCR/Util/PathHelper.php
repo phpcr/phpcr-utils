@@ -1,33 +1,14 @@
 <?php
 
-/**
- * This file is part of the PHPCR Utils
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * @license http://www.apache.org/licenses/LICENSE-2.0 Apache Software License 2.0
- * @link http://phpcr.github.com/
- */
-
 namespace PHPCR\Util;
 
-use PHPCR\SessionInterface;
-use PHPCR\ItemInterface;
 use PHPCR\RepositoryException;
-use PHPCR\NamespaceException;
 
 /**
  * Static methods to handle path operations for PHPCR implementations
+ *
+ * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
+ * @license http://opensource.org/licenses/MIT MIT License
  *
  * @author David Buchmann <david@liip.ch>
  */
@@ -36,9 +17,11 @@ class PathHelper
     /**
      * Do not create an instance of this class
      */
+    // @codeCoverageIgnoreStart
     private function __construct()
     {
     }
+    // @codeCoverageIgnoreEnd
 
     /**
      * Check whether this is a syntactically valid absolute path.
@@ -48,8 +31,8 @@ class PathHelper
      *
      * Non-normalized paths are considered invalid, i.e. /node/. is /node and /my/node/.. is /my
      *
-     * @param string $path The path to validate
-     * @param bool $destination whether this is a destination path (by copy or
+     * @param string $path        The path to validate
+     * @param bool   $destination whether this is a destination path (by copy or
      *      move), meaning [] is not allowed. If your implementation does not
      *      support same name siblings, just always pass true for this
      * @param bool $throw whether to throw an exception on validation errors
@@ -60,25 +43,16 @@ class PathHelper
      */
     public static function assertValidAbsolutePath($path, $destination = false, $throw = true)
     {
-        if (! is_string($path)
+        if ((!is_string($path) && !is_numeric($path))
             || strlen($path) == 0
             || '/' !== $path[0]
             || strlen($path) > 1 && '/' === $path[strlen($path) - 1]
             || preg_match('-//|/\./|/\.\./-', $path)
         ) {
-            if ($throw) {
-                throw new RepositoryException("Invalid path $path");
-            }
-
-            return false;
+            return self::error("Invalid path $path", $throw);
         }
         if ($destination && ']' === $path[strlen($path) - 1]) {
-            if ($throw) {
-                throw new RepositoryException("Destination path may not end with index $path");
-            }
-
-            return false;
-
+            return self::error("Destination path may not end with index $path", $throw);
         }
 
         return true;
@@ -95,7 +69,8 @@ class PathHelper
      * encode and decode characters that are not natively allowed by a storage
      * engine.
      *
-     * @param string $name The name to check
+     * @param string  $name  The name to check
+     * @param boolean $throw whether to throw an exception on validation errors.
      *
      * @return bool true if valid, false if not valid and $throw was false
      *
@@ -106,11 +81,11 @@ class PathHelper
     public static function assertValidLocalName($name, $throw = true)
     {
         if ('.' == $name || '..' == $name) {
-            throw new RepositoryException('Name may not be parent or self identifier: ' . $name);
+            return self::error("Name may not be parent or self identifier: $name", $throw);
         }
 
         if (preg_match('/\\/|:|\\[|\\]|\\||\\*/', $name)) {
-            throw new RepositoryException('Name contains illegal characters: '.$name);
+            return self::error("Name contains illegal characters: $name", $throw);
         }
 
         return true;
@@ -127,8 +102,8 @@ class PathHelper
      *
      * Note: A well-formed input path implies a well-formed and normalized path returned.
      *
-     * @param string $path The path to normalize.
-     * @param bool $destination whether this is a destination path (by copy or
+     * @param string $path        The path to normalize.
+     * @param bool   $destination whether this is a destination path (by copy or
      *      move), meaning [] is not allowed in validation.
      * @param bool $throw whether to throw an exception if validation fails or
      *      just to return false.
@@ -140,25 +115,19 @@ class PathHelper
      */
     public static function normalizePath($path, $destination = false, $throw = true)
     {
-        if (!is_string($path)) {
-            throw new RepositoryException('Expected string but got ' . gettype($path));
+        if (!is_string($path) && !is_numeric($path)) {
+            return self::error('Expected string but got ' . gettype($path), $throw);
         }
-
         if (strlen($path) === 0) {
-            throw new RepositoryException('Path must not be of zero length');
+            return self::error('Path must not be of zero length', $throw);
         }
 
         if ('/' === $path) {
-
             return '/';
         }
 
         if ('/' !== $path[0]) {
-            if ($throw) {
-                throw new RepositoryException("Not an absolute path '$path'");
-            }
-
-            return false;
+            return self::error("Not an absolute path '$path'", $throw);
         }
 
         $finalParts= array();
@@ -185,7 +154,6 @@ class PathHelper
         ;
 
         if (! self::assertValidAbsolutePath($normalizedPath, $destination, $throw)) {
-
             return false;
         }
 
@@ -196,9 +164,9 @@ class PathHelper
      * In addition to normalizing and validating, this method combines the path
      * with a context if it is not absolute.
      *
-     * @param string $path      A relative or absolute path
-     * @param string $context   The absolute path context to make $path absolute if needed
-     * @param bool $destination whether this is a destination path (by copy or
+     * @param string $path        A relative or absolute path
+     * @param string $context     The absolute path context to make $path absolute if needed
+     * @param bool   $destination whether this is a destination path (by copy or
      *      move), meaning [] is not allowed in validation.
      * @param bool $throw whether to throw an exception if validation fails or
      *      just to return false.
@@ -211,9 +179,16 @@ class PathHelper
      */
     public static function absolutizePath($path, $context, $destination = false, $throw = true)
     {
-        if (! $path) {
-            throw new RepositoryException('empty path');
+        if (!is_string($path) && !is_numeric($path)) {
+            return self::error('Expected string path but got ' . gettype($path), $throw);
         }
+        if (!is_string($context)) {
+            return self::error('Expected string context but got ' . gettype($context), $throw);
+        }
+        if (strlen($path) === 0) {
+            return self::error('Path must not be of zero length', $throw);
+        }
+
         if ('/' !== $path[0]) {
             $path = ('/' === $context) ? "/$path" : "$context/$path";
         }
@@ -231,14 +206,12 @@ class PathHelper
     public static function getParentPath($path)
     {
         if ('/' === $path) {
-
             return '/';
         }
 
         $pos = strrpos($path, '/');
 
         if (0 === $pos) {
-
             return '/';
         }
 
@@ -269,5 +242,25 @@ class PathHelper
     public static function getPathDepth($path)
     {
         return substr_count(rtrim($path, '/'), '/');
+    }
+
+    /**
+     * If $throw is true, throw a RepositoryException with $msg. Otherwise
+     * return false.
+     *
+     * @param string  $msg   the exception message to use in case of throw being true
+     * @param boolean $throw whether to throw the exception or return false
+     *
+     * @return boolean false
+     *
+     * @throws RepositoryException
+     */
+    private static function error($msg, $throw)
+    {
+        if ($throw) {
+            throw new RepositoryException($msg);
+        }
+
+        return false;
     }
 }

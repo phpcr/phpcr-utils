@@ -1,28 +1,14 @@
 <?php
 
-/**
- * This file is part of the PHPCR Utils
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * @license http://www.apache.org/licenses/LICENSE-2.0 Apache Software License 2.0
- * @link http://phpcr.github.com/
- */
-
 namespace PHPCR\Util\QOM;
+
+use PHPCR\Query\InvalidQueryException;
 
 /**
  * Split an SQL2 statement into string tokens. Allows lookup and fetching of tokens.
+ *
+ * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
+ * @license http://opensource.org/licenses/MIT MIT License
  */
 class Sql2Scanner
 {
@@ -39,6 +25,13 @@ class Sql2Scanner
      * @var array
      */
     protected $tokens;
+
+    /**
+     * Delimiters between tokens
+     *
+     * @var array
+     */
+    protected $delimiters;
 
     /**
      * Parsing position in the SQL string
@@ -76,6 +69,17 @@ class Sql2Scanner
     }
 
     /**
+     * Get the delimiter that separated the two previous tokens
+     *
+     * @return string
+     */
+    public function getPreviousDelimiter()
+    {
+
+        return isset($this->delimiters[$this->curpos - 1]) ? $this->delimiters[$this->curpos - 1] : ' ';
+    }
+
+    /**
      * Get the next token and remove it from the queue.
      * Return an empty string when there are no more tokens.
      *
@@ -103,7 +107,7 @@ class Sql2Scanner
     {
         $nextToken = $this->fetchNextToken();
         if (! $this->tokenIs($nextToken, $token, $case_insensitive)) {
-            throw new \Exception("Syntax error: Expected $token, found $nextToken");
+            throw new InvalidQueryException("Syntax error: Expected '$token', found '$nextToken' in {$this->sql2}");
         }
     }
 
@@ -152,10 +156,18 @@ class Sql2Scanner
         $tokens = array();
         $token = strtok($sql2, " \n\t");
         while ($token !== false) {
-
             $this->tokenize($tokens, $token);
             $token = strtok(" \n\t");
         }
+
+        $regexp = '';
+        foreach ($tokens as $token) {
+            $regexp[] = preg_quote($token, '/');
+        }
+
+        $regexp = '/^'.implode('([ \t\n]+)', $regexp).'$/';
+        preg_match($regexp, $sql2, $this->delimiters);
+        $this->delimiters[0] = '';
 
         return $tokens;
     }

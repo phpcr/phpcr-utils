@@ -28,6 +28,11 @@ class PathHelperTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(PathHelper::assertValidAbsolutePath('/parent[7]/child'));
     }
 
+    public function testAssertValidPathIndexedAtEnd()
+    {
+        $this->assertTrue(PathHelper::assertValidAbsolutePath('/parent[7]/child[3]'));
+    }
+
     /**
      * @expectedException \PHPCR\RepositoryException
      */
@@ -138,43 +143,40 @@ class PathHelperTest extends \PHPUnit_Framework_TestCase
     public static function dataproviderNormalizePath()
     {
         return array(
-            array('/../foo',       '/foo'),
-            array('/../',           '/'),
-            array('/foo/../bar',   '/bar'),
-            array('/foo/./bar',    '/foo/bar'),
+            array('/',           '/'),
+            array('/../foo',     '/foo'),
+            array('/../',        '/'),
+            array('/foo/../bar', '/bar'),
+            array('/foo/./bar',  '/foo/bar'),
+        );
+    }
+
+    public static function dataproviderNormalizePathInvalid()
+    {
+        return array(
+            array('foo/bar'),
+            array('bar'),
+            array('/foo/bar/'),
+            array(''),
+            array(new \stdClass()),
         );
     }
 
     /**
+     * @dataProvider dataproviderNormalizePathInvalid
      * @expectedException \PHPCR\RepositoryException
      */
-    public function testNormalizePathInvalid()
+    public function testNormalizePathInvalidThrow($input)
     {
-        PathHelper::normalizePath('foo/bar');
+        PathHelper::normalizePath($input);
     }
 
     /**
-     * @expectedException \PHPCR\RepositoryException
+     * @dataProvider dataproviderNormalizePathInvalid
      */
-    public function testNormalizePathShortInvalid()
+    public function testNormalizePathInvalidNoThrow($input)
     {
-        PathHelper::normalizePath('bar');
-    }
-
-    /**
-     * @expectedException \PHPCR\RepositoryException
-     */
-    public function testNormalizePathTrailing()
-    {
-        PathHelper::normalizePath('/foo/bar/');
-    }
-
-    /**
-     * @expectedException \PHPCR\RepositoryException
-     */
-    public function testNormalizePathEmpty()
-    {
-        PathHelper::normalizePath('');
+        $this->assertFalse(PathHelper::normalizePath($input, true, false));
     }
 
     // absolutizePath tests
@@ -194,6 +196,34 @@ class PathHelperTest extends \PHPUnit_Framework_TestCase
             array('../',        '/',    '/'),
             array('../foo/bar', '/baz', '/foo/bar'),
             array('foo/./bar',  '/baz', '/baz/foo/bar'),
+        );
+    }
+
+    /**
+     * @expectedException \PHPCR\RepositoryException
+     * @dataProvider dataproviderAbsolutizePathInvalid
+     */
+    public function testAbsolutizePathInvalidThrow($inputPath, $context, $target)
+    {
+        PathHelper::absolutizePath($inputPath, $context, $target);
+    }
+
+    /**
+     * @dataProvider dataproviderAbsolutizePathInvalid
+     */
+    public function testAbsolutizePathInvalidNoThrow($inputPath, $context, $target)
+    {
+        $this->assertFalse(PathHelper::absolutizePath($inputPath, $context, $target, false));
+    }
+
+    public static function dataproviderAbsolutizePathInvalid()
+    {
+        return array(
+            array('', '/context', false),
+            array(null,    '/context',    false),
+            array('foo',        null,    false),
+            array(new \stdClass(), '/context', false),
+            array('foo[2]',  '/bar', true),
         );
     }
 
