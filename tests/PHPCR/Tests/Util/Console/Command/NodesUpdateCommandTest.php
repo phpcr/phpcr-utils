@@ -2,6 +2,7 @@
 
 namespace PHPCR\Tests\Util\Console\Command;
 
+use PHPCR\Util\Console\Helper\PhpcrHelper;
 use Symfony\Component\Console\Application;
 use PHPCR\Util\Console\Command\NodesUpdateCommand;
 

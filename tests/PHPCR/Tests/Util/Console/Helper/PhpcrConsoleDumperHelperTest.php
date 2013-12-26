@@ -4,9 +4,15 @@ use PHPCR\Util\Console\Helper\PhpcrConsoleDumperHelper;
 
 class PhpcrConsoleDumperHelperTest extends PHPUnit_Framework_TestCase
 {
+    private $outputMock;
+    /**
+     * @var PhpcrConsoleDumperHelper
+     */
+    private $helper;
+
     public function setUp()
     {
-        $this->output = $this->getMock('Symfony\Component\Console\Output\OutputInterface');
+        $this->outputMock = $this->getMock('Symfony\Component\Console\Output\OutputInterface');
         $this->helper = new PhpcrConsoleDumperHelper;
     }
 
@@ -32,7 +38,7 @@ class PhpcrConsoleDumperHelperTest extends PHPUnit_Framework_TestCase
             'show_sys_nodes' => false,
         ), $options);
 
-        $tw = $this->helper->getTreeWalker($this->output, $options);
+        $tw = $this->helper->getTreeWalker($this->outputMock, $options);
         $this->assertInstanceOf(
             'PHPCR\Util\TreeWalker',
             $tw

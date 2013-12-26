@@ -34,6 +34,10 @@ class WorkspaceCreateCommandTest extends BaseCommandTest
             ->method('createWorkspace')
             ->with('test_workspace')
         ;
+        $this->workspace->expects($this->once())
+            ->method('getAccessibleWorkspaceNames')
+            ->will($this->returnValue(array('default')))
+        ;
 
         $this->executeCommand('phpcr:workspace:create', array(
             'name' => 'test_workspace'
@@ -41,10 +45,7 @@ class WorkspaceCreateCommandTest extends BaseCommandTest
     }
 
     /**
-     * The real console catches this exception.
-     *
-     * @expectedException \PHPCR\RepositoryException
-     * @expectedExceptionMessage Workspace exists
+     * Handle trying to create existing workspace.
      */
     public function testCreateExisting()
     {
@@ -61,13 +62,16 @@ class WorkspaceCreateCommandTest extends BaseCommandTest
             ->will($this->returnValue(true))
         ;
         $this->workspace->expects($this->once())
-            ->method('createWorkspace')
-            ->with('test_workspace')
-            ->will($this->throwException(new RepositoryException('Workspace exists')))
+            ->method('getAccessibleWorkspaceNames')
+            ->will($this->returnValue(array('default', 'test')))
         ;
 
-        $this->executeCommand('phpcr:workspace:create', array(
-            'name' => 'test_workspace'
-        ));
+        $tester = $this->executeCommand(
+            'phpcr:workspace:create',
+            array('name' => 'test'),
+            2
+        );
+
+        $this->assertContains('already has a workspace called "test"', $tester->getDisplay());
     }
 }

@@ -2,6 +2,8 @@
 
 namespace PHPCR\Tests\Util\Console\Command;
 
+use PHPCR\PathNotFoundException;
+use PHPCR\Util\Console\Helper\PhpcrHelper;
 use Symfony\Component\Console\Application;
 use PHPCR\Util\Console\Command\NodeTouchCommand;
 
@@ -10,20 +12,37 @@ use PHPCR\Util\Console\Command\NodeTouchCommand;
  */
 class NodeTouchCommandTest extends BaseCommandTest
 {
+    /**
+     * @var PhpcrHelper|\PHPUnit_Framework_MockObject_MockObject
+     */
+    public $phpcrHelper;
+
     public function setUp()
     {
         parent::setUp();
-        $this->command = new NodeTouchCommand;
+        $command = new NodeTouchCommand;
+        $this->application->add($command);
 
         // override default concrete instance with mock
-        $this->command->setPhpcrCliHelper($this->phpcrCliHelper);
-        $this->application->add($this->command);
-        $this->nodeType = $this->getMock('PHPCR\NodeType\NodeTypeInterface');
+        $this->phpcrHelper = $this->getMockBuilder('PHPCR\Util\Console\Helper\PhpcrHelper')
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+        $this->phpcrHelper->expects($this->any())
+            ->method('getSession')
+            ->will($this->returnValue($this->session))
+        ;
+        $this->phpcrHelper->expects($this->any())
+            ->method('getName')
+            ->will($this->returnValue('phpcr'))
+        ;
+        $this->helperSet->set($this->phpcrHelper);
     }
 
     public function testTouch()
     {
         $node = $this->node1;
+        $child = $this->getMock('PHPCR\Tests\Stubs\MockNode');
 
         $this->session->expects($this->exactly(2))
             ->method('getNode')
@@ -32,36 +51,46 @@ class NodeTouchCommandTest extends BaseCommandTest
                     case '/':
                         return $node;
                     case '/cms':
-                        return null;
+                        throw new PathNotFoundException();
                 }
+                throw new \Exception('Unexpected ' . $path);
             }));
 
         $this->node1->expects($this->once())
-            ->method('addNode');
+            ->method('addNode')
+            ->with('cms')
+            ->will($this->returnValue($child))
+        ;
 
         $this->session->expects($this->once())
             ->method('save');
 
-        $ct = $this->executeCommand('phpcr:node:touch', array(
+        $this->executeCommand('phpcr:node:touch', array(
             'path' => '/cms',
         ));
     }
 
     public function testUpdate()
     {
+        $nodeType = $this->getMock('PHPCR\NodeType\NodeTypeInterface');
+        $nodeType->expects($this->once())
+            ->method('getName')
+            ->will($this->returnValue('nt:unstructured'))
+        ;
+
         $this->session->expects($this->exactly(1))
             ->method('getNode')
             ->with('/cms')
-            ->will($this->returnValue($this->node1));
+            ->will($this->returnValue($this->node1))
+        ;
         $this->node1->expects($this->once())
             ->method('getPrimaryNodeType')
-            ->will($this->returnValue($this->nodeType));
-        $this->nodeType->expects($this->once())
-            ->method('getName')
-            ->will($this->returnValue('nt:unstructured'));
+            ->will($this->returnValue($nodeType))
+        ;
 
         $me = $this;
-        $this->phpcrCliHelper->expects($this->once())
+
+        $this->phpcrHelper->expects($this->once())
             ->method('processNode')
             ->will($this->returnCallback(function ($output, $node, $options) use ($me) {
                 $me->assertEquals($me->node1, $node);
@@ -74,7 +103,7 @@ class NodeTouchCommandTest extends BaseCommandTest
                 ), $options);
             }));
 
-        $ct = $this->executeCommand('phpcr:node:touch', array(
+        $this->executeCommand('phpcr:node:touch', array(
             'path' => '/cms',
             '--set-prop' => array('foo=bar'),
             '--remove-prop' => array('bar'),

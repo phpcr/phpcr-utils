@@ -46,9 +46,7 @@ class WorkspaceQueryCommand extends BaseCommand
         $limit = $input->getOption('limit');
         $offset = $input->getOption('offset');
 
-        $helper = $this->getPhpcrCliHelper();
-        $session = $this->getPhpcrSession();
-
+        $helper = $this->getPhpcrHelper();
         $query = $helper->createQuery($language, $sql);
 
         if ($limit) {

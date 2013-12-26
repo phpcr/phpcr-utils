@@ -30,6 +30,6 @@ class WorkspaceImportCommandTest extends BaseCommandTest
             'filename' => 'test_import.xml'
         ));
 
-        $this->assertEmpty($ct->getDisplay());
+        $this->assertContains('Successfully imported', $ct->getDisplay());
     }
 }

@@ -14,7 +14,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  */
-class WorkspaceListCommand extends Command
+class WorkspaceListCommand extends BaseCommand
 {
     /**
      * {@inheritDoc}
@@ -36,7 +36,7 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $session = $this->getHelper('phpcr')->getSession();
+        $session = $this->getPhpcrSession();
 
         $workspaces = $session->getWorkspace()->getAccessibleWorkspaceNames();
 
