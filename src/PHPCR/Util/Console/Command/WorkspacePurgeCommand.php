@@ -20,7 +20,7 @@ use PHPCR\Util\NodeHelper;
  *
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class WorkspacePurgeCommand extends Command
+class WorkspacePurgeCommand extends BaseCommand
 {
     /**
      * {@inheritDoc}
@@ -46,13 +46,13 @@ EOF
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /** @var $session SessionInterface */
-        $session = $this->getHelper('phpcr')->getSession();
+        $session = $this->getPhpcrSession();
         $force = $input->getOption('force');
 
         $workspaceName = $session->getWorkspace()->getName();
         if (!$force) {
-            $dialog = new DialogHelper();
+            /** @var $dialog DialogHelper */
+            $dialog = $this->getHelperSet()->get('dialog');
             $force = $dialog->askConfirmation($output, sprintf(
                 '<question>Are you sure you want to purge workspace "%s" Y/N ?</question>',
                 $workspaceName

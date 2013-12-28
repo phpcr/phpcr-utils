@@ -10,7 +10,7 @@ use PHPCR\RepositoryException;
  * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
  * @license http://opensource.org/licenses/MIT MIT License
  *
- * @author David Buchmann <david@liip.ch>
+ * @author David Buchmann <mail@davidbu.ch>
  */
 class PathHelper
 {
@@ -49,10 +49,10 @@ class PathHelper
             || strlen($path) > 1 && '/' === $path[strlen($path) - 1]
             || preg_match('-//|/\./|/\.\./-', $path)
         ) {
-            return self::error("Invalid path $path", $throw);
+            return self::error("Invalid path '$path'", $throw);
         }
         if ($destination && ']' === $path[strlen($path) - 1]) {
-            return self::error("Destination path may not end with index $path", $throw);
+            return self::error("Destination path may not end with index: '$path'", $throw);
         }
 
         return true;

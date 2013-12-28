@@ -19,7 +19,7 @@ use PHPCR\Util\PathHelper;
  *
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class NodeTouchCommand extends BaseCommand
+class NodeTouchCommand extends BaseNodeManipulationCommand
 {
     /**
      * {@inheritDoc}
@@ -71,7 +71,7 @@ HERE
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $helper = $this->getPhpcrCliHelper();
+        $helper = $this->getPhpcrHelper();
         $session = $this->getPhpcrSession();
 
         $path = $input->getArgument('path');
@@ -98,13 +98,14 @@ HERE
             ));
 
             if ($nodeType != $type) {
-                throw new \Exception(sprintf(
-                    'You have specified node type "%s" but the existing node is of type "%s"',
+                $output->writeln(sprintf(
+                    '<error>You have specified node type "%s" but the existing node is of type "%s"</error>',
                     $type, $nodeType
                 ));
+
+                return 1;
             }
         } else {
-
             $nodeName = PathHelper::getNodeName($path);
             $parentPath = PathHelper::getParentPath($path);
 
@@ -116,7 +117,7 @@ HERE
                     $parentPath
                 ));
 
-                return;
+                return 2;
             }
 
             $output->writeln(sprintf(
@@ -135,5 +136,7 @@ HERE
         ));
 
         $session->save();
+
+        return 0;
     }
 }

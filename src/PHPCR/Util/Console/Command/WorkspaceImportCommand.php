@@ -16,9 +16,9 @@ use PHPCR\ImportUUIDBehaviorInterface;
  * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
  * @license http://opensource.org/licenses/MIT MIT License
  *
- * @author David Buchmann <david@liip.ch>
+ * @author David Buchmann <mail@davidbu.ch>
  */
-class WorkspaceImportCommand extends Command
+class WorkspaceImportCommand extends BaseCommand
 {
     /**
      * {@inheritDoc}
@@ -53,7 +53,7 @@ EOF
     {
         $filename = $input->getArgument('filename');
         $parentPath = $input->getOption('parentpath');
-        $session = $this->getHelper('phpcr')->getSession();
+        $session = $this->getPhpcrSession();
         $repo = $session->getRepository();
 
         if (!$repo->getDescriptor(RepositoryInterface::OPTION_XML_IMPORT_SUPPORTED)) {
@@ -68,6 +68,13 @@ EOF
             ImportUUIDBehaviorInterface::IMPORT_UUID_CREATE_NEW
         );
         $session->save();
+
+        $output->writeln(sprintf(
+            '<info>Successfully imported file "%s" to path "%s" in workspace "%s".</info>',
+            realpath($filename),
+            $parentPath,
+            $session->getWorkspace()->getName()
+        ));
 
         return 0;
     }

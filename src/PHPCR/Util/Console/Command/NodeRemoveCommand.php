@@ -21,7 +21,7 @@ use Symfony\Component\Console\Helper\DialogHelper;
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class NodeRemoveCommand extends Command
+class NodeRemoveCommand extends BaseCommand
 {
     /**
      * {@inheritDoc}
@@ -57,8 +57,7 @@ EOF
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /** @var $session SessionInterface*/
-        $session = $this->getHelper('phpcr')->getSession();
+        $session = $this->getPhpcrSession();
 
         $path = $input->getArgument('path');
         $force = $input->getOption('force');
@@ -74,7 +73,8 @@ EOF
         }
 
         if (!$force) {
-            $dialog = new DialogHelper();
+            /** @var $dialog DialogHelper */
+            $dialog = $this->getHelperSet()->get('dialog');
             $workspaceName = $session->getWorkspace()->getName();
 
             if ($onlyChildren) {

@@ -81,12 +81,9 @@ abstract class BaseCommandTest extends \PHPUnit_Framework_TestCase
         )->disableOriginalConstructor()->getMock();
 
         $this->helperSet = new HelperSet(array(
-            'session' => new PhpcrHelper($this->session),
+            'phpcr' => new PhpcrHelper($this->session),
+            'phpcr_console_dumper' => $this->dumperHelper,
         ));
-
-        $this->phpcrCliHelper = $this->getMockBuilder('PHPCR\Util\Console\Helper\PhpcrCliHelper')
-            ->disableOriginalConstructor()
-            ->getMock();
 
         $this->session->expects($this->any())
             ->method('getWorkspace')

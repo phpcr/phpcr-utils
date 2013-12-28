@@ -19,7 +19,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @author David Buchmann <mail@davidbu.ch>
  */
-class WorkspaceDeleteCommand extends Command
+class WorkspaceDeleteCommand extends BaseCommand
 {
     /**
      * {@inheritDoc}
@@ -46,8 +46,7 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /** @var $session SessionInterface */
-        $session = $this->getHelper('phpcr')->getSession();
+        $session = $this->getPhpcrSession();
 
         $workspaceName = $input->getArgument('name');
 
@@ -72,7 +71,8 @@ EOT
 
         $force = $input->getOption('force');
         if (!$force) {
-            $dialog = new DialogHelper();
+            /** @var $dialog DialogHelper */
+            $dialog = $this->getHelperSet()->get('dialog');
             $force = $dialog->askConfirmation($output, sprintf(
                 '<question>Are you sure you want to delete workspace "%s" Y/N ?</question>',
                 $workspaceName

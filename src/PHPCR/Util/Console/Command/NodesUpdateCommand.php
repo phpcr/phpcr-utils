@@ -6,7 +6,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Helper\DialogHelper;
-use PHPCR\Util\Console\Command\BaseCommand;
 
 /**
  * Command which can update the properties of nodes found
@@ -17,7 +16,7 @@ use PHPCR\Util\Console\Command\BaseCommand;
  *
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class NodesUpdateCommand extends BaseCommand
+class NodesUpdateCommand extends BaseNodeManipulationCommand
 {
     /**
      * {@inheritDoc}
@@ -82,8 +81,6 @@ HERE
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->dialog = new DialogHelper();
-
         $query = $input->getOption('query');
         $queryLanguage = strtoupper($input->getOption('query-language'));
         $persistCounter = intval($input->getOption('persist-counter'));
@@ -93,7 +90,7 @@ HERE
         $removeMixins = $input->getOption('remove-mixin');
         $applyClosures = $input->getOption('apply-closure');
         $noInteraction = $input->getOption('no-interaction');
-        $helper = $this->getPhpcrCliHelper();
+        $helper = $this->getPhpcrHelper();
         $session = $this->getPhpcrSession();
 
         if (!$query) {
@@ -154,7 +151,9 @@ HERE
 
     protected function getAction($output, $result)
     {
-        $response = strtoupper($this->dialog->ask($output, sprintf(
+        /** @var $dialog DialogHelper */
+        $dialog = $this->getHelperSet()->get('dialog');
+        $response = strtoupper($dialog->ask($output, sprintf(
             '<question>About to update %d nodes. Enter "Y" to continue, "N" to cancel or "L" to list.</question>',
             count($result->getRows())
         ), false));

@@ -16,9 +16,9 @@ use PHPCR\RepositoryInterface;
  * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
  * @license http://opensource.org/licenses/MIT MIT License
  *
- * @author David Buchmann <david@liip.ch>
+ * @author David Buchmann <mail@davidbu.ch>
  */
-class WorkspaceExportCommand extends Command
+class WorkspaceExportCommand extends BaseCommand
 {
     /**
      * {@inheritDoc}
@@ -50,7 +50,7 @@ EOF
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $session = $this->getHelper('phpcr')->getSession();
+        $session = $this->getPhpcrSession();
         $repo = $session->getRepository();
 
         if (!$repo->getDescriptor(RepositoryInterface::OPTION_XML_EXPORT_SUPPORTED)) {
@@ -60,8 +60,21 @@ EOF
         }
 
         $path = $input->getOption('path');
-        $stream = fopen($input->getArgument('filename'), 'w');
+        $filename = $input->getArgument('filename');
+        $stream = fopen($filename, 'w');
+        if (!$stream) {
+            $output->writeln(sprintf('<error>Failed to create file "%s" for writing.', $filename));
+
+            return 2;
+        }
         $session->exportSystemView($path, $stream, $input->getOption('skip_binary') === 'yes', $input->getOption('recurse') === 'no');
+
+        $output->writeln(sprintf(
+            '<info>Successfully exported workspace "%s", path "%s" to file "%s".</info>',
+            $session->getWorkspace()->getName(),
+            $path,
+            realpath($filename)
+        ));
 
         return 0;
     }

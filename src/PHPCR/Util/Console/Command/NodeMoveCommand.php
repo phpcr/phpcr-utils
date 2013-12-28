@@ -15,7 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @author Daniel Leech <daniel@dantleech.com>
  */
-class NodeMoveCommand extends Command
+class NodeMoveCommand extends BaseCommand
 {
     /**
      * {@inheritDoc}
@@ -45,7 +45,7 @@ EOF
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $session = $this->getHelper('phpcr')->getSession();
+        $session = $this->getPhpcrSession();
 
         $sourcePath = $input->getArgument('source');
         $destPath = $input->getArgument('destination');
@@ -57,6 +57,8 @@ EOF
 
         $session->move($sourcePath, $destPath);
         $session->save();
+
+        return 0;
     }
 
 }

@@ -17,7 +17,7 @@ use PHPCR\NamespaceException;
  * @license http://opensource.org/licenses/MIT MIT License
  *
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
- * @author David Buchmann <david@liip.ch>
+ * @author David Buchmann <mail@davidbu.ch>
  */
 class NodeHelper
 {

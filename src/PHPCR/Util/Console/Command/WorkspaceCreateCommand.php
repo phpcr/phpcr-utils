@@ -16,9 +16,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @license http://opensource.org/licenses/MIT MIT License
  *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
- * @author David Buchmann <david@liip.ch>
+ * @author David Buchmann <mail@davidbu.ch>
  */
-class WorkspaceCreateCommand extends Command
+class WorkspaceCreateCommand extends BaseCommand
 {
     /**
      * {@inheritDoc}
@@ -43,8 +43,7 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /** @var $session SessionInterface */
-        $session = $this->getHelper('phpcr')->getSession();
+        $session = $this->getPhpcrSession();
 
         $workspaceName = $input->getArgument('name');
 
@@ -61,9 +60,17 @@ EOT
             return 1;
         }
 
+        if (array_search($workspaceName, $workspace->getAccessibleWorkspaceNames())) {
+            $output->writeln(
+                sprintf('<comment>This repository already has a workspace called "%s"</comment>', $workspaceName)
+            );
+
+            return 2;
+        }
+
         $workspace->createWorkspace($workspaceName);
 
-        $output->writeln("Created workspace '$workspaceName'.");
+        $output->writeln(sprintf('<info>Created workspace "%s".</info>', $workspaceName));
 
         return 0;
     }

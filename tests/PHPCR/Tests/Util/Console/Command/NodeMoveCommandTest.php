@@ -26,6 +26,6 @@ class NodeMoveCommandTest extends BaseCommandTest
             ->method('save');
 
         $this->application->add(new NodeMoveCommand());
-        $ct = $this->executeCommand('phpcr:node:move', $args);
+        $this->executeCommand('phpcr:node:move', $args);
     }
 }
