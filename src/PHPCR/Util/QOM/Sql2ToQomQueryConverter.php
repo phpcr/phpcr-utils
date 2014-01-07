@@ -2,6 +2,7 @@
 
 namespace PHPCR\Util\QOM;
 
+use PHPCR\PropertyType;
 use PHPCR\Query\InvalidQueryException;
 use PHPCR\Query\QOM\ChildNodeJoinConditionInterface;
 use PHPCR\Query\QOM\ColumnInterface;
@@ -22,6 +23,7 @@ use PHPCR\Query\QOM\QueryObjectModelInterface;
 use PHPCR\Query\QOM\SameNodeJoinConditionInterface;
 use PHPCR\Query\QOM\SourceInterface;
 use PHPCR\Query\QOM\StaticOperandInterface;
+use PHPCR\Util\ValueConverter;
 
 /**
  * Parse SQL2 statements and output a corresponding QOM objects tree.
@@ -67,9 +69,10 @@ class Sql2ToQomQueryConverter
      *
      * @param QueryObjectModelFactoryInterface $factory
      */
-    public function __construct(QueryObjectModelFactoryInterface $factory)
+    public function __construct(QueryObjectModelFactoryInterface $factory, ValueConverter $valueConverter = null)
     {
         $this->factory = $factory;
+        $this->valueConverter = $valueConverter ?: new ValueConverter();
     }
 
     /**
@@ -723,6 +726,56 @@ class Sql2ToQomQueryConverter
         return $this->factory->propertyValue($selectorName, $prop);
     }
 
+    protected function parseCastLiteral($token)
+    {
+        if ($this->scanner->tokenIs($token, 'CAST')) {
+            $this->scanner->expectToken('(');
+            $token = $this->scanner->fetchNextToken();
+
+            $quoteString = false;
+            if (substr($token, 0, 1) === '\'') {
+                $quoteString = "'";
+            } elseif (substr($token, 0, 1) === '"') {
+                $quoteString = '"';
+            }
+
+            if ($quoteString) {
+                while (substr($token, -1) !== $quoteString) {
+                    $nextToken = $this->scanner->fetchNextToken();
+                    if ('' === $nextToken) {
+                        break;
+                    }
+                    $token .= $nextToken;
+                }
+
+                if (substr($token, -1) !== $quoteString) {
+                    throw new InvalidQueryException("Syntax error: unterminated quoted string $token in '{$this->sql2}'");
+                }
+                $token = substr($token, 1, -1);
+                $token = str_replace('\\'.$quoteString, $quoteString, $token);
+            }
+
+            $this->scanner->expectToken('AS');
+
+            $type = $this->scanner->fetchNextToken();
+            try {
+                $typeValue = PropertyType::valueFromName($type);
+            } catch (\InvalidArgumentException $e) {
+                throw new InvalidQueryException("Syntax error: attempting to cast to an invalid type '$type'");
+            }
+
+            $this->scanner->expectToken(')');
+
+            try {
+                $token = $this->valueConverter->convertType($token, $typeValue, PropertyType::STRING);
+            } catch (\Exception $e) {
+                throw new InvalidQueryException("Syntax error: attempting to cast string '$token' to type '$type'");
+            }
+
+            return $this->factory->literal($token);
+        }
+    }
+
     /**
      * 6.7.34 Literal
      * Parse an SQL2 literal value
@@ -732,6 +785,9 @@ class Sql2ToQomQueryConverter
     protected function parseLiteral()
     {
         $token = $this->scanner->fetchNextToken();
+        if ($this->scanner->tokenIs($token, 'CAST')) {
+            return $this->parseCastLiteral($token);
+        }
 
         $quoteString = false;
         if (substr($token, 0, 1) === '\'') {
@@ -755,6 +811,12 @@ class Sql2ToQomQueryConverter
             }
             $token = substr($token, 1, -1);
             $token = str_replace('\\'.$quoteString, $quoteString, $token);
+            if (preg_match('/^\d{4}-\d{2}-\d{2}( \d{2}:\d{2}:\d+)?$/', $token)) {
+                if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $token)) {
+                    $token.= ' 00:00:00';
+                }
+                $token = \DateTime::createFromFormat('Y-m-d H:i:s', $token);
+            }
         } elseif (is_numeric($token)) {
             $token = strpos($token, '.') === false ? (int) $token : (float) $token;
         } elseif ($token == 'true') {
