@@ -6,8 +6,8 @@ php:
   - hhvm
 
 before_script:
-  - sudo apt-get update
-  - sudo apt-get install hhvm -qq -y --force-yes
+  - if [ $(phpenv version-name) = "hhvm" ]; then sudo apt-get update; fi
+  - if [ $(phpenv version-name) = "hhvm" ]; then sudo apt-get install hhvm -qq -y --force-yes; fi
   - composer self-update
   - composer install --prefer-source
 
