@@ -6,8 +6,11 @@ php:
   - hhvm
 
 before_script:
+  - if [ $(phpenv version-name) = "hhvm" ]; then sudo mv /etc/hhvm /etc/hhvm.orig; fi
   - if [ $(phpenv version-name) = "hhvm" ]; then sudo apt-get update; fi
   - if [ $(phpenv version-name) = "hhvm" ]; then sudo apt-get install hhvm -qq -y --force-yes; fi
+  - if [ $(phpenv version-name) = "hhvm" ]; then sudo mv /etc/hhvm /etc/hhvm.new; fi
+  - if [ $(phpenv version-name) = "hhvm" ]; then sudo mv /etc/hhvm.orig /etc/hhvm; fi
   - composer self-update
   - composer install --prefer-source
 
