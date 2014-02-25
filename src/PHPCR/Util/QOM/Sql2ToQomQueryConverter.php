@@ -283,7 +283,7 @@ class Sql2ToQomQueryConverter
 
         $token = $this->scanner->lookupNextToken();
         if ($this->scanner->tokenIs($token, ',')) {
-            $this->scanner->fetchNextToken(); // consume the coma
+            $this->scanner->fetchNextToken(); // consume the comma
             $path = $this->parsePath();
         } else {
             $path = null;
@@ -797,11 +797,15 @@ class Sql2ToQomQueryConverter
         }
 
         if ($quoteString) {
+            if (1 == strlen($token)) {
+                $token .= $this->scanner->fetchNextToken();
+            }
             while (substr($token, -1) !== $quoteString) {
                 $nextToken = $this->scanner->fetchNextToken();
                 if ('' === $nextToken) {
                     break;
                 }
+
                 $token .= $this->scanner->getPreviousDelimiter();
                 $token .= $nextToken;
             }
