@@ -33,7 +33,7 @@ class QueryBuilderTest extends \PHPUnit_Framework_TestCase
         $qb = new QueryBuilder($this->qf);
         $qb->addOrderBy($dynamicOperand, 'ASC');
         $qb->addOrderBy($dynamicOperand, 'DESC');
-        $this->assertEquals(2, count($qb->getOrderings()));
+        $this->assertCount(2, $qb->getOrderings());
         $orderings = $qb->getOrderings();
     }
 
@@ -43,7 +43,7 @@ class QueryBuilderTest extends \PHPUnit_Framework_TestCase
         $qb = new QueryBuilder($this->qf);
         $qb->addOrderBy($dynamicOperand, 'asc');
         $qb->addOrderBy($dynamicOperand, 'desc');
-        $this->assertEquals(2, count($qb->getOrderings()));
+        $this->assertCount(2, $qb->getOrderings());
         $orderings = $qb->getOrderings();
     }
 
@@ -63,7 +63,7 @@ class QueryBuilderTest extends \PHPUnit_Framework_TestCase
         $qb = new QueryBuilder($this->qf);
         $qb->orderBy($dynamicOperand, 'ASC');
         $qb->orderBy($dynamicOperand, 'ASC');
-        $this->assertEquals(1, count($qb->getOrderings()));
+        $this->assertCount(1, $qb->getOrderings());
     }
 
     public function testOrderAscending()
@@ -135,21 +135,21 @@ class QueryBuilderTest extends \PHPUnit_Framework_TestCase
     public function testSelect()
     {
         $qb = new QueryBuilder($this->qf);
-        $this->assertEquals(0, count($qb->getColumns()));
+        $this->assertCount(0, $qb->getColumns());
         $qb->select('selectorName', 'propertyName', 'columnName');
-        $this->assertEquals(1, count($qb->getColumns()));
+        $this->assertCount(1, $qb->getColumns());
         $qb->select('selectorName', 'propertyName', 'columnName');
-        $this->assertEquals(1, count($qb->getColumns()));
+        $this->assertCount(1, $qb->getColumns());
     }
 
     public function testAddSelect()
     {
         $qb = new QueryBuilder($this->qf);
-        $this->assertEquals(0, count($qb->getColumns()));
+        $this->assertCount(0, $qb->getColumns());
         $qb->addSelect('selectorName', 'propertyName', 'columnName');
-        $this->assertEquals(1, count($qb->getColumns()));
+        $this->assertCount(1, $qb->getColumns());
         $qb->addSelect('selectorName', 'propertyName', 'columnName');
-        $this->assertEquals(2, count($qb->getColumns()));
+        $this->assertCount(2, $qb->getColumns());
     }
 
     public function testFrom()
@@ -254,7 +254,7 @@ class QueryBuilderTest extends \PHPUnit_Framework_TestCase
         $key2 = "key2";
         $value2 = "value2";
         $qb->setParameters(array($key1, $value1), array($key2, $value2));
-        $this->assertEquals("2", count($qb->getParameters()));
+        $this->assertCount(2, $qb->getParameters());
     }
 
     public function testExecute()
