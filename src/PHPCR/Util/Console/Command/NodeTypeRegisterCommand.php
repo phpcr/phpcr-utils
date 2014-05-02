@@ -22,6 +22,7 @@ use PHPCR\NodeType\NodeTypeExistsException;
  * @license http://opensource.org/licenses/MIT MIT License
  *
  * @author Uwe Jäger <uwej711@googlemail.com>
+ * @author Daniel Leech <daniel@dantleech.com>
  */
 class NodeTypeRegisterCommand extends BaseCommand
 {
@@ -33,23 +34,27 @@ class NodeTypeRegisterCommand extends BaseCommand
         $this
             ->setName('phpcr:node-type:register')
             ->setDescription('Register node types in the PHPCR repository')
-            ->setDefinition(array(
-                new InputArgument(
-                    'cnd-file', InputArgument::REQUIRED, 'Register namespaces and node types from a "Compact Node Type Definition" .cnd file'
-                ),
-                new InputOption('allow-update', '', InputOption::VALUE_NONE, 'Overwrite existig node type'),
-            ))
+            ->addArgument('cnd-file', InputArgument::IS_ARRAY, 'Register namespaces and node types from a "Compact Node Type Definition" .cnd file(s)')
+            ->addOption('allow-update', null, InputOption::VALUE_NONE, 'Overwrite existig node type')
             ->setHelp(<<<EOT
 Register node types in the PHPCR repository.
 
 This command allows to register node types in the repository that are defined
-in a CND (Compact Namespace and Node Type Definition) file as used by jackrabbit.
+in a CND (Compact Namespace and Node Type Definition) file as defined in the JCR-283
+specification.
 
 Custom node types can be used to define the structure of content repository
 nodes, like allowed properties and child nodes together with the namespaces
 and their prefix used for the names of node types and properties.
 
-If you use --allow-update existing node type definitions will be overwritten
+This command allows you to specify multiple files and/or folders:
+
+    $ php app/console phpcr:node-type:register /path/to/nodetype1.cnd /path/to/a/folder
+
+When a folder is specified all files within the folder that have the <comment>.cnd</comment>
+extension will be treated as node definition files.
+
+If you use <info>--allow-update</info> existing node type definitions will be overwritten
 in the repository.
 EOT
             )
@@ -61,25 +66,28 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $cnd_file = realpath($input->getArgument('cnd-file'));
+        $definitions = $input->getArgument('cnd-file');
 
-        if (!file_exists($cnd_file)) {
+        if (count($definitions) == 0) {
             throw new \InvalidArgumentException(
-                sprintf("Node type definition file '<info>%s</info>' does not exist.", $cnd_file)
-            );
-        } elseif (!is_readable($cnd_file)) {
-            throw new \InvalidArgumentException(
-                sprintf("Node type definition file '<info>%s</info>' does not have read permissions.", $cnd_file)
+                'At least one definition (i.e. file or folder) must be specified'
             );
         }
 
-        $cnd = file_get_contents($cnd_file);
         $allowUpdate = $input->getOption('allow-update');
         $session = $this->getPhpcrSession();
 
-        $this->updateFromCnd($output, $session, $cnd, $allowUpdate);
+        $filePaths = $this->getFilePaths($definitions);
 
-        $output->write(PHP_EOL.sprintf('Successfully registered node types from "<info>%s</info>"', $cnd_file) . PHP_EOL);
+        $count = 0;
+        foreach ($filePaths as $filePath) {
+            $cnd = file_get_contents($filePath);
+            $this->updateFromCnd($output, $session, $cnd, $allowUpdate);
+            $output->writeln(sprintf('Registered: <info>%s</info>', $filePath));
+            $count++;
+        }
+
+        $output->writeln(sprintf('%d node definition file(s)', $count));
 
         return 0;
     }
@@ -108,5 +116,61 @@ EOT
             }
             throw $e;
         }
+    }
+
+    /**
+     * Return a list of node type definition file paths from
+     * the given definition files or folders.
+     *
+     * @param array $definitions List of files of folders
+     *
+     * @return array Array of full paths to all the type node definition files.
+     */
+    protected function getFilePaths($definitions)
+    {
+        $filePaths = array();
+
+        foreach ($definitions as $definition) {
+            $definition = realpath($definition);
+
+            if (is_dir($definition)) {
+                $dirHandle = opendir($definition);
+
+                while ($file = readdir($dirHandle)) {
+                    if (false === $this->fileIsNodeType($file)) {
+                        continue;
+                    }
+
+                    $filePath = sprintf('%s/%s', $definition, $file);
+
+                    if (!is_readable($filePath)) {
+                        throw new \InvalidArgumentException(
+                            sprintf("Node type definition file '<info>%s</info>' does not have read permissions.", $file)
+                        );
+                    }
+
+                    $filePaths[] = $filePath;
+                }
+            } else {
+                if (!file_exists($definition)) {
+                    throw new \InvalidArgumentException(
+                        sprintf("Node type definition file '<info>%s</info>' does not exist.", $definition)
+                    );
+                }
+
+                $filePaths[] = $definition;
+            }
+        }
+
+        return $filePaths;
+    }
+
+    protected function fileIsNodeType($filename)
+    {
+        if (substr($filename, -4) == '.cnd') {
+            return true;
+        }
+
+        return false;
     }
 }
