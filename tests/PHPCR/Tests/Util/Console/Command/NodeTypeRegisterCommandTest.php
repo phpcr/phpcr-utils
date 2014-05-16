@@ -16,7 +16,7 @@ class NodeTypeRegisterCommandTest extends BaseCommandTest
         )->disableOriginalConstructor()->getMock();
     }
 
-    public function testNodeTypeList()
+    public function testNodeTypeRegister()
     {
         $this->session->expects($this->once())
             ->method('getWorkspace')
@@ -28,7 +28,7 @@ class NodeTypeRegisterCommandTest extends BaseCommandTest
             ->method('registerNodeTypesCnd');
 
         $ct = $this->executeCommand('phpcr:node-type:register', array(
-    'cnd-file' => __DIR__.'/fixtures/cnd_dummy.cnd',
+    'cnd-file' => array(__DIR__.'/fixtures/cnd_dummy.cnd'),
         ));
     }
 }
