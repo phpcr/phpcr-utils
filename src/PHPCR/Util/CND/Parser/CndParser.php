@@ -672,6 +672,12 @@ class CndParser extends AbstractParser
 
         while (true) {
             $token = $this->tokenQueue->peek();
+
+            // If there are no more tokens, break
+            if (!$token) {
+                break;
+            }
+
             $type = $token->getType();
             $data = $token->getData();
 
