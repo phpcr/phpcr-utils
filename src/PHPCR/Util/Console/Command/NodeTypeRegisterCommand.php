@@ -83,11 +83,11 @@ EOT
         foreach ($filePaths as $filePath) {
             $cnd = file_get_contents($filePath);
             $this->updateFromCnd($output, $session, $cnd, $allowUpdate);
-            $output->writeln(sprintf('Registered: <info>%s</info>', $filePath));
+            $output->writeln(sprintf('Node type definition: <info>%s</info>', $filePath));
             $count++;
         }
 
-        $output->writeln(sprintf('%d node definition file(s)', $count));
+        $output->writeln(sprintf('%d node definition(s) registered', $count));
 
         return 0;
     }
@@ -131,7 +131,6 @@ EOT
         $filePaths = array();
 
         foreach ($definitions as $definition) {
-            $definition = realpath($definition);
 
             if (is_dir($definition)) {
                 $dirHandle = opendir($definition);
@@ -154,7 +153,7 @@ EOT
             } else {
                 if (!file_exists($definition)) {
                     throw new \InvalidArgumentException(
-                        sprintf("Node type definition file '<info>%s</info>' does not exist.", $definition)
+                        sprintf("Node type definition file / folder '<info>%s</info>' does not exist.", $definition)
                     );
                 }
 
