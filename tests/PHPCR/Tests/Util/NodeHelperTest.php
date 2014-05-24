@@ -173,7 +173,7 @@ class NodeHelperTest extends \PHPUnit_Framework_TestCase
     {
         $nodes = array();
 
-        for ($i = 0; $i < 1000000; $i++) {
+        for ($i = 0; $i < 100000; $i++) {
             $nodes[] = 'test' . $i;
         }
 
