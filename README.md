@@ -1,4 +1,8 @@
-# PHPCR Utilities [![Build Status](https://secure.travis-ci.org/phpcr/phpcr-utils.png)](http://travis-ci.org/phpcr/phpcr-utils)
+# PHPCR Utilities
+
+[![Build Status](https://secure.travis-ci.org/phpcr/phpcr-utils.png)](http://travis-ci.org/phpcr/phpcr-utils)
+[![Latest Stable Version](https://poser.pugx.org/phpcr/phpcr-utils/version.png)](https://packagist.org/packages/phpcr/phpcr-utils)
+[![Total Downloads](https://poser.pugx.org/phpcr/phpcr-utils/d/total.png)](https://packagist.org/packages/phpcr/phpcr-utils)
 
 Commands and implementations for common tasks for the PHP Content Repository (PHPCR) API.
 
