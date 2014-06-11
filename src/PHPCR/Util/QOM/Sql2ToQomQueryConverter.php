@@ -811,6 +811,7 @@ class Sql2ToQomQueryConverter
             }
             $token = substr($token, 1, -1);
             $token = str_replace('\\'.$quoteString, $quoteString, $token);
+            $token = str_replace("''", "'", $token);
             if (preg_match('/^\d{4}-\d{2}-\d{2}( \d{2}:\d{2}:\d+)?$/', $token)) {
                 if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $token)) {
                     $token.= ' 00:00:00';
@@ -828,6 +829,53 @@ class Sql2ToQomQueryConverter
         return $this->factory->literal($token);
     }
 
+    /**
+     * 6.7.34 Fulltext Literal
+     * Parse an SQL2 literal value
+     *
+     * @return LiteralInterface
+     */
+    protected function parseFulltextLiteral()
+    {
+        $token = $this->scanner->fetchNextToken();
+        if ($this->scanner->tokenIs($token, 'CAST')) {
+            return $this->parseCastLiteral($token);
+        }
+
+        $quoteString = false;
+        if (substr($token, 0, 1) === '\'') {
+            $quoteString = "'";
+        } elseif (substr($token, 0, 1) === '"') {
+            $quoteString = '"';
+        }
+
+        if ($quoteString) {
+            while (substr($token, -1) !== $quoteString) {
+                $nextToken = $this->scanner->fetchNextToken();
+                if ('' === $nextToken) {
+                    break;
+                }
+                $token .= $this->scanner->getPreviousDelimiter();
+                $token .= $nextToken;
+            }
+
+            if (substr($token, -1) !== $quoteString) {
+                throw new InvalidQueryException("Syntax error: unterminated quoted string $token in '{$this->sql2}'");
+            }
+            $token = substr($token, 1, -1);
+            $token = str_replace('\\'.$quoteString, $quoteString, $token);
+            $illegalCharacters = array(
+                '\\!' => '!', '\\(' => '(', '\\:' => ':', '\\^' => '^',
+                '\\[' => '[', '\\]' => ']', '\\{' => '{', '\\}' => '}',
+                '\\\"' => '\"', '\\?' => '?', "''" => "'",
+            );
+
+            $token = strtr($token, $illegalCharacters);
+
+        }
+
+        return $this->factory->literal($token);
+    }
     /**
      * 6.7.37 Ordering
      */
