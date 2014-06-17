@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.1.1
+-----
+
+* **2014-06-11**: handle escaping fulltext search literal when converting from/to QOM/SQL2
+
 1.1.0
 -----
 

@@ -171,9 +171,8 @@ abstract class BaseQomToSqlQueryConverter
         if ($expr instanceof QOM\BindVariableValueInterface) {
             return $this->convertBindVariable($expr);
         }
-        if ($expr instanceof QOM\LiteralInterface) {
-            return $this->convertLiteral($expr);
-        }
+
+        $expr = $this->generator->evalFullText($expr);
 
         return "'$expr'";
     }

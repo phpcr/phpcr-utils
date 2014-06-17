@@ -218,6 +218,26 @@ abstract class BaseSqlGenerator
     }
 
     /**
+     * Escape the illegal characters for inclusion in a fulltext statement. Escape Character is \\.
+     *
+     * @param string $string
+     *
+     * @return string Escaped String
+     *
+     * @see http://jackrabbit.apache.org/api/1.4/org/apache/jackrabbit/util/Text.html #escapeIllegalJcrChars
+     */
+    public function evalFullText($string)
+    {
+        $illegalCharacters = array(
+            '!' => '\\!', '(' => '\\(', ':' => '\\:', '^' => '\\^',
+            '[' => '\\[', ']' => '\\]', '{' => '\\{', '}' => '\\}',
+            '\"' => '\\\"', '?' => '\\?', "'" => "''",
+        );
+
+        return strtr($string, $illegalCharacters);
+    }
+
+    /**
      * Literal ::= CastLiteral | UncastLiteral
      *
      * @param mixed $literal
