@@ -99,7 +99,7 @@ HERE
             );
         }
 
-        if (strtoupper(substr($query, 0, 6) != 'SELECT')) {
+        if (strtoupper(substr($query, 0, 6)) != 'SELECT') {
             throw new \InvalidArgumentException(sprintf(
                 'Query doesn\'t look like a SELECT query: "%s"',
                 $query
