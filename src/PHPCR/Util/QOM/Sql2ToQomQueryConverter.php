@@ -96,9 +96,11 @@ class Sql2ToQomQueryConverter
         while ($this->scanner->lookupNextToken() !== '') {
             switch (strtoupper($this->scanner->lookupNextToken())) {
                 case 'SELECT':
+                    $this->scanner->expectToken('SELECT');
                     $columnData = $this->scanColumns();
                     break;
                 case 'FROM':
+                    $this->scanner->expectToken('FROM');
                     $source = $this->parseSource();
                     break;
                 case 'WHERE':
@@ -111,7 +113,7 @@ class Sql2ToQomQueryConverter
                     $orderings = $this->parseOrderings();
                     break;
                 default:
-                    throw new InvalidQueryException('Expected end of query, got ' . $this->scanner->lookupNextToken() . ' in ' . $this->sql2);
+                    throw new InvalidQueryException('Error parsing query, unknown query part "' . $this->scanner->lookupNextToken() . '" in: ' . $this->sql2);
             }
         }
 
@@ -134,8 +136,6 @@ class Sql2ToQomQueryConverter
      */
     protected function parseSource()
     {
-        $this->scanner->expectToken('FROM');
-
         $selector = $this->parseSelector();
 
         $next = $this->scanner->lookupNextToken();
@@ -528,7 +528,7 @@ class Sql2ToQomQueryConverter
 
         list($selectorName, $propertyName) = $this->parseIdentifier();
         $this->scanner->expectToken(',');
-        $expression = $this->parseLiteral()->getLiteralValue();
+        $expression = $this->parseLiteralValue();
         $this->scanner->expectToken(')');
 
         return $this->factory->fullTextSearch($selectorName, $propertyName, $expression);
@@ -600,7 +600,7 @@ class Sql2ToQomQueryConverter
      */
     protected function parsePath()
     {
-        $path = $this->parseLiteral()->getLiteralValue();
+        $path = $this->parseLiteralValue();
         if (substr($path, 0, 1) === '[' && substr($path, -1) === ']') {
             $path = substr($path, 1, -1);
         }
@@ -622,7 +622,7 @@ class Sql2ToQomQueryConverter
             return $this->factory->bindVariable(substr($this->scanner->fetchNextToken(), 1));
         }
 
-        return $this->parseLiteral();
+        return $this->factory->literal($this->parseLiteralValue());
     }
 
     /**
@@ -749,7 +749,7 @@ class Sql2ToQomQueryConverter
                 }
 
                 if (substr($token, -1) !== $quoteString) {
-                    throw new InvalidQueryException("Syntax error: unterminated quoted string $token in '{$this->sql2}'");
+                    throw new InvalidQueryException("Syntax error: unterminated quoted string '$token' in '{$this->sql2}'");
                 }
                 $token = substr($token, 1, -1);
                 $token = str_replace('\\'.$quoteString, $quoteString, $token);
@@ -782,7 +782,7 @@ class Sql2ToQomQueryConverter
      *
      * @return LiteralInterface
      */
-    protected function parseLiteral()
+    protected function parseLiteralValue()
     {
         $token = $this->scanner->fetchNextToken();
         if ($this->scanner->tokenIs($token, 'CAST')) {
@@ -826,7 +826,7 @@ class Sql2ToQomQueryConverter
             $token = false;
         }
 
-        return $this->factory->literal($token);
+        return $token;
     }
 
     /**
@@ -930,8 +930,6 @@ class Sql2ToQomQueryConverter
      */
     protected function scanColumns()
     {
-        $this->scanner->expectToken('SELECT');
-
         // Wildcard
         if ($this->scanner->lookupNextToken() === '*') {
             $this->scanner->fetchNextToken();
