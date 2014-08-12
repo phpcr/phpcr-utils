@@ -3,7 +3,7 @@
     "type": "library",
     "description": "PHP Content Repository implementation independant utilities",
     "keywords": ["phpcr", "contentrepository", "cli"],
-    "homepage": "http://phpcr.github.com",
+    "homepage": "http://phpcr.github.io",
     "license": [
         "MIT",
         "Apache-2.0"
