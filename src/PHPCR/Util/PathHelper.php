@@ -197,6 +197,28 @@ class PathHelper
     }
 
     /**
+     * Make an absolute path relative to $context.
+     *
+     * ie. $context . '/' . PathHelper::relativePath($path, $context) === $path
+     *
+     * Input paths are assumed to be normalized.
+     *
+     * @param string $path    The absolute path to a node
+     * @param string $context The absolute path to an ancestor of $path
+     * @param bool $throw     Whether to throw exceptions on invalid data.
+     *
+     * @return string The relative path from $context to $path
+     */
+    public static function relativizePath($path, $context, $throw = true)
+    {
+        if ($context !== substr($path, 0, strlen($context))) {
+            return self::error("$path is not within $context", $throw);
+        }
+
+        return ltrim(substr($path, strlen($context)), '/');
+    }
+
+    /**
      * Get the parent path of a valid absolute path.
      *
      * @param string $path the path to get the parent from
