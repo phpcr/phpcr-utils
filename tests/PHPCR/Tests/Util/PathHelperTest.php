@@ -8,82 +8,54 @@ class PathHelperTest extends \PHPUnit_Framework_TestCase
 {
     // assertValidPath tests
 
-    public function testAssertValidPath()
+    /**
+     * @dataProvider dataproviderValidAbsolutePaths
+     */
+    public function testAssertValidAbsolutePath($path, $destination = false)
     {
-        $this->assertTrue(PathHelper::assertValidAbsolutePath('/parent/child'));
+        $this->assertTrue(PathHelper::assertValidAbsolutePath($path, $destination));
     }
 
-    public function testAssertValidPathRoot()
+    public function dataproviderValidAbsolutePaths()
     {
-        $this->assertTrue(PathHelper::assertValidAbsolutePath('/'));
-    }
-
-    public function testAssertValidPathNamespaced()
-    {
-        $this->assertTrue(PathHelper::assertValidAbsolutePath('/jcr:foo_/b-a/0^.txt'));
-    }
-
-    public function testAssertValidPathIndexed()
-    {
-        $this->assertTrue(PathHelper::assertValidAbsolutePath('/parent[7]/child'));
-    }
-
-    public function testAssertValidPathIndexedAtEnd()
-    {
-        $this->assertTrue(PathHelper::assertValidAbsolutePath('/parent[7]/child[3]'));
+        return array(
+            array('/parent/child'),
+            array('/'),
+            array('/jcr:foo_/b-a/0^.txt'),
+            array('/parent[7]/child'),
+            array('/parent[7]/child', true), // index is allowed in destination parent path, only not in last element
+            array('/parent[7]/child[3]'),
+        );
     }
 
     /**
+     * @dataProvider dataproviderInvalidAbsolutePaths
      * @expectedException \PHPCR\RepositoryException
      */
-    public function testAssertValidTargetPathNoIndex()
+    public function testAssertInvalidAbsolutePath($path, $destination = false)
     {
-        PathHelper::assertValidAbsolutePath('/parent/child[7]', true);
+        PathHelper::assertValidAbsolutePath($path, $destination);
     }
 
     /**
-     * @expectedException \PHPCR\RepositoryException
+     * @dataProvider dataproviderInvalidAbsolutePaths
      */
-    public function testAssertValidPathNotAbsolute()
+    public function testAssertInvalidAbsolutePathNoThrow($path, $destination = false)
     {
-        PathHelper::assertValidAbsolutePath('parent');
+        $this->assertFalse(PathHelper::assertValidAbsolutePath($path, $destination, false));
     }
 
-    /**
-     * @expectedException \PHPCR\RepositoryException
-     */
-    public function testAssertValidPathDouble()
+    public function dataproviderInvalidAbsolutePaths()
     {
-        PathHelper::assertValidAbsolutePath('/parent//child');
-    }
-
-    /**
-     * @expectedException \PHPCR\RepositoryException
-     */
-    public function testAssertValidPathParent()
-    {
-        PathHelper::assertValidAbsolutePath('/parent/../child');
-    }
-
-    /**
-     * @expectedException \PHPCR\RepositoryException
-     */
-    public function testAssertValidPathSelf()
-    {
-        PathHelper::assertValidAbsolutePath('/parent/./child');
-    }
-
-    /**
-     * @expectedException \PHPCR\RepositoryException
-     */
-    public function testAssertValidPathTrailing()
-    {
-        PathHelper::assertValidAbsolutePath('/parent/child/');
-    }
-
-    public function testAssertValidPathNoThrow()
-    {
-        $this->assertFalse(PathHelper::assertValidAbsolutePath('parent', false, false));
+        return array(
+            array('/parent/child[7]', true), // destination last element with index
+            array('parent'), // not absolute
+            array('/parent//child'),
+            array('//'),
+            array('/parent/../child'),
+            array('/parent/./child'),
+            array('/parent/child/'),
+        );
     }
 
     // assertValidLocalName tests
@@ -99,35 +71,22 @@ class PathHelperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @dataProvider dataproviderInvalidLocalNames
      * @expectedException \PHPCR\RepositoryException
      */
-    public function testAssertValidLocalNameNamespaced()
+    public function testAssertInvalidLocalName($name)
     {
-        $this->assertTrue(PathHelper::assertValidLocalName('jcr:nodename'));
+        PathHelper::assertValidLocalName($name);
     }
 
-    /**
-     * @expectedException \PHPCR\RepositoryException
-     */
-    public function testAssertValidLocalNamePath()
+    public function dataproviderInvalidLocalNames()
     {
-        $this->assertTrue(PathHelper::assertValidLocalName('/path'));
-    }
-
-    /**
-     * @expectedException \PHPCR\RepositoryException
-     */
-    public function testAssertValidLocalNameSelf()
-    {
-        PathHelper::assertValidLocalName('.');
-    }
-
-    /**
-     * @expectedException \PHPCR\RepositoryException
-     */
-    public function testAssertValidLocalNameParent()
-    {
-        PathHelper::assertValidLocalName('..');
+        return array(
+            array('jcr:nodename'),
+            array('/path'),
+            array('.'),
+            array('..')
+        );
     }
 
     // normalizePath tests
@@ -151,17 +110,6 @@ class PathHelperTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public static function dataproviderNormalizePathInvalid()
-    {
-        return array(
-            array('foo/bar'),
-            array('bar'),
-            array('/foo/bar/'),
-            array(''),
-            array(new \stdClass()),
-        );
-    }
-
     /**
      * @dataProvider dataproviderNormalizePathInvalid
      * @expectedException \PHPCR\RepositoryException
@@ -177,6 +125,17 @@ class PathHelperTest extends \PHPUnit_Framework_TestCase
     public function testNormalizePathInvalidNoThrow($input)
     {
         $this->assertFalse(PathHelper::normalizePath($input, true, false));
+    }
+
+    public static function dataproviderNormalizePathInvalid()
+    {
+        return array(
+            array('foo/bar'),
+            array('bar'),
+            array('/foo/bar/'),
+            array(''),
+            array(new \stdClass()),
+        );
     }
 
     // absolutizePath tests
@@ -229,27 +188,35 @@ class PathHelperTest extends \PHPUnit_Framework_TestCase
 
     // getParentPath tests
 
-    public function testGetParentPath()
+    /**
+     * @dataProvider dataproviderParentPath
+     */
+    public function testGetParentPath($path, $parent)
     {
-        $this->assertEquals('/parent', PathHelper::getParentPath('/parent/child'));
+        $this->assertEquals($parent, PathHelper::getParentPath($path));
     }
 
-    public function testGetParentPathNamespaced()
+    public function dataproviderParentPath()
     {
-        $this->assertEquals('/jcr:parent', PathHelper::getParentPath('/jcr:parent/ns:child'));
+        return array(
+            array('/parent/child', '/parent'),
+            array('/jcr:parent/ns:child', '/jcr:parent'),
+            array('/child', '/'),
+            array('/', '/'),
+        );
     }
 
-    public function testGetParentPathNodeAtRoot()
+    // getNodeName tests
+
+    /**
+     * @dataProvider dataproviderGetNodeName
+     */
+    public function testGetNodeName($path, $expected = null)
     {
-        $this->assertEquals('/', PathHelper::getParentPath('/parent'));
+        $this->assertEquals($expected, PathHelper::getNodeName($path));
     }
 
-    public function testGetParentPathRoot()
-    {
-        $this->assertEquals('/', PathHelper::getParentPath('/'));
-    }
-
-    public function provideGetNodeName()
+    public function dataproviderGetNodeName()
     {
         return array(
             array('/parent/child', 'child'),
@@ -259,15 +226,7 @@ class PathHelperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider provideGetNodeName
-     */
-    public function testGetNodeName($path, $expected = null)
-    {
-        $this->assertEquals($expected, PathHelper::getNodeName($path));
-    }
-
-    /**
-     * @expectedException PHPCR\RepositoryException
+     * @expectedException \PHPCR\RepositoryException
      * @expectedExceptionMessage must be an absolute path
      */
     public function testGetNodeNameMustBeAbsolute()
@@ -275,11 +234,23 @@ class PathHelperTest extends \PHPUnit_Framework_TestCase
         PathHelper::getNodeName('foobar');
     }
 
-    public function testGetPathDepth()
+    // getPathDepth tests
+
+    /**
+     * @dataProvider dataproviderPathDepth
+     */
+    public function testGetPathDepth($path, $depth)
     {
-        $this->assertEquals(0, PathHelper::getPathDepth('/'));
-        $this->assertEquals(1, PathHelper::getPathDepth('/foo'));
-        $this->assertEquals(2, PathHelper::getPathDepth('/foo/bar'));
-        $this->assertEquals(2, PathHelper::getPathDepth('/foo/bar/'));
+        $this->assertEquals($depth, PathHelper::getPathDepth($path));
+    }
+
+    public function dataproviderPathDepth()
+    {
+        return array(
+            array('/', 0),
+            array('/foo', 1),
+            array('/foo/bar', 2),
+            array('/foo/bar/', 2),
+        );
     }
 }
