@@ -186,6 +186,49 @@ class PathHelperTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    // relativizePath tests
+
+    /**
+     * @dataProvider dataproviderRelativizePath
+     */
+    public function testRelativizePath($inputPath, $context, $outputPath)
+    {
+        $this->assertSame($outputPath, PathHelper::relativizePath($inputPath, $context));
+    }
+
+    public static function dataproviderRelativizePath()
+    {
+        return array(
+            array('/parent/path/child', '/parent', 'path/child'),
+            array('/child', '/', 'child'),
+        );
+    }
+
+    /**
+     * @expectedException \PHPCR\RepositoryException
+     * @dataProvider dataproviderRelativizePathInvalid
+     */
+    public function testRelativizePathInvalidThrow($inputPath, $context)
+    {
+        PathHelper::relativizePath($inputPath, $context);
+    }
+
+    /**
+     * @dataProvider dataproviderRelativizePathInvalid
+     */
+    public function testRelativizePathInvalidNoThrow($inputPath, $context)
+    {
+        $this->assertFalse(PathHelper::relativizePath($inputPath, $context, false));
+    }
+
+    public static function dataproviderRelativizePathInvalid()
+    {
+        return array(
+            array('/path', '/context'),
+            array('/parent', '/parent/child'),
+        );
+    }
+
     // getParentPath tests
 
     /**
