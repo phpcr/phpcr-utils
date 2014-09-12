@@ -5,7 +5,7 @@ namespace PHPCR\Tests\Util\QOM;
 use PHPCR\Util\QOM\Sql2Generator;
 use PHPCR\Util\ValueConverter;
 
-class Sql2GeneratorTest extends \PHPUnit_Framework_TestCase
+class Sql2GeneratorTest extends BaseSqlGeneratorTest
 {
     protected $generator;
 

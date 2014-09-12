@@ -83,7 +83,7 @@ abstract class BaseSqlGenerator
      */
     public function evalNot($constraint)
     {
-        return "NOT $constraint";
+        return "(NOT $constraint)";
     }
 
     /**
