@@ -263,6 +263,26 @@ class PathHelper
     }
 
     /**
+     * Return the localname of the node at the given path.
+     * The local name is the node name minus the namespace
+     *
+     * @param string $path a valid absolute path
+     *
+     * @return string The localname
+     */
+    public static function getLocalNodeName($path)
+    {
+        $nodeName = self::getNodeName($path);
+        $localName = strstr($nodeName, ':');
+
+        if (false !== $localName) {
+            return substr($localName, 1);
+        }
+
+        return $nodeName;
+    }
+
+    /**
      * Get the depth of the path, ignore trailing slashes, root starts counting at 0
      *
      * @param string $path a valid absolute path, like /content/jobs/data
