@@ -146,7 +146,7 @@ class ValueConverter
                 switch ($srctype) {
                     case PropertyType::DATE:
                         if (! $value instanceof \DateTime) {
-                            throw new RepositoryException('Can not convert a date that is not a \DateTime instance to string');
+                            throw new RepositoryException('Cannot convert a date that is not a \DateTime instance to string');
                         }
                         /** @var $value \DateTime */
                         // Milliseconds formatting is not possible in PHP so we
@@ -161,7 +161,7 @@ class ValueConverter
                          return $value;
                     default:
                         if (is_object($value)) {
-                            throw new ValueFormatException('Can not convert object of class '.get_class($value).' to STRING');
+                            throw new ValueFormatException('Cannot convert object of class "'.get_class($value).'" to STRING');
                         }
                         if (is_resource($value)) {
                             throw new ValueFormatException('Inconsistency: Non-binary property should not have resource stream value');
@@ -200,9 +200,9 @@ class ValueConverter
                         return $value->getTimestamp();
                 }
                 if (is_object($value)) {
-                    throw new ValueFormatException('Can not convert object of class '.get_class($value).' to a LONG');
+                    throw new ValueFormatException('Cannot convert object of class "'.get_class($value).'" to a LONG');
                 }
-                throw new ValueFormatException('Can not convert '.var_export($value, true).' to a LONG');
+                throw new ValueFormatException('Cannot convert "'.var_export($value, true).'" to a LONG');
 
             case PropertyType::DOUBLE:
                 switch ($srctype) {
@@ -222,9 +222,9 @@ class ValueConverter
                         return (double) $value->getTimestamp();
                 }
                 if (is_object($value)) {
-                    throw new ValueFormatException('Can not convert object of class '.get_class($value).' to a DOUBLE');
+                    throw new ValueFormatException('Cannot convert object of class "'.get_class($value).'" to a DOUBLE');
                 }
-                throw new ValueFormatException('Can not convert '.var_export($value, true).' to a DOUBLE');
+                throw new ValueFormatException('Cannot convert "'.var_export($value, true).'" to a DOUBLE');
 
             case PropertyType::DATE:
                 switch ($srctype) {
@@ -247,9 +247,9 @@ class ValueConverter
                         return $datetime;
                 }
                 if (is_object($value)) {
-                    throw new ValueFormatException('Can not convert object of class '.get_class($value).' to a DATE');
+                    throw new ValueFormatException('Cannot convert object of class "'.get_class($value).'" to a DATE');
                 }
-                throw new ValueFormatException('Can not convert '.var_export($value, true).' to DATE');
+                throw new ValueFormatException('Cannot convert "'.var_export($value, true).'" to DATE');
 
             case PropertyType::BOOLEAN:
                 switch ($srctype) {
@@ -266,9 +266,9 @@ class ValueConverter
                         return (boolean) ((double) $value); // '0' is false too
                 }
                 if (is_object($value)) {
-                    throw new ValueFormatException('Can not convert object of class '.get_class($value).' to a BOOLEAN');
+                    throw new ValueFormatException('Cannot convert object of class "'.get_class($value).'" to a BOOLEAN');
                 }
-                throw new ValueFormatException('Can not convert '.var_export($value, true).' to a BOOLEAN');
+                throw new ValueFormatException('Cannot convert "'.var_export($value, true).'" to a BOOLEAN');
 
             case PropertyType::NAME:
                 switch ($srctype) {
@@ -282,9 +282,9 @@ class ValueConverter
                         return $value;
                 }
                 if (is_object($value)) {
-                    throw new ValueFormatException('Can not convert object of class '.get_class($value).' to a NAME');
+                    throw new ValueFormatException('Cannot convert object of class "'.get_class($value).'" to a NAME');
                 }
-                throw new ValueFormatException('Can not convert '.var_export($value, true).' to NAME');
+                throw new ValueFormatException('Cannot convert "'.var_export($value, true).'" to NAME');
 
             case PropertyType::PATH:
                 switch ($srctype) {
@@ -299,9 +299,9 @@ class ValueConverter
                         return $value;
                 }
                 if (is_object($value)) {
-                    throw new ValueFormatException('Can not convert object of class '.get_class($value).' to a PATH');
+                    throw new ValueFormatException('Cannot convert object of class "'.get_class($value).'" to a PATH');
                 }
-                throw new ValueFormatException('Can not convert '.var_export($value, true).' to PATH');
+                throw new ValueFormatException('Cannot convert "'.var_export($value, true).'" to PATH');
 
             case PropertyType::REFERENCE:
             case PropertyType::WEAKREFERENCE:
@@ -311,15 +311,15 @@ class ValueConverter
                     case PropertyType::WEAKREFERENCE:
                         if (empty($value)) {
                             //TODO check if string is valid uuid
-                            throw new ValueFormatException('Value '.var_export($value, true).' is not a valid unique id');
+                            throw new ValueFormatException('Value "'.var_export($value, true).'" is not a valid unique id');
                         }
 
                         return $value;
                 }
                 if (is_object($value)) {
-                    throw new ValueFormatException('Can not convert object of class '.get_class($value).' to a unique id');
+                    throw new ValueFormatException('Cannot convert object of class "'.get_class($value).'" to a unique id');
                 }
-                throw new ValueFormatException('Can not convert '.var_export($value, true).' to unique id');
+                throw new ValueFormatException('Cannot convert "'.var_export($value, true).'" to unique id');
 
             case PropertyType::URI:
                 switch ($srctype) {
@@ -341,9 +341,9 @@ class ValueConverter
                         return $value;
                 }
                 if (is_object($value)) {
-                    throw new ValueFormatException('Can not convert object of class '.get_class($value).' to a URI');
+                    throw new ValueFormatException('Cannot convert object of class "'.get_class($value).'" to a URI');
                 }
-                throw new ValueFormatException('Can not convert '.var_export($value, true).' to URI');
+                throw new ValueFormatException('Cannot convert "'.var_export($value, true).'" to URI');
 
             case PropertyType::DECIMAL:
                 switch ($srctype) {
@@ -361,12 +361,12 @@ class ValueConverter
                         return (string) $value->getTimestamp();
                 }
                 if (is_object($value)) {
-                    throw new ValueFormatException('Can not convert object of class '.get_class($value).' to a DECIMAL');
+                    throw new ValueFormatException('Cannot convert object of class "'.get_class($value).'" to a DECIMAL');
                 }
-                throw new ValueFormatException('Can not convert '.var_export($value, true).' to a DECIMAL');
+                throw new ValueFormatException('Cannot convert "'.var_export($value, true).'" to a DECIMAL');
 
             default:
-                throw new ValueFormatException("Unexpected target type $type in conversion");
+                throw new ValueFormatException('Unexpected target type "' . $type . '" in conversion');
         }
     }
 }
