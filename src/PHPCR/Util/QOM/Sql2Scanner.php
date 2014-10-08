@@ -184,7 +184,7 @@ class Sql2Scanner
         $buffer = '';
         for ($i = 0; $i < strlen($token); $i++) {
             $char = trim(substr($token, $i, 1));
-            if (in_array($char, array('.', ',', '(', ')', '='))) {
+            if (in_array($char, array('[', ']', '.', ',', '(', ')', '='))) {
                 if ($buffer !== '') {
                     $tokens[] = $buffer;
                     $buffer = '';
