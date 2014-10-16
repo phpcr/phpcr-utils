@@ -789,10 +789,6 @@ class Sql2ToQomQueryConverter
             return $this->parseCastLiteral($token);
         }
 
-        if ($this->scanner->tokenIs($token, 'NULL')) {
-            return null;
-        }
-
         $quoteString = false;
         if (substr($token, 0, 1) === '\'') {
             $quoteString = "'";
@@ -939,9 +935,9 @@ class Sql2ToQomQueryConverter
     {
         $token = $this->scanner->fetchNextToken();
 
-        if ($token === '[') {
-            $token = $this->scanner->fetchNextToken();
-            $this->scanner->expectToken(']');
+        if (substr($token, 0, 1) === '[' && substr($token, -1) === ']') {
+            // Remove brackets around the selector name
+            $token = substr($token, 1, -1);
         }
 
         return $token;
