@@ -1,6 +1,13 @@
 Changelog
 =========
 
+1.2.0
+-----
+
+* **2014-10-24**: Fixed SQL2 handling, notably precedency when generating SQL2 and parsing of literals.
+* **2014-10-05** Added PathHelper::getLocalNodeName
+* **2014-09-01** Added PathHelper::relativizePath
+
 1.1.1
 -----
 
