@@ -269,6 +269,25 @@ class PathHelperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @dataProvider dataproviderGetLocalNodeName
+     */
+    public function testGetLocalNodeName($path, $expected = null)
+    {
+        $this->assertEquals($expected, PathHelper::getLocalNodeName($path));
+    }
+
+    public function dataproviderGetLocalNodeName()
+    {
+        return array(
+            array('/parent/child', 'child'),
+            array('/foo:child', 'child'),
+            array('/parent/ns:child', 'child'),
+            array('/ns:parent/child:foo', 'foo'),
+            array('/', ''),
+        );
+    }
+
+    /**
      * @expectedException \PHPCR\RepositoryException
      * @expectedExceptionMessage must be an absolute path
      */
