@@ -60,7 +60,7 @@ EOT
             return 1;
         }
 
-        if (array_search($workspaceName, $workspace->getAccessibleWorkspaceNames())) {
+        if (in_array($workspaceName, $workspace->getAccessibleWorkspaceNames())) {
             $output->writeln(
                 sprintf('<comment>This repository already has a workspace called "%s"</comment>', $workspaceName)
             );
