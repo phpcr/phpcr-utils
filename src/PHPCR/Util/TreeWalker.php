@@ -63,7 +63,7 @@ class TreeWalker
      */
     public function addNodeFilter(TreeWalkerFilterInterface $filter)
     {
-        if (!array_search($filter, $this->nodeFilters)) {
+        if (!in_array($filter, $this->nodeFilters)) {
             $this->nodeFilters[] = $filter;
         }
     }
@@ -75,7 +75,7 @@ class TreeWalker
      */
     public function addPropertyFilter(TreeWalkerFilterInterface $filter)
     {
-        if (!array_search($filter, $this->propertyFilters)) {
+        if (!in_array($filter, $this->propertyFilters)) {
             $this->propertyFilters[] = $filter;
         }
     }
