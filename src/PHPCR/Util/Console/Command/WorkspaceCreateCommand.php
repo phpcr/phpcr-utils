@@ -5,6 +5,7 @@ namespace PHPCR\Util\Console\Command;
 use PHPCR\RepositoryInterface;
 use PHPCR\SessionInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -28,6 +29,12 @@ class WorkspaceCreateCommand extends BaseCommand
         $this
             ->setName('phpcr:workspace:create')
             ->addArgument('name', InputArgument::REQUIRED, 'Name of the workspace to create')
+            ->addOption(
+               'silent-on-exist',
+               null,
+               InputOption::VALUE_NONE,
+               'If set, an existing workspace will return a success code'
+            )
             ->setDescription('Create a workspace in the configured repository')
             ->setHelp(<<<EOT
 The <info>workspace:create</info> command creates a workspace with the specified name.
@@ -65,7 +72,7 @@ EOT
                 sprintf('<comment>This repository already has a workspace called "%s"</comment>', $workspaceName)
             );
 
-            return 2;
+            return $input->getOption('silent-on-exist') ? 0 : 2;
         }
 
         $workspace->createWorkspace($workspaceName);
