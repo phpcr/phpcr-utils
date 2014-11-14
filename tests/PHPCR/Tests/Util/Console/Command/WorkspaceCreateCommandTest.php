@@ -49,19 +49,19 @@ class WorkspaceCreateCommandTest extends BaseCommandTest
      */
     public function testCreateExisting()
     {
-        $this->session->expects($this->once())
+        $this->session->expects($this->exactly(2))
             ->method('getWorkspace')
             ->will($this->returnValue($this->workspace))
         ;
-        $this->session->expects($this->once())
+        $this->session->expects($this->exactly(2))
             ->method('getRepository')
             ->will($this->returnValue($this->repository));
-        $this->repository->expects($this->once())
+        $this->repository->expects($this->exactly(2))
             ->method('getDescriptor')
             ->with(RepositoryInterface::OPTION_WORKSPACE_MANAGEMENT_SUPPORTED)
             ->will($this->returnValue(true))
         ;
-        $this->workspace->expects($this->once())
+        $this->workspace->expects($this->exactly(2))
             ->method('getAccessibleWorkspaceNames')
             ->will($this->returnValue(array('default', 'test')))
         ;
@@ -70,6 +70,17 @@ class WorkspaceCreateCommandTest extends BaseCommandTest
             'phpcr:workspace:create',
             array('name' => 'test'),
             2
+        );
+
+        $this->assertContains('already has a workspace called "test"', $tester->getDisplay());
+
+        $tester = $this->executeCommand(
+            'phpcr:workspace:create',
+            array(
+                'name' => 'test',
+                '--ignore-existing' => true
+            ),
+            0
         );
 
         $this->assertContains('already has a workspace called "test"', $tester->getDisplay());

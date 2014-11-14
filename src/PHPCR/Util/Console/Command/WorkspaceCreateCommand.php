@@ -30,7 +30,7 @@ class WorkspaceCreateCommand extends BaseCommand
             ->setName('phpcr:workspace:create')
             ->addArgument('name', InputArgument::REQUIRED, 'Name of the workspace to create')
             ->addOption(
-               'silent-on-exist',
+               'ignore-existing',
                null,
                InputOption::VALUE_NONE,
                'If set, an existing workspace will return a success code'
@@ -72,7 +72,7 @@ EOT
                 sprintf('<comment>This repository already has a workspace called "%s"</comment>', $workspaceName)
             );
 
-            return $input->getOption('silent-on-exist') ? 0 : 2;
+            return $input->getOption('ignore-existing') ? 0 : 2;
         }
 
         $workspace->createWorkspace($workspaceName);
