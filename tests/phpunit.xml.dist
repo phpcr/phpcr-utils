@@ -9,6 +9,7 @@
          stopOnFailure="false"
          syntaxCheck="true"
          strict="true"
+         timeoutForSmallTests="2"
          bootstrap="bootstrap.php">
 
     <testsuites>
