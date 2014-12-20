@@ -29,7 +29,7 @@
     "require": {
         "php": ">=5.3.3",
         "phpcr/phpcr": "~2.1.0",
-        "symfony/console": "~2.0"
+        "symfony/console": "2.*,>=2.0.5"
     },
     "autoload": {
         "psr-0": {
