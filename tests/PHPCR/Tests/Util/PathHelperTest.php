@@ -38,6 +38,15 @@ class PathHelperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @expectedException \PHPCR\NamespaceException
+     * @expectedExceptionMessage invalidprefix and other-ns
+     */
+    public function testAssertInvalidNamespaceAbsolutePath()
+    {
+        PathHelper::assertValidAbsolutePath('/invalidprefix:localname/other-ns:test/invalidprefix:node/bla', false, true, array('jcr', 'nt'));
+    }
+
+    /**
      * @dataProvider dataproviderInvalidAbsolutePaths
      */
     public function testAssertInvalidAbsolutePathNoThrow($path, $destination = false)
