@@ -13,8 +13,9 @@ use PHPCR\Query\QOM\DynamicOperandInterface;
 use PHPCR\Query\QOM\EquiJoinConditionInterface;
 use PHPCR\Query\QOM\FullTextSearchInterface;
 use PHPCR\Query\QOM\JoinConditionInterface;
-use PHPCR\Query\QOM\LiteralInterface;
+use PHPCR\Query\QOM\JoinInterface;
 use PHPCR\Query\QOM\NotInterface;
+use PHPCR\Query\QOM\OrderingInterface;
 use PHPCR\Query\QOM\PropertyExistenceInterface;
 use PHPCR\Query\QOM\PropertyValueInterface;
 use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants;
@@ -68,6 +69,7 @@ class Sql2ToQomQueryConverter
      * Instantiate a converter
      *
      * @param QueryObjectModelFactoryInterface $factory
+     * @param ValueConverter                   $valueConverter To override default converter.
      */
     public function __construct(QueryObjectModelFactoryInterface $factory, ValueConverter $valueConverter = null)
     {
@@ -183,10 +185,11 @@ class Sql2ToQomQueryConverter
      * 6.7.6. Join type
      * Parse an SQL2 join source and return a QOM\Join
      *
-     * @param string $leftSelector the left selector as it has been read by parseSource
-     * return \PHPCR\Query\QOM\JoinInterface
+     * @param SourceInterface $leftSelector the left selector as it has been read by parseSource
+     *
+     * @return JoinInterface
      */
-    protected function parseJoin($leftSelector)
+    protected function parseJoin(SourceInterface $leftSelector)
     {
         $joinType = $this->parseJoinType();
         $right = $this->parseSelector();
@@ -332,7 +335,12 @@ class Sql2ToQomQueryConverter
      * 6.7.13 And
      * 6.7.14 Or
      *
+     * @param ConstraintInterface $lhs     Left hand side
+     * @param int                 $minprec Precedence
+     *
      * @return ConstraintInterface
+     *
+     * @throws \Exception
      */
     protected function parseConstraint($lhs = null, $minprec = 0)
     {
@@ -728,52 +736,54 @@ class Sql2ToQomQueryConverter
 
     protected function parseCastLiteral($token)
     {
-        if ($this->scanner->tokenIs($token, 'CAST')) {
-            $this->scanner->expectToken('(');
-            $token = $this->scanner->fetchNextToken();
-
-            $quoteString = false;
-            if (substr($token, 0, 1) === '\'') {
-                $quoteString = "'";
-            } elseif (substr($token, 0, 1) === '"') {
-                $quoteString = '"';
-            }
-
-            if ($quoteString) {
-                while (substr($token, -1) !== $quoteString) {
-                    $nextToken = $this->scanner->fetchNextToken();
-                    if ('' === $nextToken) {
-                        break;
-                    }
-                    $token .= $nextToken;
-                }
-
-                if (substr($token, -1) !== $quoteString) {
-                    throw new InvalidQueryException("Syntax error: unterminated quoted string '$token' in '{$this->sql2}'");
-                }
-                $token = substr($token, 1, -1);
-                $token = str_replace('\\'.$quoteString, $quoteString, $token);
-            }
-
-            $this->scanner->expectToken('AS');
-
-            $type = $this->scanner->fetchNextToken();
-            try {
-                $typeValue = PropertyType::valueFromName($type);
-            } catch (\InvalidArgumentException $e) {
-                throw new InvalidQueryException("Syntax error: attempting to cast to an invalid type '$type'");
-            }
-
-            $this->scanner->expectToken(')');
-
-            try {
-                $token = $this->valueConverter->convertType($token, $typeValue, PropertyType::STRING);
-            } catch (\Exception $e) {
-                throw new InvalidQueryException("Syntax error: attempting to cast string '$token' to type '$type'");
-            }
-
-            return $token;
+        if (!$this->scanner->tokenIs($token, 'CAST')) {
+            throw new \LogicException('parseCastLiteral when not a CAST');
         }
+
+        $this->scanner->expectToken('(');
+        $token = $this->scanner->fetchNextToken();
+
+        $quoteString = false;
+        if (substr($token, 0, 1) === '\'') {
+            $quoteString = "'";
+        } elseif (substr($token, 0, 1) === '"') {
+            $quoteString = '"';
+        }
+
+        if ($quoteString) {
+            while (substr($token, -1) !== $quoteString) {
+                $nextToken = $this->scanner->fetchNextToken();
+                if ('' === $nextToken) {
+                    break;
+                }
+                $token .= $nextToken;
+            }
+
+            if (substr($token, -1) !== $quoteString) {
+                throw new InvalidQueryException("Syntax error: unterminated quoted string '$token' in '{$this->sql2}'");
+            }
+            $token = substr($token, 1, -1);
+            $token = str_replace('\\'.$quoteString, $quoteString, $token);
+        }
+
+        $this->scanner->expectToken('AS');
+
+        $type = $this->scanner->fetchNextToken();
+        try {
+            $typeValue = PropertyType::valueFromName($type);
+        } catch (\InvalidArgumentException $e) {
+            throw new InvalidQueryException("Syntax error: attempting to cast to an invalid type '$type'");
+        }
+
+        $this->scanner->expectToken(')');
+
+        try {
+            $token = $this->valueConverter->convertType($token, $typeValue, PropertyType::STRING);
+        } catch (\Exception $e) {
+            throw new InvalidQueryException("Syntax error: attempting to cast string '$token' to type '$type'");
+        }
+
+        return $token;
     }
 
     /**
@@ -850,6 +860,8 @@ class Sql2ToQomQueryConverter
 
     /**
      * 6.7.38 Order
+     *
+     * @return OrderingInterface
      */
     protected function parseOrdering()
     {
@@ -1044,9 +1056,11 @@ class Sql2ToQomQueryConverter
     /**
      * Build a single SQL2 column definition
      *
+     * @param array $data with selector name, property name and column name.
+     *
      * @return ColumnInterface
      */
-    protected function buildColumn($data)
+    protected function buildColumn(array $data)
     {
         list($selectorName, $propertyName, $columnName) = $data;
         $selectorName = $this->ensureSelectorName($selectorName);
