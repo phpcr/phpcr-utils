@@ -2,6 +2,7 @@
 
 namespace PHPCR\Util;
 
+use PHPCR\NamespaceException;
 use PHPCR\RepositoryException;
 
 /**
@@ -36,12 +37,14 @@ class PathHelper
      *      move), meaning [] is not allowed. If your implementation does not
      *      support same name siblings, just always pass true for this
      * @param bool $throw whether to throw an exception on validation errors
+     * @param array|bool $namespacePrefixes List of all known namespace prefixes.
+     *      If specified, this method validates that the path contains no unknown prefixes.
      *
      * @return bool true if valid, false if not valid and $throw was false
      *
      * @throws RepositoryException if the path contains invalid characters and $throw is true
      */
-    public static function assertValidAbsolutePath($path, $destination = false, $throw = true)
+    public static function assertValidAbsolutePath($path, $destination = false, $throw = true, $namespacePrefixes = false)
     {
         if ((!is_string($path) && !is_numeric($path))
             || strlen($path) == 0
@@ -53,6 +56,17 @@ class PathHelper
         }
         if ($destination && ']' === $path[strlen($path) - 1]) {
             return self::error("Destination path may not end with index: '$path'", $throw);
+        }
+        if ($namespacePrefixes) {
+            $matches = array();
+            preg_match_all('#/(?P<prefixes>[^:]+):#', $path, $matches);
+            $unknown = array_diff(array_unique($matches['prefixes']), $namespacePrefixes);
+            if (count($unknown)) {
+                if (!$throw) {
+                    return false;
+                }
+                throw new NamespaceException(sprintf('Unknown namespace prefix(es) (%s) in path %s', implode(' and ', $unknown), $path));
+            }
         }
 
         return true;
