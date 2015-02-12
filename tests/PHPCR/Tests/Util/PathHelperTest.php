@@ -38,6 +38,29 @@ class PathHelperTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @dataProvider dataproviderValidAbsolutePathsWithNamespaces
+     */
+    public function testAssertAbsolutePathNamespace($path)
+    {
+        PathHelper::assertValidAbsolutePath($path, false, true, array('jcr', 'nt'));
+    }
+
+    public function dataproviderValidAbsolutePathsWithNamespaces()
+    {
+        return array(
+            array('/parent/child'),
+            array('/jcr:localname'),
+            array('/jcr:localname/test'),
+            array('/jcr:localname/test/nt:node'),
+            array('/jcr:localname/test/nt:node/bla'),
+            array('/'),
+            array('/jcr:foo_/b-a/0^.txt'),
+            array('/parent[7]/child'),
+            array('/jcr:localname[3]/test'),
+        );
+    }
+
+    /**
      * @expectedException \PHPCR\NamespaceException
      * @expectedExceptionMessage invalidprefix and other-ns
      */

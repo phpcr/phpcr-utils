@@ -59,7 +59,7 @@ class PathHelper
         }
         if ($namespacePrefixes) {
             $matches = array();
-            preg_match_all('#/(?P<prefixes>[^:]+):#', $path, $matches);
+            preg_match_all('#/(?P<prefixes>[^/:]+):#', $path, $matches);
             $unknown = array_diff(array_unique($matches['prefixes']), $namespacePrefixes);
             if (count($unknown)) {
                 if (!$throw) {
