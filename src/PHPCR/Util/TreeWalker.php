@@ -129,6 +129,7 @@ class TreeWalker
 
             // Visit node
             $this->nodeVisitor->setLevel($level);
+            $this->nodeVisitor->setShowFullPath(0 === $level);
             $node->accept($this->nodeVisitor);
 
             // Visit properties

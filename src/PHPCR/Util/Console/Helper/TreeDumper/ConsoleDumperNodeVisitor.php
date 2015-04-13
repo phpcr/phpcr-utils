@@ -21,6 +21,11 @@ class ConsoleDumperNodeVisitor extends ConsoleDumperItemVisitor
     protected $identifiers;
 
     /**
+     * Show the full path for the node
+     */
+    protected $showFullPath;
+
+    /**
      * Instantiate the console dumper visitor
      *
      * @param OutputInterface $output
@@ -30,6 +35,16 @@ class ConsoleDumperNodeVisitor extends ConsoleDumperItemVisitor
     {
         parent::__construct($output);
         $this->identifiers = $identifiers;
+    }
+
+    /**
+     * If to show the full path or not
+     *
+     * @param bool $showFullPath
+     */
+    public function setShowFullPath($showFullPath)
+    {
+        $this->showFullPath = $showFullPath;
     }
 
     /**
@@ -43,10 +58,12 @@ class ConsoleDumperNodeVisitor extends ConsoleDumperItemVisitor
             throw new \Exception("Internal error: did not expect to visit a non-node object: $item");
         }
 
-        $name = $item->getName();
-
         if ($item->getDepth() == 0) {
             $name = 'ROOT';
+        } else if ($this->showFullPath) {
+            $name = $item->getPath();
+        } else {
+            $name = $item->getName();
         }
 
         $out = str_repeat('  ', $this->level)
