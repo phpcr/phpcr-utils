@@ -82,6 +82,7 @@ HERE
         try {
             if (UUIDHelper::isUUID($identifier)) {
                 $node = $session->getNodeByIdentifier($identifier);
+                $output->writeln("<info>UUID '$identifier' points to '{$node->getPath()}'</info>");
             } else {
                 $node = $session->getNode($identifier);
             }
