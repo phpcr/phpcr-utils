@@ -42,7 +42,7 @@ class WorkspaceQueryCommand extends BaseCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $sql = $input->getArgument('query');
-        $language = strtoupper($input->getOption('language'));
+        $language = $input->getOption('language');
         $limit = $input->getOption('limit');
         $offset = $input->getOption('offset');
 
