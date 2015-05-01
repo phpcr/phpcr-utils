@@ -152,11 +152,10 @@ class PhpcrHelper extends Helper
      */
     public function createQuery($language, $sql)
     {
-        $this->validateQueryLanguage($language);
+        $language = $this->validateQueryLanguage($language);
 
         $session = $this->getSession();
         $qm = $session->getWorkspace()->getQueryManager();
-        $language = strtoupper($language);
         $query = $qm->createQuery($sql, $language);
 
         return $query;
@@ -173,11 +172,15 @@ class PhpcrHelper extends Helper
     {
         $qm = $this->getSession()->getWorkspace()->getQueryManager();
         $langs = $qm->getSupportedQueryLanguages();
-        if (!in_array($language, $langs)) {
-            throw new \Exception(sprintf(
-                'Query language "%s" not supported, available query languages: %s',
-                $language, implode(',', $langs)
-            ));
+        foreach ($langs as $lang) {
+            if (strtoupper($lang) === strtoupper($language)) {
+                return $lang;
+            }
         }
+
+        throw new \Exception(sprintf(
+            'Query language "%s" not supported, available query languages: %s',
+            $language, implode(',', $langs)
+        ));
     }
 }
