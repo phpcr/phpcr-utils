@@ -14,6 +14,11 @@ class WorkspaceExportCommandTest extends BaseCommandTest
         $this->application->add(new WorkspaceExportCommand());
     }
 
+    public function tearDown()
+    {
+        unlink('test');
+    }
+
     public function testNodeTypeList()
     {
         $this->session->expects($this->once())
@@ -26,8 +31,16 @@ class WorkspaceExportCommandTest extends BaseCommandTest
         $this->session->expects($this->once())
             ->method('exportSystemView');
 
+        $this->assertFileNotExists('test', 'test export file must not exist, it will be overwritten');
+
         $ct = $this->executeCommand('phpcr:workspace:export', array(
             'filename' => 'test'
         ));
+
+        if (method_exists($ct, 'getStatusCode')) {
+            // only available since symfony 2.4
+            $this->assertEquals(0, $ct->getStatusCode());
+        }
+        $this->assertFileExists('test');
     }
 }
