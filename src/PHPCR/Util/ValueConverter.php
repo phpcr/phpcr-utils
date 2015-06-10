@@ -31,6 +31,9 @@ class ValueConverter
      * - if the given $value is a Node object, type will be REFERENCE, unless
      *    $weak is set to true which results in WEAKREFERENCE
      * - if the given $value is a DateTime object, the type will be DATE.
+     * - if the $value is an empty array, the type is arbitrarily set to STRING
+     * - if the $value is a non-empty array, the type of its first element is
+     *   chosen.
      *
      * Note that string is converted to date exactly if it matches the jcr
      * formatting spec for dates (sYYYY-MM-DDThh:mm:ss.sssTZD) according to
@@ -46,6 +49,15 @@ class ValueConverter
      */
     public function determineType($value, $weak = false)
     {
+        if (is_array($value)) {
+            if (0 === count($value)) {
+                // there is no value to determine the type on. we arbitrarily
+                // chose string, which is what jackrabbit does as well.
+                return PropertyType::STRING;
+            }
+            $value = reset($value);
+        }
+
         return PropertyType::determineType($value, $weak);
     }
 
