@@ -31,6 +31,9 @@
         "phpcr/phpcr": "~2.1.0",
         "symfony/console": "2.*,>=2.0.5"
     },
+    "conflict": {
+        "jackalope/jackalope-jackrabbit": "<1.2.1"
+    },
     "autoload": {
         "psr-0": {
             "PHPCR\\Util": "src"
