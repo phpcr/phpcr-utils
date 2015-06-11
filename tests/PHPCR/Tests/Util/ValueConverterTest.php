@@ -387,7 +387,7 @@ class ValueConverterTest extends \PHPUnit_Framework_TestCase
     {
         $nodemock = $this->getMock('PHPCR\Tests\Stubs\MockNode');
         $nodemock
-            ->expects($this->once())
+            ->expects($this->never())
             ->method('isNew')
             ->will($this->returnValue(true))
         ;
@@ -400,7 +400,7 @@ class ValueConverterTest extends \PHPUnit_Framework_TestCase
     {
         $nodemock = $this->getMock('PHPCR\Tests\Stubs\MockNode');
         $nodemock
-            ->expects($this->once())
+            ->expects($this->never())
             ->method('isNew')
             ->will($this->returnValue(false))
         ;

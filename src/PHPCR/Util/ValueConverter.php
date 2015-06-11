@@ -130,11 +130,6 @@ class ValueConverter
             && $value instanceof NodeInterface
         ) {
             /** @var $value NodeInterface */
-            // In Jackrabbit a new node cannot be referenced until it has been persisted
-            // See: https://issues.apache.org/jira/browse/JCR-1614
-            if ($value->isNew()) {
-                throw new ValueFormatException('Node ' . $value->getPath() . ' must be persisted before being referenceable');
-            }
             if (! $value->isNodeType('mix:referenceable')) {
                 throw new ValueFormatException('Node ' . $value->getPath() . ' is not referenceable');
             }
