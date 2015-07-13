@@ -2,12 +2,9 @@
 
 namespace PHPCR\Util\Console\Command;
 
-use PHPCR\SessionInterface;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Helper\DialogHelper;
 
 use PHPCR\Util\NodeHelper;
 
@@ -51,9 +48,7 @@ EOF
 
         $workspaceName = $session->getWorkspace()->getName();
         if (!$force) {
-            /** @var $dialog DialogHelper */
-            $dialog = $this->getHelperSet()->get('dialog');
-            $force = $dialog->askConfirmation($output, sprintf(
+            $force = $this->askConfirmation($input, $output, sprintf(
                 '<question>Are you sure you want to purge workspace "%s" Y/N ?</question>',
                 $workspaceName
             ), false);

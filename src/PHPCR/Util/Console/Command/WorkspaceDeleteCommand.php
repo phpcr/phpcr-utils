@@ -3,9 +3,6 @@
 namespace PHPCR\Util\Console\Command;
 
 use PHPCR\RepositoryInterface;
-use PHPCR\SessionInterface;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\DialogHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -71,9 +68,7 @@ EOT
 
         $force = $input->getOption('force');
         if (!$force) {
-            /** @var $dialog DialogHelper */
-            $dialog = $this->getHelperSet()->get('dialog');
-            $force = $dialog->askConfirmation($output, sprintf(
+            $force = $this->askConfirmation($input, $output, sprintf(
                 '<question>Are you sure you want to delete workspace "%s" Y/N ?</question>',
                 $workspaceName
             ), false);
