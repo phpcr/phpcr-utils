@@ -2,10 +2,11 @@
 
 namespace PHPCR\Util\Console\Command;
 
+use PHPCR\Query\QueryResultInterface;
+use PHPCR\Query\RowInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Helper\DialogHelper;
 
 /**
  * Command which can update the properties of nodes found
@@ -110,13 +111,14 @@ HERE
         $result = $query->execute();
 
         if (!$noInteraction) {
-            if (false === $this->getAction($output, $result)) {
+            if (false === $this->shouldExecute($input, $output, $result)) {
                 return 0;
             }
         }
 
         $persistIn = $persistCounter;
 
+        /** @var $row RowInterface */
         foreach ($result as $i => $row) {
             $output->writeln(sprintf(
                 "<info>Updating node:</info> [%d] %s.",
@@ -149,21 +151,23 @@ HERE
         return 0;
     }
 
-    protected function getAction($output, $result)
+    /**
+     * @return bool Whether to execute the action or not.
+     */
+    private function shouldExecute(InputInterface $input, OutputInterface $output, QueryResultInterface $result)
     {
-        /** @var $dialog DialogHelper */
-        $dialog = $this->getHelperSet()->get('dialog');
-        $response = strtoupper($dialog->ask($output, sprintf(
+        $response = strtoupper($this->ask($input, $output, sprintf(
             '<question>About to update %d nodes. Enter "Y" to continue, "N" to cancel or "L" to list.</question>',
             count($result->getRows())
-        ), false));
+        )));
 
         if ($response == 'L') {
+            /** @var $row RowInterface */
             foreach ($result as $i => $row) {
                 $output->writeln(sprintf(' - [%d] %s', $i, $row->getPath()));
             }
 
-            return $this->getAction($output, $result);
+            return $this->shouldExecute($input, $output, $result);
         }
 
         if ($response == 'N') {
@@ -174,6 +178,6 @@ HERE
             return true;
         }
 
-        return $this->getAction($output, $result);
+        return $this->shouldExecute($input, $output, $result);
     }
 }

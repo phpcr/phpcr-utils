@@ -1,6 +1,13 @@
 Changelog
 =========
 
+1.2.7
+-----
+
+* **2015-07-13**: Added Symfony 3 compatibility for the console commands. If you use
+  the commands, update your `cli-config.php` according to `cli-config.php.dist` to set
+  the question helper if it is available.
+
 1.2.0
 -----
 

@@ -3,13 +3,10 @@
 namespace PHPCR\Util\Console\Command;
 
 use PHPCR\NodeInterface;
-use PHPCR\SessionInterface;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Helper\DialogHelper;
 
 /**
  * Command to remove all nodes from a path in the workspace of the configured
@@ -73,8 +70,6 @@ EOF
         }
 
         if (!$force) {
-            /** @var $dialog DialogHelper */
-            $dialog = $this->getHelperSet()->get('dialog');
             $workspaceName = $session->getWorkspace()->getName();
 
             if ($onlyChildren) {
@@ -87,9 +82,12 @@ EOF
                     'from workspace "%s"';
             }
 
-            $force = $dialog->askConfirmation($output, sprintf(
-                '<question>'.$question.' Y/N ?</question>', $path, $workspaceName, false
-            ));
+            $force = $this->askConfirmation(
+                $input,
+                $output,
+                sprintf('<question>'.$question.' Y/N ?</question>', $path, $workspaceName),
+                false
+            );
         }
 
         if (!$force) {
