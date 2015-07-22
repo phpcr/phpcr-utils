@@ -75,7 +75,6 @@ class Sql2Scanner
      */
     public function getPreviousDelimiter()
     {
-
         return isset($this->delimiters[$this->curpos - 1]) ? $this->delimiters[$this->curpos - 1] : ' ';
     }
 

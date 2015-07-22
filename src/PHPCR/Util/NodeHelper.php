@@ -297,14 +297,14 @@ class NodeHelper
                 //if in the old order $c and next are not neighbors already, do the reorder command
                 if ($oldIndex[$current] + 1 != $oldIndex[$next]) {
                     $reorders[$current] = $next;
-                    $old = self::orderBeforeArray($current,$next,$old);
+                    $old = self::orderBeforeArray($current, $next, $old);
                     $oldIndex = array_flip($old);
                 }
             } else {
                 //check if it's not already at the end of the nodes
                 if ($oldIndex[$current] != $len) {
                     $reorders[$current] = null;
-                    $old = self::orderBeforeArray($current,null,$old);
+                    $old = self::orderBeforeArray($current, null, $old);
                     $oldIndex = array_flip($old);
                 }
             }
@@ -333,7 +333,6 @@ class NodeHelper
         $oldpos = array_search($name, $list);
 
         if (false === $oldpos) {
-
             throw new ItemNotFoundException("$name is not a child of this node");
         }
 
@@ -345,7 +344,6 @@ class NodeHelper
             // insert before element $destination
             $newpos = array_search($destination, $list);
             if ($newpos === false) {
-
                 throw new ItemNotFoundException("$destination is not a child of this node");
             }
             if ($oldpos < $newpos) {

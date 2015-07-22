@@ -5,9 +5,7 @@ namespace PHPCR\Util\Console\Command;
 use PHPCR\ItemNotFoundException;
 use PHPCR\RepositoryException;
 use PHPCR\PathNotFoundException;
-
 use PHPCR\Util\UUIDHelper;
-
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
@@ -99,5 +97,4 @@ HERE
 
         return 0;
     }
-
 }

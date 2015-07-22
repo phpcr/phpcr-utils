@@ -2,8 +2,8 @@
 
 namespace PHPCR\Tests\Util\CND\Scanner;
 
-use PHPCR\Util\CND\Scanner\Token,
-    PHPCR\Util\CND\Scanner\TokenQueue;
+use PHPCR\Util\CND\Scanner\Token;
+use PHPCR\Util\CND\Scanner\TokenQueue;
 
 class TokenQueueTest extends \PHPUnit_Framework_TestCase
 {

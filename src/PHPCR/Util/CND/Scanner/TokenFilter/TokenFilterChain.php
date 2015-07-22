@@ -29,7 +29,6 @@ class TokenFilterChain implements TokenFilterInterface
     public function filter(Token $token)
     {
         foreach ($this->filters as $filter) {
-
             $token = $filter->filter($token);
 
             if (!$token) {

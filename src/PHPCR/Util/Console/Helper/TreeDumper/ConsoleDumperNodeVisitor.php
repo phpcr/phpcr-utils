@@ -60,7 +60,7 @@ class ConsoleDumperNodeVisitor extends ConsoleDumperItemVisitor
 
         if ($item->getDepth() == 0) {
             $name = 'ROOT';
-        } else if ($this->showFullPath) {
+        } elseif ($this->showFullPath) {
             $name = $item->getPath();
         } else {
             $name = $item->getName();

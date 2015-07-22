@@ -37,8 +37,8 @@ class Sql1Generator extends BaseSqlGenerator
         if ($path == '/') {
             $sql1 = '/%';
         } else {
-            $path = trim($path,"\"'/");
-            $sql1 = "/" . str_replace("/","[%]/",$path) ;
+            $path = trim($path, "\"'/");
+            $sql1 = "/" . str_replace("/", "[%]/", $path) ;
             $sql1 .= "[%]/%";
         }
 

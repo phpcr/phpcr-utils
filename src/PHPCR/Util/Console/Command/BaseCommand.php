@@ -5,7 +5,6 @@ namespace PHPCR\Util\Console\Command;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-
 use PHPCR\SessionInterface;
 use PHPCR\Util\Console\Helper\PhpcrHelper;
 use PHPCR\Util\Console\Helper\PhpcrConsoleDumperHelper;

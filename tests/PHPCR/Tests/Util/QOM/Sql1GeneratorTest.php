@@ -80,7 +80,7 @@ class Sql1GeneratorTest extends \PHPUnit_Framework_TestCase
     {
         $literal = $this->generator->evalColumns(null);
         $this->assertSame("s", $literal);
-        $literal = $this->generator->evalColumns(array("bar","foo"));
+        $literal = $this->generator->evalColumns(array("bar", "foo"));
         $this->assertSame("bar, foo", $literal);
     }
 

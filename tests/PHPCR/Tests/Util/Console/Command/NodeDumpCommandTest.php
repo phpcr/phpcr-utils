@@ -5,7 +5,6 @@ namespace PHPCR\Tests\Util\Console\Command;
 use PHPCR\ItemNotFoundException;
 use PHPCR\Util\UUIDHelper;
 use Symfony\Component\Console\Application;
-
 use PHPCR\Util\TreeWalker;
 use PHPCR\Util\Console\Command\NodeDumpCommand;
 

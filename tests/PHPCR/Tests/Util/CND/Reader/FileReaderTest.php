@@ -45,7 +45,6 @@ class FileReaderTest extends \PHPUnit_Framework_TestCase
         $curCol = 1;
 
         for ($i = 0; $i < count($this->chars); $i++) {
-
             $peek = $this->reader->currentChar();
 
             if ($peek === $this->reader->getEofMarker()) {
@@ -84,5 +83,4 @@ class FileReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($this->reader->isEof());
         $this->assertEquals(false, $this->reader->forwardChar());
     }
-
 }

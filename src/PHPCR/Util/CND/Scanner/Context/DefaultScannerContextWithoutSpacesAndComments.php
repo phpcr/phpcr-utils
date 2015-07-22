@@ -20,5 +20,4 @@ class DefaultScannerContextWithoutSpacesAndComments extends DefaultScannerContex
         $this->addTokenFilter(new TokenFilter\NoWhitespacesFilter());
         $this->addTokenFilter(new TokenFilter\NoCommentsFilter());
     }
-
 }

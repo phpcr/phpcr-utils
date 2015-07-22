@@ -38,5 +38,4 @@ class GenericToken extends Token
     {
         return sprintf("TOKEN(%s, '%s', %s, %s)", self::getTypeName($this->getType()), trim($this->data), $this->line, $this->row);
     }
-
 }

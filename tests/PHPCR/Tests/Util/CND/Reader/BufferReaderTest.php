@@ -104,5 +104,4 @@ class BufferReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($reader->getEofMarker(), $reader->forward());
         $this->assertEquals($reader->getEofMarker(), $reader->consume());
     }
-
 }

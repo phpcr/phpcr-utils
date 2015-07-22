@@ -138,7 +138,7 @@ class ValueConverter
             rewind($value);
             $value = $t;
             $srctype = PropertyType::STRING;
-        } elseif ((PropertyType::REFERENCE == $srctype || PropertyType::WEAKREFERENCE == $srctype )
+        } elseif ((PropertyType::REFERENCE == $srctype || PropertyType::WEAKREFERENCE == $srctype)
             && $value instanceof NodeInterface
         ) {
             /** @var $value NodeInterface */
