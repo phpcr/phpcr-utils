@@ -48,7 +48,6 @@ class GenericScanner extends AbstractScanner
                     $this->addToken($reader, $token);
                 }
             }
-
         }
 
         return $this->getQueue();
@@ -64,7 +63,6 @@ class GenericScanner extends AbstractScanner
     protected function consumeSpaces(ReaderInterface $reader)
     {
         if (in_array($reader->currentChar(), $this->context->getWhitespaces())) {
-
             $char = $reader->forwardChar();
             while (in_array($char, $this->context->getWhitespaces())) {
                 $char = $reader->forwardChar();
@@ -91,7 +89,6 @@ class GenericScanner extends AbstractScanner
     protected function consumeNewLine(ReaderInterface $reader)
     {
         if ($reader->currentChar() === "\n") {
-
             $token = new GenericToken(GenericToken::TK_NEWLINE, "\n");
             $this->addToken($reader, $token);
 
@@ -120,10 +117,8 @@ class GenericScanner extends AbstractScanner
     {
         $curDelimiter = $reader->currentChar();
         if (in_array($curDelimiter, $this->context->getStringDelimiters())) {
-
             $char = $reader->forwardChar();
             while ($char !== $curDelimiter) {
-
                 if ($char === "\n") {
                     throw new ScannerException($reader, "Newline detected in string");
                 }
@@ -170,7 +165,6 @@ class GenericScanner extends AbstractScanner
     {
         $nextChar = $reader->currentChar();
         foreach ($this->context->getBlockCommentDelimiters() as $beginDelim => $endDelim) {
-
             if ($nextChar === $beginDelim[0]) {
 
                 // Lookup the start delimiter
@@ -183,9 +177,7 @@ class GenericScanner extends AbstractScanner
                     $nextChar = $reader->forwardChar();
 
                     while (! $reader->isEof()) {
-
                         if ($nextChar === $endDelim[0]) {
-
                             for ($i = 1; $i <= strlen($endDelim); $i++) {
                                 $reader->forward();
                             }
@@ -203,7 +195,6 @@ class GenericScanner extends AbstractScanner
 
                     // End of file reached and no end delimiter found, error
                     throw new ScannerException($reader, "Unterminated block comment");
-
                 } else {
 
                     // Start delimiter not found, rewind the looked up characters
@@ -211,13 +202,10 @@ class GenericScanner extends AbstractScanner
 
                     return false;
                 }
-
             }
-
         }
 
         return false;
-
     }
 
     /**
@@ -231,9 +219,7 @@ class GenericScanner extends AbstractScanner
     {
         $nextChar = $reader->currentChar();
         foreach ($this->context->getLineCommentDelimiters() as $delimiter) {
-
             if ($delimiter && $nextChar === $delimiter[0]) {
-
                 for ($i = 1; $i <= strlen($delimiter); $i++) {
                     $reader->forward();
                 }
@@ -249,7 +235,6 @@ class GenericScanner extends AbstractScanner
                     $this->addToken($reader, $token);
 
                     return true;
-
                 } else {
 
                     // Rewind the looked up characters
@@ -257,7 +242,6 @@ class GenericScanner extends AbstractScanner
 
                     return false;
                 }
-
             }
         }
 

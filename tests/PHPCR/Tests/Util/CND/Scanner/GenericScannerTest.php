@@ -2,12 +2,12 @@
 
 namespace PHPCR\Tests\Util\CND\Scanner;
 
-use PHPCR\Util\CND\Scanner\GenericScanner,
-    PHPCR\Util\CND\Reader\FileReader,
-    PHPCR\Util\CND\Scanner\GenericToken as Token,
-    PHPCR\Util\CND\Scanner\TokenQueue,
-    PHPCR\Util\CND\Scanner\TokenFilter,
-    PHPCR\Util\CND\Scanner\Context\DefaultScannerContext;
+use PHPCR\Util\CND\Scanner\GenericScanner;
+use PHPCR\Util\CND\Reader\FileReader;
+use PHPCR\Util\CND\Scanner\GenericToken as Token;
+use PHPCR\Util\CND\Scanner\TokenQueue;
+use PHPCR\Util\CND\Scanner\TokenFilter;
+use PHPCR\Util\CND\Scanner\Context\DefaultScannerContext;
 
 class GenericScannerTest extends \PHPUnit_Framework_TestCase
 {
@@ -147,7 +147,6 @@ class GenericScannerTest extends \PHPUnit_Framework_TestCase
         $token = $queue->peek();
 
         while ($it->valid()) {
-
             $expectedToken = $it->current();
 
             $this->assertFalse($queue->isEof(), 'There is no more tokens, expected = ' . $expectedToken[1]);

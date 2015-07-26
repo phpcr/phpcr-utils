@@ -31,5 +31,4 @@ class TokenTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals('TOKEN(123, \'foobar\', 0, 0)', $this->token->__toString());
     }
-
 }

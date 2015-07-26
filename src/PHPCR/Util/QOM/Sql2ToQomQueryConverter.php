@@ -914,7 +914,6 @@ class Sql2ToQomQueryConverter
             } else {
                 $this->scanner->fetchNextToken();
             }
-
         }
 
         return $columns;

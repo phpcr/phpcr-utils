@@ -159,7 +159,6 @@ abstract class BaseSqlGenerator
         $sql2 = '';
 
         foreach ($orderings as $ordering) {
-
             if ($sql2 !== '') {
                 $sql2 .= ', ';
             }
@@ -288,5 +287,4 @@ abstract class BaseSqlGenerator
      * @return string
      */
     abstract public function evalPath($path);
-
 }

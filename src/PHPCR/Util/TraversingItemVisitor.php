@@ -3,7 +3,6 @@
 namespace PHPCR\Util;
 
 use SplQueue;
-
 use PHPCR\ItemInterface;
 use PHPCR\PropertyInterface;
 use PHPCR\NodeInterface;

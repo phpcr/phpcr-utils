@@ -167,5 +167,4 @@ class BufferReader implements ReaderInterface
 
         return $current;
     }
-
 }

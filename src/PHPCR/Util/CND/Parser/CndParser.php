@@ -120,7 +120,6 @@ class CndParser extends AbstractParser
         $this->tokenQueue = $scanner->scan($reader);
 
         while (!$this->tokenQueue->isEof()) {
-
             while ($this->checkToken(Token::TK_SYMBOL, '<')) {
                 $this->parseNamespaceMapping();
             }
@@ -128,7 +127,6 @@ class CndParser extends AbstractParser
             if (!$this->tokenQueue->isEof()) {
                 $this->parseNodeType();
             }
-
         }
 
         return array(
@@ -732,10 +730,8 @@ class CndParser extends AbstractParser
 
         $ops = array();
         do {
-
             $op = $this->parseQueryOperator();
             $ops[] = $op;
-
         } while ($op && $this->checkAndExpectToken(Token::TK_SYMBOL, ','));
 
         if (empty($ops)) {

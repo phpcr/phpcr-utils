@@ -268,5 +268,4 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
         // This should not happen, but who knows...
         throw new \InvalidArgumentException("Invalid operand");
     }
-
 }

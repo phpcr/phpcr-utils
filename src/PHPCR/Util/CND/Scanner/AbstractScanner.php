@@ -38,7 +38,6 @@ abstract class AbstractScanner
     public function applyFilters(Token $token)
     {
         foreach ($this->context->getTokenFilters() as $filter) {
-
             $token = $filter->filter($token);
 
             if (null === $token) {

@@ -3,7 +3,6 @@
 namespace PHPCR\Util\Console\Helper\TreeDumper;
 
 use Symfony\Component\Console\Output\OutputInterface;
-
 use PHPCR\ItemInterface;
 use PHPCR\PropertyInterface;
 use PHPCR\PropertyType;
@@ -103,5 +102,4 @@ class ConsoleDumperPropertyVisitor extends ConsoleDumperItemVisitor
             }
         }
     }
-
 }

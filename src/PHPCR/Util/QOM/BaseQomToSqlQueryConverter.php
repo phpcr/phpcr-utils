@@ -308,5 +308,4 @@ abstract class BaseQomToSqlQueryConverter
 
         return $this->generator->evalColumns($list);
     }
-
 }

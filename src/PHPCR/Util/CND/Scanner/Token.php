@@ -110,5 +110,4 @@ class Token
     {
         return $this->row;
     }
-
 }
