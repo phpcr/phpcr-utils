@@ -295,7 +295,7 @@ class Sql2Generator extends BaseSqlGenerator
     public function evalPropertyValue($propertyName, $selectorName = null)
     {
         $sql2 = null !== $selectorName ? $this->addBracketsIfNeeded($selectorName) . '.' : '';
-        if (substr($propertyName, 0, 1) !== '[') {
+        if ('*' !== $propertyName && substr($propertyName, 0, 1) !== '[') {
             $propertyName = "[$propertyName]";
         }
         $sql2 .= $propertyName;
