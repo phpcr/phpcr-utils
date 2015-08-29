@@ -89,6 +89,8 @@ class NodeHelper
     /**
      * Kept as alias of purgeWorkspace for BC compatibility
      *
+     * @param SessionInterface $session
+     *
      * @deprecated
      */
     public static function deleteAllNodes(SessionInterface $session)
@@ -102,6 +104,8 @@ class NodeHelper
      * repository.
      *
      * @param ItemInterface $item
+     *
+     * @return boolean true if $item is a system item, false otherwise
      */
     public static function isSystemItem(ItemInterface $item)
     {

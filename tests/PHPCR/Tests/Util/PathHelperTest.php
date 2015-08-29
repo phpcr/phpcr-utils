@@ -42,7 +42,7 @@ class PathHelperTest extends \PHPUnit_Framework_TestCase
      */
     public function testAssertAbsolutePathNamespace($path)
     {
-        PathHelper::assertValidAbsolutePath($path, false, true, array('jcr', 'nt'));
+        $this->assertTrue(PathHelper::assertValidAbsolutePath($path, false, true, array('jcr', 'nt')));
     }
 
     public function dataproviderValidAbsolutePathsWithNamespaces()

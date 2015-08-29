@@ -33,14 +33,14 @@ class TreeWalker
     /**
      * Filters to apply to decide whether a node needs to be visited
      *
-     * @var array()
+     * @var TreeWalkerFilterInterface[]
      */
     protected $nodeFilters = array();
 
     /**
      * Filters to apply to decide whether a property needs to be visited
      *
-     * @var array()
+     * @var TreeWalkerFilterInterface[]
      */
     protected $propertyFilters = array();
 

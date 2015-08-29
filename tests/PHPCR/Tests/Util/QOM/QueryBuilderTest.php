@@ -174,6 +174,9 @@ class QueryBuilderTest extends \PHPUnit_Framework_TestCase
         $source1 = $this->getMock('PHPCR\Query\QOM\SourceInterface', array(), array());
         $source2= $this->getMock('PHPCR\Query\QOM\SourceInterface', array(), array());
         $joinCondition = $this->getMock('PHPCR\Query\QOM\SameNodeJoinConditionInterface', array(), array());
+        $this->qf->expects($this->once())
+            ->method('join')
+            ->with($source1, $source2, $this->equalTo(\PHPCR\Query\QOM\QueryObjectModelConstantsInterface::JCR_JOIN_TYPE_INNER), $joinCondition);
         $qb = new QueryBuilder($this->qf);
         $qb->from($source1);
         $qb->join($source2, $joinCondition);
