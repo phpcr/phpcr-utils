@@ -46,41 +46,41 @@ class Sql2GeneratorTest extends BaseSqlGeneratorTest
 
     public function testChildNode()
     {
-        $literal = $this->generator->evalChildNode("/foo/bar/baz");
-        $this->assertSame("ISCHILDNODE(/foo/bar/baz)", $literal);
+        $literal = $this->generator->evalChildNode('/foo/bar/baz');
+        $this->assertSame('ISCHILDNODE(/foo/bar/baz)', $literal);
     }
 
     public function testDescendantNode()
     {
-        $literal = $this->generator->evalDescendantNode("/foo/bar/baz");
-        $this->assertSame("ISDESCENDANTNODE(/foo/bar/baz)", $literal);
+        $literal = $this->generator->evalDescendantNode('/foo/bar/baz');
+        $this->assertSame('ISDESCENDANTNODE(/foo/bar/baz)', $literal);
     }
 
     public function testPopertyExistence()
     {
-        $literal = $this->generator->evalPropertyExistence(null, "foo");
-        $this->assertSame("foo IS NOT NULL", $literal);
+        $literal = $this->generator->evalPropertyExistence(null, 'foo');
+        $this->assertSame('[foo] IS NOT NULL', $literal);
     }
 
     public function testFullTextSearch()
     {
-        $literal = $this->generator->evalFullTextSearch("data", "'foo'");
+        $literal = $this->generator->evalFullTextSearch('data', "'foo'");
         $this->assertSame("CONTAINS(data.*, 'foo')", $literal);
-        $literal = $this->generator->evalFullTextSearch("data", "'foo'", "bar");
-        $this->assertSame("CONTAINS(data.bar, 'foo')", $literal);
+        $literal = $this->generator->evalFullTextSearch('data', "'foo'", 'bar');
+        $this->assertSame("CONTAINS(data.[bar], 'foo')", $literal);
     }
 
     public function testColumns()
     {
         $literal = $this->generator->evalColumns(null);
-        $this->assertSame("*", $literal);
-        $literal = $this->generator->evalColumns(array("bar", "foo"));
-        $this->assertSame("bar, foo", $literal);
+        $this->assertSame('*', $literal);
+        $literal = $this->generator->evalColumns(array('bar', 'foo'));
+        $this->assertSame('bar, foo', $literal);
     }
 
     public function testPropertyValue()
     {
-        $literal = $this->generator->evalPropertyValue("foo");
-        $this->assertSame("foo", $literal);
+        $literal = $this->generator->evalPropertyValue('foo');
+        $this->assertSame('[foo]', $literal);
     }
 }
