@@ -417,7 +417,7 @@ class QueryBuilder
      *
      * @return QueryBuilder This QueryBuilder instance.
      *
-     * @throws RuntimeException if there is not an existing source.
+     * @throws \RuntimeException if there is not an existing source.
      */
     public function join(SourceInterface $rightSource, JoinConditionInterface $joinCondition)
     {
@@ -432,7 +432,7 @@ class QueryBuilder
      *
      * @return QueryBuilder This QueryBuilder instance.
      *
-     * @throws RuntimeException if there is not an existing source.
+     * @throws \RuntimeException if there is not an existing source.
      */
     public function innerJoin(SourceInterface $rightSource, JoinConditionInterface $joinCondition)
     {
@@ -447,7 +447,7 @@ class QueryBuilder
      *
      * @return QueryBuilder This QueryBuilder instance.
      *
-     * @throws RuntimeException if there is not an existing source.
+     * @throws \RuntimeException if there is not an existing source.
      */
     public function leftJoin(SourceInterface $rightSource, JoinConditionInterface $joinCondition)
     {
@@ -462,7 +462,7 @@ class QueryBuilder
      *
      * @return QueryBuilder This QueryBuilder instance.
      *
-     * @throws RuntimeException if there is not an existing source.
+     * @throws \RuntimeException if there is not an existing source.
      */
     public function rightJoin(SourceInterface $rightSource, JoinConditionInterface $joinCondition)
     {
@@ -478,7 +478,7 @@ class QueryBuilder
      *
      * @return QueryBuilder This QueryBuilder instance.
      *
-     * @throws RuntimeException if there is not an existing source.
+     * @throws \RuntimeException if there is not an existing source.
      */
     public function joinWithType(SourceInterface $rightSource, $joinType, JoinConditionInterface $joinCondition)
     {

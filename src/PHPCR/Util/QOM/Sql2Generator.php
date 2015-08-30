@@ -166,6 +166,8 @@ class Sql2Generator extends BaseSqlGenerator
      *
      * @param string $path
      * @param string $selectorName
+     *
+     * @return string
      */
     public function evalSameNode($path, $selectorName = null)
     {
@@ -181,6 +183,8 @@ class Sql2Generator extends BaseSqlGenerator
      *
      * @param string $path
      * @param string $selectorName
+     *
+     * @return string
      */
     public function evalChildNode($path, $selectorName = null)
     {
@@ -196,6 +200,8 @@ class Sql2Generator extends BaseSqlGenerator
      *
      * @param string $path
      * @param string $selectorName
+     *
+     * @return string
      */
     public function evalDescendantNode($path, $selectorName = null)
     {
@@ -260,6 +266,8 @@ class Sql2Generator extends BaseSqlGenerator
      * NodeName ::= 'NAME(' [selectorName] ')'
      *
      * @param string $selectorValue
+     *
+     * @return string
      */
     public function evalNodeName($selectorValue = null)
     {
@@ -270,6 +278,8 @@ class Sql2Generator extends BaseSqlGenerator
      * NodeLocalName ::= 'LOCALNAME(' [selectorName] ')'
      *
      * @param string $selectorValue
+     *
+     * @return string
      */
     public function evalNodeLocalName($selectorValue = null)
     {
@@ -280,6 +290,8 @@ class Sql2Generator extends BaseSqlGenerator
      * FullTextSearchScore ::= 'SCORE(' [selectorName] ')'
      *
      * @param string $selectorValue
+     *
+     * @return string
      */
     public function evalFullTextSearchScore($selectorValue = null)
     {
@@ -291,6 +303,8 @@ class Sql2Generator extends BaseSqlGenerator
      *
      * @param string $propertyName
      * @param string $selectorName
+     *
+     * @return string
      */
     public function evalPropertyValue($propertyName, $selectorName = null)
     {

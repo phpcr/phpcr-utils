@@ -50,6 +50,8 @@ class Sql1Generator extends BaseSqlGenerator
      *
      * @param string $path
      * @param string $selectorName
+     *
+     * @return string
      */
     public function evalChildNode($path, $selectorName = null)
     {
@@ -142,6 +144,8 @@ class Sql1Generator extends BaseSqlGenerator
      *
      * @param string $propertyName
      * @param string $selectorName unused in SQL1
+     *
+     * @return string
      */
     public function evalPropertyValue($propertyName, $selectorName = null)
     {
