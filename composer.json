@@ -29,7 +29,8 @@
     "require": {
         "php": ">=5.3.3",
         "phpcr/phpcr": "~2.1.0",
-        "symfony/console": "~2.3|~3.0"
+        "symfony/console": "~2.3|~3.0",
+        "ramsey/uuid": "~2.8"
     },
     "conflict": {
         "jackalope/jackalope-jackrabbit": "<1.2.1"
