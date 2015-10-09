@@ -66,6 +66,11 @@ valid UUID.
 We recommend all implementations to use this implementation to guarantee
 consistent behaviour.
 
+**Note**
+
+You can use [ramsey/uuid](https://github.com/ramsey/uuid) library to generate UUIDs. In this case,
+install it using Composer and generating UUIDs will be taken over by `ramsey/uuid`.
+
 ### QOM QueryBuilder
 
 The ``QueryBuilder`` is a fluent query builder with method names matching the

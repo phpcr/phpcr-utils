@@ -29,8 +29,10 @@
     "require": {
         "php": ">=5.3.3",
         "phpcr/phpcr": "~2.1.0",
-        "symfony/console": "~2.3|~3.0",
-        "ramsey/uuid": "~2.8"
+        "symfony/console": "~2.3|~3.0"
+    },
+    "suggest": {
+        "ramsey/uuid": "A PHP 5.4+ library for generating RFC 4122 version 1, 3, 4, and 5 universally unique identifiers (UUID)."
     },
     "conflict": {
         "jackalope/jackalope-jackrabbit": "<1.2.1"

@@ -2,7 +2,7 @@
 
 namespace PHPCR\Util;
 
-use Rhumsaa\Uuid\Uuid;
+use Ramsey\Uuid\Uuid;
 
 /**
  * Static helper functions to deal with Universally Unique IDs (UUID).
@@ -32,12 +32,39 @@ class UUIDHelper
     /**
      * Generate a UUID.
      *
+     * This UUID can not be guaranteed to be unique within the repository.
+     * Ensuring this is the responsibility of the repository implementation.
+     *
+     * It also allows the use of Ramsey\Uuid\Uuid class.
+     *
      * @return string a random UUID
      */
     public static function generateUUID()
     {
-        $uuid4 = Uuid::uuid4();
+        if (class_exists('Ramsey\Uuid\Uuid')) {
+            $uuid4 = Uuid::uuid4();
 
-        return $uuid4->toString();
+            return $uuid4->toString();
+        }
+
+        return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+            // 32 bits for "time_low"
+            mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+
+            // 16 bits for "time_mid"
+            mt_rand(0, 0xffff),
+
+            // 16 bits for "time_hi_and_version",
+            // four most significant bits holds version number 4
+            mt_rand(0, 0x0fff) | 0x4000,
+
+            // 16 bits, 8 bits for "clk_seq_hi_res",
+            // 8 bits for "clk_seq_low",
+            // two most significant bits holds zero and one for variant DCE1.1
+            mt_rand(0, 0x3fff) | 0x8000,
+
+            // 48 bits for "node"
+            mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
+        );
     }
 }
