@@ -2,6 +2,8 @@
 
 namespace PHPCR\Util;
 
+use Ramsey\Uuid\Uuid;
+
 /**
  * Static helper functions to deal with Universally Unique IDs (UUID).
  *
@@ -13,8 +15,9 @@ class UUIDHelper
     /**
      * Checks if the string could be a UUID.
      *
-     * @param  string  $id Possible uuid
-     * @return boolean True if the test was passed, else false.
+     * @param string $id Possible uuid
+     *
+     * @return bool True if the test was passed, else false.
      */
     public static function isUUID($id)
     {
@@ -32,10 +35,18 @@ class UUIDHelper
      * This UUID can not be guaranteed to be unique within the repository.
      * Ensuring this is the responsibility of the repository implementation.
      *
+     * It also allows the use of Ramsey\Uuid\Uuid class.
+     *
      * @return string a random UUID
      */
     public static function generateUUID()
     {
+        if (class_exists('Ramsey\Uuid\Uuid')) {
+            $uuid4 = Uuid::uuid4();
+
+            return $uuid4->toString();
+        }
+
         return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
             // 32 bits for "time_low"
             mt_rand(0, 0xffff), mt_rand(0, 0xffff),
