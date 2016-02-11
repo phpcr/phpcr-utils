@@ -1070,4 +1070,3 @@ class Sql2ToQomQueryConverter
         return $this->factory->column($selectorName, $propertyName, $columnName);
     }
 }
-
