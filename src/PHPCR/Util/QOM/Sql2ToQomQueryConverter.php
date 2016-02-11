@@ -143,7 +143,7 @@ class Sql2ToQomQueryConverter
 
         $next = $this->scanner->lookupNextToken();
         $left = $selector;
-        while(in_array(strtoupper($next), array('JOIN', 'INNER', 'RIGHT', 'LEFT'))) {
+        while (in_array(strtoupper($next), array('JOIN', 'INNER', 'RIGHT', 'LEFT'))) {
             $left = $this->parseJoin($left);
             $next = $this->scanner->lookupNextToken();
         }
