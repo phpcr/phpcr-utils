@@ -24,6 +24,7 @@ use PHPCR\Query\QOM\QueryObjectModelInterface;
 use PHPCR\Query\QOM\SameNodeJoinConditionInterface;
 use PHPCR\Query\QOM\SourceInterface;
 use PHPCR\Query\QOM\StaticOperandInterface;
+use Jackalope\Query\QOM\Selector;
 use PHPCR\Util\ValueConverter;
 
 /**
@@ -141,11 +142,13 @@ class Sql2ToQomQueryConverter
         $selector = $this->parseSelector();
 
         $next = $this->scanner->lookupNextToken();
-        if (in_array(strtoupper($next), array('JOIN', 'INNER', 'RIGHT', 'LEFT'))) {
-            return $this->parseJoin($selector);
+        $left = $selector;
+        while (in_array(strtoupper($next), array('JOIN', 'INNER', 'RIGHT', 'LEFT'))) {
+            $left = $this->parseJoin($left);
+            $next = $this->scanner->lookupNextToken();
         }
 
-        return $selector;
+        return $left;
     }
 
     /**
