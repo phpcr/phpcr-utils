@@ -27,7 +27,7 @@
         }
     ],
     "require": {
-        "php": ">=5.3.3",
+        "php": "^5.3.3|7.0.x|7.1.x",
         "phpcr/phpcr": "~2.1.0",
         "symfony/console": "~2.3|~3.0"
     },

@@ -159,12 +159,12 @@ class Sql2Scanner
             $token = strtok(" \n\t");
         }
 
-        $regexp = '';
+        $regexpTokens = array();
         foreach ($tokens as $token) {
-            $regexp[] = preg_quote($token, '/');
+            $regexpTokens[] = preg_quote($token, '/');
         }
 
-        $regexp = '/^'.implode('([ \t\n]+)', $regexp).'$/';
+        $regexp = '/^'.implode('([ \t\n]+)', $regexpTokens).'$/';
         preg_match($regexp, $sql2, $this->delimiters);
         $this->delimiters[0] = '';
 
