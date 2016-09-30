@@ -52,7 +52,7 @@ class ValueConverterTest extends \PHPUnit_Framework_TestCase
         ;
         $nodemock
             ->expects($this->any())
-            ->method('isNodetype')
+            ->method('isNodeType')
             ->with('mix:referenceable')
             ->will($this->returnValue(true))
         ;
@@ -406,7 +406,7 @@ class ValueConverterTest extends \PHPUnit_Framework_TestCase
         ;
         $nodemock
             ->expects($this->once())
-            ->method('isNodetype')
+            ->method('isNodeType')
             ->with('mix:referenceable')
             ->will($this->returnValue(false))
         ;
