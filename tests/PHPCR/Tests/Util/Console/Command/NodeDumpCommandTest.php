@@ -70,14 +70,13 @@ class NodeDumpCommandTest extends BaseCommandTest
         $this->executeCommand('phpcr:node:dump', array('identifier' => $uuid));
     }
 
+    /**
+     * @expectedException \Exception
+     */
     public function testInvalidRefFormat()
     {
-        try {
-            $this->executeCommand('phpcr:node:dump', array('--ref-format' => 'xy'));
-            $this->fail('invalid ref-format did not produce exception');
-        } catch (\Exception $e) {
-            // success
-        }
+        $this->executeCommand('phpcr:node:dump', array('--ref-format' => 'xy'));
+        $this->fail('invalid ref-format did not produce exception');
     }
 
     public function testNotFound()
