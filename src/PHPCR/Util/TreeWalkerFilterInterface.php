@@ -15,7 +15,7 @@ interface TreeWalkerFilterInterface
     /**
      * Whether to visit the passed item
      *
-     * @param \PHPCR\ItemInterface $item
+     * @param ItemInterface $item
      *
      * @return mixed
      */

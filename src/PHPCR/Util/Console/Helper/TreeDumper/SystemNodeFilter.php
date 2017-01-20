@@ -3,6 +3,7 @@
 namespace PHPCR\Util\Console\Helper\TreeDumper;
 
 use PHPCR\ItemInterface;
+use PHPCR\RepositoryException;
 use PHPCR\Util\TreeWalkerFilterInterface;
 use PHPCR\Util\NodeHelper;
 
@@ -19,6 +20,8 @@ class SystemNodeFilter implements TreeWalkerFilterInterface
      * @param ItemInterface $item
      *
      * @return boolean
+     *
+     * @throws RepositoryException
      */
     public function mustVisit(ItemInterface $item)
     {

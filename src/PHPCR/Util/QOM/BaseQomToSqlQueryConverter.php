@@ -2,6 +2,7 @@
 
 namespace PHPCR\Util\QOM;
 
+use InvalidArgumentException;
 use PHPCR\Query\QOM;
 
 /**
@@ -193,7 +194,10 @@ abstract class BaseQomToSqlQueryConverter
      * bindVariableName ::= Prefix
      *
      * @param  QOM\StaticOperandInterface $operand
+     *
      * @return string
+     *
+     * @throws InvalidArgumentException
      */
     protected function convertStaticOperand(QOM\StaticOperandInterface $operand)
     {
@@ -205,7 +209,7 @@ abstract class BaseQomToSqlQueryConverter
         }
 
         // This should not happen, but who knows...
-        throw new \InvalidArgumentException("Invalid operand");
+        throw new InvalidArgumentException('Invalid operand');
     }
 
     /**

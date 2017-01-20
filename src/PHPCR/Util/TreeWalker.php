@@ -3,8 +3,8 @@
 namespace PHPCR\Util;
 
 use PHPCR\ItemVisitorInterface;
-use \PHPCR\NodeInterface;
-use \PHPCR\PropertyInterface;
+use PHPCR\NodeInterface;
+use PHPCR\PropertyInterface;
 
 /**
  * TODO: this should base on the TraversingItemVisitor

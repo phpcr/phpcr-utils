@@ -164,7 +164,7 @@ abstract class TraversingItemVisitor implements ItemVisitorInterface
             try {
                 if ($this->breadthFirst === false) {
                     $this->entering($item, $this->currentDepth);
-                    if ($this->maxDepth == -1 || $this->currentDepth < $this->maxDepth) {
+                    if ($this->maxDepth === -1 || $this->currentDepth < $this->maxDepth) {
                         $this->currentDepth++;
                         foreach ($item->getProperties() as $property) {
                             /** @var $property PropertyInterface */
@@ -181,7 +181,7 @@ abstract class TraversingItemVisitor implements ItemVisitorInterface
                     $this->entering($item, $this->currentDepth);
                     $this->leaving($item, $this->currentDepth);
 
-                    if ($this->maxDepth == -1 || $this->currentDepth < $this->maxDepth) {
+                    if ($this->maxDepth === -1 || $this->currentDepth < $this->maxDepth) {
                         foreach ($item->getProperties() as $property) {
                             /** @var $property PropertyInterface */
                             $property->accept($this);

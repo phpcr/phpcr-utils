@@ -2,6 +2,7 @@
 
 namespace PHPCR\Util\Console\Helper\TreeDumper;
 
+use Exception;
 use Symfony\Component\Console\Output\OutputInterface;
 use PHPCR\ItemInterface;
 use PHPCR\PropertyInterface;
@@ -30,7 +31,7 @@ class ConsoleDumperPropertyVisitor extends ConsoleDumperItemVisitor
      * Instantiate property visitor
      *
      * @param OutputInterface $output
-     * @param int             $maxLineLength
+     * @param array           $options
      */
     public function __construct(OutputInterface $output, $options = array())
     {
@@ -49,11 +50,13 @@ class ConsoleDumperPropertyVisitor extends ConsoleDumperItemVisitor
      * Print information about this property
      *
      * @param ItemInterface $item the property to visit
+     *
+     * @throws Exception
      */
     public function visit(ItemInterface $item)
     {
         if (! $item instanceof PropertyInterface) {
-            throw new \Exception(sprintf('Internal error: did not expect to visit a non-property object: %s', is_object($item) ? get_class($item) : $item));
+            throw new Exception(sprintf('Internal error: did not expect to visit a non-property object: %s', is_object($item) ? get_class($item) : $item));
         }
 
         $value = $item->getString();

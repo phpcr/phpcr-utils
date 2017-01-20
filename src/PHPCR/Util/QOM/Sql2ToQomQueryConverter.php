@@ -2,6 +2,10 @@
 
 namespace PHPCR\Util\QOM;
 
+use DateTime;
+use Exception;
+use InvalidArgumentException;
+use LogicException;
 use PHPCR\PropertyType;
 use PHPCR\Query\InvalidQueryException;
 use PHPCR\Query\QOM\ChildNodeJoinConditionInterface;
@@ -22,6 +26,7 @@ use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants;
 use PHPCR\Query\QOM\QueryObjectModelFactoryInterface;
 use PHPCR\Query\QOM\QueryObjectModelInterface;
 use PHPCR\Query\QOM\SameNodeJoinConditionInterface;
+use PHPCR\Query\QOM\SelectorInterface;
 use PHPCR\Query\QOM\SourceInterface;
 use PHPCR\Query\QOM\StaticOperandInterface;
 use Jackalope\Query\QOM\Selector;
@@ -85,6 +90,8 @@ class Sql2ToQomQueryConverter
      * @param string $sql2
      *
      * @return QueryObjectModelInterface
+     *
+     * @throws InvalidQueryException
      */
     public function parse($sql2)
     {
@@ -155,7 +162,7 @@ class Sql2ToQomQueryConverter
      * 6.7.3. Selector
      * Parse an SQL2 selector and return a QOM\Selector
      *
-     * @return \PHPCR\Query\QOM\SelectorInterface
+     * @return SelectorInterface
      */
     protected function parseSelector()
     {
@@ -205,6 +212,8 @@ class Sql2ToQomQueryConverter
      * 6.7.6. Join type
      *
      * @return string
+     *
+     * @throws InvalidQueryException
      */
     protected function parseJoinType()
     {
@@ -343,7 +352,7 @@ class Sql2ToQomQueryConverter
      *
      * @return ConstraintInterface
      *
-     * @throws \Exception
+     * @throws Exception
      */
     protected function parseConstraint($lhs = null, $minprec = 0)
     {
@@ -380,9 +389,7 @@ class Sql2ToQomQueryConverter
                     // this only happens if the operator is
                     // in the $opprec-array but there is no
                     // "elseif"-branch here for this operator.
-                    throw new \Exception(
-                        "Internal error: No action is defined for operator '$op'"
-                    );
+                    throw new Exception("Internal error: No action is defined for operator '$op'");
             }
 
             $op = strtoupper($this->scanner->lookupNextToken());
@@ -463,6 +470,8 @@ class Sql2ToQomQueryConverter
      * 6.7.16 Comparison
      *
      * @return ComparisonInterface
+     *
+     * @throws InvalidQueryException
      */
     protected function parseComparison()
     {
@@ -740,7 +749,7 @@ class Sql2ToQomQueryConverter
     protected function parseCastLiteral($token)
     {
         if (!$this->scanner->tokenIs($token, 'CAST')) {
-            throw new \LogicException('parseCastLiteral when not a CAST');
+            throw new LogicException('parseCastLiteral when not a CAST');
         }
 
         $this->scanner->expectToken('(');
@@ -774,7 +783,7 @@ class Sql2ToQomQueryConverter
         $type = $this->scanner->fetchNextToken();
         try {
             $typeValue = PropertyType::valueFromName($type);
-        } catch (\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             throw new InvalidQueryException("Syntax error: attempting to cast to an invalid type '$type'");
         }
 
@@ -782,7 +791,7 @@ class Sql2ToQomQueryConverter
 
         try {
             $token = $this->valueConverter->convertType($token, $typeValue, PropertyType::STRING);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new InvalidQueryException("Syntax error: attempting to cast string '$token' to type '$type'");
         }
 
@@ -829,13 +838,13 @@ class Sql2ToQomQueryConverter
                 if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $token)) {
                     $token.= ' 00:00:00';
                 }
-                $token = \DateTime::createFromFormat('Y-m-d H:i:s', $token);
+                $token = DateTime::createFromFormat('Y-m-d H:i:s', $token);
             }
         } elseif (is_numeric($token)) {
             $token = strpos($token, '.') === false ? (int) $token : (float) $token;
-        } elseif ($token == 'true') {
+        } elseif ($token === 'true') {
             $token = true;
-        } elseif ($token == 'false') {
+        } elseif ($token === 'false') {
             $token = false;
         }
 
@@ -990,6 +999,8 @@ class Sql2ToQomQueryConverter
      * Add a selector name to the known selector names.
      *
      * @param string $selectorName
+     *
+     * @throws InvalidQueryException
      */
     protected function updateImplicitSelectorName($selectorName)
     {

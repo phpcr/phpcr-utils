@@ -47,7 +47,7 @@ class PathHelper
     public static function assertValidAbsolutePath($path, $destination = false, $throw = true, $namespacePrefixes = false)
     {
         if ((!is_string($path) && !is_numeric($path))
-            || strlen($path) == 0
+            || strlen($path) === 0
             || '/' !== $path[0]
             || strlen($path) > 1 && '/' === $path[strlen($path) - 1]
             || preg_match('-//|/\./|/\.\./-', $path)
@@ -94,7 +94,7 @@ class PathHelper
      */
     public static function assertValidLocalName($name, $throw = true)
     {
-        if ('.' == $name || '..' == $name) {
+        if ('.' === $name || '..' === $name) {
             return self::error("Name may not be parent or self identifier: $name", $throw);
         }
 
@@ -262,6 +262,8 @@ class PathHelper
      * @param string $path a valid absolute path, like /content/jobs/data
      *
      * @return string the name, that is the string after the last "/"
+     *
+     * @throws RepositoryException
      */
     public static function getNodeName($path)
     {
@@ -283,6 +285,8 @@ class PathHelper
      * @param string $path a valid absolute path
      *
      * @return string The localname
+     *
+     * @throws RepositoryException
      */
     public static function getLocalNodeName($path)
     {

@@ -34,7 +34,7 @@ class Sql1Generator extends BaseSqlGenerator
      */
     protected function getPathForDescendantQuery($path)
     {
-        if ($path == '/') {
+        if ($path === '/') {
             $sql1 = '/%';
         } else {
             $path = trim($path, "\"'/");
