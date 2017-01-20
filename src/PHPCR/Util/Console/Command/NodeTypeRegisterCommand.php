@@ -2,9 +2,10 @@
 
 namespace PHPCR\Util\Console\Command;
 
+use InvalidArgumentException;
+use PHPCR\RepositoryException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use PHPCR\SessionInterface;
@@ -62,15 +63,15 @@ EOT
 
     /**
      * {@inheritDoc}
+     *
+     * @throws InvalidArgumentException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $definitions = $input->getArgument('cnd-file');
 
         if (count($definitions) == 0) {
-            throw new \InvalidArgumentException(
-                'At least one definition (i.e. file or folder) must be specified'
-            );
+            throw new InvalidArgumentException('At least one definition (i.e. file or folder) must be specified');
         }
 
         $allowUpdate = $input->getOption('allow-update');
@@ -99,7 +100,7 @@ EOT
      * @param string           $cnd         the compact namespace and node type definition in string form
      * @param bool             $allowUpdate whether to allow updating existing node types.
      *
-     * @throws \PHPCR\RepositoryException on other errors
+     * @throws RepositoryException on other errors
      */
     protected function updateFromCnd(OutputInterface $output, SessionInterface $session, $cnd, $allowUpdate)
     {
@@ -124,6 +125,8 @@ EOT
      * @param array $definitions List of files of folders
      *
      * @return array Array of full paths to all the type node definition files.
+     *
+     * @throws InvalidArgumentException
      */
     protected function getFilePaths($definitions)
     {
@@ -141,7 +144,7 @@ EOT
                     $filePath = sprintf('%s/%s', $definition, $file);
 
                     if (!is_readable($filePath)) {
-                        throw new \InvalidArgumentException(
+                        throw new InvalidArgumentException(
                             sprintf("Node type definition file '<info>%s</info>' does not have read permissions.", $file)
                         );
                     }
@@ -150,7 +153,7 @@ EOT
                 }
             } else {
                 if (!file_exists($definition)) {
-                    throw new \InvalidArgumentException(
+                    throw new InvalidArgumentException(
                         sprintf("Node type definition file / folder '<info>%s</info>' does not exist.", $definition)
                     );
                 }

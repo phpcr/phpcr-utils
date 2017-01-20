@@ -1,6 +1,10 @@
 #!/usr/bin/env php
 <?php
 
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Helper\HelperSet;
+use PHPCR\Util\Console\Command;
+
 if (!class_exists('\Symfony\Component\Console\Application')) {
     if (is_file(__DIR__.'/../vendor/autoload.php')) {
         require __DIR__.'/../vendor/autoload.php';
@@ -19,7 +23,7 @@ $helperSet = null;
 if (file_exists($configFile)) {
     if (!is_readable($configFile)) {
         trigger_error(
-            'Configuration file [' . $configFile . '] does not have read permission.', E_USER_ERROR
+            "Configuration file [$configFile] does not have read permission.", E_USER_ERROR
         );
     }
 
@@ -33,29 +37,32 @@ if (file_exists($configFile)) {
     }
 } else {
     trigger_error(
-        'Configuration file [' . $configFile . '] does not exist. See https://github.com/doctrine/phpcr-odm/wiki/Command-line-tool-configuration', E_USER_ERROR
+        "Configuration file [$configFile] does not exist. See https://github.com/doctrine/phpcr-odm/wiki/Command-line-tool-configuration", E_USER_ERROR
     );
 }
 
-$helperSet = ($helperSet) ?: new \Symfony\Component\Console\Helper\HelperSet();
+$helperSet = $helperSet ?: new HelperSet();
 
-$cli = new \Symfony\Component\Console\Application('PHPCR Command Line Interface', '0.1');
+$cli = new Application('PHPCR Command Line Interface', '0.1');
+
 $cli->setCatchExceptions(true);
 $cli->setHelperSet($helperSet);
+
 $cli->addCommands(array(
-    new \PHPCR\Util\Console\Command\NodeDumpCommand(),
-    new \PHPCR\Util\Console\Command\NodeMoveCommand(),
-    new \PHPCR\Util\Console\Command\NodeRemoveCommand(),
-    new \PHPCR\Util\Console\Command\NodeTouchCommand(),
-    new \PHPCR\Util\Console\Command\NodesUpdateCommand(),
-    new \PHPCR\Util\Console\Command\NodeTypeListCommand(),
-    new \PHPCR\Util\Console\Command\NodeTypeRegisterCommand(),
-    new \PHPCR\Util\Console\Command\WorkspaceCreateCommand(),
-    new \PHPCR\Util\Console\Command\WorkspaceDeleteCommand(),
-    new \PHPCR\Util\Console\Command\WorkspaceExportCommand(),
-    new \PHPCR\Util\Console\Command\WorkspaceImportCommand(),
-    new \PHPCR\Util\Console\Command\WorkspacePurgeCommand(),
-    new \PHPCR\Util\Console\Command\WorkspaceQueryCommand(),
+    new Command\NodeDumpCommand(),
+    new Command\NodeMoveCommand(),
+    new Command\NodeRemoveCommand(),
+    new Command\NodeTouchCommand(),
+    new Command\NodesUpdateCommand(),
+    new Command\NodeTypeListCommand(),
+    new Command\NodeTypeRegisterCommand(),
+    new Command\WorkspaceCreateCommand(),
+    new Command\WorkspaceDeleteCommand(),
+    new Command\WorkspaceExportCommand(),
+    new Command\WorkspaceImportCommand(),
+    new Command\WorkspacePurgeCommand(),
+    new Command\WorkspaceQueryCommand(),
 ));
+
 $cli->run();
 

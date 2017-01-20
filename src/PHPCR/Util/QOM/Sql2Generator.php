@@ -2,7 +2,6 @@
 
 namespace PHPCR\Util\QOM;
 
-use PHPCR\Query\QOM;
 use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants;
 
 /**

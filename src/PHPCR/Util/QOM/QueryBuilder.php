@@ -2,6 +2,9 @@
 
 namespace PHPCR\Util\QOM;
 
+use InvalidArgumentException;
+use PHPCR\Query\QOM\ColumnInterface;
+use PHPCR\Query\QOM\OrderingInterface;
 use PHPCR\Query\QOM\QueryObjectModelFactoryInterface;
 use PHPCR\Query\QOM\DynamicOperandInterface;
 use PHPCR\Query\QOM\ConstraintInterface;
@@ -10,6 +13,7 @@ use PHPCR\Query\QOM\JoinConditionInterface;
 use PHPCR\Query\QOM\QueryObjectModelConstantsInterface;
 use PHPCR\Query\QueryInterface;
 use PHPCR\Query\QOM\QueryObjectModelInterface;
+use RuntimeException;
 
 /**
  * QueryBuilder class is responsible for dynamically create QOM queries.
@@ -96,6 +100,8 @@ class QueryBuilder
      * @param string $language  the query language
      *
      * @return QueryBuilder This QueryBuilder instance.
+     *
+     * @throws InvalidArgumentException
      */
     public function setFromQuery($statement, $language)
     {
@@ -105,7 +111,7 @@ class QueryBuilder
         }
 
         if (!$statement instanceof QueryObjectModelInterface) {
-            throw new \InvalidArgumentException("Language '$language' not supported");
+            throw new InvalidArgumentException("Language '$language' not supported");
         }
 
         $this->state = self::STATE_DIRTY;
@@ -189,7 +195,7 @@ class QueryBuilder
     /**
      * Gets the array of orderings.
      *
-     * @return \PHPCR\Query\QOM\OrderingInterface[] Orderings to apply.
+     * @return OrderingInterface[] Orderings to apply.
      */
     public function getOrderings()
     {
@@ -203,17 +209,19 @@ class QueryBuilder
      * @param string                  $order The ordering direction.
      *
      * @return QueryBuilder This QueryBuilder instance.
+     *
+     * @throws InvalidArgumentException
      */
     public function addOrderBy(DynamicOperandInterface $sort, $order = 'ASC')
     {
         $order = strtoupper($order);
 
         if (!in_array($order, array('ASC', 'DESC'))) {
-            throw new \InvalidArgumentException('Order must be one of "ASC" or "DESC"');
+            throw new InvalidArgumentException('Order must be one of "ASC" or "DESC"');
         }
 
         $this->state = self::STATE_DIRTY;
-        if ($order == 'DESC') {
+        if ($order === 'DESC') {
             $ordering = $this->qomFactory->descending($sort);
         } else {
             $ordering = $this->qomFactory->ascending($sort);
@@ -327,7 +335,7 @@ class QueryBuilder
     /**
      * Returns the columns to be selected
      *
-     * @return \PHPCR\Query\QOM\ColumnInterface[] The columns to be selected
+     * @return ColumnInterface[] The columns to be selected
      */
     public function getColumns()
     {
@@ -337,7 +345,7 @@ class QueryBuilder
     /**
      * Sets the columns to be selected
      *
-     * @param \PHPCR\Query\QOM\ColumnInterface[] $columns The columns to be selected
+     * @param ColumnInterface[] $columns The columns to be selected
      *
      * @return QueryBuilder This QueryBuilder instance.
      */
@@ -417,7 +425,7 @@ class QueryBuilder
      *
      * @return QueryBuilder This QueryBuilder instance.
      *
-     * @throws \RuntimeException if there is not an existing source.
+     * @throws RuntimeException if there is not an existing source.
      */
     public function join(SourceInterface $rightSource, JoinConditionInterface $joinCondition)
     {
@@ -432,7 +440,7 @@ class QueryBuilder
      *
      * @return QueryBuilder This QueryBuilder instance.
      *
-     * @throws \RuntimeException if there is not an existing source.
+     * @throws RuntimeException if there is not an existing source.
      */
     public function innerJoin(SourceInterface $rightSource, JoinConditionInterface $joinCondition)
     {
@@ -447,7 +455,7 @@ class QueryBuilder
      *
      * @return QueryBuilder This QueryBuilder instance.
      *
-     * @throws \RuntimeException if there is not an existing source.
+     * @throws RuntimeException if there is not an existing source.
      */
     public function leftJoin(SourceInterface $rightSource, JoinConditionInterface $joinCondition)
     {
@@ -462,7 +470,7 @@ class QueryBuilder
      *
      * @return QueryBuilder This QueryBuilder instance.
      *
-     * @throws \RuntimeException if there is not an existing source.
+     * @throws RuntimeException if there is not an existing source.
      */
     public function rightJoin(SourceInterface $rightSource, JoinConditionInterface $joinCondition)
     {
@@ -478,12 +486,12 @@ class QueryBuilder
      *
      * @return QueryBuilder This QueryBuilder instance.
      *
-     * @throws \RuntimeException if there is not an existing source.
+     * @throws RuntimeException if there is not an existing source.
      */
     public function joinWithType(SourceInterface $rightSource, $joinType, JoinConditionInterface $joinCondition)
     {
         if (!$this->source) {
-            throw new \RuntimeException('Cannot perform a join without a previous call to from');
+            throw new RuntimeException('Cannot perform a join without a previous call to from');
         }
         $this->state = self::STATE_DIRTY;
         $this->source = $this->qomFactory->join($this->source, $rightSource, $joinType, $joinCondition);

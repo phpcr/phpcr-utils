@@ -61,7 +61,7 @@ EOF
             return 1;
         }
 
-        $session->importXml(
+        $session->importXML(
             $parentPath,
             $filename,
             ImportUUIDBehaviorInterface::IMPORT_UUID_CREATE_NEW

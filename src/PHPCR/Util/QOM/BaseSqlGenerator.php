@@ -2,7 +2,6 @@
 
 namespace PHPCR\Util\QOM;
 
-use PHPCR\Query\QOM;
 use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants;
 use PHPCR\PropertyType;
 use PHPCR\Util\ValueConverter;
@@ -59,6 +58,8 @@ abstract class BaseSqlGenerator
      *
      * @param string $constraint1
      * @param string $constraint2
+     *
+     * @return string
      */
     public function evalAnd($constraint1, $constraint2)
     {
@@ -70,6 +71,8 @@ abstract class BaseSqlGenerator
      *
      * @param string $constraint1
      * @param string $constraint2
+     *
+     * @return string
      */
     public function evalOr($constraint1, $constraint2)
     {
@@ -80,6 +83,8 @@ abstract class BaseSqlGenerator
      * Not ::= 'NOT' Constraint
      *
      * @param string $constraint
+     *
+     * @return string
      */
     public function evalNot($constraint)
     {
@@ -92,6 +97,8 @@ abstract class BaseSqlGenerator
      * @param string $operand1
      * @param string $operator
      * @param string $operand2
+     *
+     * @return string
      */
     public function evalComparison($operand1, $operator, $operand2)
     {
@@ -104,6 +111,8 @@ abstract class BaseSqlGenerator
      *        GreaterThanOrEqualTo | Like
      *
      * @param string $operator
+     *
+     * @return string
      */
     public function evalOperator($operator)
     {
@@ -131,6 +140,8 @@ abstract class BaseSqlGenerator
      * LowerCase ::= 'LOWER(' DynamicOperand ')'
      *
      * @param string $operand
+     *
+     * @return string
      */
     public function evalLower($operand)
     {
@@ -141,6 +152,8 @@ abstract class BaseSqlGenerator
      * LowerCase ::= 'UPPER(' DynamicOperand ')'
      *
      * @param string $operand
+     *
+     * @return string
      */
     public function evalUpper($operand)
     {

@@ -2,6 +2,7 @@
 
 namespace PHPCR\Util\Console\Helper;
 
+use Exception;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Helper\Helper;
 use PHPCR\NodeInterface;
@@ -177,7 +178,7 @@ class PhpcrHelper extends Helper
             }
         }
 
-        throw new \Exception(sprintf(
+        throw new Exception(sprintf(
             'Query language "%s" not supported, available query languages: %s',
             $language, implode(',', $langs)
         ));

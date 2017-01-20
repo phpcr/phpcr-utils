@@ -2,6 +2,7 @@
 
 namespace PHPCR\Util\QOM;
 
+use InvalidArgumentException;
 use PHPCR\Query\QOM;
 
 /**
@@ -18,6 +19,8 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
      * @param QOM\SourceInterface $source
      *
      * @return string
+     *
+     * @throws InvalidArgumentException
      */
     protected function convertSource(QOM\SourceInterface $source)
     {
@@ -28,7 +31,7 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
             return $this->convertJoin($source);
         }
 
-        throw new \InvalidArgumentException("Invalid Source");
+        throw new InvalidArgumentException('Invalid Source');
     }
 
     /**
@@ -61,7 +64,10 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
      *             DescendantNodeJoinCondition
      *
      * @param  QOM\JoinConditionInterface $condition
+     *
      * @return string
+     *
+     * @throws InvalidArgumentException
      */
     protected function convertJoinCondition(QOM\JoinConditionInterface $condition)
     {
@@ -75,7 +81,7 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
             $sql2 = $this->convertDescendantNodeJoinCondition($condition);
         } else {
             // This should not happen, but who knows...
-            throw new \InvalidArgumentException("Invalid operand");
+            throw new InvalidArgumentException('Invalid operand');
         }
 
         return $sql2;
@@ -175,7 +181,10 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
      *           specification of the selectorName is optional
      *
      * @param  QOM\ConstraintInterface $constraint
+     *
      * @return string
+     *
+     * @throws InvalidArgumentException
      */
     protected function convertConstraint(QOM\ConstraintInterface $constraint)
     {
@@ -217,7 +226,7 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
         }
 
         // This should not happen, but who knows...
-        throw new \InvalidArgumentException("Invalid operand: " . get_class($constraint));
+        throw new InvalidArgumentException("Invalid operand: " . get_class($constraint));
     }
 
     /**
@@ -233,7 +242,10 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
      * UpperCase ::= 'UPPER(' DynamicOperand ')'
      *
      * @param  QOM\DynamicOperandInterface $operand
+     *
      * @return string
+     *
+     * @throws InvalidArgumentException
      */
     protected function convertDynamicOperand(QOM\DynamicOperandInterface $operand)
     {
@@ -266,6 +278,6 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
         }
 
         // This should not happen, but who knows...
-        throw new \InvalidArgumentException("Invalid operand");
+        throw new InvalidArgumentException('Invalid operand');
     }
 }

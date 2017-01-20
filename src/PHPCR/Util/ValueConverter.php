@@ -2,6 +2,7 @@
 
 namespace PHPCR\Util;
 
+use DateTime;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 use PHPCR\PropertyType;
@@ -124,7 +125,7 @@ class ValueConverter
             return $ret;
         }
 
-        if (PropertyType::UNDEFINED == $srctype) {
+        if (PropertyType::UNDEFINED === $srctype) {
             $srctype = $this->determineType($value);
         }
 
@@ -133,12 +134,12 @@ class ValueConverter
         }
 
         // except on noop, stream needs to be read into string first
-        if (PropertyType::BINARY == $srctype && PropertyType::BINARY != $type && is_resource($value)) {
+        if (PropertyType::BINARY === $srctype && PropertyType::BINARY !== $type && is_resource($value)) {
             $t = stream_get_contents($value);
             rewind($value);
             $value = $t;
             $srctype = PropertyType::STRING;
-        } elseif ((PropertyType::REFERENCE == $srctype || PropertyType::WEAKREFERENCE == $srctype)
+        } elseif ((PropertyType::REFERENCE === $srctype || PropertyType::WEAKREFERENCE === $srctype)
             && $value instanceof NodeInterface
         ) {
             /** @var $value NodeInterface */
@@ -152,10 +153,10 @@ class ValueConverter
             case PropertyType::STRING:
                 switch ($srctype) {
                     case PropertyType::DATE:
-                        if (! $value instanceof \DateTime) {
+                        if (! $value instanceof DateTime) {
                             throw new RepositoryException('Cannot convert a date that is not a \DateTime instance to string');
                         }
-                        /** @var $value \DateTime */
+                        /** @var $value DateTime */
                         // Milliseconds formatting is not possible in PHP so we
                         // construct it by cutting microseconds to 3 positions.
                         // This might not be as accurate as "real" rounded milliseconds.
@@ -199,10 +200,10 @@ class ValueConverter
                     case PropertyType::DECIMAL:
                         return (integer) $value;
                     case PropertyType::DATE:
-                        if (! $value instanceof \DateTime) {
+                        if (! $value instanceof DateTime) {
                             throw new RepositoryException('something weird');
                         }
-                        /** @var $value \DateTime */
+                        /** @var $value DateTime */
 
                         return $value->getTimestamp();
                 }
@@ -220,11 +221,11 @@ class ValueConverter
                     case PropertyType::DECIMAL:
                         return (double) $value;
                     case PropertyType::DATE:
-                        if (! $value instanceof \DateTime) {
+                        if (! $value instanceof DateTime) {
                             throw new RepositoryException('something weird');
                         }
 
-                        /** @var $value \DateTime */
+                        /** @var $value DateTime */
 
                         return (double) $value->getTimestamp();
                 }
@@ -237,18 +238,18 @@ class ValueConverter
                 switch ($srctype) {
                     case PropertyType::STRING:
                     case PropertyType::DATE:
-                        if ($value instanceof \DateTime) {
+                        if ($value instanceof DateTime) {
                             return $value;
                         }
                         try {
-                            return new \DateTime($value);
+                            return new DateTime($value);
                         } catch (\Exception $e) {
                             throw new ValueFormatException("String '$value' is not a valid date", null, $e);
                         }
                     case PropertyType::LONG:
                     case PropertyType::DOUBLE:
                     case PropertyType::DECIMAL:
-                        $datetime = new \DateTime();
+                        $datetime = new DateTime();
                         $datetime = $datetime->setTimestamp($value);
 
                         return $datetime;
@@ -363,7 +364,7 @@ class ValueConverter
                     case PropertyType::DECIMAL:
                         return (string) $value;
                     case PropertyType::DATE:
-                        /** @var $value \DateTime */
+                        /** @var $value DateTime */
 
                         return (string) $value->getTimestamp();
                 }

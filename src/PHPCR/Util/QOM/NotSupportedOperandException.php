@@ -2,13 +2,15 @@
 
 namespace PHPCR\Util\QOM;
 
+use RuntimeException;
+
 /**
  * A helper exception to report not yet implemented functionality.
  *
  * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
  * @license http://opensource.org/licenses/MIT MIT License
  */
-class NotSupportedOperandException extends \RuntimeException
+class NotSupportedOperandException extends RuntimeException
 {
     /**
      * Create the exception with an explaining message
@@ -17,6 +19,7 @@ class NotSupportedOperandException extends \RuntimeException
      */
     public function __construct($operand)
     {
-        parent::__construct(get_class($operand) . " is not supported by this query language");
+        $class = get_class($operand);
+        parent::__construct("$class is not supported by this query language");
     }
 }

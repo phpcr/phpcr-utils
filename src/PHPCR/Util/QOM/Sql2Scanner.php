@@ -101,6 +101,8 @@ class Sql2Scanner
      *
      * @param string  $token            The expected token
      * @param boolean $case_insensitive
+     *
+     * @throws InvalidQueryException
      */
     public function expectToken($token, $case_insensitive = true)
     {
@@ -117,6 +119,8 @@ class Sql2Scanner
      *
      * @param array   $tokens
      * @param boolean $case_insensitive
+     *
+     * @throws InvalidQueryException
      */
     public function expectTokens($tokens, $case_insensitive = true)
     {
