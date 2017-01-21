@@ -2,7 +2,6 @@
 
 namespace PHPCR\Tests\Util\Console\Command;
 
-use Symfony\Component\Console\Application;
 use PHPCR\Util\Console\Command\WorkspacePurgeCommand;
 
 class WorkspacePurgeCommandTest extends BaseCommandTest
@@ -10,6 +9,7 @@ class WorkspacePurgeCommandTest extends BaseCommandTest
     public function setUp()
     {
         parent::setUp();
+
         $this->application->add(new WorkspacePurgeCommand());
     }
 
@@ -18,15 +18,17 @@ class WorkspacePurgeCommandTest extends BaseCommandTest
         $this->session->expects($this->once())
             ->method('getRootNode')
             ->will($this->returnValue($this->node1));
+
         $this->node1->expects($this->once())
             ->method('getProperties')
-            ->will($this->returnValue(array()));
+            ->will($this->returnValue([]));
+
         $this->node1->expects($this->once())
             ->method('getNodes')
-            ->will($this->returnValue(array()));
+            ->will($this->returnValue([]));
 
-        $ct = $this->executeCommand('phpcr:workspace:purge', array(
+        $this->executeCommand('phpcr:workspace:purge', [
             '--force' => true,
-        ));
+        ]);
     }
 }

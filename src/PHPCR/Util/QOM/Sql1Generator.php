@@ -2,8 +2,6 @@
 
 namespace PHPCR\Util\QOM;
 
-use PHPCR\Query\QOM;
-
 /**
  * Generate SQL1 statements.
  *
@@ -72,9 +70,8 @@ class Sql1Generator extends BaseSqlGenerator
     public function evalDescendantNode($path)
     {
         $path = $this->getPathForDescendantQuery($path);
-        $sql1 = "jcr:path LIKE '" . $path . "'";
 
-        return $sql1;
+        return "jcr:path LIKE '" . $path . "'";
     }
 
     /**

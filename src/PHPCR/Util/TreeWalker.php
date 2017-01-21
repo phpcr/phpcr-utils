@@ -35,14 +35,14 @@ class TreeWalker
      *
      * @var TreeWalkerFilterInterface[]
      */
-    protected $nodeFilters = array();
+    protected $nodeFilters = [];
 
     /**
      * Filters to apply to decide whether a property needs to be visited
      *
      * @var TreeWalkerFilterInterface[]
      */
-    protected $propertyFilters = array();
+    protected $propertyFilters = [];
 
     /**
      * Instantiate a tree walker

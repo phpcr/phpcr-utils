@@ -2,7 +2,9 @@
 
 namespace PHPCR\Util\Console\Command;
 
+use InvalidArgumentException;
 use PHPCR\NodeInterface;
+use Symfony\Component\Console\Exception\InvalidArgumentException as CliInvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
@@ -22,6 +24,8 @@ class NodeRemoveCommand extends BaseCommand
 {
     /**
      * {@inheritDoc}
+     *
+     * @throws CliInvalidArgumentException
      */
     protected function configure()
     {
@@ -51,6 +55,9 @@ EOF
 
     /**
      * {@inheritDoc}
+     *
+     * @throws CliInvalidArgumentException
+     * @throws InvalidArgumentException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -63,7 +70,7 @@ EOF
         if ('/' === $path) {
             // even if we have only children, this will not work as we would
             // try to remove system nodes.
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 'Can not delete root node (path "/"), please use the '.
                 'workspace:purge command instead to purge the whole workspace.'
             );

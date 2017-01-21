@@ -2,10 +2,12 @@
 
 namespace PHPCR\Util\Console\Command;
 
+use Exception;
 use PHPCR\ItemNotFoundException;
 use PHPCR\RepositoryException;
 use PHPCR\PathNotFoundException;
 use PHPCR\Util\UUIDHelper;
+use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
@@ -24,6 +26,8 @@ class NodeDumpCommand extends BaseCommand
 {
     /**
      * {@inheritDoc}
+     *
+     * @throws InvalidArgumentException
      */
     protected function configure()
     {
@@ -54,6 +58,10 @@ HERE
 
     /**
      * {@inheritDoc}
+     *
+     * @throws InvalidArgumentException
+     * @throws Exception
+     * @throws RepositoryException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -72,7 +80,7 @@ HERE
         $options['max_line_length'] = $input->getOption('max_line_length');
 
         if (null !== $options['ref_format'] && !in_array($options['ref_format'], array('uuid', 'path'))) {
-            throw new \Exception('The ref-format option must be set to either "path" or "uuid"');
+            throw new Exception('The ref-format option must be set to either "path" or "uuid"');
         }
 
         $walker = $dumperHelper->getTreeWalker($output, $options);

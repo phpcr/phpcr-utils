@@ -2,36 +2,52 @@
 
 namespace PHPCR\Tests\Util\CND\Reader;
 
+use InvalidArgumentException;
 use PHPCR\Util\CND\Reader\FileReader;
+use PHPUnit_Framework_TestCase;
 
-class FileReaderTest extends \PHPUnit_Framework_TestCase
+class FileReaderTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @var string
+     */
+    private $filepath;
+
+    /**
+     * @var FileReader
+     */
+    private $reader;
+
+    /**
+     * @var array
+     */
+    private $lines;
+
     public function setUp()
     {
         $this->filepath = __DIR__ . '/../Fixtures/files/TestFile.txt';
         $this->reader = new FileReader($this->filepath);
 
-        $this->lines = array(
+        $this->lines = [
             'This is a test file...',
             '',
             '...containing dummy content.',
             ''
-        );
+        ];
 
         $this->chars = array_merge(
             preg_split('//', $this->lines[0], -1, PREG_SPLIT_NO_EMPTY),
-            array("\n", "\n"),
+            ["\n", "\n"],
             preg_split('//', $this->lines[2], -1, PREG_SPLIT_NO_EMPTY),
-            array("\n", "\n")
+            ["\n", "\n"]
         );
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function test__construct_fileNotFound()
     {
-        $reader = new FileReader('unexisting_file');
+        $this->expectException(InvalidArgumentException::class);
+
+        new FileReader('unexisting_file');
     }
 
     public function testGetPath()

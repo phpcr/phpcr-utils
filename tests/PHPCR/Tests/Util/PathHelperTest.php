@@ -2,7 +2,10 @@
 
 namespace PHPCR\Tests\Util;
 
+use PHPCR\NamespaceException;
+use PHPCR\RepositoryException;
 use PHPCR\Util\PathHelper;
+use stdClass;
 
 class PathHelperTest extends \PHPUnit_Framework_TestCase
 {
@@ -18,22 +21,23 @@ class PathHelperTest extends \PHPUnit_Framework_TestCase
 
     public function dataproviderValidAbsolutePaths()
     {
-        return array(
-            array('/parent/child'),
-            array('/'),
-            array('/jcr:foo_/b-a/0^.txt'),
-            array('/parent[7]/child'),
-            array('/parent[7]/child', true), // index is allowed in destination parent path, only not in last element
-            array('/parent[7]/child[3]'),
-        );
+        return [
+            ['/parent/child'],
+            ['/'],
+            ['/jcr:foo_/b-a/0^.txt'],
+            ['/parent[7]/child'],
+            ['/parent[7]/child', true], // index is allowed in destination parent path, only not in last element
+            ['/parent[7]/child[3]'],
+        ];
     }
 
     /**
      * @dataProvider dataproviderInvalidAbsolutePaths
-     * @expectedException \PHPCR\RepositoryException
      */
     public function testAssertInvalidAbsolutePath($path, $destination = false)
     {
+        $this->expectException(RepositoryException::class);
+
         PathHelper::assertValidAbsolutePath($path, $destination);
     }
 
@@ -42,31 +46,32 @@ class PathHelperTest extends \PHPUnit_Framework_TestCase
      */
     public function testAssertAbsolutePathNamespace($path)
     {
-        $this->assertTrue(PathHelper::assertValidAbsolutePath($path, false, true, array('jcr', 'nt')));
+        $this->assertTrue(PathHelper::assertValidAbsolutePath($path, false, true, ['jcr', 'nt']));
     }
 
     public function dataproviderValidAbsolutePathsWithNamespaces()
     {
-        return array(
-            array('/parent/child'),
-            array('/jcr:localname'),
-            array('/jcr:localname/test'),
-            array('/jcr:localname/test/nt:node'),
-            array('/jcr:localname/test/nt:node/bla'),
-            array('/'),
-            array('/jcr:foo_/b-a/0^.txt'),
-            array('/parent[7]/child'),
-            array('/jcr:localname[3]/test'),
-        );
+        return [
+            ['/parent/child'],
+            ['/jcr:localname'],
+            ['/jcr:localname/test'],
+            ['/jcr:localname/test/nt:node'],
+            ['/jcr:localname/test/nt:node/bla'],
+            ['/'],
+            ['/jcr:foo_/b-a/0^.txt'],
+            ['/parent[7]/child'],
+            ['/jcr:localname[3]/test'],
+        ];
     }
 
     /**
-     * @expectedException \PHPCR\NamespaceException
      * @expectedExceptionMessage invalidprefix and other-ns
      */
     public function testAssertInvalidNamespaceAbsolutePath()
     {
-        PathHelper::assertValidAbsolutePath('/invalidprefix:localname/other-ns:test/invalidprefix:node/bla', false, true, array('jcr', 'nt'));
+        $this->expectException(NamespaceException::class);
+
+        PathHelper::assertValidAbsolutePath('/invalidprefix:localname/other-ns:test/invalidprefix:node/bla', false, true, ['jcr', 'nt']);
     }
 
     /**
@@ -79,15 +84,15 @@ class PathHelperTest extends \PHPUnit_Framework_TestCase
 
     public function dataproviderInvalidAbsolutePaths()
     {
-        return array(
-            array('/parent/child[7]', true), // destination last element with index
-            array('parent'), // not absolute
-            array('/parent//child'),
-            array('//'),
-            array('/parent/../child'),
-            array('/parent/./child'),
-            array('/parent/child/'),
-        );
+        return [
+            ['/parent/child[7]', true], // destination last element with index
+            ['parent'], // not absolute
+            ['/parent//child'],
+            ['//'],
+            ['/parent/../child'],
+            ['/parent/./child'],
+            ['/parent/child/'],
+        ];
     }
 
     // assertValidLocalName tests
@@ -104,21 +109,22 @@ class PathHelperTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider dataproviderInvalidLocalNames
-     * @expectedException \PHPCR\RepositoryException
      */
     public function testAssertInvalidLocalName($name)
     {
+        $this->expectException(RepositoryException::class);
+
         PathHelper::assertValidLocalName($name);
     }
 
     public function dataproviderInvalidLocalNames()
     {
-        return array(
-            array('jcr:nodename'),
-            array('/path'),
-            array('.'),
-            array('..')
-        );
+        return [
+            ['jcr:nodename'],
+            ['/path'],
+            ['.'],
+            ['..']
+        ];
     }
 
     // normalizePath tests
@@ -133,21 +139,22 @@ class PathHelperTest extends \PHPUnit_Framework_TestCase
 
     public static function dataproviderNormalizePath()
     {
-        return array(
-            array('/',           '/'),
-            array('/../foo',     '/foo'),
-            array('/../',        '/'),
-            array('/foo/../bar', '/bar'),
-            array('/foo/./bar',  '/foo/bar'),
-        );
+        return [
+            ['/',           '/'],
+            ['/../foo',     '/foo'],
+            ['/../',        '/'],
+            ['/foo/../bar', '/bar'],
+            ['/foo/./bar',  '/foo/bar'],
+        ];
     }
 
     /**
      * @dataProvider dataproviderNormalizePathInvalid
-     * @expectedException \PHPCR\RepositoryException
      */
     public function testNormalizePathInvalidThrow($input)
     {
+        $this->expectException(RepositoryException::class);
+
         PathHelper::normalizePath($input);
     }
 
@@ -161,13 +168,13 @@ class PathHelperTest extends \PHPUnit_Framework_TestCase
 
     public static function dataproviderNormalizePathInvalid()
     {
-        return array(
-            array('foo/bar'),
-            array('bar'),
-            array('/foo/bar/'),
-            array(''),
-            array(new \stdClass()),
-        );
+        return [
+            ['foo/bar'],
+            ['bar'],
+            ['/foo/bar/'],
+            [''],
+            [new stdClass()],
+        ];
     }
 
     // absolutizePath tests
@@ -182,12 +189,12 @@ class PathHelperTest extends \PHPUnit_Framework_TestCase
 
     public static function dataproviderAbsolutizePath()
     {
-        return array(
-            array('/../foo',    '/',    '/foo'),
-            array('../',        '/',    '/'),
-            array('../foo/bar', '/baz', '/foo/bar'),
-            array('foo/./bar',  '/baz', '/baz/foo/bar'),
-        );
+        return [
+            ['/../foo',    '/',    '/foo'],
+            ['../',        '/',    '/'],
+            ['../foo/bar', '/baz', '/foo/bar'],
+            ['foo/./bar',  '/baz', '/baz/foo/bar'],
+        ];
     }
 
     /**
@@ -209,13 +216,13 @@ class PathHelperTest extends \PHPUnit_Framework_TestCase
 
     public static function dataproviderAbsolutizePathInvalid()
     {
-        return array(
-            array('', '/context', false),
-            array(null,    '/context',    false),
-            array('foo',        null,    false),
-            array(new \stdClass(), '/context', false),
-            array('foo[2]',  '/bar', true),
-        );
+        return [
+            ['', '/context', false],
+            [null,    '/context',    false],
+            ['foo',        null,    false],
+            [new stdClass(), '/context', false],
+            ['foo[2]',  '/bar', true],
+        ];
     }
 
     // relativizePath tests
@@ -230,18 +237,19 @@ class PathHelperTest extends \PHPUnit_Framework_TestCase
 
     public static function dataproviderRelativizePath()
     {
-        return array(
-            array('/parent/path/child', '/parent', 'path/child'),
-            array('/child', '/', 'child'),
-        );
+        return [
+            ['/parent/path/child', '/parent', 'path/child'],
+            ['/child', '/', 'child'],
+        ];
     }
 
     /**
-     * @expectedException \PHPCR\RepositoryException
      * @dataProvider dataproviderRelativizePathInvalid
      */
     public function testRelativizePathInvalidThrow($inputPath, $context)
     {
+        $this->expectException(RepositoryException::class);
+
         PathHelper::relativizePath($inputPath, $context);
     }
 
@@ -255,10 +263,10 @@ class PathHelperTest extends \PHPUnit_Framework_TestCase
 
     public static function dataproviderRelativizePathInvalid()
     {
-        return array(
-            array('/path', '/context'),
-            array('/parent', '/parent/child'),
-        );
+        return [
+            ['/path', '/context'],
+            ['/parent', '/parent/child'],
+        ];
     }
 
     // getParentPath tests
@@ -273,12 +281,12 @@ class PathHelperTest extends \PHPUnit_Framework_TestCase
 
     public function dataproviderParentPath()
     {
-        return array(
-            array('/parent/child', '/parent'),
-            array('/jcr:parent/ns:child', '/jcr:parent'),
-            array('/child', '/'),
-            array('/', '/'),
-        );
+        return [
+            ['/parent/child', '/parent'],
+            ['/jcr:parent/ns:child', '/jcr:parent'],
+            ['/child', '/'],
+            ['/', '/'],
+        ];
     }
 
     // getNodeName tests
@@ -310,21 +318,22 @@ class PathHelperTest extends \PHPUnit_Framework_TestCase
 
     public function dataproviderGetLocalNodeName()
     {
-        return array(
-            array('/parent/child', 'child'),
-            array('/foo:child', 'child'),
-            array('/parent/ns:child', 'child'),
-            array('/ns:parent/child:foo', 'foo'),
-            array('/', ''),
-        );
+        return [
+            ['/parent/child', 'child'],
+            ['/foo:child', 'child'],
+            ['/parent/ns:child', 'child'],
+            ['/ns:parent/child:foo', 'foo'],
+            ['/', ''],
+        ];
     }
 
     /**
-     * @expectedException \PHPCR\RepositoryException
      * @expectedExceptionMessage must be an absolute path
      */
     public function testGetNodeNameMustBeAbsolute()
     {
+        $this->expectException(RepositoryException::class);
+
         PathHelper::getNodeName('foobar');
     }
 
@@ -340,11 +349,11 @@ class PathHelperTest extends \PHPUnit_Framework_TestCase
 
     public function dataproviderPathDepth()
     {
-        return array(
-            array('/', 0),
-            array('/foo', 1),
-            array('/foo/bar', 2),
-            array('/foo/bar/', 2),
-        );
+        return [
+            ['/', 0],
+            ['/foo', 1],
+            ['/foo/bar', 2],
+            ['/foo/bar/', 2],
+        ];
     }
 }

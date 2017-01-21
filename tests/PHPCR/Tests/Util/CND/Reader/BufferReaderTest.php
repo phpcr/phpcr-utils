@@ -3,15 +3,16 @@
 namespace PHPCR\Tests\Util\CND\Reader;
 
 use PHPCR\Util\CND\Reader\BufferReader;
+use PHPUnit_Framework_TestCase;
 
-class BufferReaderTest extends \PHPUnit_Framework_TestCase
+class BufferReaderTest extends PHPUnit_Framework_TestCase
 {
     public function test__construct()
     {
         $buffer = "Some random\nor\r\nstring";
         $reader = new BufferReader($buffer);
 
-        $this->assertInstanceOf('\PHPCR\Util\CND\Reader\BufferReader', $reader);
+        $this->assertInstanceOf(BufferReader::class, $reader);
         $this->assertAttributeEquals(str_replace("\r\n", "\n", $buffer) . $reader->getEofMarker(), 'buffer', $reader);
         $this->assertAttributeEquals(0, 'startPos', $reader);
         $this->assertAttributeEquals(0, 'forwardPos', $reader);
@@ -89,7 +90,7 @@ class BufferReaderTest extends \PHPUnit_Framework_TestCase
     {
         $reader = new BufferReader('');
 
-        $this->assertInstanceOf('\PHPCR\Util\CND\Reader\BufferReader', $reader);
+        $this->assertInstanceOf(BufferReader::class, $reader);
         $this->assertAttributeEquals($reader->getEofMarker(), 'buffer', $reader);
         $this->assertAttributeEquals(0, 'startPos', $reader);
         $this->assertAttributeEquals(0, 'forwardPos', $reader);

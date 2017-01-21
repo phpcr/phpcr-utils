@@ -41,7 +41,7 @@ class UUIDHelper
      */
     public static function generateUUID()
     {
-        if (class_exists('Ramsey\Uuid\Uuid')) {
+        if (class_exists(Uuid::class)) {
             $uuid4 = Uuid::uuid4();
 
             return $uuid4->toString();

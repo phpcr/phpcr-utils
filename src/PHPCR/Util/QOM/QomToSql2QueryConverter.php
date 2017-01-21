@@ -193,32 +193,39 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
                 $this->convertConstraint($constraint->getConstraint1()),
                 $this->convertConstraint($constraint->getConstraint2()));
         }
+
         if ($constraint instanceof QOM\OrInterface) {
             return $this->generator->evalOr(
                 $this->convertConstraint($constraint->getConstraint1()),
                 $this->convertConstraint($constraint->getConstraint2()));
         }
+
         if ($constraint instanceof QOM\NotInterface) {
             return $this->generator->evalNot($this->convertConstraint($constraint->getConstraint()));
         }
+
         if ($constraint instanceof QOM\ComparisonInterface) {
             return $this->convertComparison($constraint);
         }
+
         if ($constraint instanceof QOM\PropertyExistenceInterface) {
             return $this->convertPropertyExistence($constraint);
         } elseif ($constraint instanceof QOM\FullTextSearchInterface) {
             return $this->convertFullTextSearch($constraint);
         }
+
         if ($constraint instanceof QOM\SameNodeInterface) {
             return $this->generator->evalSameNode(
                 $this->convertPath($constraint->getPath()),
                 $constraint->getSelectorName());
         }
+
         if ($constraint instanceof QOM\ChildNodeInterface) {
             return $this->generator->evalChildNode(
                 $this->convertPath($constraint->getParentPath()),
                 $constraint->getSelectorName());
         }
+
         if ($constraint instanceof QOM\DescendantNodeInterface) {
             return $this->generator->evalDescendantNode(
                 $this->convertPath($constraint->getAncestorPath()),
@@ -252,6 +259,7 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
         if ($operand instanceof QOM\PropertyValueInterface) {
             return $this->convertPropertyValue($operand);
         }
+
         if ($operand instanceof QOM\LengthInterface) {
             return $this->generator->evalLength($this->convertPropertyValue($operand->getPropertyValue()));
         }
@@ -263,14 +271,17 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
         if ($operand instanceof QOM\NodeLocalNameInterface) {
             return $this->generator->evalNodeLocalName($operand->getSelectorName());
         }
+
         if ($operand instanceof QOM\FullTextSearchScoreInterface) {
             return $this->generator->evalFullTextSearchScore($operand->getSelectorName());
         }
+
         if ($operand instanceof QOM\LowerCaseInterface) {
             $operand = $this->convertDynamicOperand($operand->getOperand());
 
             return $this->generator->evalLower($operand);
         }
+
         if ($operand instanceof QOM\UpperCaseInterface) {
             $operand = $this->convertDynamicOperand($operand->getOperand());
 

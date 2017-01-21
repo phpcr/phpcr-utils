@@ -240,7 +240,7 @@ class NodeHelper
          * as a basis. The way in which the local name is constructed from the hint
          * may vary across implementations.
          */
-        $matches = array();
+        $matches = [];
         if (preg_match('#^\\{([^\\}]+)\\}([a-zA-Z][a-zA-Z0-9]*)$#', $nameHint, $matches)) {
             $ns = $matches[1];
             $name = $matches[2];
@@ -294,7 +294,7 @@ class NodeHelper
      */
     public static function calculateOrderBefore(array $old, array $new)
     {
-        $reorders = array();
+        $reorders = [];
 
         //check for deleted items
         $newIndex = array_flip($new);

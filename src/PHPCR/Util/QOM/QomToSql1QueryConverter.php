@@ -18,6 +18,8 @@ class QomToSql1QueryConverter extends BaseQomToSqlQueryConverter
      *
      * @param  QOM\SourceInterface $source
      * @return string
+     *
+     * @throws InvalidArgumentException
      */
     protected function convertSource(QOM\SourceInterface $source)
     {
@@ -51,29 +53,36 @@ class QomToSql1QueryConverter extends BaseQomToSqlQueryConverter
                 $this->convertConstraint($constraint->getConstraint1()),
                 $this->convertConstraint($constraint->getConstraint2()));
         }
+
         if ($constraint instanceof QOM\OrInterface) {
             return $this->generator->evalOr(
                 $this->convertConstraint($constraint->getConstraint1()),
                 $this->convertConstraint($constraint->getConstraint2()));
         }
+
         if ($constraint instanceof QOM\NotInterface) {
             return $this->generator->evalNot($this->convertConstraint($constraint->getConstraint()));
         }
+
         if ($constraint instanceof QOM\ComparisonInterface) {
             return $this->convertComparison($constraint);
         }
+
         if ($constraint instanceof QOM\PropertyExistenceInterface) {
             return $this->convertPropertyExistence($constraint);
         } elseif ($constraint instanceof QOM\FullTextSearchInterface) {
             return $this->convertFullTextSearch($constraint);
         }
+
         if ($constraint instanceof QOM\SameNodeInterface) {
             throw new NotSupportedConstraintException($constraint);
         }
+
         if ($constraint instanceof QOM\ChildNodeInterface) {
             return $this->generator->evalChildNode(
                 $this->convertPath($constraint->getParentPath()));
         }
+
         if ($constraint instanceof QOM\DescendantNodeInterface) {
             return $this->generator->evalDescendantNode(
                 $this->convertPath($constraint->getAncestorPath()));
@@ -102,23 +111,29 @@ class QomToSql1QueryConverter extends BaseQomToSqlQueryConverter
         if ($operand instanceof QOM\PropertyValueInterface) {
             return $this->convertPropertyValue($operand);
         }
+
         if ($operand instanceof QOM\LengthInterface) {
             throw new NotSupportedOperandException($operand);
         }
+
         if ($operand instanceof QOM\NodeNameInterface) {
             throw new NotSupportedOperandException($operand);
         }
+
         if ($operand instanceof QOM\NodeLocalNameInterface) {
             throw new NotSupportedOperandException($operand);
         }
+
         if ($operand instanceof QOM\FullTextSearchScoreInterface) {
             throw new NotSupportedOperandException($operand);
         }
+
         if ($operand instanceof QOM\LowerCaseInterface) {
             $operand = $this->convertDynamicOperand($operand->getOperand());
 
             return $this->generator->evalLower($operand);
         }
+
         if ($operand instanceof QOM\UpperCaseInterface) {
             $operand = $this->convertDynamicOperand($operand->getOperand());
 

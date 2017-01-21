@@ -156,14 +156,14 @@ class Sql2Scanner
      */
     protected function scan($sql2)
     {
-        $tokens = array();
+        $tokens = [];
         $token = strtok($sql2, " \n\t");
         while ($token !== false) {
             $this->tokenize($tokens, $token);
             $token = strtok(" \n\t");
         }
 
-        $regexpTokens = array();
+        $regexpTokens = [];
         foreach ($tokens as $token) {
             $regexpTokens[] = preg_quote($token, '/');
         }
@@ -187,7 +187,7 @@ class Sql2Scanner
         $buffer = '';
         for ($i = 0; $i < strlen($token); $i++) {
             $char = trim(substr($token, $i, 1));
-            if (in_array($char, array('.', ',', '(', ')', '='))) {
+            if (in_array($char, ['.', ',', '(', ')', '='])) {
                 if ($buffer !== '') {
                     $tokens[] = $buffer;
                     $buffer = '';

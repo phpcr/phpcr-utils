@@ -2,9 +2,9 @@
 
 namespace PHPCR\Tests\Util\Console\Command;
 
+use Exception;
 use PHPCR\ItemNotFoundException;
 use PHPCR\Util\UUIDHelper;
-use Symfony\Component\Console\Application;
 use PHPCR\Util\TreeWalker;
 use PHPCR\Util\Console\Command\NodeDumpCommand;
 
@@ -16,9 +16,10 @@ class NodeDumpCommandTest extends BaseCommandTest
     public function setUp()
     {
         parent::setUp();
-        $this->treeWalker = $this->getMockBuilder(
-            'PHPCR\Util\TreeWalker'
-        )->disableOriginalConstructor()->getMock();
+        $this->treeWalker = $this->getMockBuilder(TreeWalker::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
 
         $ndCommand = new NodeDumpCommand();
         $this->application->add($ndCommand);
@@ -31,12 +32,14 @@ class NodeDumpCommandTest extends BaseCommandTest
             ->method('getTreeWalker')
             ->will($this->returnValue($this->treeWalker))
         ;
+
         $this->session
             ->expects($this->once())
             ->method('getNode')
             ->with('/')
             ->will($this->returnValue($this->node1))
         ;
+
         $this->treeWalker
             ->expects($this->once())
             ->method('traverse')
@@ -55,27 +58,28 @@ class NodeDumpCommandTest extends BaseCommandTest
             ->method('getTreeWalker')
             ->will($this->returnValue($this->treeWalker))
         ;
+
         $this->session
             ->expects($this->once())
             ->method('getNodeByIdentifier')
             ->with($uuid)
             ->will($this->returnValue($this->node1))
         ;
+
         $this->treeWalker
             ->expects($this->once())
             ->method('traverse')
             ->with($this->node1)
         ;
 
-        $this->executeCommand('phpcr:node:dump', array('identifier' => $uuid));
+        $this->executeCommand('phpcr:node:dump', ['identifier' => $uuid]);
     }
 
-    /**
-     * @expectedException \Exception
-     */
     public function testInvalidRefFormat()
     {
-        $this->executeCommand('phpcr:node:dump', array('--ref-format' => 'xy'));
+        $this->expectException(Exception::class);
+
+        $this->executeCommand('phpcr:node:dump', ['--ref-format' => 'xy']);
         $this->fail('invalid ref-format did not produce exception');
     }
 
@@ -88,7 +92,7 @@ class NodeDumpCommandTest extends BaseCommandTest
             ->will($this->throwException(new ItemNotFoundException()))
         ;
 
-        $ct = $this->executeCommand('phpcr:node:dump', array(), 1);
+        $ct = $this->executeCommand('phpcr:node:dump', [], 1);
         $this->assertContains('does not exist', $ct->getDisplay());
     }
 }

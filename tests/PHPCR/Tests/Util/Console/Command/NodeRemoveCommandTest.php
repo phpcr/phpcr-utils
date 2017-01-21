@@ -2,7 +2,7 @@
 
 namespace PHPCR\Tests\Util\Console\Command;
 
-use Symfony\Component\Console\Application;
+use LogicException;
 use PHPCR\Util\Console\Command\NodeRemoveCommand;
 
 class NodeRemoveCommandTest extends BaseCommandTest
@@ -10,6 +10,7 @@ class NodeRemoveCommandTest extends BaseCommandTest
     public function setUp()
     {
         parent::setUp();
+
         $this->application->add(new NodeRemoveCommand());
     }
 
@@ -19,18 +20,17 @@ class NodeRemoveCommandTest extends BaseCommandTest
             ->method('removeItem')
             ->with('/cms');
 
-        $ct = $this->executeCommand('phpcr:node:remove', array(
+        $this->executeCommand('phpcr:node:remove', array(
             '--force' => true,
             'path' => '/cms',
         ));
     }
 
-    /**
-     * @expectedException \LogicException
-     */
     public function testRemoveRoot()
     {
-        $ct = $this->executeCommand('phpcr:node:remove', array(
+        $this->expectException(LogicException::class);
+
+        $this->executeCommand('phpcr:node:remove', array(
             '--force' => true,
             'path' => '/',
         ));

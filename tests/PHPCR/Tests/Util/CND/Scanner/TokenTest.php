@@ -3,9 +3,15 @@
 namespace PHPCR\Tests\Util\CND\Scanner;
 
 use PHPCR\Util\CND\Scanner\Token;
+use PHPUnit_Framework_TestCase;
 
-class TokenTest extends \PHPUnit_Framework_TestCase
+class TokenTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @var Token
+     */
+    private $token;
+
     public function setUp()
     {
         $this->token = new Token(123, 'foobar');
