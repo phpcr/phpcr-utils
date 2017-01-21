@@ -4,9 +4,35 @@ namespace PHPCR\Tests\Util\CND\Scanner;
 
 use PHPCR\Util\CND\Scanner\Token;
 use PHPCR\Util\CND\Scanner\TokenQueue;
+use PHPUnit_Framework_TestCase;
 
-class TokenQueueTest extends \PHPUnit_Framework_TestCase
+class TokenQueueTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * @var Token
+     */
+    private $token0;
+
+    /**
+     * @var Token
+     */
+    private $token1;
+
+    /**
+     * @var Token
+     */
+    private $token2;
+
+    /**
+     * @var Token
+     */
+    private $token3;
+
+    /**
+     * @var TokenQueue
+     */
+    private $queue;
+
     public function setUp()
     {
         $this->token0 = new Token(0, 'token 0');
@@ -24,13 +50,13 @@ class TokenQueueTest extends \PHPUnit_Framework_TestCase
     public function testAdd()
     {
         $queue = new TokenQueue();
-        $this->assertAttributeEquals(array(), 'tokens', $queue);
+        $this->assertAttributeEquals([], 'tokens', $queue);
 
         $queue->add($this->token0);
-        $this->assertAttributeEquals(array($this->token0), 'tokens', $queue);
+        $this->assertAttributeEquals([$this->token0], 'tokens', $queue);
 
         $queue->add($this->token1);
-        $this->assertAttributeEquals(array($this->token0, $this->token1), 'tokens', $queue);
+        $this->assertAttributeEquals([$this->token0, $this->token1], 'tokens', $queue);
     }
 
     public function testResetAndPeek()

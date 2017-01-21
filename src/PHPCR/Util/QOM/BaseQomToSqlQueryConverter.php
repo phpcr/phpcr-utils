@@ -301,7 +301,8 @@ abstract class BaseQomToSqlQueryConverter
      */
     protected function convertColumns(array $columns)
     {
-        $list = array();
+        $list = [];
+
         /** @var $column QOM\ColumnInterface */
         foreach ($columns as $column) {
             $selector = $column->getSelectorName();

@@ -2,7 +2,9 @@
 
 namespace PHPCR\Tests\Util;
 
-class TraversingItemVisitorTest extends \PHPUnit_Framework_TestCase
+use PHPUnit_Framework_TestCase;
+
+class TraversingItemVisitorTest extends PHPUnit_Framework_TestCase
 {
     public function testVisitor()
     {

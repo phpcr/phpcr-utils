@@ -150,7 +150,8 @@ class Sql2ToQomQueryConverter
 
         $next = $this->scanner->lookupNextToken();
         $left = $selector;
-        while (in_array(strtoupper($next), array('JOIN', 'INNER', 'RIGHT', 'LEFT'))) {
+
+        while (in_array(strtoupper($next), ['JOIN', 'INNER', 'RIGHT', 'LEFT'])) {
             $left = $this->parseJoin($left);
             $next = $this->scanner->lookupNextToken();
         }
@@ -317,7 +318,7 @@ class Sql2ToQomQueryConverter
      */
     protected function parseChildNodeJoinCondition()
     {
-        $this->scanner->expectTokens(array('ISCHILDNODE', '('));
+        $this->scanner->expectTokens(['ISCHILDNODE', '(']);
         $child = $this->fetchTokenWithoutBrackets();
         $this->scanner->expectToken(',');
         $parent = $this->fetchTokenWithoutBrackets();
@@ -532,7 +533,7 @@ class Sql2ToQomQueryConverter
             return $this->factory->notConstraint($this->factory->propertyExistence($selectorName, $prop));
         }
 
-        $this->scanner->expectTokens(array('NOT', 'NULL'));
+        $this->scanner->expectTokens(['NOT', 'NULL']);
 
         return $this->factory->propertyExistence($selectorName, $prop);
     }
@@ -544,7 +545,7 @@ class Sql2ToQomQueryConverter
      */
     protected function parseFullTextSearch()
     {
-        $this->scanner->expectTokens(array('CONTAINS', '('));
+        $this->scanner->expectTokens(['CONTAINS', '(']);
 
         list($selectorName, $propertyName) = $this->parseIdentifier();
         $this->scanner->expectToken(',');
@@ -559,7 +560,7 @@ class Sql2ToQomQueryConverter
      */
     protected function parseSameNode()
     {
-        $this->scanner->expectTokens(array('ISSAMENODE', '('));
+        $this->scanner->expectTokens(['ISSAMENODE', '(']);
         if ($this->scanner->tokenIs($this->scanner->lookupNextToken(1), ',')) {
             $selectorName = $this->scanner->fetchNextToken();
             $this->scanner->expectToken(',');
@@ -578,7 +579,7 @@ class Sql2ToQomQueryConverter
      */
     protected function parseChildNode()
     {
-        $this->scanner->expectTokens(array('ISCHILDNODE', '('));
+        $this->scanner->expectTokens(['ISCHILDNODE', '(']);
         if ($this->scanner->tokenIs($this->scanner->lookupNextToken(1), ',')) {
             $selectorName = $this->scanner->fetchNextToken();
             $this->scanner->expectToken(',');
@@ -597,7 +598,7 @@ class Sql2ToQomQueryConverter
      */
     protected function parseDescendantNode()
     {
-        $this->scanner->expectTokens(array('ISDESCENDANTNODE', '('));
+        $this->scanner->expectTokens(['ISDESCENDANTNODE', '(']);
         if ($this->scanner->tokenIs($this->scanner->lookupNextToken(1), ',')) {
             $selectorName = $this->scanner->fetchNextToken();
             $this->scanner->expectToken(',');
@@ -856,8 +857,9 @@ class Sql2ToQomQueryConverter
      */
     protected function parseOrderings()
     {
-        $orderings = array();
+        $orderings = [];
         $continue = true;
+
         while ($continue) {
             $orderings[] = $this->parseOrdering();
             if ($this->scanner->tokenIs($this->scanner->lookupNextToken(), ',')) {
@@ -911,10 +913,10 @@ class Sql2ToQomQueryConverter
         if ($this->scanner->lookupNextToken() === '*') {
             $this->scanner->fetchNextToken();
 
-            return array();
+            return [];
         }
 
-        $columns = array();
+        $columns = [];
         $hasNext = true;
 
         while ($hasNext) {
@@ -940,7 +942,7 @@ class Sql2ToQomQueryConverter
      */
     protected function buildColumns($data)
     {
-        $columns = array();
+        $columns = [];
         foreach ($data as $col) {
             $columns[] = $this->buildColumn($col);
         }

@@ -153,7 +153,7 @@ abstract class TraversingItemVisitor implements ItemVisitorInterface
      */
     public function visit(ItemInterface $item)
     {
-        if ($this->currentDepth == 0) {
+        if ($this->currentDepth === 0) {
             $this->currentDepth = $item->getDepth();
         }
         if ($item instanceof PropertyInterface) {

@@ -2,6 +2,7 @@
 
 namespace PHPCR\Util\QOM;
 
+use DateTime;
 use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants;
 use PHPCR\PropertyType;
 use PHPCR\Util\ValueConverter;
@@ -240,11 +241,11 @@ abstract class BaseSqlGenerator
      */
     public function evalFullText($string)
     {
-        $illegalCharacters = array(
+        $illegalCharacters = [
             '!' => '\\!', '(' => '\\(', ':' => '\\:', '^' => '\\^',
             '[' => '\\[', ']' => '\\]', '{' => '\\{', '}' => '\\}',
             '\"' => '\\\"', '?' => '\\?', "'" => "''",
-        );
+        ];
 
         return strtr($string, $illegalCharacters);
     }
@@ -258,7 +259,7 @@ abstract class BaseSqlGenerator
      */
     public function evalLiteral($literal)
     {
-        if ($literal instanceof \DateTime) {
+        if ($literal instanceof DateTime) {
             $string = $this->valueConverter->convertType($literal, PropertyType::STRING);
 
             return $this->evalCastLiteral($string, 'DATE');

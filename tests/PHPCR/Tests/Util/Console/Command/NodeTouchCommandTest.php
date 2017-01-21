@@ -2,9 +2,11 @@
 
 namespace PHPCR\Tests\Util\Console\Command;
 
+use Exception;
+use PHPCR\NodeType\NodeTypeInterface;
 use PHPCR\PathNotFoundException;
+use PHPCR\Tests\Stubs\MockNode;
 use PHPCR\Util\Console\Helper\PhpcrHelper;
-use Symfony\Component\Console\Application;
 use PHPCR\Util\Console\Command\NodeTouchCommand;
 
 /**
@@ -20,29 +22,33 @@ class NodeTouchCommandTest extends BaseCommandTest
     public function setUp()
     {
         parent::setUp();
+
         $command = new NodeTouchCommand;
         $this->application->add($command);
 
-        // override default concrete instance with mock
-        $this->phpcrHelper = $this->getMockBuilder('PHPCR\Util\Console\Helper\PhpcrHelper')
+        // Override default concrete instance with mock
+        $this->phpcrHelper = $this->getMockBuilder(PhpcrHelper::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
+
         $this->phpcrHelper->expects($this->any())
             ->method('getSession')
             ->will($this->returnValue($this->session))
         ;
+
         $this->phpcrHelper->expects($this->any())
             ->method('getName')
             ->will($this->returnValue('phpcr'))
         ;
+
         $this->helperSet->set($this->phpcrHelper);
     }
 
     public function testTouch()
     {
         $node = $this->node1;
-        $child = $this->getMock('PHPCR\Tests\Stubs\MockNode');
+        $child = $this->createMock(MockNode::class);
 
         $this->session->expects($this->exactly(2))
             ->method('getNode')
@@ -53,7 +59,7 @@ class NodeTouchCommandTest extends BaseCommandTest
                     case '/cms':
                         throw new PathNotFoundException();
                 }
-                throw new \Exception('Unexpected ' . $path);
+                throw new Exception('Unexpected ' . $path);
             }));
 
         $this->node1->expects($this->once())
@@ -65,14 +71,12 @@ class NodeTouchCommandTest extends BaseCommandTest
         $this->session->expects($this->once())
             ->method('save');
 
-        $this->executeCommand('phpcr:node:touch', array(
-            'path' => '/cms',
-        ));
+        $this->executeCommand('phpcr:node:touch', ['path' => '/cms']);
     }
 
     public function testUpdate()
     {
-        $nodeType = $this->getMock('PHPCR\NodeType\NodeTypeInterface');
+        $nodeType = $this->createMock(NodeTypeInterface::class);
         $nodeType->expects($this->once())
             ->method('getName')
             ->will($this->returnValue('nt:unstructured'))
@@ -83,6 +87,7 @@ class NodeTouchCommandTest extends BaseCommandTest
             ->with('/cms')
             ->will($this->returnValue($this->node1))
         ;
+
         $this->node1->expects($this->once())
             ->method('getPrimaryNodeType')
             ->will($this->returnValue($nodeType))
@@ -94,22 +99,22 @@ class NodeTouchCommandTest extends BaseCommandTest
             ->method('processNode')
             ->will($this->returnCallback(function ($output, $node, $options) use ($me) {
                 $me->assertEquals($me->node1, $node);
-                $me->assertEquals(array(
-                    'setProp' => array('foo=bar'),
-                    'removeProp' => array('bar'),
-                    'addMixins' => array('foo:bar'),
-                    'removeMixins' => array('bar:foo'),
+                $me->assertEquals([
+                    'setProp' => ['foo=bar'],
+                    'removeProp' => ['bar'],
+                    'addMixins' => ['foo:bar'],
+                    'removeMixins' => ['bar:foo'],
                     'dump' => true,
-                ), $options);
+                ], $options);
             }));
 
-        $this->executeCommand('phpcr:node:touch', array(
+        $this->executeCommand('phpcr:node:touch', [
             'path' => '/cms',
-            '--set-prop' => array('foo=bar'),
-            '--remove-prop' => array('bar'),
-            '--add-mixin' => array('foo:bar'),
-            '--remove-mixin' => array('bar:foo'),
+            '--set-prop' => ['foo=bar'],
+            '--remove-prop' => ['bar'],
+            '--add-mixin' => ['foo:bar'],
+            '--remove-mixin' => ['bar:foo'],
             '--dump' => true,
-        ));
+        ]);
     }
 }

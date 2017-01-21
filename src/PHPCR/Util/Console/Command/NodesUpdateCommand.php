@@ -2,8 +2,10 @@
 
 namespace PHPCR\Util\Console\Command;
 
+use InvalidArgumentException;
 use PHPCR\Query\QueryResultInterface;
 use PHPCR\Query\RowInterface;
+use Symfony\Component\Console\Exception\InvalidArgumentException as CliInvalidArgumentException;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -21,6 +23,8 @@ class NodesUpdateCommand extends BaseNodeManipulationCommand
 {
     /**
      * {@inheritDoc}
+     *
+     * @throws CliInvalidArgumentException
      */
     protected function configure()
     {
@@ -79,12 +83,15 @@ HERE
 
     /**
      * {@inheritDoc}
+     *
+     * @throws CliInvalidArgumentException
+     * @throws InvalidArgumentException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $query = $input->getOption('query');
         $queryLanguage = strtoupper($input->getOption('query-language'));
-        $persistCounter = intval($input->getOption('persist-counter'));
+        $persistCounter = (int) $input->getOption('persist-counter');
         $setProp = $input->getOption('set-prop');
         $removeProp = $input->getOption('remove-prop');
         $addMixins = $input->getOption('add-mixin');
@@ -95,16 +102,13 @@ HERE
         $session = $this->getPhpcrSession();
 
         if (!$query) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 'You must provide a SELECT query, e.g. --query="SELECT * FROM [nt:unstructured]"'
             );
         }
 
-        if (strtoupper(substr($query, 0, 6)) != 'SELECT') {
-            throw new \InvalidArgumentException(sprintf(
-                'Query doesn\'t look like a SELECT query: "%s"',
-                $query
-            ));
+        if (strtoupper(substr($query, 0, 6)) !== 'SELECT') {
+            throw new InvalidArgumentException("Query doesn't look like a SELECT query: '$query'");
         }
 
         $query = $helper->createQuery($queryLanguage, $query);
@@ -161,7 +165,7 @@ HERE
             count($result->getRows())
         )));
 
-        if ($response == 'L') {
+        if ($response === 'L') {
             /** @var $row RowInterface */
             foreach ($result as $i => $row) {
                 $output->writeln(sprintf(' - [%d] %s', $i, $row->getPath()));
@@ -170,11 +174,11 @@ HERE
             return $this->shouldExecute($input, $output, $result);
         }
 
-        if ($response == 'N') {
+        if ($response === 'N') {
             return false;
         }
 
-        if ($response == 'Y') {
+        if ($response === 'Y') {
             return true;
         }
 

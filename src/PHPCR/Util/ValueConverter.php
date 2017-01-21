@@ -3,6 +3,8 @@
 namespace PHPCR\Util;
 
 use DateTime;
+use Exception;
+use InvalidArgumentException;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 use PHPCR\PropertyType;
@@ -104,29 +106,29 @@ class ValueConverter
      *
      * @param mixed $value   The value or value array to check and convert
      * @param int   $type    Target type to convert into. One of the type constants in PropertyType
-     * @param int   $srctype Source type to convert from, if not specified this is automatically determined, which will miss the string based types that are not strings (DECIMAL, NAME, PATH, URI)
+     * @param int   $srcType Source type to convert from, if not specified this is automatically determined, which will miss the string based types that are not strings (DECIMAL, NAME, PATH, URI)
      *
      * @return mixed the value casted into the proper format (throws an exception if conversion is not possible)
      *
      * @throws ValueFormatException      is thrown if the specified value cannot be converted to the specified type
      * @throws RepositoryException       if the specified Node is not referenceable, the current Session is no longer active, or another error occurs.
-     * @throws \InvalidArgumentException if the specified DateTime value cannot be expressed in the ISO 8601-based format defined in the JCR 2.0 specification and the implementation does not support dates incompatible with that format.
+     * @throws InvalidArgumentException if the specified DateTime value cannot be expressed in the ISO 8601-based format defined in the JCR 2.0 specification and the implementation does not support dates incompatible with that format.
      *
      * @see http://www.day.com/specs/jcr/2.0/3_Repository_Model.html#3.6.4%20Property%20Type%20Conversion
      */
-    public function convertType($value, $type, $srctype = PropertyType::UNDEFINED)
+    public function convertType($value, $type, $srcType = PropertyType::UNDEFINED)
     {
         if (is_array($value)) {
             $ret = array();
             foreach ($value as $v) {
-                $ret[] = self::convertType($v, $type, $srctype);
+                $ret[] = self::convertType($v, $type, $srcType);
             }
 
             return $ret;
         }
 
-        if (PropertyType::UNDEFINED === $srctype) {
-            $srctype = $this->determineType($value);
+        if (PropertyType::UNDEFINED === $srcType) {
+            $srcType = $this->determineType($value);
         }
 
         if ($value instanceof PropertyInterface) {
@@ -134,12 +136,12 @@ class ValueConverter
         }
 
         // except on noop, stream needs to be read into string first
-        if (PropertyType::BINARY === $srctype && PropertyType::BINARY !== $type && is_resource($value)) {
+        if (PropertyType::BINARY === $srcType && PropertyType::BINARY !== $type && is_resource($value)) {
             $t = stream_get_contents($value);
             rewind($value);
             $value = $t;
-            $srctype = PropertyType::STRING;
-        } elseif ((PropertyType::REFERENCE === $srctype || PropertyType::WEAKREFERENCE === $srctype)
+            $srcType = PropertyType::STRING;
+        } elseif ((PropertyType::REFERENCE === $srcType || PropertyType::WEAKREFERENCE === $srcType)
             && $value instanceof NodeInterface
         ) {
             /** @var $value NodeInterface */
@@ -151,7 +153,7 @@ class ValueConverter
 
         switch ($type) {
             case PropertyType::STRING:
-                switch ($srctype) {
+                switch ($srcType) {
                     case PropertyType::DATE:
                         if (! $value instanceof DateTime) {
                             throw new RepositoryException('Cannot convert a date that is not a \DateTime instance to string');
@@ -183,7 +185,7 @@ class ValueConverter
                     return $value;
                 }
                 if (! is_string($value)) {
-                    $value = $this->convertType($value, PropertyType::STRING, $srctype);
+                    $value = $this->convertType($value, PropertyType::STRING, $srcType);
                 }
                 $f = fopen('php://memory', 'rwb+');
                 fwrite($f, $value);
@@ -192,7 +194,7 @@ class ValueConverter
                 return $f;
 
             case PropertyType::LONG:
-                switch ($srctype) {
+                switch ($srcType) {
                     case PropertyType::STRING:
                     case PropertyType::LONG:
                     case PropertyType::DOUBLE:
@@ -213,7 +215,7 @@ class ValueConverter
                 throw new ValueFormatException('Cannot convert "'.var_export($value, true).'" to a LONG');
 
             case PropertyType::DOUBLE:
-                switch ($srctype) {
+                switch ($srcType) {
                     case PropertyType::STRING:
                     case PropertyType::LONG:
                     case PropertyType::DOUBLE:
@@ -235,7 +237,7 @@ class ValueConverter
                 throw new ValueFormatException('Cannot convert "'.var_export($value, true).'" to a DOUBLE');
 
             case PropertyType::DATE:
-                switch ($srctype) {
+                switch ($srcType) {
                     case PropertyType::STRING:
                     case PropertyType::DATE:
                         if ($value instanceof DateTime) {
@@ -243,7 +245,7 @@ class ValueConverter
                         }
                         try {
                             return new DateTime($value);
-                        } catch (\Exception $e) {
+                        } catch (Exception $e) {
                             throw new ValueFormatException("String '$value' is not a valid date", null, $e);
                         }
                     case PropertyType::LONG:
@@ -260,14 +262,14 @@ class ValueConverter
                 throw new ValueFormatException('Cannot convert "'.var_export($value, true).'" to DATE');
 
             case PropertyType::BOOLEAN:
-                switch ($srctype) {
+                switch ($srcType) {
                     case PropertyType::STRING:
                     case PropertyType::LONG:
                     case PropertyType::DOUBLE:
                     case PropertyType::BOOLEAN:
                         return (boolean) $value;
                     case PropertyType::DATE:
-                        /** @var $value \DateTime */
+                        /** @var $value DateTime */
 
                         return (boolean) $value->getTimestamp();
                     case PropertyType::DECIMAL:
@@ -279,7 +281,7 @@ class ValueConverter
                 throw new ValueFormatException('Cannot convert "'.var_export($value, true).'" to a BOOLEAN');
 
             case PropertyType::NAME:
-                switch ($srctype) {
+                switch ($srcType) {
                     case PropertyType::STRING:
                     case PropertyType::PATH:
                     case PropertyType::NAME:
@@ -295,7 +297,7 @@ class ValueConverter
                 throw new ValueFormatException('Cannot convert "'.var_export($value, true).'" to NAME');
 
             case PropertyType::PATH:
-                switch ($srctype) {
+                switch ($srcType) {
                     case PropertyType::STRING:
                         // TODO: check if valid
                         return $value;
@@ -313,7 +315,7 @@ class ValueConverter
 
             case PropertyType::REFERENCE:
             case PropertyType::WEAKREFERENCE:
-                switch ($srctype) {
+                switch ($srcType) {
                     case PropertyType::STRING:
                     case PropertyType::REFERENCE:
                     case PropertyType::WEAKREFERENCE:
@@ -330,7 +332,7 @@ class ValueConverter
                 throw new ValueFormatException('Cannot convert "'.var_export($value, true).'" to unique id');
 
             case PropertyType::URI:
-                switch ($srctype) {
+                switch ($srcType) {
                     case PropertyType::STRING:
                         // TODO: check if valid
                         return $value;
@@ -354,7 +356,7 @@ class ValueConverter
                 throw new ValueFormatException('Cannot convert "'.var_export($value, true).'" to URI');
 
             case PropertyType::DECIMAL:
-                switch ($srctype) {
+                switch ($srcType) {
                     case PropertyType::STRING:
                         // TODO: validate
                         return $value;
@@ -374,7 +376,7 @@ class ValueConverter
                 throw new ValueFormatException('Cannot convert "'.var_export($value, true).'" to a DECIMAL');
 
             default:
-                throw new ValueFormatException('Unexpected target type "' . $type . '" in conversion');
+                throw new ValueFormatException("Unexpected target type '$type' in conversion");
         }
     }
 }

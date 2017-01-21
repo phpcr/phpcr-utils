@@ -1,6 +1,9 @@
 <?php
 
 use PHPCR\Util\Console\Helper\PhpcrConsoleDumperHelper;
+use PHPCR\Util\Console\Helper\TreeDumper\ConsoleDumperPropertyVisitor;
+use PHPCR\Util\TreeWalker;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class PhpcrConsoleDumperHelperTest extends PHPUnit_Framework_TestCase
 {
@@ -12,18 +15,13 @@ class PhpcrConsoleDumperHelperTest extends PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->outputMock = $this->getMock('Symfony\Component\Console\Output\OutputInterface');
+        $this->outputMock = $this->createMock(OutputInterface::class);
         $this->helper = new PhpcrConsoleDumperHelper;
     }
 
     public function provideHelper()
     {
-        return array(
-            array(array()),
-            array(array(
-                'show_props' => true,
-            )),
-        );
+        return [[[]], [['show_props' => true]]];
     }
 
     /**
@@ -31,29 +29,23 @@ class PhpcrConsoleDumperHelperTest extends PHPUnit_Framework_TestCase
      */
     public function testGetTreeWalker($options)
     {
-        $options = array_merge(array(
+        $options = array_merge([
             'dump_uuids' => false,
             'ref_format' => 'uuid',
             'show_props' => false,
             'show_sys_nodes' => false,
-        ), $options);
+        ], $options);
 
         $tw = $this->helper->getTreeWalker($this->outputMock, $options);
-        $this->assertInstanceOf(
-            'PHPCR\Util\TreeWalker',
-            $tw
-        );
+        $this->assertInstanceOf(TreeWalker::class, $tw);
 
-        $refl = new \ReflectionClass($tw);
-        $propVisitorProp = $refl->getProperty('propertyVisitor');
+        $reflection = new ReflectionClass($tw);
+        $propVisitorProp = $reflection->getProperty('propertyVisitor');
         $propVisitorProp->setAccessible(true);
         $propVisitor = $propVisitorProp->getValue($tw);
 
         if ($options['show_props'] === true) {
-            $this->assertInstanceOf(
-                'PHPCR\Util\Console\Helper\TreeDumper\ConsoleDumperPropertyVisitor',
-                $propVisitor
-            );
+            $this->assertInstanceOf(ConsoleDumperPropertyVisitor::class, $propVisitor);
         } else {
             $this->assertNull($propVisitor);
         }

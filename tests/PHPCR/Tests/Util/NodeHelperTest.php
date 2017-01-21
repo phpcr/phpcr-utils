@@ -2,40 +2,56 @@
 
 namespace PHPCR\Tests\Util;
 
+use PHPCR\Tests\Stubs\MockNode;
 use PHPCR\Util\NodeHelper;
+use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit_Framework_TestCase;
 
-require_once(__DIR__.'/../Stubs/MockNode.php');
+require_once __DIR__.'/../Stubs/MockNode.php';
 
-class NodeHelperTest extends \PHPUnit_Framework_TestCase
+class NodeHelperTest extends PHPUnit_Framework_TestCase
 {
-    private $namespaces = array('a' => 'http://phpcr', 'b' => 'http://jcr');
-    private $usedNames = array('a:x', 'b:y', 'c');
+    /**
+     * @var array
+     */
+    private $namespaces = ['a' => 'http://phpcr', 'b' => 'http://jcr'];
 
+    /**
+     * @var array
+     */
+    private $usedNames = ['a:x', 'b:y', 'c'];
+
+    /**
+     * @return array
+     */
     public static function hints()
     {
-        return array(
-            array('', true),
-            array(':', true),
-            array('{}', true),
-            array('b:', 'b:'),
-            array('{http://jcr}', 'b:'),
-            array('b:z', 'b:z'),
-            array('{http://phpcr}bar', 'a:bar'),
-        );
+        return [
+            ['', true],
+            [':', true],
+            ['{}', true],
+            ['b:', 'b:'],
+            ['{http://jcr}', 'b:'],
+            ['b:z', 'b:z'],
+            ['{http://phpcr}bar', 'a:bar'],
+        ];
     }
 
+    /**
+     * @return array
+     */
     public static function invalidHints()
     {
-        return array(
-            array('::'),
-            array('a'), // no colon
-            array('a:foo:'),
-            array('{foo'),
-            array('x:'), // not an existing namespace prefix
-            array('{http://xy}'), // not an existing namespace uri
-            array('x:a'), // not an existing namespace prefix with a local name prefix
-            array('{http://xy}a'), // not an existing namespace uri with a local name prefix
-        );
+        return [
+            ['::'],
+            ['a'], // no colon
+            ['a:foo:'],
+            ['{foo'],
+            ['x:'], // not an existing namespace prefix
+            ['{http://xy}'], // not an existing namespace uri
+            ['x:a'], // not an existing namespace prefix with a local name prefix
+            ['{http://xy}a'], // not an existing namespace uri with a local name prefix
+        ];
     }
 
     public function testGenerateAutoNodeNameNoHint()
@@ -68,101 +84,115 @@ class NodeHelperTest extends \PHPUnit_Framework_TestCase
 
     public function testIsSystemItem()
     {
-        $sys = $this->getMock('PHPCR\Tests\Stubs\MockNode');
+        /** @var MockNode|PHPUnit_Framework_MockObject_MockObject $sys */
+        $sys = $this->createMock(MockNode::class);
+
         $sys->expects($this->once())
             ->method('getDepth')
             ->will($this->returnValue(0))
         ;
+
         $sys->expects($this->once())
             ->method('getName')
             ->will($this->returnValue('jcr:root'))
         ;
+
         $this->assertTrue(NodeHelper::isSystemItem($sys));
 
-        $sys = $this->getMock('PHPCR\Tests\Stubs\MockNode');
+        $sys = $this->createMock(MockNode::class);
         $sys->expects($this->once())
             ->method('getDepth')
             ->will($this->returnValue(1))
         ;
+
         $sys->expects($this->once())
             ->method('getName')
             ->will($this->returnValue('jcr:system'))
         ;
+
         $this->assertTrue(NodeHelper::isSystemItem($sys));
 
-        $top = $this->getMock('PHPCR\Tests\Stubs\MockNode');
+        /** @var MockNode|PHPUnit_Framework_MockObject_MockObject $top */
+        $top = $this->createMock(MockNode::class);
         $top->expects($this->once())
             ->method('getDepth')
             ->will($this->returnValue(1))
         ;
+
         $top->expects($this->once())
             ->method('getName')
             ->will($this->returnValue('jcrname')) // this is NOT in the jcr namespace
         ;
+
         $this->assertFalse(NodeHelper::isSystemItem($top));
 
-        $deep = $this->getMock('PHPCR\Tests\Stubs\MockNode');
+        /** @var MockNode|PHPUnit_Framework_MockObject_MockObject $deep */
+        $deep = $this->createMock(MockNode::class);
         $deep->expects($this->once())
             ->method('getDepth')
             ->will($this->returnValue(2))
         ;
+
         $this->assertFalse(NodeHelper::isSystemItem($deep));
     }
 
     public function testCalculateOrderBeforeSwapLast()
     {
-        $old = array('one', 'two', 'three', 'four');
-        $new = array('one', 'two', 'four', 'three');
+        $old = ['one', 'two', 'three', 'four'];
+        $new = ['one', 'two', 'four', 'three'];
 
         $reorders = NodeHelper::calculateOrderBefore($old, $new);
 
-        $expected = array(
+        $expected = [
             'three' => null,
             'two'   => 'four', // TODO: this is an unnecessary but harmless NOOP. we should try to eliminate
-        );
+        ];
+
         $this->assertEquals($expected, $reorders);
     }
 
     public function testCalculateOrderBeforeSwap()
     {
-        $old = array('one', 'two', 'three', 'four');
-        $new = array('one', 'four', 'three', 'two');
+        $old = ['one', 'two', 'three', 'four'];
+        $new = ['one', 'four', 'three', 'two'];
 
         $reorders = NodeHelper::calculateOrderBefore($old, $new);
 
-        $expected = array(
+        $expected = [
             'three' => 'two',
             'two'   => null,
-        );
+        ];
+
         $this->assertEquals($expected, $reorders);
     }
 
     public function testCalculateOrderBeforeReverse()
     {
-        $old = array('one', 'two', 'three', 'four');
-        $new = array('four', 'three', 'two', 'one');
+        $old = ['one', 'two', 'three', 'four'];
+        $new = ['four', 'three', 'two', 'one'];
 
         $reorders = NodeHelper::calculateOrderBefore($old, $new);
 
-        $expected = array(
+        $expected = [
             'three' => 'two',
             'two'   => 'one',
             'one'   => null,
-        );
+        ];
         $this->assertEquals($expected, $reorders);
     }
 
     public function testCalculateOrderBeforeDeleted()
     {
-        $old = array('one', 'two', 'three', 'four');
-        $new = array('one', 'three', 'two');
+        $old = ['one', 'two', 'three', 'four'];
+        $new = ['one', 'three', 'two'];
 
         $reorders = NodeHelper::calculateOrderBefore($old, $new);
 
-        $expected = array(
+        $expected = [
             'two' => null,
             'one'   => 'three', // TODO: this is an unnecessary but harmless NOOP. we should try to eliminate
-        );
+        ];
+
         $this->assertEquals($expected, $reorders);
     }
 
@@ -171,7 +201,7 @@ class NodeHelperTest extends \PHPUnit_Framework_TestCase
      */
     public function testBenchmarkOrderBeforeArray()
     {
-        $nodes = array();
+        $nodes = [];
 
         for ($i = 0; $i < 100000; $i++) {
             $nodes[] = 'test' . $i;

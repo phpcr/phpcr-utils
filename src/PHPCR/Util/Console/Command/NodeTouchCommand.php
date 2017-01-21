@@ -3,6 +3,7 @@
 namespace PHPCR\Util\Console\Command;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -23,6 +24,8 @@ class NodeTouchCommand extends BaseNodeManipulationCommand
 {
     /**
      * {@inheritDoc}
+     *
+     * @throws InvalidArgumentException
      */
     protected function configure()
     {
@@ -68,6 +71,8 @@ HERE
 
     /**
      * {@inheritDoc}
+     *
+     * @throws InvalidArgumentException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

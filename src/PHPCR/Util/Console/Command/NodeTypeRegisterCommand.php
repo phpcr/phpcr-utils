@@ -130,7 +130,7 @@ EOT
      */
     protected function getFilePaths($definitions)
     {
-        $filePaths = array();
+        $filePaths = [];
 
         foreach ($definitions as $definition) {
             if (is_dir($definition)) {
@@ -167,7 +167,7 @@ EOT
 
     protected function fileIsNodeType($filename)
     {
-        if (substr($filename, -4) == '.cnd') {
+        if (substr($filename, -4) === '.cnd') {
             return true;
         }
 

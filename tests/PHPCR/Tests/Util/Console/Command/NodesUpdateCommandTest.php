@@ -2,69 +2,75 @@
 
 namespace PHPCR\Tests\Util\Console\Command;
 
-use PHPCR\Util\Console\Helper\PhpcrHelper;
-use Symfony\Component\Console\Application;
+use InvalidArgumentException;
+use PHPCR\Query\QueryInterface;
 use PHPCR\Util\Console\Command\NodesUpdateCommand;
+use PHPUnit_Framework_MockObject_MockObject;
 
 class NodesUpdateCommandTest extends BaseCommandTest
 {
+    /**
+     * @var QueryInterface|PHPUnit_Framework_MockObject_MockObject
+     */
+    private $query;
+
     public function setUp()
     {
         parent::setUp();
+
         $this->application->add(new NodesUpdateCommand());
-        $this->query = $this->getMock('PHPCR\Query\QueryInterface');
+        $this->query = $this->createMock(QueryInterface::class);
     }
 
     public function provideNodeUpdate()
     {
-        return array(
-
-            // no query specified
-            array(array(
-                'exception' => 'InvalidArgumentException',
-            )),
-
-            // specify query
-            array(array(
-                'query' => 'SELECT * FROM nt:unstructured WHERE foo="bar"',
-            )),
-
-            // set, remote properties and mixins
-            array(array(
-                'setProp' => array(array('foo', 'bar')),
-                'removeProp' => array('bar'),
-                'addMixin' => array('mixin1'),
-                'removeMixin' => array('mixin1'),
+        return [
+            // No query specified
+            [['exception' => InvalidArgumentException::class]],
+            // Specify query
+            [['query' => 'SELECT * FROM nt:unstructured WHERE foo="bar"']],
+            // Set, remote properties and mixins
+            [[
+                'setProp' => [['foo', 'bar']],
+                'removeProp' => ['bar'],
+                'addMixin' => ['mixin1'],
+                'removeMixin' => ['mixin1'],
                 'query' => 'SELECT * FROM nt:unstructured',
-            )),
-        );
+            ]],
+        ];
     }
 
     protected function setupQueryManager($options)
     {
-        $options = array_merge(array(
-            'query' => '',
-        ), $options);
+        $options = array_merge(['query' => ''], $options);
 
         $this->session->expects($this->any())
             ->method('getWorkspace')
-            ->will($this->returnValue($this->workspace));
+            ->will($this->returnValue($this->workspace))
+        ;
+
         $this->workspace->expects($this->any())
             ->method('getQueryManager')
-            ->will($this->returnValue($this->queryManager));
+            ->will($this->returnValue($this->queryManager))
+        ;
 
         $this->queryManager->expects($this->any())
             ->method('createQuery')
             ->with($options['query'], 'JCR-SQL2')
-            ->will($this->returnValue($this->query));
+            ->will($this->returnValue($this->query))
+        ;
+
         $this->query->expects($this->any())
             ->method('execute')
-            ->will($this->returnValue(array(
+            ->will($this->returnValue([
                 $this->row1,
-            )));
+            ]))
+        ;
+
         $this->row1->expects($this->any())
             ->method('getNode')
-            ->will($this->returnValue($this->node1));
+            ->will($this->returnValue($this->node1))
+        ;
     }
 
     /**
@@ -72,30 +78,30 @@ class NodesUpdateCommandTest extends BaseCommandTest
      */
     public function testNodeUpdate($options)
     {
-        $options = array_merge(array(
+        $options = array_merge([
             'query' => null,
-            'setProp' => array(),
-            'removeProp' => array(),
-            'addMixin' => array(),
-            'removeMixin' => array(),
+            'setProp' => [],
+            'removeProp' => [],
+            'addMixin' => [],
+            'removeMixin' => [],
             'exception' => null,
-        ), $options);
+        ], $options);
 
         if ($options['exception']) {
-            $this->setExpectedException($options['exception']);
+            $this->expectException($options['exception']);
         }
 
         $this->setupQueryManager($options);
 
-        $args = array(
+        $args = [
             '--query-language' => null,
             '--query' => $options['query'],
             '--no-interaction' => true,
-            '--set-prop' => array(),
-            '--remove-prop' => array(),
-            '--add-mixin' => array(),
-            '--remove-mixin' => array(),
-        );
+            '--set-prop' => [],
+            '--remove-prop' => [],
+            '--add-mixin' => [],
+            '--remove-mixin' => [],
+        ];
 
         foreach ($options['setProp'] as $setProp) {
             list($prop, $value) = $setProp;
@@ -130,7 +136,7 @@ class NodesUpdateCommandTest extends BaseCommandTest
             $args['--remove-mixin'][] = $mixin;
         }
 
-        $ct = $this->executeCommand('phpcr:nodes:update', $args);
+        $this->executeCommand('phpcr:nodes:update', $args);
     }
 
     public function testApplyClosure()
@@ -146,16 +152,18 @@ class NodesUpdateCommandTest extends BaseCommandTest
             ),
         );
 
-        $this->setupQueryManager(array('query' => 'SELECT foo FROM bar'));
+        $this->setupQueryManager(['query' => 'SELECT foo FROM bar']);
 
         $this->node1->expects($this->exactly(2))
             ->method('setProperty')
-            ->with('foo', 'bar');
+            ->with('foo', 'bar')
+        ;
 
         $this->session->expects($this->once())
             ->method('getNodeByIdentifier')
-            ->with('/foo');
+            ->with('/foo')
+        ;
 
-        $ct = $this->executeCommand('phpcr:nodes:update', $args);
+        $this->executeCommand('phpcr:nodes:update', $args);
     }
 }

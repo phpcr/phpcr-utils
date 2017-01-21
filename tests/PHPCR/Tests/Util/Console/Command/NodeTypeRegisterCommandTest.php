@@ -2,33 +2,45 @@
 
 namespace PHPCR\Tests\Util\Console\Command;
 
-use Symfony\Component\Console\Application;
+use PHPCR\Tests\Stubs\MockNodeTypeManager;
 use PHPCR\Util\Console\Command\NodeTypeRegisterCommand;
+use PHPUnit_Framework_MockObject_MockObject;
 
 class NodeTypeRegisterCommandTest extends BaseCommandTest
 {
+    /**
+     * @var MockNodeTypeManager|PHPUnit_Framework_MockObject_MockObject
+     */
+    private $nodeTypeManager;
+
     public function setUp()
     {
         parent::setUp();
+
         $this->application->add(new NodeTypeRegisterCommand());
-        $this->nodeTypeManager = $this->getMockBuilder(
-            'PHPCR\Tests\Stubs\MockNodeTypeManager'
-        )->disableOriginalConstructor()->getMock();
+        $this->nodeTypeManager = $this->getMockBuilder(MockNodeTypeManager::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
     }
 
     public function testNodeTypeRegister()
     {
         $this->session->expects($this->once())
             ->method('getWorkspace')
-            ->will($this->returnValue($this->workspace));
+            ->will($this->returnValue($this->workspace))
+        ;
+
         $this->workspace->expects($this->once())
             ->method('getNodeTypeManager')
-            ->will($this->returnValue($this->nodeTypeManager));
+            ->will($this->returnValue($this->nodeTypeManager))
+        ;
+
         $this->nodeTypeManager->expects($this->once())
             ->method('registerNodeTypesCnd');
 
-        $ct = $this->executeCommand('phpcr:node-type:register', array(
-    'cnd-file' => array(__DIR__.'/fixtures/cnd_dummy.cnd'),
-        ));
+        $this->executeCommand('phpcr:node-type:register', [
+            'cnd-file' => [__DIR__.'/fixtures/cnd_dummy.cnd'],
+        ]);
     }
 }

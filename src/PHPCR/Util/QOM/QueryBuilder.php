@@ -13,6 +13,7 @@ use PHPCR\Query\QOM\JoinConditionInterface;
 use PHPCR\Query\QOM\QueryObjectModelConstantsInterface;
 use PHPCR\Query\QueryInterface;
 use PHPCR\Query\QOM\QueryObjectModelInterface;
+use PHPCR\Query\QueryResultInterface;
 use RuntimeException;
 
 /**
@@ -54,7 +55,7 @@ class QueryBuilder
     /**
      * @var array with the orderings that determine the order of the result
      */
-    private $orderings = array();
+    private $orderings = [];
 
     /**
      * @var ConstraintInterface to apply to the query.
@@ -64,7 +65,7 @@ class QueryBuilder
     /**
      * @var array with the columns to be selected.
      */
-    private $columns = array();
+    private $columns = [];
 
     /**
      * @var SourceInterface source of the query.
@@ -81,7 +82,7 @@ class QueryBuilder
     /**
      * @var array The query parameters.
      */
-    private $params = array();
+    private $params = [];
 
     /**
      * Initializes a new QueryBuilder
@@ -216,7 +217,7 @@ class QueryBuilder
     {
         $order = strtoupper($order);
 
-        if (!in_array($order, array('ASC', 'DESC'))) {
+        if (!in_array($order, ['ASC', 'DESC'])) {
             throw new InvalidArgumentException('Order must be one of "ASC" or "DESC"');
         }
 
@@ -294,6 +295,7 @@ class QueryBuilder
     public function andWhere(ConstraintInterface $constraint)
     {
         $this->state = self::STATE_DIRTY;
+
         if ($this->constraint) {
             $this->constraint = $this->qomFactory->andConstraint($this->constraint, $constraint);
         } else {
@@ -323,6 +325,7 @@ class QueryBuilder
     public function orWhere(ConstraintInterface $constraint)
     {
         $this->state = self::STATE_DIRTY;
+
         if ($this->constraint) {
             $this->constraint = $this->qomFactory->orConstraint($this->constraint, $constraint);
         } else {
@@ -369,7 +372,7 @@ class QueryBuilder
     public function select($selectorName, $propertyName, $columnName = null)
     {
         $this->state = self::STATE_DIRTY;
-        $this->columns = array($this->qomFactory->column($selectorName, $propertyName, $columnName));
+        $this->columns = [$this->qomFactory->column($selectorName, $propertyName, $columnName)];
 
         return $this;
     }
@@ -386,6 +389,7 @@ class QueryBuilder
     public function addSelect($selectorName, $propertyName, $columnName = null)
     {
         $this->state = self::STATE_DIRTY;
+
         $this->columns[] = $this->qomFactory->column($selectorName, $propertyName, $columnName);
 
         return $this;
@@ -493,6 +497,7 @@ class QueryBuilder
         if (!$this->source) {
             throw new RuntimeException('Cannot perform a join without a previous call to from');
         }
+
         $this->state = self::STATE_DIRTY;
         $this->source = $this->qomFactory->join($this->source, $rightSource, $joinType, $joinCondition);
 
@@ -509,6 +514,7 @@ class QueryBuilder
         if ($this->query !== null && $this->state === self::STATE_CLEAN) {
             return $this->query;
         }
+
         $this->state = self::STATE_CLEAN;
         $this->query = $this->qomFactory->createQuery($this->source, $this->constraint, $this->orderings, $this->columns);
 
@@ -526,7 +532,7 @@ class QueryBuilder
     /**
      * Executes the query setting firstResult and maxResults.
      *
-     * @return \PHPCR\Query\QueryResultInterface
+     * @return QueryResultInterface
      */
     public function execute()
     {
@@ -538,9 +544,7 @@ class QueryBuilder
             $this->query->bindValue($key, $value);
         }
 
-        $queryResult = $this->query->execute();
-
-        return $queryResult;
+        return $this->query->execute();
     }
 
     /**

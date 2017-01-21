@@ -2,16 +2,13 @@
 
 namespace PHPCR\Tests\Util\Console\Command;
 
-use Symfony\Component\Console\Application;
 use PHPCR\Util\Console\Command\NodeMoveCommand;
 
 class NodeMoveCommandTest extends BaseCommandTest
 {
     public function provideCommand()
     {
-        return array(
-            array(array('source' => '/foo', 'destination' => '/bar'))
-        );
+        return [[['source' => '/foo', 'destination' => '/bar']]];
     }
 
     /**
@@ -21,9 +18,12 @@ class NodeMoveCommandTest extends BaseCommandTest
     {
         $this->session->expects($this->once())
             ->method('move')
-            ->with($args['source'], $args['destination']);
+            ->with($args['source'], $args['destination'])
+        ;
+
         $this->session->expects($this->once())
-            ->method('save');
+            ->method('save')
+        ;
 
         $this->application->add(new NodeMoveCommand());
         $this->executeCommand('phpcr:node:move', $args);
