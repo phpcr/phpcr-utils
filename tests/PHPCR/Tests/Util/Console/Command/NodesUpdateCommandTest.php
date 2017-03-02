@@ -94,7 +94,6 @@ class NodesUpdateCommandTest extends BaseCommandTest
         $this->setupQueryManager($options);
 
         $args = [
-            '--query-language' => null,
             '--query' => $options['query'],
             '--no-interaction' => true,
             '--set-prop' => [],
