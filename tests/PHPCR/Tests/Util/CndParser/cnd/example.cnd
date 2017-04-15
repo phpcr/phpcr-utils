@@ -1,0 +1,12 @@
+asdsad /*  An example node type definition */ asdasd
+<ns = 'http://namespace.com/ns'>
+[ns:NodeType] > ns:ParentType1, ns:ParentType2
+  orderable mixin
+  - ex:property (string)
+  = 'default1', 'default2'
+    primary mandatory autocreated protected multiple
+    version
+    < 'constraint1', 'constraint2'
+  + ns:node (ns:reqType1, ns:reqType2)
+    = ns:defaultType
+    mandatory autocreated protected multiple versionT
