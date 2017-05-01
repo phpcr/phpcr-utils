@@ -2,6 +2,8 @@
 
 namespace PHPCR\Tests\Util;
 
+use PHPCR\SessionInterface;
+use PHPCR\Tests\Stubs\MockNode;
 use PHPCR\Util\NodeHelper;
 
 require_once(__DIR__.'/../Stubs/MockNode.php');
@@ -182,5 +184,45 @@ class NodeHelperTest extends \PHPUnit_Framework_TestCase
         NodeHelper::orderBeforeArray('test250', 'test750', $nodes);
 
         $this->assertLessThan(1.0, microtime(true) - $start);
+    }
+
+    public function testNodePositionIsOneForNoMatches()
+    {
+        $sessionMock = $this->getMock(SessionInterface::class);
+        $parentNode = $this->getMock(MockNode::class);
+        $nodesMock = $this->getMock(MockNode::class);
+
+        $sessionMock
+            ->expects($this->once())
+            ->method('getNode')
+            ->with($this->equalTo('/path/no'))
+            ->will($this->returnValue($parentNode));
+        $parentNode->expects($this->once())->method('getNodes')->will($this->returnValue($nodesMock));
+        $position = NodeHelper::getNodePosition($sessionMock, '/path/no/match');
+
+        $this->assertEquals(1, $position);
+    }
+
+    public function testNodePositionIsTwo()
+    {
+        $sessionMock = $this->getMock(SessionInterface::class);
+        $parentNode = $this->getMock(MockNode::class);
+        $nodesMock = $this->getMock(MockNode::class);
+
+        $sessionMock
+            ->expects($this->once())
+            ->method('getNode')
+            ->with($this->equalTo('/path'))
+            ->will($this->returnValue($parentNode));
+        $parentNode->expects($this->once())->method('getNodes')->will($this->returnValue($nodesMock));
+        $nodesMock->expects($this->at(0))->method('valid')->will($this->returnValue(true));
+        $nodesMock->expects($this->at(1))->method('valid')->will($this->returnValue(true));
+
+        $nodesMock->expects($this->at(0))->method('key')->will($this->returnValue('/path/some-other'));
+        $nodesMock->expects($this->at(1))->method('key')->will($this->returnValue('/path/match'));
+
+        $position = NodeHelper::getNodePosition($sessionMock, '/path/match');
+
+        $this->assertEquals(2, $position);
     }
 }

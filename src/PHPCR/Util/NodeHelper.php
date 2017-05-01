@@ -360,4 +360,30 @@ class NodeHelper
 
         return $list;
     }
+
+    /**
+     * To evalute the a nodes position in a list of ordered children, we have to loop through them all
+     * and count until the first match.
+     *
+     * @param SessionInterface $session
+     * @param string $path The path of the node to evalute the position.
+     *
+     * @return int The position in a list of ordered children.
+     */
+    public static function getNodePosition(SessionInterface $session, $path)
+    {
+        $parentNode = $session->getNode(PathHelper::getParentPath($path));
+        $nodeIterator = $parentNode->getNodes();
+
+        $counter = 0;
+        $nodeIterator->rewind();
+        while ($nodeIterator->valid()) {
+            $counter++;
+            if ($nodeIterator->key() === $path) {
+                return $counter;
+            }
+        }
+
+        return 1;
+    }
 }
