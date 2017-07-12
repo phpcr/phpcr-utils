@@ -278,7 +278,9 @@ abstract class BaseSqlGenerator
             $string = $this->valueConverter->convertType($literal, PropertyType::STRING);
 
             return $this->evalCastLiteral($string, 'DOUBLE');
-        }
+        }        
+        
+        $literal = str_replace("'", "''", $literal);
 
         return "'$literal'";
     }
