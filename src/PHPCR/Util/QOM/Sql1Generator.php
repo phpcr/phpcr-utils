@@ -120,7 +120,9 @@ class Sql1Generator extends BaseSqlGenerator
      */
     public function evalColumns($columns)
     {
-        if (count($columns) === 0) {
+        if ((!is_array($columns) && !$columns instanceof \Countable)
+            || count($columns) === 0
+        ) {
             return 's';
         }
 
