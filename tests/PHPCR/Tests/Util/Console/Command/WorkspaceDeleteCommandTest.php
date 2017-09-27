@@ -42,10 +42,10 @@ class WorkspaceDeleteCommandTest extends BaseCommandTest
             ->with('test_workspace')
         ;
 
-        $ct = $this->executeCommand('phpcr:workspace:delete', array(
+        $ct = $this->executeCommand('phpcr:workspace:delete', [
             'name' => 'test_workspace',
             '--force' => 'true',
-        ));
+        ]);
 
         $this->assertContains("Deleted workspace 'test_workspace'.", $ct->getDisplay());
     }

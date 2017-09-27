@@ -237,7 +237,7 @@ abstract class BaseQomToSqlQueryConverter
      */
     protected function convertOrderings(array $orderings)
     {
-        $list = array();
+        $list = [];
         /** @var $ordering QOM\OrderingInterface */
         foreach ($orderings as $ordering) {
             $order = $this->generator->evalOrder($ordering->getOrder());

@@ -410,7 +410,7 @@ class QueryBuilderTest extends PHPUnit_Framework_TestCase
 
         $this->qf->expects($this->once())
                  ->method('createQuery')
-                 ->with($source, $constraint, array(), array())
+                 ->with($source, $constraint, [], [])
                  ->will($this->returnValue($query));
 
         $qb = new QueryBuilder($this->qf);

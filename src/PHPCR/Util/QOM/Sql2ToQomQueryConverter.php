@@ -99,9 +99,9 @@ class Sql2ToQomQueryConverter
         $this->sql2 = $sql2;
         $this->scanner = new Sql2Scanner($sql2);
         $source = null;
-        $columnData = array();
+        $columnData = [];
         $constraint = null;
-        $orderings = array();
+        $orderings = [];
 
         while ($this->scanner->lookupNextToken() !== '') {
             switch (strtoupper($this->scanner->lookupNextToken())) {
@@ -119,7 +119,7 @@ class Sql2ToQomQueryConverter
                     break;
                 case 'ORDER':
                     // Ordering, check there is a BY
-                    $this->scanner->expectTokens(array('ORDER', 'BY'));
+                    $this->scanner->expectTokens(['ORDER', 'BY']);
                     $orderings = $this->parseOrderings();
                     break;
                 default:
@@ -229,11 +229,11 @@ class Sql2ToQomQueryConverter
                 $this->scanner->fetchNextToken();
                 break;
             case 'LEFT':
-                $this->scanner->expectTokens(array('OUTER', 'JOIN'));
+                $this->scanner->expectTokens(['OUTER', 'JOIN']);
                 $joinType = Constants::JCR_JOIN_TYPE_LEFT_OUTER;
                 break;
             case 'RIGHT':
-                $this->scanner->expectTokens(array('OUTER', 'JOIN'));
+                $this->scanner->expectTokens(['OUTER', 'JOIN']);
                 $joinType = Constants::JCR_JOIN_TYPE_RIGHT_OUTER;
                 break;
             default:
@@ -292,7 +292,7 @@ class Sql2ToQomQueryConverter
      */
     protected function parseSameNodeJoinCondition()
     {
-        $this->scanner->expectTokens(array('ISSAMENODE', '('));
+        $this->scanner->expectTokens(['ISSAMENODE', '(']);
         $selectorName1 = $this->fetchTokenWithoutBrackets();
         $this->scanner->expectToken(',');
         $selectorName2 = $this->fetchTokenWithoutBrackets();
@@ -335,7 +335,7 @@ class Sql2ToQomQueryConverter
      */
     protected function parseDescendantNodeJoinCondition()
     {
-        $this->scanner->expectTokens(array('ISDESCENDANTNODE', '('));
+        $this->scanner->expectTokens(['ISDESCENDANTNODE', '(']);
         $descendant = $this->fetchTokenWithoutBrackets();
         $this->scanner->expectToken(',');
         $parent = $this->fetchTokenWithoutBrackets();
@@ -361,10 +361,10 @@ class Sql2ToQomQueryConverter
             $lhs = $this->parsePrimaryConstraint();
         }
 
-        $opprec = array(
+        $opprec = [
             'OR' => 1,
             'AND' => 2,
-        );
+        ];
 
         $op = strtoupper($this->scanner->lookupNextToken());
         while (isset($opprec[$op]) && $opprec[$op] >= $minprec) {
@@ -994,7 +994,7 @@ class Sql2ToQomQueryConverter
             $selectorName = $this->ensureSelectorName($selectorName);
         }
 
-        return array($selectorName, $propertyName);
+        return [$selectorName, $propertyName];
     }
 
     /**
@@ -1010,7 +1010,7 @@ class Sql2ToQomQueryConverter
             $this->implicitSelectorName = $selectorName;
         } else {
             if (!is_array($this->implicitSelectorName)) {
-                $this->implicitSelectorName = array($this->implicitSelectorName => $this->implicitSelectorName);
+                $this->implicitSelectorName = [$this->implicitSelectorName => $this->implicitSelectorName];
             }
             if (isset($this->implicitSelectorName[$selectorName])) {
                 throw new InvalidQueryException("Selector $selectorName is already in use");
@@ -1065,7 +1065,7 @@ class Sql2ToQomQueryConverter
             $columnName = $propertyName;
         }
 
-        return array($selectorName, $propertyName, $columnName);
+        return [$selectorName, $propertyName, $columnName];
     }
 
     /**

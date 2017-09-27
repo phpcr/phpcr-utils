@@ -16,7 +16,7 @@ class ScannerContext
      * Characters to be considered as white spaces
      * @var array
      */
-    protected $whitespaces = array();
+    protected $whitespaces = [];
 
     /**
      * Characters to be considered as paired string delimiters.
@@ -26,21 +26,21 @@ class ScannerContext
      *
      * @var array
      */
-    protected $stringDelimiters = array();
+    protected $stringDelimiters = [];
 
     /**
      * Line comments start
      *
      * @var array
      */
-    protected $lineCommentDelimiters = array();
+    protected $lineCommentDelimiters = [];
 
     /**
      * Block comments delimiters
      *
      * @var array
      */
-    protected $blockCommentDelimiters = array();
+    protected $blockCommentDelimiters = [];
 
     /**
      * Characters to be considered as symbols.
@@ -49,12 +49,12 @@ class ScannerContext
      *
      * @var array
      */
-    protected $symbols = array();
+    protected $symbols = [];
 
     /**
      * @var TokenFilterInterface[]
      */
-    protected $tokenFilters = array();
+    protected $tokenFilters = [];
 
     /**
      * @param string $startDelim

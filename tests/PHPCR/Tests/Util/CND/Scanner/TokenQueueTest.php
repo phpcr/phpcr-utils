@@ -108,7 +108,7 @@ class TokenQueueTest extends PHPUnit_Framework_TestCase
     public function testGetIterator()
     {
         $this->assertEquals(
-            array($this->token0, $this->token1, $this->token2, $this->token3),
+            [$this->token0, $this->token1, $this->token2, $this->token3],
             iterator_to_array($this->queue->getIterator())
         );
     }

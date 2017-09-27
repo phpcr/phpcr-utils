@@ -64,14 +64,14 @@ class PhpcrHelper extends Helper
      */
     public function processNode(OutputInterface $output, NodeInterface $node, array $operations)
     {
-        $operations = array_merge(array(
-            'setProp' => array(),
-            'removeProp' => array(),
-            'addMixins' => array(),
-            'removeMixins' => array(),
-            'applyClosures' => array(),
+        $operations = array_merge([
+            'setProp' => [],
+            'removeProp' => [],
+            'addMixins' => [],
+            'removeMixins' => [],
+            'applyClosures' => [],
             'dump' => false,
-        ), $operations);
+        ], $operations);
 
         foreach ($operations['setProp'] as $set) {
             $parts = explode('=', $set);

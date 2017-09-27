@@ -46,7 +46,7 @@ class NodeDumpCommandTest extends BaseCommandTest
             ->with($this->node1)
         ;
 
-        $this->executeCommand('phpcr:node:dump', array());
+        $this->executeCommand('phpcr:node:dump', []);
     }
 
     public function testCommandIdentifier()

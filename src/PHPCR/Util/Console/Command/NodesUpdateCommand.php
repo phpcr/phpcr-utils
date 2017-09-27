@@ -132,13 +132,13 @@ HERE
 
             $node = $row->getNode();
 
-            $helper->processNode($output, $node, array(
+            $helper->processNode($output, $node, [
                 'setProp' => $setProp,
                 'removeProp' => $removeProp,
                 'addMixins' => $addMixins,
                 'removeMixins' => $removeMixins,
                 'applyClosures' => $applyClosures,
-            ));
+            ]);
 
             $persistIn--;
             if (0 === $persistIn) {

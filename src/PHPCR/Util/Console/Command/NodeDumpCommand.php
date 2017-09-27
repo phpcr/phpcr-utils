@@ -72,14 +72,14 @@ HERE
         $identifier = $input->getArgument('identifier');
 
         // whether to dump node uuid
-        $options = array();
+        $options = [];
         $options['dump_uuids'] = $input->hasParameterOption('--identifiers');
         $options['ref_format'] = $input->getOption('ref-format');
         $options['show_props'] = $input->hasParameterOption('--props');
         $options['show_sys_nodes'] = $input->hasParameterOption('--sys-nodes');
         $options['max_line_length'] = $input->getOption('max_line_length');
 
-        if (null !== $options['ref_format'] && !in_array($options['ref_format'], array('uuid', 'path'))) {
+        if (null !== $options['ref_format'] && !in_array($options['ref_format'], ['uuid', 'path'])) {
             throw new Exception('The ref-format option must be set to either "path" or "uuid"');
         }
 
