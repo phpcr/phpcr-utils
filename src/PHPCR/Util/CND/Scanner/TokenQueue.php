@@ -15,7 +15,7 @@ class TokenQueue implements \IteratorAggregate
      */
     protected $tokens;
 
-    public function __construct($tokens = array())
+    public function __construct($tokens = [])
     {
         $this->tokens = $tokens;
     }

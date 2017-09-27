@@ -33,12 +33,12 @@ class ConsoleDumperPropertyVisitor extends ConsoleDumperItemVisitor
      * @param OutputInterface $output
      * @param array           $options
      */
-    public function __construct(OutputInterface $output, $options = array())
+    public function __construct(OutputInterface $output, $options = [])
     {
-        $options = array_merge(array(
+        $options = array_merge([
             'max_line_length' => 120,
             'ref_format' => 'uuid',
-        ), $options);
+        ], $options);
 
         parent::__construct($output);
 
@@ -69,13 +69,13 @@ class ConsoleDumperPropertyVisitor extends ConsoleDumperItemVisitor
             $value = substr($value, 0, $this->maxLineLength) . '...';
         }
 
-        $referrers = array();
+        $referrers = [];
 
-        if (in_array($item->getType(), array(
+        if (in_array($item->getType(), [
             PropertyType::WEAKREFERENCE,
             PropertyType::REFERENCE
-        ))) {
-            $referenceStrings = array();
+        ])) {
+            $referenceStrings = [];
 
             if ('path' == $this->refFormat) {
                 $references = (array) $item->getValue();
@@ -90,7 +90,7 @@ class ConsoleDumperPropertyVisitor extends ConsoleDumperItemVisitor
             $value = '';
         }
 
-        $value = str_replace(array("\n", "\t"), '', $value);
+        $value = str_replace(["\n", "\t"], '', $value);
 
         $this->output->writeln(str_repeat('  ', $this->level + 1) . '- <info>' . $item->getName() . '</info> = ' . $value);
 

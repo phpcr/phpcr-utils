@@ -25,8 +25,8 @@ class WorkspaceListCommandTest extends BaseCommandTest
                 'foo', 'bar'
             ]));
 
-        $ct = $this->executeCommand('phpcr:workspace:list', array(
-        ));
+        $ct = $this->executeCommand('phpcr:workspace:list', [
+        ]);
 
         $expected = <<<HERE
 The following 2 workspaces are available:

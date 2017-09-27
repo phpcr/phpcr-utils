@@ -140,16 +140,16 @@ class NodesUpdateCommandTest extends BaseCommandTest
 
     public function testApplyClosure()
     {
-        $args = array(
+        $args = [
             '--query' => "SELECT foo FROM bar",
             '--no-interaction' => true,
-            '--apply-closure' => array(
+            '--apply-closure' => [
                 '$session->getNodeByIdentifier("/foo"); $node->setProperty("foo", "bar");',
                 function ($session, $node) {
                     $node->setProperty('foo', 'bar');
                 }
-            ),
-        );
+            ],
+        ];
 
         $this->setupQueryManager(['query' => 'SELECT foo FROM bar']);
 

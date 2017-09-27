@@ -22,10 +22,10 @@ class DefaultScannerContext extends ScannerContext
 
         $this->addBlockCommentDelimiter('/*', '*/');
 
-        $symbols = array(
+        $symbols = [
             '<', '>', '+', '*', '%', '&', '/', '(', ')', '=', '?', '#', '|', '!', '~',
             '[', ']', '{', '}', '$', ',', ';', ':', '.', '-', '_', '\\',
-        );
+        ];
         foreach ($symbols as $symbol) {
             $this->addSymbol($symbol);
         }

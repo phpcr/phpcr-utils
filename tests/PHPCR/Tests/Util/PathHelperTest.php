@@ -301,11 +301,11 @@ class PathHelperTest extends \PHPUnit_Framework_TestCase
 
     public function dataproviderGetNodeName()
     {
-        return array(
-            array('/parent/child', 'child'),
-            array('/parent/ns:child', 'ns:child'),
-            array('/', ''),
-        );
+        return [
+            ['/parent/child', 'child'],
+            ['/parent/ns:child', 'ns:child'],
+            ['/', ''],
+        ];
     }
 
     /**

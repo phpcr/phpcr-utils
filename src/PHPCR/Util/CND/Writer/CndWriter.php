@@ -33,7 +33,7 @@ class CndWriter
     private $ns;
 
     /** @var array hashmap of prefix => namespace uri */
-    private $namespaces = array();
+    private $namespaces = [];
 
     /**
      * @param NodeTypeManagerInterface $ntm

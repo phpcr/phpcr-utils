@@ -36,30 +36,30 @@ use PHPCR\Version\OnParentVersionAction;
 class CndParser extends AbstractParser
 {
     // node type attributes
-    private $ORDERABLE = array('o', 'ord', 'orderable');//, 'variant' => true);
-    private $MIXIN     = array('m', 'mix', 'mixin');//, 'variant' => true);
-    private $ABSTRACT  = array('a', 'abs', 'abstract');//, 'variant' => true);
-    private $NOQUERY   = array('noquery', 'nq');//, 'variant' => false);
-    private $QUERY      = array('query', 'q');//, 'variant' => false);
-    private $PRIMARYITEM = array('primaryitem', '!');//, 'variant' => false);
+    private $ORDERABLE = ['o', 'ord', 'orderable'];//, 'variant' => true);
+    private $MIXIN     = ['m', 'mix', 'mixin'];//, 'variant' => true);
+    private $ABSTRACT  = ['a', 'abs', 'abstract'];//, 'variant' => true);
+    private $NOQUERY   = ['noquery', 'nq'];//, 'variant' => false);
+    private $QUERY      = ['query', 'q'];//, 'variant' => false);
+    private $PRIMARYITEM = ['primaryitem', '!'];//, 'variant' => false);
 
     // common for properties and child definitions
-    private $PRIMARY = array('!', 'pri', 'primary'); //, 'variant' => true),
-    private $AUTOCREATED = array('a', 'aut', 'autocreated'); //, 'variant' => true),
-    private $MANDATORY = array('m', 'man', 'mandatory'); //, 'variant' => true),
-    private $PROTECTED = array('p', 'pro', 'protected'); //, 'variant' => true),
-    private $OPV = array('COPY', 'VERSION', 'INITIALIZE', 'COMPUTE', 'IGNORE', 'ABORT');
+    private $PRIMARY = ['!', 'pri', 'primary']; //, 'variant' => true),
+    private $AUTOCREATED = ['a', 'aut', 'autocreated']; //, 'variant' => true),
+    private $MANDATORY = ['m', 'man', 'mandatory']; //, 'variant' => true),
+    private $PROTECTED = ['p', 'pro', 'protected']; //, 'variant' => true),
+    private $OPV = ['COPY', 'VERSION', 'INITIALIZE', 'COMPUTE', 'IGNORE', 'ABORT'];
 
     // property type attributes
-    private $MULTIPLE = array('*', 'mul', 'multiple'); //, 'variant' => true),
-    private $QUERYOPS = array('qop', 'queryops'); //, 'variant' => true), // Needs special handling !
-    private $NOFULLTEXT = array('nof', 'nofulltext'); //, 'variant' => true),
-    private $NOQUERYORDER = array('nqord', 'noqueryorder'); //, 'variant' => true),
+    private $MULTIPLE = ['*', 'mul', 'multiple']; //, 'variant' => true),
+    private $QUERYOPS = ['qop', 'queryops']; //, 'variant' => true), // Needs special handling !
+    private $NOFULLTEXT = ['nof', 'nofulltext']; //, 'variant' => true),
+    private $NOQUERYORDER = ['nqord', 'noqueryorder']; //, 'variant' => true),
 
     // child node attributes
     // multiple is actually a jackrabbit specific synonym for sns
     // http://www.mail-archive.com/users@jackrabbit.apache.org/msg19268.html
-    private $SNS = array('*', 'sns', 'multiple'); //, 'variant' => true),
+    private $SNS = ['*', 'sns', 'multiple']; //, 'variant' => true),
 
     /**
      * @var NodeTypeManagerInterface
@@ -69,12 +69,12 @@ class CndParser extends AbstractParser
     /**
      * @var array
      */
-    protected $namespaces = array();
+    protected $namespaces = [];
 
     /**
      * @var array
      */
-    protected $nodeTypes = array();
+    protected $nodeTypes = [];
 
     /**
      * @param NodeTypeManagerInterface $ntm
@@ -129,10 +129,10 @@ class CndParser extends AbstractParser
             }
         }
 
-        return array(
+        return [
             'namespaces' => $this->namespaces,
             'nodeTypes' => $this->nodeTypes,
-        );
+        ];
     }
 
     /**
@@ -208,7 +208,7 @@ class CndParser extends AbstractParser
         $this->expectToken(Token::TK_SYMBOL, '>');
 
         if ($this->checkAndExpectToken(Token::TK_SYMBOL, '?')) {
-            $nodeType->setDeclaredSuperTypeNames(array('?'));
+            $nodeType->setDeclaredSuperTypeNames(['?']);
         } else {
             $nodeType->setDeclaredSuperTypeNames($this->parseCndStringList());
         }
@@ -369,8 +369,8 @@ class CndParser extends AbstractParser
      */
     protected function parsePropertyType(PropertyDefinitionTemplateInterface $property)
     {
-        $types = array("STRING", "BINARY", "LONG", "DOUBLE", "BOOLEAN",  "DATE", "NAME", "PATH",
-                       "REFERENCE", "WEAKREFERENCE", "DECIMAL", "URI", "UNDEFINED", "*", "?");
+        $types = ["STRING", "BINARY", "LONG", "DOUBLE", "BOOLEAN",  "DATE", "NAME", "PATH",
+                       "REFERENCE", "WEAKREFERENCE", "DECIMAL", "URI", "UNDEFINED", "*", "?"];
 
         if (! $this->checkTokenIn(Token::TK_IDENTIFIER, $types, true)) {
             throw new ParserException($this->tokenQueue, sprintf("Invalid property type: %s", $this->tokenQueue->get()->getData()));
@@ -394,7 +394,7 @@ class CndParser extends AbstractParser
     protected function parseDefaultValue(PropertyDefinitionTemplateInterface $property)
     {
         if ($this->checkAndExpectToken(Token::TK_SYMBOL, '?')) {
-            $list = array('?');
+            $list = ['?'];
         } else {
             $list = $this->parseCndStringList();
         }
@@ -414,7 +414,7 @@ class CndParser extends AbstractParser
         $this->expectToken(Token::TK_SYMBOL, '<');
 
         if ($this->checkAndExpectToken(Token::TK_SYMBOL, '?')) {
-            $list = array('?');
+            $list = ['?'];
         } else {
             $list = $this->parseCndStringList();
         }
@@ -632,7 +632,7 @@ class CndParser extends AbstractParser
      */
     protected function parseCndStringList()
     {
-        $strings = array();
+        $strings = [];
 
         $strings[] = $this->parseCndString();
         while ($this->checkAndExpectToken(Token::TK_SYMBOL, ',')) {
@@ -728,7 +728,7 @@ class CndParser extends AbstractParser
             throw new ParserException($this->tokenQueue, 'TODO: understand what "variant" means');
         }
 
-        $ops = array();
+        $ops = [];
         do {
             $op = $this->parseQueryOperator();
             $ops[] = $op;

@@ -132,13 +132,13 @@ HERE
             $node = $parentNode->addNode($nodeName, $type);
         }
 
-        $helper->processNode($output, $node, array(
+        $helper->processNode($output, $node, [
             'setProp' => $setProp,
             'removeProp' => $removeProp,
             'addMixins' => $addMixins,
             'removeMixins' => $removeMixins,
             'dump' => $dump,
-        ));
+        ]);
 
         $session->save();
 

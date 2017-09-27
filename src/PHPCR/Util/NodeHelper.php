@@ -176,10 +176,10 @@ class NodeHelper
             return self::generateWithPrefix($usedNames, '');
         }
 
-         /*
-          * "<i>somePrefix</i>:" where <i>somePrefix</i> is a syntactically
-          * valid namespace prefix
-          */
+        /*
+         * "<i>somePrefix</i>:" where <i>somePrefix</i> is a syntactically
+         * valid namespace prefix
+         */
         if (':' === $nameHint[strlen($nameHint)-1]
             && substr_count($nameHint, ':') === 1
             && preg_match('#^[a-zA-Z][a-zA-Z0-9]*:$#', $nameHint)

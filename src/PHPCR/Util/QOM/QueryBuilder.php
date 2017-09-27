@@ -243,7 +243,7 @@ class QueryBuilder
      */
     public function orderBy(DynamicOperandInterface $sort, $order = 'ASC')
     {
-        $this->orderings = array();
+        $this->orderings = [];
         $this->addOrderBy($sort, $order);
 
         return $this;

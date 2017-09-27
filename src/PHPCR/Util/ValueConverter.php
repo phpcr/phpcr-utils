@@ -119,7 +119,7 @@ class ValueConverter
     public function convertType($value, $type, $srcType = PropertyType::UNDEFINED)
     {
         if (is_array($value)) {
-            $ret = array();
+            $ret = [];
             foreach ($value as $v) {
                 $ret[] = self::convertType($v, $type, $srcType);
             }

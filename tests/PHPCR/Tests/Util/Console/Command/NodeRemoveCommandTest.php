@@ -20,19 +20,19 @@ class NodeRemoveCommandTest extends BaseCommandTest
             ->method('removeItem')
             ->with('/cms');
 
-        $this->executeCommand('phpcr:node:remove', array(
+        $this->executeCommand('phpcr:node:remove', [
             '--force' => true,
             'path' => '/cms',
-        ));
+        ]);
     }
 
     public function testRemoveRoot()
     {
         $this->expectException(LogicException::class);
 
-        $this->executeCommand('phpcr:node:remove', array(
+        $this->executeCommand('phpcr:node:remove', [
             '--force' => true,
             'path' => '/',
-        ));
+        ]);
     }
 }

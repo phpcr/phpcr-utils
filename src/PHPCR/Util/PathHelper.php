@@ -58,7 +58,7 @@ class PathHelper
             return self::error("Destination path may not end with index: '$path'", $throw);
         }
         if ($namespacePrefixes) {
-            $matches = array();
+            $matches = [];
             preg_match_all('#/(?P<prefixes>[^/:]+):#', $path, $matches);
             $unknown = array_diff(array_unique($matches['prefixes']), $namespacePrefixes);
             if (count($unknown)) {
@@ -144,7 +144,7 @@ class PathHelper
             return self::error("Not an absolute path '$path'", $throw);
         }
 
-        $finalParts= array();
+        $finalParts= [];
         $parts = explode('/', $path);
 
         foreach ($parts as $pathPart) {
