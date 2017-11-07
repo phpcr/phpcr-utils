@@ -4,9 +4,9 @@ namespace PHPCR\Tests\Util\CND\Scanner;
 
 use PHPCR\Util\CND\Scanner\Token;
 use PHPCR\Util\CND\Scanner\TokenQueue;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class TokenQueueTest extends PHPUnit_Framework_TestCase
+class TokenQueueTest extends TestCase
 {
     /**
      * @var Token

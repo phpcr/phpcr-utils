@@ -5,11 +5,11 @@ namespace PHPCR\Tests\Util;
 use PHPCR\Tests\Stubs\MockNode;
 use PHPCR\Util\NodeHelper;
 use PHPUnit_Framework_MockObject_MockObject;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 require_once __DIR__.'/../Stubs/MockNode.php';
 
-class NodeHelperTest extends PHPUnit_Framework_TestCase
+class NodeHelperTest extends TestCase
 {
     /**
      * @var array

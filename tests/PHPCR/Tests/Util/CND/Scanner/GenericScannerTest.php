@@ -9,11 +9,11 @@ use PHPCR\Util\CND\Scanner\GenericToken as Token;
 use PHPCR\Util\CND\Scanner\TokenQueue;
 use PHPCR\Util\CND\Scanner\TokenFilter;
 use PHPCR\Util\CND\Scanner\Context\DefaultScannerContext;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Test;
 use TestClass;
 
-class GenericScannerTest extends PHPUnit_Framework_TestCase
+class GenericScannerTest extends TestCase
 {
     protected $expectedTokens = [
 

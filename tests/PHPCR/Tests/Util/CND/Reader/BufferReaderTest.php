@@ -3,9 +3,9 @@
 namespace PHPCR\Tests\Util\CND\Reader;
 
 use PHPCR\Util\CND\Reader\BufferReader;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class BufferReaderTest extends PHPUnit_Framework_TestCase
+class BufferReaderTest extends TestCase
 {
     public function test__construct()
     {
