@@ -7,14 +7,14 @@ use PHPCR\RepositoryException;
 use PHPCR\Tests\Stubs\MockNode;
 use PHPCR\Util\ValueConverter;
 use PHPCR\ValueFormatException;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 require_once __DIR__.'/../Stubs/MockNode.php';
 
 /**
  * A test for the PHPCR\PropertyType class
  */
-class ValueConverterTest extends PHPUnit_Framework_TestCase
+class ValueConverterTest extends TestCase
 {
     /**
      * @var ValueConverter

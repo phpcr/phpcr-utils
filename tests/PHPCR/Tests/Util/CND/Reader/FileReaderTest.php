@@ -4,9 +4,9 @@ namespace PHPCR\Tests\Util\CND\Reader;
 
 use InvalidArgumentException;
 use PHPCR\Util\CND\Reader\FileReader;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class FileReaderTest extends PHPUnit_Framework_TestCase
+class FileReaderTest extends TestCase
 {
     /**
      * @var string

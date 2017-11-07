@@ -9,7 +9,7 @@ use PHPCR\RepositoryInterface;
 use PHPCR\Tests\Stubs\MockNode;
 use PHPCR\Tests\Stubs\MockRow;
 use PHPUnit_Framework_MockObject_MockObject;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Console\Helper\HelperSet;
@@ -22,7 +22,7 @@ require_once __DIR__.'/../../../Stubs/MockNode.php';
 require_once __DIR__.'/../../../Stubs/MockNodeTypeManager.php';
 require_once __DIR__.'/../../../Stubs/MockRow.php';
 
-abstract class BaseCommandTest extends PHPUnit_Framework_TestCase
+abstract class BaseCommandTest extends TestCase
 {
     /**
      * @var SessionInterface|PHPUnit_Framework_MockObject_MockObject

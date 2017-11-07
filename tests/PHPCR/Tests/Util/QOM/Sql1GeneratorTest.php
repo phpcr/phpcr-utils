@@ -5,9 +5,9 @@ namespace PHPCR\Tests\Util\QOM;
 use DateTime;
 use PHPCR\Util\QOM\Sql1Generator;
 use PHPCR\Util\ValueConverter;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class Sql1GeneratorTest extends PHPUnit_Framework_TestCase
+class Sql1GeneratorTest extends TestCase
 {
     /**
      * @var Sql1Generator

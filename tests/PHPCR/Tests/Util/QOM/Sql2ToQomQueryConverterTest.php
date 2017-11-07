@@ -6,9 +6,9 @@ use PHPCR\Query\InvalidQueryException;
 use PHPCR\Query\QOM\QueryObjectModelFactoryInterface;
 use PHPCR\Util\QOM\Sql2ToQomQueryConverter;
 use PHPCR\Util\ValueConverter;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class Sql2ToQomQueryConverterTest extends PHPUnit_Framework_TestCase
+class Sql2ToQomQueryConverterTest extends TestCase
 {
     /**
      * @var QueryObjectModelFactoryInterface

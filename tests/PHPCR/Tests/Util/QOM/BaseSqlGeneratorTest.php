@@ -2,9 +2,9 @@
 
 namespace PHPCR\Tests\Util\QOM;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-abstract class BaseSqlGeneratorTest extends PHPUnit_Framework_TestCase
+abstract class BaseSqlGeneratorTest extends TestCase
 {
     public function testNot()
     {

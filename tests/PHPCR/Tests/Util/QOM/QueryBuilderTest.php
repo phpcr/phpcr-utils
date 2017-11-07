@@ -12,10 +12,10 @@ use PHPCR\Query\QOM\SameNodeJoinConditionInterface;
 use PHPCR\Query\QOM\SourceInterface;
 use PHPCR\Util\QOM\QueryBuilder;
 use PHPUnit_Framework_MockObject_MockObject;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
-class QueryBuilderTest extends PHPUnit_Framework_TestCase
+class QueryBuilderTest extends TestCase
 {
     /**
      * @var PHPUnit_Framework_MockObject_MockObject|QueryObjectModelFactoryInterface

@@ -3,9 +3,9 @@
 namespace PHPCR\Tests\Util;
 
 use PHPCR\Util\UUIDHelper;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class UUIDHelperTest extends PHPUnit_Framework_TestCase
+class UUIDHelperTest extends TestCase
 {
     public function testGenerateUUID()
     {

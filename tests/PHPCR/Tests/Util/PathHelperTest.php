@@ -6,8 +6,9 @@ use PHPCR\NamespaceException;
 use PHPCR\RepositoryException;
 use PHPCR\Util\PathHelper;
 use stdClass;
+use PHPUnit\Framework\TestCase;
 
-class PathHelperTest extends \PHPUnit_Framework_TestCase
+class PathHelperTest extends TestCase
 {
     // assertValidPath tests
 
