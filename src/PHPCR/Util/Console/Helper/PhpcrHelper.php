@@ -115,7 +115,9 @@ class PhpcrHelper extends Helper
                 );
             } else {
                 $closureString = $closure;
-                $closure = create_function('$session, $node', $closure);
+                $closure = function (SessionInterface $session, NodeInterface $node) use ($closureString) {
+                    eval($closureString);
+                };
                 $output->writeln(sprintf(
                     '<comment> > Applying closure: %s</comment>',
                     strlen($closureString) > 75 ? substr($closureString, 0, 72).'...' : $closureString
