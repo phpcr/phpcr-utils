@@ -1,6 +1,8 @@
 Changelog
 =========
 
+* **2017-11-18**: Removed hhvm test
+
 1.2.7
 -----
 
