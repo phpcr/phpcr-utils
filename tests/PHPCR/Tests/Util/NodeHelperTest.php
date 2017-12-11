@@ -67,7 +67,7 @@ class NodeHelperTest extends TestCase
     {
         $result = NodeHelper::generateAutoNodeName($this->usedNames, $this->namespaces, 'a', $hint);
         if (true === $expect) {
-            $this->assertFalse(strpos($result, ':'));
+            $this->assertNotContains(':', $result);
         } else {
             $this->assertEquals($expect, substr($result, 0, strlen($expect)));
         }
