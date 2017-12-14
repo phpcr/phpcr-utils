@@ -235,13 +235,12 @@ class GenericScanner extends AbstractScanner
                     $this->addToken($reader, $token);
 
                     return true;
-                } else {
-
-                    // Rewind the looked up characters
-                    $reader->rewind();
-
-                    return false;
                 }
+
+                // Rewind the looked up characters
+                $reader->rewind();
+
+                return false;
             }
         }
 
