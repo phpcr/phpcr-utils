@@ -195,13 +195,12 @@ class GenericScanner extends AbstractScanner
 
                     // End of file reached and no end delimiter found, error
                     throw new ScannerException($reader, "Unterminated block comment");
-                } else {
-
-                    // Start delimiter not found, rewind the looked up characters
-                    $reader->rewind();
-
-                    return false;
                 }
+
+                // Start delimiter not found, rewind the looked up characters
+                $reader->rewind();
+
+                return false;
             }
         }
 
