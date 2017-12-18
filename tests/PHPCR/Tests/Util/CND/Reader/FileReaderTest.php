@@ -25,14 +25,14 @@ class FileReaderTest extends TestCase
 
     public function setUp()
     {
-        $this->filepath = __DIR__ . '/../Fixtures/files/TestFile.txt';
+        $this->filepath = __DIR__.'/../Fixtures/files/TestFile.txt';
         $this->reader = new FileReader($this->filepath);
 
         $this->lines = [
             'This is a test file...',
             '',
             '...containing dummy content.',
-            ''
+            '',
         ];
 
         $this->chars = array_merge(

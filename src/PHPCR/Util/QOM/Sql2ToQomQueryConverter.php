@@ -5,6 +5,7 @@ namespace PHPCR\Util\QOM;
 use DateTime;
 use Exception;
 use InvalidArgumentException;
+use Jackalope\Query\QOM\Selector;
 use LogicException;
 use PHPCR\PropertyType;
 use PHPCR\Query\InvalidQueryException;
@@ -29,7 +30,6 @@ use PHPCR\Query\QOM\SameNodeJoinConditionInterface;
 use PHPCR\Query\QOM\SelectorInterface;
 use PHPCR\Query\QOM\SourceInterface;
 use PHPCR\Query\QOM\StaticOperandInterface;
-use Jackalope\Query\QOM\Selector;
 use PHPCR\Util\ValueConverter;
 
 /**
@@ -41,21 +41,21 @@ use PHPCR\Util\ValueConverter;
 class Sql2ToQomQueryConverter
 {
     /**
-     * The factory to create QOM objects
+     * The factory to create QOM objects.
      *
      * @var QueryObjectModelFactoryInterface
      */
     protected $factory;
 
     /**
-     * Scanner to parse SQL2
+     * Scanner to parse SQL2.
      *
      * @var Sql2Scanner;
      */
     protected $scanner;
 
     /**
-     * The SQL2 query (the converter is not reentrant)
+     * The SQL2 query (the converter is not reentrant).
      *
      * @var string
      */
@@ -72,7 +72,7 @@ class Sql2ToQomQueryConverter
     protected $implicitSelectorName = null;
 
     /**
-     * Instantiate a converter
+     * Instantiate a converter.
      *
      * @param QueryObjectModelFactoryInterface $factory
      * @param ValueConverter                   $valueConverter To override default converter.
@@ -85,13 +85,13 @@ class Sql2ToQomQueryConverter
 
     /**
      * 6.7.1. Query
-     * Parse an SQL2 query and return the corresponding QOM QueryObjectModel
+     * Parse an SQL2 query and return the corresponding QOM QueryObjectModel.
      *
      * @param string $sql2
      *
-     * @return QueryObjectModelInterface
-     *
      * @throws InvalidQueryException
+     *
+     * @return QueryObjectModelInterface
      */
     public function parse($sql2)
     {
@@ -123,7 +123,7 @@ class Sql2ToQomQueryConverter
                     $orderings = $this->parseOrderings();
                     break;
                 default:
-                    throw new InvalidQueryException('Error parsing query, unknown query part "' . $this->scanner->lookupNextToken() . '" in: ' . $this->sql2);
+                    throw new InvalidQueryException('Error parsing query, unknown query part "'.$this->scanner->lookupNextToken().'" in: '.$this->sql2);
             }
         }
 
@@ -140,7 +140,7 @@ class Sql2ToQomQueryConverter
 
     /**
      * 6.7.2. Source
-     * Parse an SQL2 source definition and return the corresponding QOM Source
+     * Parse an SQL2 source definition and return the corresponding QOM Source.
      *
      * @return SourceInterface
      */
@@ -161,7 +161,7 @@ class Sql2ToQomQueryConverter
 
     /**
      * 6.7.3. Selector
-     * Parse an SQL2 selector and return a QOM\Selector
+     * Parse an SQL2 selector and return a QOM\Selector.
      *
      * @return SelectorInterface
      */
@@ -182,7 +182,7 @@ class Sql2ToQomQueryConverter
     }
 
     /**
-     * 6.7.4. Name
+     * 6.7.4. Name.
      *
      * @return string
      */
@@ -194,7 +194,7 @@ class Sql2ToQomQueryConverter
     /**
      * 6.7.5. Join
      * 6.7.6. Join type
-     * Parse an SQL2 join source and return a QOM\Join
+     * Parse an SQL2 join source and return a QOM\Join.
      *
      * @param SourceInterface $leftSelector the left selector as it has been read by parseSource
      *
@@ -210,11 +210,11 @@ class Sql2ToQomQueryConverter
     }
 
     /**
-     * 6.7.6. Join type
-     *
-     * @return string
+     * 6.7.6. Join type.
      *
      * @throws InvalidQueryException
+     *
+     * @return string
      */
     protected function parseJoinType()
     {
@@ -245,7 +245,7 @@ class Sql2ToQomQueryConverter
 
     /**
      * 6.7.7. JoinCondition
-     * Parse an SQL2 join condition and return a JoinConditionInterface
+     * Parse an SQL2 join condition and return a JoinConditionInterface.
      *
      * @return JoinConditionInterface
      */
@@ -271,7 +271,7 @@ class Sql2ToQomQueryConverter
 
     /**
      * 6.7.8. EquiJoinCondition
-     * Parse an SQL2 equijoin condition and return a EquiJoinConditionInterface
+     * Parse an SQL2 equijoin condition and return a EquiJoinConditionInterface.
      *
      * @return EquiJoinConditionInterface
      */
@@ -286,7 +286,7 @@ class Sql2ToQomQueryConverter
 
     /**
      * 6.7.9 SameNodeJoinCondition
-     * Parse an SQL2 same node join condition and return a SameNodeJoinConditionInterface
+     * Parse an SQL2 same node join condition and return a SameNodeJoinConditionInterface.
      *
      * @return SameNodeJoinConditionInterface
      */
@@ -312,7 +312,7 @@ class Sql2ToQomQueryConverter
 
     /**
      * 6.7.10 ChildNodeJoinCondition
-     * Parse an SQL2 child node join condition and return a ChildNodeJoinConditionInterface
+     * Parse an SQL2 child node join condition and return a ChildNodeJoinConditionInterface.
      *
      * @return ChildNodeJoinConditionInterface
      */
@@ -329,7 +329,7 @@ class Sql2ToQomQueryConverter
 
     /**
      * 6.7.11 DescendantNodeJoinCondition
-     * Parse an SQL2 descendant node join condition and return a DescendantNodeJoinConditionInterface
+     * Parse an SQL2 descendant node join condition and return a DescendantNodeJoinConditionInterface.
      *
      * @return DescendantNodeJoinConditionInterface
      */
@@ -346,14 +346,14 @@ class Sql2ToQomQueryConverter
 
     /**
      * 6.7.13 And
-     * 6.7.14 Or
+     * 6.7.14 Or.
      *
      * @param ConstraintInterface $lhs     Left hand side
      * @param int                 $minprec Precedence
      *
-     * @return ConstraintInterface
-     *
      * @throws Exception
+     *
+     * @return ConstraintInterface
      */
     protected function parseConstraint($lhs = null, $minprec = 0)
     {
@@ -362,7 +362,7 @@ class Sql2ToQomQueryConverter
         }
 
         $opprec = [
-            'OR' => 1,
+            'OR'  => 1,
             'AND' => 2,
         ];
 
@@ -400,7 +400,7 @@ class Sql2ToQomQueryConverter
     }
 
     /**
-     * 6.7.12 Constraint
+     * 6.7.12 Constraint.
      *
      * @return ConstraintInterface
      */
@@ -456,7 +456,7 @@ class Sql2ToQomQueryConverter
     }
 
     /**
-     * 6.7.15 Not
+     * 6.7.15 Not.
      *
      * @return NotInterface
      */
@@ -468,11 +468,11 @@ class Sql2ToQomQueryConverter
     }
 
     /**
-     * 6.7.16 Comparison
-     *
-     * @return ComparisonInterface
+     * 6.7.16 Comparison.
      *
      * @throws InvalidQueryException
+     *
+     * @return ComparisonInterface
      */
     protected function parseComparison()
     {
@@ -489,7 +489,7 @@ class Sql2ToQomQueryConverter
     }
 
     /**
-     * 6.7.17 Operator
+     * 6.7.17 Operator.
      *
      * @return string a constant from QueryObjectModelConstantsInterface
      */
@@ -517,7 +517,7 @@ class Sql2ToQomQueryConverter
     }
 
     /**
-     * 6.7.18 PropertyExistence
+     * 6.7.18 PropertyExistence.
      *
      * @return PropertyExistenceInterface
      */
@@ -539,7 +539,7 @@ class Sql2ToQomQueryConverter
     }
 
     /**
-     * 6.7.19 FullTextSearch
+     * 6.7.19 FullTextSearch.
      *
      * @return FullTextSearchInterface
      */
@@ -556,7 +556,7 @@ class Sql2ToQomQueryConverter
     }
 
     /**
-     * 6.7.20 SameNode
+     * 6.7.20 SameNode.
      */
     protected function parseSameNode()
     {
@@ -575,7 +575,7 @@ class Sql2ToQomQueryConverter
     }
 
     /**
-     * 6.7.21 ChildNode
+     * 6.7.21 ChildNode.
      */
     protected function parseChildNode()
     {
@@ -594,7 +594,7 @@ class Sql2ToQomQueryConverter
     }
 
     /**
-     * 6.7.22 DescendantNode
+     * 6.7.22 DescendantNode.
      */
     protected function parseDescendantNode()
     {
@@ -632,7 +632,7 @@ class Sql2ToQomQueryConverter
     /**
      * Parse an SQL2 static operand
      * 6.7.35 BindVariable
-     * 6.7.36 Prefix
+     * 6.7.36 Prefix.
      *
      * @return StaticOperandInterface
      */
@@ -654,7 +654,7 @@ class Sql2ToQomQueryConverter
      * 6.7.31 FullTextSearchScore
      * 6.7.32 LowerCase
      * 6.7.33 UpperCase
-     * Parse an SQL2 dynamic operand
+     * Parse an SQL2 dynamic operand.
      *
      * @return DynamicOperandInterface
      */
@@ -736,7 +736,7 @@ class Sql2ToQomQueryConverter
 
     /**
      * 6.7.27 PropertyValue
-     * Parse an SQL2 property value
+     * Parse an SQL2 property value.
      *
      * @return PropertyValueInterface
      */
@@ -782,6 +782,7 @@ class Sql2ToQomQueryConverter
         $this->scanner->expectToken('AS');
 
         $type = $this->scanner->fetchNextToken();
+
         try {
             $typeValue = PropertyType::valueFromName($type);
         } catch (InvalidArgumentException $e) {
@@ -801,7 +802,7 @@ class Sql2ToQomQueryConverter
 
     /**
      * 6.7.34 Literal
-     * Parse an SQL2 literal value
+     * Parse an SQL2 literal value.
      *
      * @return mixed
      */
@@ -837,7 +838,7 @@ class Sql2ToQomQueryConverter
             $token = str_replace("''", "'", $token);
             if (preg_match('/^\d{4}-\d{2}-\d{2}( \d{2}:\d{2}:\d+)?$/', $token)) {
                 if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $token)) {
-                    $token.= ' 00:00:00';
+                    $token .= ' 00:00:00';
                 }
                 $token = DateTime::createFromFormat('Y-m-d H:i:s', $token);
             }
@@ -853,7 +854,7 @@ class Sql2ToQomQueryConverter
     }
 
     /**
-     * 6.7.37 Ordering
+     * 6.7.37 Ordering.
      */
     protected function parseOrderings()
     {
@@ -873,7 +874,7 @@ class Sql2ToQomQueryConverter
     }
 
     /**
-     * 6.7.38 Order
+     * 6.7.38 Order.
      *
      * @return OrderingInterface
      */
@@ -900,7 +901,7 @@ class Sql2ToQomQueryConverter
     }
 
     /**
-     * 6.7.39 Column
+     * 6.7.39 Column.
      *
      * Scan the SQL2 columns definitions and return data arrays to convert to
      * columns once the FROM is parsed.
@@ -952,7 +953,7 @@ class Sql2ToQomQueryConverter
 
     /**
      * Get the next token and make sure to remove the brackets if the token is
-     * in the [ns:name] notation
+     * in the [ns:name] notation.
      *
      * @return string
      */
@@ -971,10 +972,10 @@ class Sql2ToQomQueryConverter
     /**
      * Parse something that is expected to be a property identifier.
      *
-     * @param boolean $checkSelector whether we need to ensure a valid selector.
+     * @param bool $checkSelector whether we need to ensure a valid selector.
      *
      * @return array with selectorName and propertyName. If no selectorName is
-     *      specified, defaults to $this->defaultSelectorName
+     *               specified, defaults to $this->defaultSelectorName
      */
     private function parseIdentifier($checkSelector = true)
     {
@@ -1025,10 +1026,10 @@ class Sql2ToQomQueryConverter
      *
      * @param string|null $parsedName
      *
-     * @return string the selector to use
-     *
      * @throws InvalidQueryException if there was no explicit selector and
-     *      there is more than one selector available.
+     *                               there is more than one selector available.
+     *
+     * @return string the selector to use
      */
     protected function ensureSelectorName($parsedName)
     {
@@ -1042,14 +1043,14 @@ class Sql2ToQomQueryConverter
             return $parsedName;
         }
         if (is_array($this->implicitSelectorName)) {
-            throw new InvalidQueryException("Need an explicit selector name in join queries");
+            throw new InvalidQueryException('Need an explicit selector name in join queries');
         }
 
         return $this->implicitSelectorName;
     }
 
     /**
-     * Scan a single SQL2 column definition and return an array of information
+     * Scan a single SQL2 column definition and return an array of information.
      *
      * @return array
      */
@@ -1069,7 +1070,7 @@ class Sql2ToQomQueryConverter
     }
 
     /**
-     * Build a single SQL2 column definition
+     * Build a single SQL2 column definition.
      *
      * @param array $data with selector name, property name and column name.
      *

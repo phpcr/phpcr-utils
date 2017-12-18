@@ -13,7 +13,7 @@ use RuntimeException;
 class NotSupportedConstraintException extends RuntimeException
 {
     /**
-     * Create the exception with an explaining message
+     * Create the exception with an explaining message.
      *
      * @param string $constraint the constraint expression that is not supported
      */

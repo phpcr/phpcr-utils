@@ -9,41 +9,40 @@ namespace PHPCR\Util\CND\Scanner;
  *
  * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
  * @license http://opensource.org/licenses/MIT MIT License
- *
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  */
 class Token
 {
     /**
-     * The type of token
+     * The type of token.
      *
      * @var int
      */
     public $type;
 
     /**
-     * The token raw data
+     * The token raw data.
      *
      * @var string
      */
     public $data;
 
     /**
-     * The line where the token appears
+     * The line where the token appears.
      *
      * @var int
      */
     protected $line;
 
     /**
-     * The column where the token appears
+     * The column where the token appears.
      *
      * @var int
      */
     protected $row;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param int    $type
      * @param string $data

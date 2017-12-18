@@ -3,32 +3,32 @@
 namespace PHPCR\Util\Console\Helper\TreeDumper;
 
 use Exception;
-use Symfony\Component\Console\Output\OutputInterface;
 use PHPCR\ItemInterface;
 use PHPCR\PropertyInterface;
 use PHPCR\PropertyType;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * TODO: this should base on the TraversingItemVisitor
+ * TODO: this should base on the TraversingItemVisitor.
  *
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  */
 class ConsoleDumperPropertyVisitor extends ConsoleDumperItemVisitor
 {
     /**
-     * Limit to cap lines at to avoid garbled output on long property values
+     * Limit to cap lines at to avoid garbled output on long property values.
      *
      * @var int
      */
     protected $maxLineLength;
 
     /**
-     * Show the full path for each reference
+     * Show the full path for each reference.
      */
     protected $expandReferences;
 
     /**
-     * Instantiate property visitor
+     * Instantiate property visitor.
      *
      * @param OutputInterface $output
      * @param array           $options
@@ -37,7 +37,7 @@ class ConsoleDumperPropertyVisitor extends ConsoleDumperItemVisitor
     {
         $options = array_merge([
             'max_line_length' => 120,
-            'ref_format' => 'uuid',
+            'ref_format'      => 'uuid',
         ], $options);
 
         parent::__construct($output);
@@ -47,7 +47,7 @@ class ConsoleDumperPropertyVisitor extends ConsoleDumperItemVisitor
     }
 
     /**
-     * Print information about this property
+     * Print information about this property.
      *
      * @param ItemInterface $item the property to visit
      *
@@ -55,25 +55,25 @@ class ConsoleDumperPropertyVisitor extends ConsoleDumperItemVisitor
      */
     public function visit(ItemInterface $item)
     {
-        if (! $item instanceof PropertyInterface) {
+        if (!$item instanceof PropertyInterface) {
             throw new Exception(sprintf('Internal error: did not expect to visit a non-property object: %s', is_object($item) ? get_class($item) : $item));
         }
 
         $value = $item->getString();
 
-        if (! is_string($value)) {
+        if (!is_string($value)) {
             $value = print_r($value, true);
         }
 
         if (strlen($value) > $this->maxLineLength) {
-            $value = substr($value, 0, $this->maxLineLength) . '...';
+            $value = substr($value, 0, $this->maxLineLength).'...';
         }
 
         $referrers = [];
 
         if (in_array($item->getType(), [
             PropertyType::WEAKREFERENCE,
-            PropertyType::REFERENCE
+            PropertyType::REFERENCE,
         ])) {
             $referenceStrings = [];
 
@@ -92,7 +92,7 @@ class ConsoleDumperPropertyVisitor extends ConsoleDumperItemVisitor
 
         $value = str_replace(["\n", "\t"], '', $value);
 
-        $this->output->writeln(str_repeat('  ', $this->level + 1) . '- <info>' . $item->getName() . '</info> = ' . $value);
+        $this->output->writeln(str_repeat('  ', $this->level + 1).'- <info>'.$item->getName().'</info> = '.$value);
 
         if (isset($referenceStrings)) {
             foreach ($referenceStrings as $referenceString) {

@@ -2,14 +2,14 @@
 
 namespace PHPCR\Util\Console\Command;
 
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Exception\InvalidArgumentException;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use PHPCR\PathNotFoundException;
 use PHPCR\Util\PathHelper;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Exception\InvalidArgumentException;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Command to create a PHPCR node of a specified type from
@@ -17,13 +17,12 @@ use PHPCR\Util\PathHelper;
  *
  * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
  * @license http://opensource.org/licenses/MIT MIT License
- *
  * @author Daniel Leech <daniel@dantleech.com>
  */
 class NodeTouchCommand extends BaseNodeManipulationCommand
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @throws InvalidArgumentException
      */
@@ -50,7 +49,7 @@ class NodeTouchCommand extends BaseNodeManipulationCommand
                 'Dump a string reperesentation of the created / modified node.'
             )
             ->setDescription('Create or modify a node')
-            ->setHelp(<<<HERE
+            ->setHelp(<<<'HERE'
 This command allows you to create or modify a node at the specified path.
 
 For example::
@@ -70,7 +69,7 @@ HERE
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @throws InvalidArgumentException
      */
@@ -133,11 +132,11 @@ HERE
         }
 
         $helper->processNode($output, $node, [
-            'setProp' => $setProp,
-            'removeProp' => $removeProp,
-            'addMixins' => $addMixins,
+            'setProp'      => $setProp,
+            'removeProp'   => $removeProp,
+            'addMixins'    => $addMixins,
             'removeMixins' => $removeMixins,
-            'dump' => $dump,
+            'dump'         => $dump,
         ]);
 
         $session->save();

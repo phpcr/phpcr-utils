@@ -2,8 +2,8 @@
 
 namespace PHPCR\Tests\Util\Console\Command;
 
-use PHPCR\Util\Console\Command\WorkspaceImportCommand;
 use PHPCR\RepositoryInterface;
+use PHPCR\Util\Console\Command\WorkspaceImportCommand;
 
 class WorkspaceImportCommandTest extends BaseCommandTest
 {
@@ -29,7 +29,7 @@ class WorkspaceImportCommandTest extends BaseCommandTest
             ->method('importXml');
 
         $ct = $this->executeCommand('phpcr:workspace:import', [
-            'filename' => 'test_import.xml'
+            'filename' => 'test_import.xml',
         ]);
 
         $this->assertContains('Successfully imported', $ct->getDisplay());

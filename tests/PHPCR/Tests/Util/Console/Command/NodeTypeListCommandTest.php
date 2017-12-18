@@ -20,26 +20,22 @@ class NodeTypeListCommandTest extends BaseCommandTest
         $this->application->add(new NodeTypeListCommand());
         $this->nodeTypeManager = $this->getMockBuilder(MockNodeTypeManager::class)
             ->disableOriginalConstructor()
-            ->getMock()
-        ;
+            ->getMock();
     }
 
     public function testNodeTypeList()
     {
         $this->session->expects($this->once())
             ->method('getWorkspace')
-            ->will($this->returnValue($this->workspace))
-        ;
+            ->will($this->returnValue($this->workspace));
 
         $this->workspace->expects($this->once())
             ->method('getNodeTypeManager')
-            ->will($this->returnValue($this->nodeTypeManager))
-        ;
+            ->will($this->returnValue($this->nodeTypeManager));
 
         $this->nodeTypeManager->expects($this->once())
             ->method('getAllNodeTypes')
-            ->will($this->returnValue([]))
-        ;
+            ->will($this->returnValue([]));
 
         $this->executeCommand('phpcr:node-type:list', []);
     }

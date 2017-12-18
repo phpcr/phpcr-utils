@@ -14,13 +14,13 @@ use PHPCR\Query\QOM;
 class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
 {
     /**
-     * Source ::= Selector | Join
+     * Source ::= Selector | Join.
      *
      * @param QOM\SourceInterface $source
      *
-     * @return string
-     *
      * @throws InvalidArgumentException
+     *
+     * @return string
      */
     protected function convertSource(QOM\SourceInterface $source)
     {
@@ -38,14 +38,15 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
      * Join ::= left [JoinType] 'JOIN' right 'ON' JoinCondition
      *    // If JoinType is omitted INNER is assumed.
      * left ::= Source
-     * right ::= Source
+     * right ::= Source.
      *
      * JoinType ::= Inner | LeftOuter | RightOuter
      * Inner ::= 'INNER'
      * LeftOuter ::= 'LEFT OUTER'
      * RightOuter ::= 'RIGHT OUTER'
      *
-     * @param  QOM\JoinInterface $join
+     * @param QOM\JoinInterface $join
+     *
      * @return string
      */
     protected function convertJoin(QOM\JoinInterface $join)
@@ -61,13 +62,13 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
      * JoinCondition ::= EquiJoinCondition |
      *             SameNodeJoinCondition |
      *             ChildNodeJoinCondition |
-     *             DescendantNodeJoinCondition
+     *             DescendantNodeJoinCondition.
      *
-     * @param  QOM\JoinConditionInterface $condition
-     *
-     * @return string
+     * @param QOM\JoinConditionInterface $condition
      *
      * @throws InvalidArgumentException
+     *
+     * @return string
      */
     protected function convertJoinCondition(QOM\JoinConditionInterface $condition)
     {
@@ -93,9 +94,10 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
      *   selector1Name ::= selectorName
      *   selector2Name ::= selectorName
      *   property1Name ::= propertyName
-     *   property2Name ::= propertyName
+     *   property2Name ::= propertyName.
      *
-     * @param  QOM\EquiJoinConditionInterface $condition
+     * @param QOM\EquiJoinConditionInterface $condition
+     *
      * @return string
      */
     protected function convertEquiJoinCondition(QOM\EquiJoinConditionInterface $condition)
@@ -112,9 +114,10 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
      *   'ISSAMENODE(' selector1Name ','
      *                  selector2Name
      *                  [',' selector2Path] ')'
-     *   selector2Path ::= Path
+     *   selector2Path ::= Path.
      *
-     * @param  QOM\SameNodeJoinConditionInterface $condition
+     * @param QOM\SameNodeJoinConditionInterface $condition
+     *
      * @return string
      */
     protected function convertSameNodeJoinCondition(QOM\SameNodeJoinConditionInterface $condition)
@@ -130,9 +133,10 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
      *   'ISCHILDNODE(' childSelectorName ','
      *                  parentSelectorName ')'
      *   childSelectorName ::= selectorName
-     *   parentSelectorName ::= selectorName
+     *   parentSelectorName ::= selectorName.
      *
-     * @param  QOM\ChildNodeJoinConditionInterface $condition
+     * @param QOM\ChildNodeJoinConditionInterface $condition
+     *
      * @return string
      */
     protected function convertChildNodeJoinCondition(QOM\ChildNodeJoinConditionInterface $condition)
@@ -147,9 +151,10 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
      *   'ISDESCENDANTNODE(' descendantSelectorName ','
      *                       ancestorSelectorName ')'
      *   descendantSelectorName ::= selectorName
-     *   ancestorSelectorName ::= selectorName
+     *   ancestorSelectorName ::= selectorName.
      *
-     * @param  QOM\DescendantNodeJoinConditionInterface $condition
+     * @param QOM\DescendantNodeJoinConditionInterface $condition
+     *
      * @return string
      */
     protected function convertDescendantNodeJoinCondition(QOM\DescendantNodeJoinConditionInterface $condition)
@@ -162,7 +167,7 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
     /**
      * Constraint ::= And | Or | Not | Comparison |
      *          PropertyExistence | FullTextSearch |
-     *          SameNode | ChildNode | DescendantNode
+     *          SameNode | ChildNode | DescendantNode.
      *
      * And ::= constraint1 'AND' constraint2
      * Or ::= constraint1 'OR' constraint2
@@ -180,11 +185,11 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
      *        // If only one selector exists in this query, explicit
      *           specification of the selectorName is optional
      *
-     * @param  QOM\ConstraintInterface $constraint
-     *
-     * @return string
+     * @param QOM\ConstraintInterface $constraint
      *
      * @throws InvalidArgumentException
+     *
+     * @return string
      */
     protected function convertConstraint(QOM\ConstraintInterface $constraint)
     {
@@ -233,13 +238,13 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
         }
 
         // This should not happen, but who knows...
-        throw new InvalidArgumentException("Invalid operand: " . get_class($constraint));
+        throw new InvalidArgumentException('Invalid operand: '.get_class($constraint));
     }
 
     /**
      * DynamicOperand ::= PropertyValue | Length | NodeName |
      *              NodeLocalName | FullTextSearchScore |
-     *              LowerCase | UpperCase
+     *              LowerCase | UpperCase.
      *
      * Length ::= 'LENGTH(' PropertyValue ')'
      * NodeName ::= 'NAME(' [selectorName] ')'              // If only one selector exists
@@ -248,11 +253,11 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
      * LowerCase ::= 'LOWER(' DynamicOperand ')'
      * UpperCase ::= 'UPPER(' DynamicOperand ')'
      *
-     * @param  QOM\DynamicOperandInterface $operand
-     *
-     * @return string
+     * @param QOM\DynamicOperandInterface $operand
      *
      * @throws InvalidArgumentException
+     *
+     * @return string
      */
     protected function convertDynamicOperand(QOM\DynamicOperandInterface $operand)
     {

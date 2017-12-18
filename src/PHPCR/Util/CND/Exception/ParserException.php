@@ -2,15 +2,13 @@
 
 namespace PHPCR\Util\CND\Exception;
 
-use PHPCR\Util\CND\Scanner\TokenQueue;
 use PHPCR\Util\CND\Scanner\GenericToken;
+use PHPCR\Util\CND\Scanner\TokenQueue;
 
 /**
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
- *
  * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
  * @license http://opensource.org/licenses/MIT MIT License
- *
  */
 class ParserException extends \Exception
 {
@@ -26,7 +24,7 @@ class ParserException extends \Exception
                 break;
             }
             $token = $queue->get();
-            $lookup .= $token->getData() . ' ';
+            $lookup .= $token->getData().' ';
         }
         $msg .= "\nBuffer lookup: \"$lookup\"";
 

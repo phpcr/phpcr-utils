@@ -7,13 +7,13 @@ use PHPCR\Util\CND\Scanner\TokenFilter\TokenFilterInterface;
 /**
  * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
  * @license http://opensource.org/licenses/MIT MIT License
- *
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  */
 class ScannerContext
 {
     /**
-     * Characters to be considered as white spaces
+     * Characters to be considered as white spaces.
+     *
      * @var array
      */
     protected $whitespaces = [];
@@ -29,14 +29,14 @@ class ScannerContext
     protected $stringDelimiters = [];
 
     /**
-     * Line comments start
+     * Line comments start.
      *
      * @var array
      */
     protected $lineCommentDelimiters = [];
 
     /**
-     * Block comments delimiters
+     * Block comments delimiters.
      *
      * @var array
      */

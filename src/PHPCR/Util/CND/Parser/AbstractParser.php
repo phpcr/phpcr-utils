@@ -2,12 +2,12 @@
 
 namespace PHPCR\Util\CND\Parser;
 
+use PHPCR\Util\CND\Exception\ParserException;
 use PHPCR\Util\CND\Scanner\GenericToken as Token;
 use PHPCR\Util\CND\Scanner\TokenQueue;
-use PHPCR\Util\CND\Exception\ParserException;
 
 /**
- * Abstract base class for parsers
+ * Abstract base class for parsers.
  *
  * It implements helper functions for parsers:
  *
@@ -17,13 +17,12 @@ use PHPCR\Util\CND\Exception\ParserException;
  *
  * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
  * @license http://opensource.org/licenses/MIT MIT License
- *
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  */
 abstract class AbstractParser
 {
     /**
-     * The token queue
+     * The token queue.
      *
      * @var TokenQueue
      */
@@ -38,7 +37,7 @@ abstract class AbstractParser
      * @param null|string $data       The expected data or null
      * @param bool        $ignoreCase whether to do string comparisons case insensitive or sensitive
      *
-     * @return boolean
+     * @return bool
      */
     protected function checkToken($type, $data = null, $ignoreCase = false)
     {
@@ -69,7 +68,7 @@ abstract class AbstractParser
      * @param int   $type
      * @param array $data
      *
-     * @return boolean
+     * @return bool
      */
     protected function checkTokenIn($type, array $data, $ignoreCase = false)
     {
@@ -89,9 +88,9 @@ abstract class AbstractParser
      * @param int         $type The expected token type
      * @param null|string $data The expected token data or null
      *
-     * @return Token
-     *
      * @throws ParserException
+     *
+     * @return Token
      */
     protected function expectToken($type, $data = null)
     {
@@ -113,7 +112,7 @@ abstract class AbstractParser
      * @param int         $type The expected token type
      * @param null|string $data The expected token data or null
      *
-     * @return boolean|Token
+     * @return bool|Token
      */
     protected function checkAndExpectToken($type, $data = null)
     {

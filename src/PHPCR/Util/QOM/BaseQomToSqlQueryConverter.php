@@ -14,14 +14,14 @@ use PHPCR\Query\QOM;
 abstract class BaseQomToSqlQueryConverter
 {
     /**
-     * The generator to use
+     * The generator to use.
      *
      * @var BaseSqlGenerator
      */
     protected $generator;
 
     /**
-     * Instantiate the converter
+     * Instantiate the converter.
      *
      * @param BaseSqlGenerator $generator
      */
@@ -34,7 +34,7 @@ abstract class BaseQomToSqlQueryConverter
      * Query ::= 'SELECT' columns
      *     'FROM' Source
      *     ['WHERE' Constraint]
-     *     ['ORDER BY' orderings]
+     *     ['ORDER BY' orderings].
      *
      * @param QOM\QueryObjectModelInterface $query
      *
@@ -59,7 +59,7 @@ abstract class BaseQomToSqlQueryConverter
     }
 
     /**
-     * Convert a source. This is different between SQL1 and SQL2
+     * Convert a source. This is different between SQL1 and SQL2.
      *
      * @param QOM\SourceInterface $source
      *
@@ -78,6 +78,7 @@ abstract class BaseQomToSqlQueryConverter
 
     /**
      * Convert dynamic operand. This is different between SQL1 and SQL2.
+     *
      * @param QOM\DynamicOperandInterface $operand
      *
      * @return mixed
@@ -86,9 +87,10 @@ abstract class BaseQomToSqlQueryConverter
 
     /**
      * Selector ::= nodeTypeName ['AS' selectorName]
-     * nodeTypeName ::= Name
+     * nodeTypeName ::= Name.
      *
-     * @param  QOM\SelectorInterface $selector
+     * @param QOM\SelectorInterface $selector
+     *
      * @return string
      */
     protected function convertSelector(QOM\SelectorInterface $selector)
@@ -97,7 +99,7 @@ abstract class BaseQomToSqlQueryConverter
     }
 
     /**
-     * Comparison ::= DynamicOperand Operator StaticOperand
+     * Comparison ::= DynamicOperand Operator StaticOperand.
      *
      * Operator ::= EqualTo | NotEqualTo | LessThan |
      *        LessThanOrEqualTo | GreaterThan |
@@ -110,7 +112,8 @@ abstract class BaseQomToSqlQueryConverter
      * GreaterThanOrEqualTo ::= '>='
      * Like ::= 'LIKE'
      *
-     * @param  QOM\ComparisonInterface $comparison
+     * @param QOM\ComparisonInterface $comparison
+     *
      * @return string
      */
     protected function convertComparison(QOM\ComparisonInterface $comparison)
@@ -127,12 +130,13 @@ abstract class BaseQomToSqlQueryConverter
      *   selectorName'.'propertyName 'IS NOT NULL' |
      *   propertyName 'IS NOT NULL'    If only one
      *                                 selector exists in
-     *                                 this query
+     *                                 this query.
      *
      *   Note: The negation, 'NOT x IS NOT NULL'
      *      can be written 'x IS NULL'
      *
-     * @param  QOM\PropertyExistenceInterface $constraint
+     * @param QOM\PropertyExistenceInterface $constraint
+     *
      * @return string
      */
     protected function convertPropertyExistence(QOM\PropertyExistenceInterface $constraint)
@@ -149,9 +153,10 @@ abstract class BaseQomToSqlQueryConverter
      *                    FullTextSearchExpression ')'
      *                      // If only one selector exists in this query,
      *                         explicit specification of the selectorName
-     *                         preceding the propertyName is optional
+     *                         preceding the propertyName is optional.
      *
-     * @param  QOM\FullTextSearchInterface $constraint
+     * @param QOM\FullTextSearchInterface $constraint
+     *
      * @return string
      */
     protected function convertFullTextSearch(QOM\FullTextSearchInterface $constraint)
@@ -162,9 +167,10 @@ abstract class BaseQomToSqlQueryConverter
     }
 
     /**
-     * FullTextSearchExpression ::= BindVariable | ''' FullTextSearchLiteral '''
+     * FullTextSearchExpression ::= BindVariable | ''' FullTextSearchLiteral '''.
      *
-     * @param  string $expr
+     * @param string $expr
+     *
      * @return string
      */
     protected function convertFullTextSearchExpression($expr)
@@ -179,7 +185,7 @@ abstract class BaseQomToSqlQueryConverter
     }
 
     /**
-     * StaticOperand ::= Literal | BindVariableValue
+     * StaticOperand ::= Literal | BindVariableValue.
      *
      * Literal ::= CastLiteral | UncastLiteral
      * CastLiteral ::= 'CAST(' UncastLiteral ' AS ' PropertyType ')'
@@ -193,11 +199,11 @@ abstract class BaseQomToSqlQueryConverter
      * BindVariableValue ::= '$'bindVariableName
      * bindVariableName ::= Prefix
      *
-     * @param  QOM\StaticOperandInterface $operand
-     *
-     * @return string
+     * @param QOM\StaticOperandInterface $operand
      *
      * @throws InvalidArgumentException
+     *
+     * @return string
      */
     protected function convertStaticOperand(QOM\StaticOperandInterface $operand)
     {
@@ -213,9 +219,10 @@ abstract class BaseQomToSqlQueryConverter
     }
 
     /**
-     * PropertyValue ::= [selectorName'.'] propertyName     // If only one selector exists
+     * PropertyValue ::= [selectorName'.'] propertyName     // If only one selector exists.
      *
-     * @param  QOM\PropertyValueInterface $value
+     * @param QOM\PropertyValueInterface $value
+     *
      * @return string
      */
     protected function convertPropertyValue(QOM\PropertyValueInterface $value)
@@ -230,9 +237,10 @@ abstract class BaseQomToSqlQueryConverter
      * Ordering ::= DynamicOperand [Order]
      * Order ::= Ascending | Descending
      * Ascending ::= 'ASC'
-     * Descending ::= 'DESC'
+     * Descending ::= 'DESC'.
      *
-     * @param  QOM\OrderingInterface[] $orderings
+     * @param QOM\OrderingInterface[] $orderings
+     *
      * @return string
      */
     protected function convertOrderings(array $orderings)
@@ -251,7 +259,7 @@ abstract class BaseQomToSqlQueryConverter
     /**
      * Path ::= '[' quotedPath ']' | '[' simplePath ']' | simplePath
      * quotedPath ::= A JCR Path that contains non-SQL-legal characters
-     * simplePath ::= A JCR Name that contains only SQL-legal characters
+     * simplePath ::= A JCR Name that contains only SQL-legal characters.
      *
      * @param string $path
      *
@@ -264,7 +272,7 @@ abstract class BaseQomToSqlQueryConverter
 
     /**
      * BindVariableValue ::= '$'bindVariableName
-     * bindVariableName ::= Prefix
+     * bindVariableName ::= Prefix.
      *
      * @param string $var
      *
@@ -276,7 +284,7 @@ abstract class BaseQomToSqlQueryConverter
     }
 
     /**
-     * Literal ::= CastLiteral | UncastLiteral
+     * Literal ::= CastLiteral | UncastLiteral.
      *
      * @param mixed $literal
      *
@@ -294,9 +302,10 @@ abstract class BaseQomToSqlQueryConverter
      *            (selectorName'.*')    // If only one selector exists
      * selectorName ::= Name
      * propertyName ::= Name
-     * columnName ::= Name
+     * columnName ::= Name.
      *
-     * @param  QOM\ColumnInterface[] $columns
+     * @param QOM\ColumnInterface[] $columns
+     *
      * @return string
      */
     protected function convertColumns(array $columns)

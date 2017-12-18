@@ -5,7 +5,6 @@ namespace PHPCR\Util\CND\Reader;
 /**
  * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
  * @license http://opensource.org/licenses/MIT MIT License
- *
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  */
 interface ReaderInterface
@@ -21,7 +20,7 @@ interface ReaderInterface
     public function currentChar();
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isEof();
 
@@ -36,14 +35,15 @@ interface ReaderInterface
     public function getCurrentColumn();
 
     /**
-     * Return the literal delimited by start and end position
+     * Return the literal delimited by start and end position.
      *
      * @return string
      */
     public function current();
 
     /**
-     * Advance the forward position and return the literal delimited by start and end position
+     * Advance the forward position and return the literal delimited by start and end position.
+     *
      * @return string
      */
     public function forward();
@@ -51,13 +51,13 @@ interface ReaderInterface
     public function forwardChar();
 
     /**
-     * Rewind the forward position to the start position
+     * Rewind the forward position to the start position.
      */
     public function rewind();
 
     /**
      * Return the literal delimited by start and end position, then set the
-     * start position to the end position
+     * start position to the end position.
      *
      * @return string
      */

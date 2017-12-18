@@ -1,6 +1,4 @@
-preset: psr2
+preset: recommended
 
 enabled:
-  - short_array_syntax
-  - duplicate_semicolon
   - no_useless_else

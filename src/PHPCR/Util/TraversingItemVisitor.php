@@ -2,12 +2,12 @@
 
 namespace PHPCR\Util;
 
-use SplQueue;
 use PHPCR\ItemInterface;
-use PHPCR\PropertyInterface;
-use PHPCR\NodeInterface;
 use PHPCR\ItemVisitorInterface;
+use PHPCR\NodeInterface;
+use PHPCR\PropertyInterface;
 use PHPCR\RepositoryException;
+use SplQueue;
 
 /**
  * An implementation of ItemVisitor.
@@ -24,7 +24,6 @@ use PHPCR\RepositoryException;
  *
  * @author Karsten Dambekalns <karsten@typo3.org>
  * @author Day Management AG, Switzerland
- *
  * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
  * @license http://opensource.org/licenses/MIT MIT License
  *
@@ -36,7 +35,7 @@ abstract class TraversingItemVisitor implements ItemVisitorInterface
      * Indicates if traversal should be done in a breadth-first manner rather
      * than depth-first (which is the default).
      *
-     * @var boolean
+     * @var bool
      */
     protected $breadthFirst = false;
 
@@ -45,7 +44,7 @@ abstract class TraversingItemVisitor implements ItemVisitorInterface
      * -1, the hierarchy will be traversed until there are no more children of
      * the current item).
      *
-     * @var integer
+     * @var int
      */
     protected $maxDepth = -1;
 
@@ -66,20 +65,20 @@ abstract class TraversingItemVisitor implements ItemVisitorInterface
     /**
      * Used to track hierarchy depth of item currently being processed.
      *
-     * @var integer
+     * @var int
      */
     protected $currentDepth;
 
     /**
      * Constructs a new instance of this class.
      *
-     * @param boolean $breadthFirst if $breadthFirst is true then traversal is
-     *      done in a breadth-first manner; otherwise it is done in a
-     *      depth-first manner (which is the default behavior).
-     * @param integer $maxDepth the 0-based depth relative to the root node up
-     *      to which the hierarchy should be traversed (if it's -1, the
-     *      hierarchy will be traversed until there are no more children of the
-     *      current item).
+     * @param bool $breadthFirst if $breadthFirst is true then traversal is
+     *                           done in a breadth-first manner; otherwise it is done in a
+     *                           depth-first manner (which is the default behavior).
+     * @param int  $maxDepth     the 0-based depth relative to the root node up
+     *                           to which the hierarchy should be traversed (if it's -1, the
+     *                           hierarchy will be traversed until there are no more children of the
+     *                           current item).
      *
      * @api
      */
@@ -96,7 +95,7 @@ abstract class TraversingItemVisitor implements ItemVisitorInterface
     }
 
     /**
-     * Update the current depth level for indention
+     * Update the current depth level for indention.
      *
      * @param int $level
      */
@@ -109,10 +108,10 @@ abstract class TraversingItemVisitor implements ItemVisitorInterface
      * Implement this method to add behavior performed before a Property is
      * visited.
      *
-     * @param ItemInterface $item the Item that is accepting this
-     *      visitor.
-     * @param integer $depth hierarchy level of this node (the root node starts
-     *      at depth 0).
+     * @param ItemInterface $item  the Item that is accepting this
+     *                             visitor.
+     * @param int           $depth hierarchy level of this node (the root node starts
+     *                             at depth 0).
      *
      * @throws RepositoryException if an error occurs.
      *
@@ -124,10 +123,10 @@ abstract class TraversingItemVisitor implements ItemVisitorInterface
      * Implement this method to add behavior performed after a Property is
      * visited.
      *
-     * @param ItemInterface $item the Item that is accepting this
-     *      visitor.
-     * @param integer $depth hierarchy level of this property (the root node
-     *      starts at depth 0).
+     * @param ItemInterface $item  the Item that is accepting this
+     *                             visitor.
+     * @param int           $depth hierarchy level of this property (the root node
+     *                             starts at depth 0).
      *
      * @throws RepositoryException if an error occurs.
      *
@@ -145,7 +144,7 @@ abstract class TraversingItemVisitor implements ItemVisitorInterface
      * If this method throws, the visiting process is aborted.
      *
      * @param ItemInterface $item the Node or Property that is accepting
-     *      this visitor.
+     *                            this visitor.
      *
      * @throws RepositoryException if an error occurs.
      *
@@ -160,18 +159,18 @@ abstract class TraversingItemVisitor implements ItemVisitorInterface
             $this->entering($item, $this->currentDepth);
             $this->leaving($item, $this->currentDepth);
         } else {
-            /** @var $item NodeInterface */
+            /* @var $item NodeInterface */
             try {
                 if ($this->breadthFirst === false) {
                     $this->entering($item, $this->currentDepth);
                     if ($this->maxDepth === -1 || $this->currentDepth < $this->maxDepth) {
                         $this->currentDepth++;
                         foreach ($item->getProperties() as $property) {
-                            /** @var $property PropertyInterface */
+                            /* @var $property PropertyInterface */
                             $property->accept($this);
                         }
                         foreach ($item->getNodes() as $node) {
-                            /** @var $node NodeInterface */
+                            /* @var $node NodeInterface */
                             $node->accept($this);
                         }
                         $this->currentDepth--;
@@ -183,11 +182,11 @@ abstract class TraversingItemVisitor implements ItemVisitorInterface
 
                     if ($this->maxDepth === -1 || $this->currentDepth < $this->maxDepth) {
                         foreach ($item->getProperties() as $property) {
-                            /** @var $property PropertyInterface */
+                            /* @var $property PropertyInterface */
                             $property->accept($this);
                         }
                         foreach ($item->getNodes() as $node) {
-                            /** @var $node NodeInterface */
+                            /* @var $node NodeInterface */
                             $node->accept($this);
                         }
                     }
@@ -205,6 +204,7 @@ abstract class TraversingItemVisitor implements ItemVisitorInterface
                 }
             } catch (RepositoryException $exception) {
                 $this->currentDepth = 0;
+
                 throw $exception;
             }
         }

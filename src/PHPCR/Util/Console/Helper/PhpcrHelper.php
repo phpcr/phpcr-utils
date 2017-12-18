@@ -3,30 +3,29 @@
 namespace PHPCR\Util\Console\Helper;
 
 use Exception;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Helper\Helper;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 use PHPCR\SessionInterface;
+use Symfony\Component\Console\Helper\Helper;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Helper class to make the session instance available to console commands.
  *
  * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
  * @license http://opensource.org/licenses/MIT MIT License
- *
  */
 class PhpcrHelper extends Helper
 {
     /**
-     * The session bound to this helper
+     * The session bound to this helper.
      *
      * @var SessionInterface
      */
     protected $session;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param SessionInterface $session the session to use in commands
      */
@@ -36,7 +35,7 @@ class PhpcrHelper extends Helper
     }
 
     /**
-     * Get the session
+     * Get the session.
      *
      * @return SessionInterface
      */
@@ -46,7 +45,7 @@ class PhpcrHelper extends Helper
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getName()
     {
@@ -65,12 +64,12 @@ class PhpcrHelper extends Helper
     public function processNode(OutputInterface $output, NodeInterface $node, array $operations)
     {
         $operations = array_merge([
-            'setProp' => [],
-            'removeProp' => [],
-            'addMixins' => [],
-            'removeMixins' => [],
+            'setProp'       => [],
+            'removeProp'    => [],
+            'addMixins'     => [],
+            'removeMixins'  => [],
             'applyClosures' => [],
-            'dump' => false,
+            'dump'          => false,
         ], $operations);
 
         foreach ($operations['setProp'] as $set) {

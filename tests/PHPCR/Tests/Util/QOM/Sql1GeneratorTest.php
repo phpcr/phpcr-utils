@@ -84,9 +84,9 @@ class Sql1GeneratorTest extends TestCase
     public function testColumns()
     {
         $literal = $this->generator->evalColumns(null);
-        $this->assertSame("s", $literal);
+        $this->assertSame('s', $literal);
         $literal = $this->generator->evalColumns(['bar', 'foo']);
-        $this->assertSame("bar, foo", $literal);
+        $this->assertSame('bar, foo', $literal);
     }
 
     public function testPropertyValue()

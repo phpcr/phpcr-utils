@@ -3,31 +3,31 @@
 namespace PHPCR\Util\Console\Command;
 
 use InvalidArgumentException;
-use PHPCR\RepositoryException;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use PHPCR\SessionInterface;
 use PHPCR\NodeType\NodeTypeExistsException;
+use PHPCR\RepositoryException;
+use PHPCR\SessionInterface;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Command to load and register a node type defined in a common nodetype
  * definition (CND) file.
  *
  * See the link below for the cnd definition.
+ *
  * @link http://jackrabbit.apache.org/node-type-notation.html
  *
  * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
  * @license http://opensource.org/licenses/MIT MIT License
- *
  * @author Uwe Jäger <uwej711@googlemail.com>
  * @author Daniel Leech <daniel@dantleech.com>
  */
 class NodeTypeRegisterCommand extends BaseCommand
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function configure()
     {
@@ -36,7 +36,7 @@ class NodeTypeRegisterCommand extends BaseCommand
             ->setDescription('Register node types in the PHPCR repository')
             ->addArgument('cnd-file', InputArgument::IS_ARRAY, 'Register namespaces and node types from a "Compact Node Type Definition" .cnd file(s)')
             ->addOption('allow-update', null, InputOption::VALUE_NONE, 'Overwrite existig node type')
-            ->setHelp(<<<EOT
+            ->setHelp(<<<'EOT'
 Register node types in the PHPCR repository.
 
 This command allows to register node types in the repository that are defined
@@ -57,12 +57,11 @@ extension will be treated as node definition files.
 If you use <info>--allow-update</info> existing node type definitions will be overwritten
 in the repository.
 EOT
-            )
-        ;
+            );
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @throws InvalidArgumentException
      */
@@ -114,6 +113,7 @@ EOT
                 $output->write(PHP_EOL.'If you want to override the existing definition call this command with the ');
                 $output->write('<info>--allow-update</info> option.'.PHP_EOL);
             }
+
             throw $e;
         }
     }
@@ -124,9 +124,9 @@ EOT
      *
      * @param array $definitions List of files of folders
      *
-     * @return array Array of full paths to all the type node definition files.
-     *
      * @throws InvalidArgumentException
+     *
+     * @return array Array of full paths to all the type node definition files.
      */
     protected function getFilePaths($definitions)
     {

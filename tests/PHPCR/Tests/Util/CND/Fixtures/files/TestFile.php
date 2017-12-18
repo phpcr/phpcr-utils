@@ -5,14 +5,14 @@ namespace Test\Foobar;
 class TestClass
 {
     /**
-     * Block comment
+     * Block comment.
      */
     public function testMethod($testParam)
     {
         // Line comment
         $string = 'This is a "Test // string"';
 
-        return "Test string";
+        return 'Test string';
     }
 
     // String in "comment"

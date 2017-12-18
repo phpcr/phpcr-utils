@@ -2,12 +2,12 @@
 
 namespace PHPCR\Util\Console\Command;
 
+use PHPCR\SessionInterface;
+use PHPCR\Util\Console\Helper\PhpcrConsoleDumperHelper;
+use PHPCR\Util\Console\Helper\PhpcrHelper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use PHPCR\SessionInterface;
-use PHPCR\Util\Console\Helper\PhpcrHelper;
-use PHPCR\Util\Console\Helper\PhpcrConsoleDumperHelper;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
 
@@ -73,7 +73,7 @@ abstract class BaseCommand extends Command
      * @param InputInterface  $input
      * @param OutputInterface $output
      * @param string          $question
-     * @param boolean         $default
+     * @param bool            $default
      *
      * @return string
      */

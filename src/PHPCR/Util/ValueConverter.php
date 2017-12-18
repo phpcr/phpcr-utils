@@ -19,7 +19,6 @@ use PHPCR\ValueFormatException;
  *
  * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
  * @license http://opensource.org/licenses/MIT MIT License
- *
  * @author David Buchmann <mail@davidbu.ch>
  *
  * @api
@@ -42,13 +41,13 @@ class ValueConverter
      * formatting spec for dates (sYYYY-MM-DDThh:mm:ss.sssTZD) according to
      * http://www.day.com/specs/jcr/2.0/3_Repository_Model.html#3.6.4.3%20From%20DATE%20To
      *
-     * @param mixed   $value The variable we need to know the type of
-     * @param boolean $weak  When a Node is given as $value this can be given
-     *                       as true to create a WEAKREFERENCE.
-     *
-     * @return int One of the type constants
+     * @param mixed $value The variable we need to know the type of
+     * @param bool  $weak  When a Node is given as $value this can be given
+     *                     as true to create a WEAKREFERENCE.
      *
      * @throws ValueFormatException if the type can not be determined
+     *
+     * @return int One of the type constants
      */
     public function determineType($value, $weak = false)
     {
@@ -86,33 +85,33 @@ class ValueConverter
      *
      * Table based on <a href="http://www.day.com/specs/jcr/2.0/3_Repository_Model.html#3.6.4%20Property%20Type%20Conversion">JCR spec</a>
      *
-        <TABLE>
-        <TR><TD><BR></TD><TD>STRING (1)</TD><TD>BINARY (2)</TD><TD>LONG (3)</TD><TD>DOUBLE (4)</TD><TD>DATE (5)</TD><TD>BOOLEAN (6)</TD><TD>NAME(7)</TD><TD>PATH (8)</TD><TD>REFERENCE (9/10)</TD><TD>URI (11)</TD><TD>DECIMAL (12)</TD></TR>
-        <TR><TD>STRING</TD><TD>x</TD><TD>Utf-8 encoded</TD><TD>cast to int</TD><TD>cast to float</TD><TD>SYYYY-MM-DDThh:Mm:ss.sssTZD</TD><TD><I>'' is false, else true</I></TD><TD>if valid name, name</TD><TD>if valid path, as name</TD><TD>check valid uuid</TD><TD>RFC 3986</TD><TD>string</TD></TR>
-        <TR><TD>BINARY</TD><TD>Utf-8</TD><TD>x</TD><TD COLSPAN="9" BGCOLOR="#E6E6E6">Converted to string and then interpreted as above</TD></TR>
-        <TR><TD>LONG</TD><TD>cast to string</TD><TD>String, then Utf-8</TD><TD>x</TD><TD>cast to float</TD><TD>Unix Time</TD><TD><I>0 false else true</I></TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>cast to string</TD></TR>
-        <TR><TD>DOUBLE</TD><TD>cast to string</TD><TD>String, then Utf-8</TD><TD>cast to int</TD><TD>x</TD><TD>Unix Time</TD><TD><I>0.0 is false, else true</I></TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>cast to string</TD></TR>
-        <TR><TD>DATE</TD><TD>SYYYY-MM-DDThh:<BR>Mm:ss.sssTZD</TD><TD>String, then Utf-8</TD><TD>Unix timestamp</TD><TD>Unix timestamp</TD><TD>x</TD>
-        <TD><I>true</I></TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>Unix timestamp</TD></TR>
-        <TR><TD>BOOLEAN</TD><TD>cast to string</TD><TD>String, then Utf-8</TD><TD>0/1</TD><TD>0.0/1.0</TD><TD>ValueFormatException</TD><TD>x</TD><TD>'0'/'1'</TD>
-        <TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD></TR>
-        <TR><TD>NAME</TD><TD>Qualified form</TD><TD>String, then Utf-8</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>x</TD><TD>noop (relative path)</TD><TD>ValueFormatException</TD><TD>„./“ and qualified name. % encode illegal characters</TD><TD>ValueFormatException</TD></TR>
-        <TR><TD>PATH</TD><TD>Standard form</TD><TD>String, then Utf-8</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>if relative path lenght 1 noop / otherwise ValueFormatException</TD><TD>x</TD><TD>ValueFormatException</TD><TD>„./“ if not starting with /. % encode illegal characters</TD><TD>ValueFormatException</TD></TR>
-        <TR><TD>REFERENCE</TD><TD>noop</TD><TD>String, then Utf-8</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>x</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD></TR>
-        <TR><TD>URI</TD><TD>noop</TD><TD>String, then Utf-8</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD>
-        <TD>ValueFormatException</TD><TD>single name: decode %, remove ./  else ValueFormatException</TD><TD>Decode %, remove leading ./ . if not star w. name, / or ./ then ValueFormatException</TD><TD>ValueFormatException</TD><TD>x</TD><TD>ValueFormatException</TD></TR>
-        <TR><TD>DECIMAL</TD><TD>noop</TD><TD>Utf-8 encoded</TD><TD>cast to int</TD><TD>cast to float</TD><TD>Unix Time</TD><TD><I>0 false else true</I></TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>x</TD></TR>
-        </TABLE>
+     * <TABLE>
+     * <TR><TD><BR></TD><TD>STRING (1)</TD><TD>BINARY (2)</TD><TD>LONG (3)</TD><TD>DOUBLE (4)</TD><TD>DATE (5)</TD><TD>BOOLEAN (6)</TD><TD>NAME(7)</TD><TD>PATH (8)</TD><TD>REFERENCE (9/10)</TD><TD>URI (11)</TD><TD>DECIMAL (12)</TD></TR>
+     * <TR><TD>STRING</TD><TD>x</TD><TD>Utf-8 encoded</TD><TD>cast to int</TD><TD>cast to float</TD><TD>SYYYY-MM-DDThh:Mm:ss.sssTZD</TD><TD><I>'' is false, else true</I></TD><TD>if valid name, name</TD><TD>if valid path, as name</TD><TD>check valid uuid</TD><TD>RFC 3986</TD><TD>string</TD></TR>
+     * <TR><TD>BINARY</TD><TD>Utf-8</TD><TD>x</TD><TD COLSPAN="9" BGCOLOR="#E6E6E6">Converted to string and then interpreted as above</TD></TR>
+     * <TR><TD>LONG</TD><TD>cast to string</TD><TD>String, then Utf-8</TD><TD>x</TD><TD>cast to float</TD><TD>Unix Time</TD><TD><I>0 false else true</I></TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>cast to string</TD></TR>
+     * <TR><TD>DOUBLE</TD><TD>cast to string</TD><TD>String, then Utf-8</TD><TD>cast to int</TD><TD>x</TD><TD>Unix Time</TD><TD><I>0.0 is false, else true</I></TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>cast to string</TD></TR>
+     * <TR><TD>DATE</TD><TD>SYYYY-MM-DDThh:<BR>Mm:ss.sssTZD</TD><TD>String, then Utf-8</TD><TD>Unix timestamp</TD><TD>Unix timestamp</TD><TD>x</TD>
+     * <TD><I>true</I></TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>Unix timestamp</TD></TR>
+     * <TR><TD>BOOLEAN</TD><TD>cast to string</TD><TD>String, then Utf-8</TD><TD>0/1</TD><TD>0.0/1.0</TD><TD>ValueFormatException</TD><TD>x</TD><TD>'0'/'1'</TD>
+     * <TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD></TR>
+     * <TR><TD>NAME</TD><TD>Qualified form</TD><TD>String, then Utf-8</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>x</TD><TD>noop (relative path)</TD><TD>ValueFormatException</TD><TD>„./“ and qualified name. % encode illegal characters</TD><TD>ValueFormatException</TD></TR>
+     * <TR><TD>PATH</TD><TD>Standard form</TD><TD>String, then Utf-8</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>if relative path lenght 1 noop / otherwise ValueFormatException</TD><TD>x</TD><TD>ValueFormatException</TD><TD>„./“ if not starting with /. % encode illegal characters</TD><TD>ValueFormatException</TD></TR>
+     * <TR><TD>REFERENCE</TD><TD>noop</TD><TD>String, then Utf-8</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>x</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD></TR>
+     * <TR><TD>URI</TD><TD>noop</TD><TD>String, then Utf-8</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD>
+     * <TD>ValueFormatException</TD><TD>single name: decode %, remove ./  else ValueFormatException</TD><TD>Decode %, remove leading ./ . if not star w. name, / or ./ then ValueFormatException</TD><TD>ValueFormatException</TD><TD>x</TD><TD>ValueFormatException</TD></TR>
+     * <TR><TD>DECIMAL</TD><TD>noop</TD><TD>Utf-8 encoded</TD><TD>cast to int</TD><TD>cast to float</TD><TD>Unix Time</TD><TD><I>0 false else true</I></TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>ValueFormatException</TD><TD>x</TD></TR>
+     * </TABLE>
      *
      * @param mixed $value   The value or value array to check and convert
      * @param int   $type    Target type to convert into. One of the type constants in PropertyType
      * @param int   $srcType Source type to convert from, if not specified this is automatically determined, which will miss the string based types that are not strings (DECIMAL, NAME, PATH, URI)
      *
-     * @return mixed the value casted into the proper format (throws an exception if conversion is not possible)
-     *
-     * @throws ValueFormatException      is thrown if the specified value cannot be converted to the specified type
-     * @throws RepositoryException       if the specified Node is not referenceable, the current Session is no longer active, or another error occurs.
+     * @throws ValueFormatException     is thrown if the specified value cannot be converted to the specified type
+     * @throws RepositoryException      if the specified Node is not referenceable, the current Session is no longer active, or another error occurs.
      * @throws InvalidArgumentException if the specified DateTime value cannot be expressed in the ISO 8601-based format defined in the JCR 2.0 specification and the implementation does not support dates incompatible with that format.
+     *
+     * @return mixed the value casted into the proper format (throws an exception if conversion is not possible)
      *
      * @see http://www.day.com/specs/jcr/2.0/3_Repository_Model.html#3.6.4%20Property%20Type%20Conversion
      */
@@ -145,8 +144,8 @@ class ValueConverter
             && $value instanceof NodeInterface
         ) {
             /** @var $value NodeInterface */
-            if (! $value->isNodeType('mix:referenceable')) {
-                throw new ValueFormatException('Node ' . $value->getPath() . ' is not referenceable');
+            if (!$value->isNodeType('mix:referenceable')) {
+                throw new ValueFormatException('Node '.$value->getPath().' is not referenceable');
             }
             $value = $value->getIdentifier();
         }
@@ -155,15 +154,15 @@ class ValueConverter
             case PropertyType::STRING:
                 switch ($srcType) {
                     case PropertyType::DATE:
-                        if (! $value instanceof DateTime) {
+                        if (!$value instanceof DateTime) {
                             throw new RepositoryException('Cannot convert a date that is not a \DateTime instance to string');
                         }
-                        /** @var $value DateTime */
+                        /* @var $value DateTime */
                         // Milliseconds formatting is not possible in PHP so we
                         // construct it by cutting microseconds to 3 positions.
                         // This might not be as accurate as "real" rounded milliseconds.
-                        return $value->format('Y-m-d\TH:i:s.') .
-                            substr($value->format('u'), 0, 3) .
+                        return $value->format('Y-m-d\TH:i:s.').
+                            substr($value->format('u'), 0, 3).
                             $value->format('P');
                     case PropertyType::NAME:
                     case PropertyType::PATH:
@@ -184,7 +183,7 @@ class ValueConverter
                 if (is_resource($value)) {
                     return $value;
                 }
-                if (! is_string($value)) {
+                if (!is_string($value)) {
                     $value = $this->convertType($value, PropertyType::STRING, $srcType);
                 }
                 $f = fopen('php://memory', 'rwb+');
@@ -200,20 +199,20 @@ class ValueConverter
                     case PropertyType::DOUBLE:
                     case PropertyType::BOOLEAN:
                     case PropertyType::DECIMAL:
-                        return (integer) $value;
+                        return (int) $value;
                     case PropertyType::DATE:
-                        if (! $value instanceof DateTime) {
+                        if (!$value instanceof DateTime) {
                             throw new RepositoryException('something weird');
                         }
-                        /** @var $value DateTime */
+                        /* @var $value DateTime */
 
                         return $value->getTimestamp();
                 }
                 if (is_object($value)) {
                     throw new ValueFormatException('Cannot convert object of class "'.get_class($value).'" to a LONG');
                 }
-                throw new ValueFormatException('Cannot convert "'.var_export($value, true).'" to a LONG');
 
+                throw new ValueFormatException('Cannot convert "'.var_export($value, true).'" to a LONG');
             case PropertyType::DOUBLE:
                 switch ($srcType) {
                     case PropertyType::STRING:
@@ -221,21 +220,21 @@ class ValueConverter
                     case PropertyType::DOUBLE:
                     case PropertyType::BOOLEAN:
                     case PropertyType::DECIMAL:
-                        return (double) $value;
+                        return (float) $value;
                     case PropertyType::DATE:
-                        if (! $value instanceof DateTime) {
+                        if (!$value instanceof DateTime) {
                             throw new RepositoryException('something weird');
                         }
 
-                        /** @var $value DateTime */
+                        /* @var $value DateTime */
 
-                        return (double) $value->getTimestamp();
+                        return (float) $value->getTimestamp();
                 }
                 if (is_object($value)) {
                     throw new ValueFormatException('Cannot convert object of class "'.get_class($value).'" to a DOUBLE');
                 }
-                throw new ValueFormatException('Cannot convert "'.var_export($value, true).'" to a DOUBLE');
 
+                throw new ValueFormatException('Cannot convert "'.var_export($value, true).'" to a DOUBLE');
             case PropertyType::DATE:
                 switch ($srcType) {
                     case PropertyType::STRING:
@@ -243,6 +242,7 @@ class ValueConverter
                         if ($value instanceof DateTime) {
                             return $value;
                         }
+
                         try {
                             return new DateTime($value);
                         } catch (Exception $e) {
@@ -259,27 +259,27 @@ class ValueConverter
                 if (is_object($value)) {
                     throw new ValueFormatException('Cannot convert object of class "'.get_class($value).'" to a DATE');
                 }
-                throw new ValueFormatException('Cannot convert "'.var_export($value, true).'" to DATE');
 
+                throw new ValueFormatException('Cannot convert "'.var_export($value, true).'" to DATE');
             case PropertyType::BOOLEAN:
                 switch ($srcType) {
                     case PropertyType::STRING:
                     case PropertyType::LONG:
                     case PropertyType::DOUBLE:
                     case PropertyType::BOOLEAN:
-                        return (boolean) $value;
+                        return (bool) $value;
                     case PropertyType::DATE:
-                        /** @var $value DateTime */
+                        /* @var $value DateTime */
 
-                        return (boolean) $value->getTimestamp();
+                        return (bool) $value->getTimestamp();
                     case PropertyType::DECIMAL:
-                        return (boolean) ((double) $value); // '0' is false too
+                        return (bool) ((float) $value); // '0' is false too
                 }
                 if (is_object($value)) {
                     throw new ValueFormatException('Cannot convert object of class "'.get_class($value).'" to a BOOLEAN');
                 }
-                throw new ValueFormatException('Cannot convert "'.var_export($value, true).'" to a BOOLEAN');
 
+                throw new ValueFormatException('Cannot convert "'.var_export($value, true).'" to a BOOLEAN');
             case PropertyType::NAME:
                 switch ($srcType) {
                     case PropertyType::STRING:
@@ -294,8 +294,8 @@ class ValueConverter
                 if (is_object($value)) {
                     throw new ValueFormatException('Cannot convert object of class "'.get_class($value).'" to a NAME');
                 }
-                throw new ValueFormatException('Cannot convert "'.var_export($value, true).'" to NAME');
 
+                throw new ValueFormatException('Cannot convert "'.var_export($value, true).'" to NAME');
             case PropertyType::PATH:
                 switch ($srcType) {
                     case PropertyType::STRING:
@@ -311,8 +311,8 @@ class ValueConverter
                 if (is_object($value)) {
                     throw new ValueFormatException('Cannot convert object of class "'.get_class($value).'" to a PATH');
                 }
-                throw new ValueFormatException('Cannot convert "'.var_export($value, true).'" to PATH');
 
+                throw new ValueFormatException('Cannot convert "'.var_export($value, true).'" to PATH');
             case PropertyType::REFERENCE:
             case PropertyType::WEAKREFERENCE:
                 switch ($srcType) {
@@ -329,8 +329,8 @@ class ValueConverter
                 if (is_object($value)) {
                     throw new ValueFormatException('Cannot convert object of class "'.get_class($value).'" to a unique id');
                 }
-                throw new ValueFormatException('Cannot convert "'.var_export($value, true).'" to unique id');
 
+                throw new ValueFormatException('Cannot convert "'.var_export($value, true).'" to unique id');
             case PropertyType::URI:
                 switch ($srcType) {
                     case PropertyType::STRING:
@@ -353,8 +353,8 @@ class ValueConverter
                 if (is_object($value)) {
                     throw new ValueFormatException('Cannot convert object of class "'.get_class($value).'" to a URI');
                 }
-                throw new ValueFormatException('Cannot convert "'.var_export($value, true).'" to URI');
 
+                throw new ValueFormatException('Cannot convert "'.var_export($value, true).'" to URI');
             case PropertyType::DECIMAL:
                 switch ($srcType) {
                     case PropertyType::STRING:
@@ -366,15 +366,15 @@ class ValueConverter
                     case PropertyType::DECIMAL:
                         return (string) $value;
                     case PropertyType::DATE:
-                        /** @var $value DateTime */
+                        /* @var $value DateTime */
 
                         return (string) $value->getTimestamp();
                 }
                 if (is_object($value)) {
                     throw new ValueFormatException('Cannot convert object of class "'.get_class($value).'" to a DECIMAL');
                 }
-                throw new ValueFormatException('Cannot convert "'.var_export($value, true).'" to a DECIMAL');
 
+                throw new ValueFormatException('Cannot convert "'.var_export($value, true).'" to a DECIMAL');
             default:
                 throw new ValueFormatException("Unexpected target type '$type' in conversion");
         }

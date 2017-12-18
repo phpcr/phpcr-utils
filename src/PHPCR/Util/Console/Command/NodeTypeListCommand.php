@@ -3,38 +3,35 @@
 namespace PHPCR\Util\Console\Command;
 
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * A command to list all node types
+ * A command to list all node types.
  *
  * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
  * @license http://opensource.org/licenses/MIT MIT License
- *
  * @author Daniel Leech <daniel@dantleech.com>
  */
 class NodeTypeListCommand extends BaseCommand
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function configure()
     {
         $this
             ->setName('phpcr:node-type:list')
             ->setDescription('List all available node types in the repository')
-            ->setHelp(<<<EOT
+            ->setHelp(<<<'EOT'
 This command lists all of the available node types and their subtypes
 in the PHPCR repository.
 EOT
-            )
-        ;
+            );
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

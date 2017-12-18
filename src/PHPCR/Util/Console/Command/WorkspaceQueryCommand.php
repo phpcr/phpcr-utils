@@ -2,9 +2,9 @@
 
 namespace PHPCR\Util\Console\Command;
 
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -13,14 +13,13 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
  * @license http://opensource.org/licenses/MIT MIT License
- *
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  * @author Daniel Leech <daniel@dantleech.com>
  */
 class WorkspaceQueryCommand extends BaseCommand
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function configure()
     {
@@ -32,11 +31,11 @@ class WorkspaceQueryCommand extends BaseCommand
             ->addOption('limit', null, InputOption::VALUE_OPTIONAL, 'The query limit', 0)
             ->addOption('offset', null, InputOption::VALUE_OPTIONAL, 'The query offset', 0)
             ->setDescription('Execute a JCR SQL2 statement')
-            ->setHelp("The <info>query</info> command executes a JCR query statement on the content repository");
+            ->setHelp('The <info>query</info> command executes a JCR query statement on the content repository');
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -64,7 +63,7 @@ class WorkspaceQueryCommand extends BaseCommand
 
         $output->writeln("Results:\n");
         foreach ($result as $i => $row) {
-            $output->writeln("\n".($i+1).'. Row (Path: '. $row->getPath() .', Score: '. $row->getScore() .'):');
+            $output->writeln("\n".($i + 1).'. Row (Path: '.$row->getPath().', Score: '.$row->getScore().'):');
             foreach ($row as $column => $value) {
                 $output->writeln("$column: ".var_export($value, true));
             }

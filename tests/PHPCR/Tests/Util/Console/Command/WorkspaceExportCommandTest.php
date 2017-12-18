@@ -2,8 +2,8 @@
 
 namespace PHPCR\Tests\Util\Console\Command;
 
-use PHPCR\Util\Console\Command\WorkspaceExportCommand;
 use PHPCR\RepositoryInterface;
+use PHPCR\Util\Console\Command\WorkspaceExportCommand;
 
 class WorkspaceExportCommandTest extends BaseCommandTest
 {
@@ -36,7 +36,7 @@ class WorkspaceExportCommandTest extends BaseCommandTest
         $this->assertFileNotExists('test', 'test export file must not exist, it will be overwritten');
 
         $ct = $this->executeCommand('phpcr:workspace:export', [
-            'filename' => 'test'
+            'filename' => 'test',
         ]);
 
         if (method_exists($ct, 'getStatusCode')) {

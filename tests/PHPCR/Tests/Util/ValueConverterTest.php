@@ -1,4 +1,5 @@
 <?php
+
 namespace PHPCR\Tests\Util;
 
 use DateTime;
@@ -12,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 require_once __DIR__.'/../Stubs/MockNode.php';
 
 /**
- * A test for the PHPCR\PropertyType class
+ * A test for the PHPCR\PropertyType class.
  */
 class ValueConverterTest extends TestCase
 {
@@ -55,15 +56,13 @@ class ValueConverterTest extends TestCase
         $nodeMock
             ->expects($this->any())
             ->method('getIdentifier')
-            ->will($this->returnValue('38b7cf18-c417-477a-af0b-c1e92a290c9a'))
-        ;
+            ->will($this->returnValue('38b7cf18-c417-477a-af0b-c1e92a290c9a'));
 
         $nodeMock
             ->expects($this->any())
             ->method('isNodeType')
             ->with('mix:referenceable')
-            ->will($this->returnValue(true))
-        ;
+            ->will($this->returnValue(true));
 
         return [
             // String to...
@@ -133,7 +132,7 @@ class ValueConverterTest extends TestCase
             [123.1, PropertyType::DOUBLE, '123.1', PropertyType::DECIMAL],
 
             // Date to...
-            [$datetimeLong, PropertyType::DATE, $datetimeLong->format('Y-m-d\TH:i:s.') . substr($datetimeLong->format('u'), 0, 3) . $datetimeLong->format('P'), PropertyType::STRING],
+            [$datetimeLong, PropertyType::DATE, $datetimeLong->format('Y-m-d\TH:i:s.').substr($datetimeLong->format('u'), 0, 3).$datetimeLong->format('P'), PropertyType::STRING],
             [$datetimeLong, PropertyType::DATE, 123, PropertyType::LONG],
             [$datetimeLong, PropertyType::DATE, 123.0, PropertyType::DOUBLE],
             [$datetimeLong, PropertyType::DATE, $datetimeLong, PropertyType::DATE],
@@ -271,10 +270,10 @@ class ValueConverterTest extends TestCase
     }
 
     /**
-     * Skip binary target as its a special case
+     * Skip binary target as its a special case.
      *
      * @param mixed $value
-     * @param int $srcType PropertyType constant to convert from
+     * @param int   $srcType PropertyType constant to convert from
      * @param $expected
      * @param $targetType
      *
@@ -396,8 +395,7 @@ class ValueConverterTest extends TestCase
         $nodeMock
             ->expects($this->never())
             ->method('isNew')
-            ->will($this->returnValue(true))
-        ;
+            ->will($this->returnValue(true));
         $this->valueConverter->convertType($nodeMock, PropertyType::STRING);
     }
 
@@ -409,14 +407,12 @@ class ValueConverterTest extends TestCase
         $nodeMock
             ->expects($this->never())
             ->method('isNew')
-            ->will($this->returnValue(false))
-        ;
+            ->will($this->returnValue(false));
         $nodeMock
             ->expects($this->once())
             ->method('isNodeType')
             ->with('mix:referenceable')
-            ->will($this->returnValue(false))
-        ;
+            ->will($this->returnValue(false));
         $this->valueConverter->convertType($nodeMock, PropertyType::STRING);
     }
 
@@ -430,7 +426,7 @@ class ValueConverterTest extends TestCase
     }
 
     /**
-     * Check if the util will survive a broken implementation
+     * Check if the util will survive a broken implementation.
      *
      * @dataProvider dataDateTargetType
      */

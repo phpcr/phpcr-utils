@@ -7,45 +7,44 @@ use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 
 /**
- * TODO: this should base on the TraversingItemVisitor
+ * TODO: this should base on the TraversingItemVisitor.
  *
  * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
  * @license http://opensource.org/licenses/MIT MIT License
- *
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  */
 class TreeWalker
 {
     /**
-     * Visitor for nodes
+     * Visitor for nodes.
      *
      * @var ItemVisitorInterface
      */
     protected $nodeVisitor;
 
     /**
-     * Visitor for properties
+     * Visitor for properties.
      *
      * @var ItemVisitorInterface
      */
     protected $propertyVisitor;
 
     /**
-     * Filters to apply to decide whether a node needs to be visited
+     * Filters to apply to decide whether a node needs to be visited.
      *
      * @var TreeWalkerFilterInterface[]
      */
     protected $nodeFilters = [];
 
     /**
-     * Filters to apply to decide whether a property needs to be visited
+     * Filters to apply to decide whether a property needs to be visited.
      *
      * @var TreeWalkerFilterInterface[]
      */
     protected $propertyFilters = [];
 
     /**
-     * Instantiate a tree walker
+     * Instantiate a tree walker.
      *
      * @param ItemVisitorInterface $nodeVisitor     The visitor for the nodes
      * @param ItemVisitorInterface $propertyVisitor The visitor for the nodes properties
@@ -57,7 +56,7 @@ class TreeWalker
     }
 
     /**
-     * Add a filter to select the nodes that will be traversed
+     * Add a filter to select the nodes that will be traversed.
      *
      * @param TreeWalkerFilterInterface $filter
      */
@@ -69,7 +68,7 @@ class TreeWalker
     }
 
     /**
-     * Add a filter to select the properties that will be traversed
+     * Add a filter to select the properties that will be traversed.
      *
      * @param TreeWalkerFilterInterface $filter
      */
@@ -81,16 +80,16 @@ class TreeWalker
     }
 
     /**
-     * Return whether a node must be traversed or not
+     * Return whether a node must be traversed or not.
      *
      * @param NodeInterface $node
      *
-     * @return boolean
+     * @return bool
      */
     protected function mustVisitNode(NodeInterface $node)
     {
         foreach ($this->nodeFilters as $filter) {
-            if (! $filter->mustVisit($node)) {
+            if (!$filter->mustVisit($node)) {
                 return false;
             }
         }
@@ -99,16 +98,16 @@ class TreeWalker
     }
 
     /**
-     * Return whether a node property must be traversed or not
+     * Return whether a node property must be traversed or not.
      *
      * @param PropertyInterface $property
      *
-     * @return boolean
+     * @return bool
      */
     protected function mustVisitProperty(PropertyInterface $property)
     {
         foreach ($this->propertyFilters as $filter) {
-            if (! $filter->mustVisit($property)) {
+            if (!$filter->mustVisit($property)) {
                 return false;
             }
         }
@@ -117,7 +116,7 @@ class TreeWalker
     }
 
     /**
-     * Traverse a node
+     * Traverse a node.
      *
      * @param NodeInterface $node
      * @param int           $recurse Max recursion level

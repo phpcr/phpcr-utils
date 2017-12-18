@@ -6,8 +6,8 @@ use InvalidArgumentException;
 use PHPCR\Query\QueryResultInterface;
 use PHPCR\Query\RowInterface;
 use Symfony\Component\Console\Exception\InvalidArgumentException as CliInvalidArgumentException;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -16,13 +16,12 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
  * @license http://opensource.org/licenses/MIT MIT License
- *
  * @author Daniel Leech <daniel@dantleech.com>
  */
 class NodesUpdateCommand extends BaseNodeManipulationCommand
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @throws CliInvalidArgumentException
      */
@@ -82,7 +81,7 @@ HERE
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @throws CliInvalidArgumentException
      * @throws InvalidArgumentException
@@ -125,7 +124,7 @@ HERE
         /** @var $row RowInterface */
         foreach ($result as $i => $row) {
             $output->writeln(sprintf(
-                "<info>Updating node:</info> [%d] %s.",
+                '<info>Updating node:</info> [%d] %s.',
                 $i,
                 $row->getPath()
             ));
@@ -133,10 +132,10 @@ HERE
             $node = $row->getNode();
 
             $helper->processNode($output, $node, [
-                'setProp' => $setProp,
-                'removeProp' => $removeProp,
-                'addMixins' => $addMixins,
-                'removeMixins' => $removeMixins,
+                'setProp'       => $setProp,
+                'removeProp'    => $removeProp,
+                'addMixins'     => $addMixins,
+                'removeMixins'  => $removeMixins,
                 'applyClosures' => $applyClosures,
             ]);
 

@@ -31,11 +31,11 @@ class NodesUpdateCommandTest extends BaseCommandTest
             [['query' => 'SELECT * FROM nt:unstructured WHERE foo="bar"']],
             // Set, remote properties and mixins
             [[
-                'setProp' => [['foo', 'bar']],
-                'removeProp' => ['bar'],
-                'addMixin' => ['mixin1'],
+                'setProp'     => [['foo', 'bar']],
+                'removeProp'  => ['bar'],
+                'addMixin'    => ['mixin1'],
                 'removeMixin' => ['mixin1'],
-                'query' => 'SELECT * FROM nt:unstructured',
+                'query'       => 'SELECT * FROM nt:unstructured',
             ]],
         ];
     }
@@ -46,31 +46,26 @@ class NodesUpdateCommandTest extends BaseCommandTest
 
         $this->session->expects($this->any())
             ->method('getWorkspace')
-            ->will($this->returnValue($this->workspace))
-        ;
+            ->will($this->returnValue($this->workspace));
 
         $this->workspace->expects($this->any())
             ->method('getQueryManager')
-            ->will($this->returnValue($this->queryManager))
-        ;
+            ->will($this->returnValue($this->queryManager));
 
         $this->queryManager->expects($this->any())
             ->method('createQuery')
             ->with($options['query'], 'JCR-SQL2')
-            ->will($this->returnValue($this->query))
-        ;
+            ->will($this->returnValue($this->query));
 
         $this->query->expects($this->any())
             ->method('execute')
             ->will($this->returnValue([
                 $this->row1,
-            ]))
-        ;
+            ]));
 
         $this->row1->expects($this->any())
             ->method('getNode')
-            ->will($this->returnValue($this->node1))
-        ;
+            ->will($this->returnValue($this->node1));
     }
 
     /**
@@ -79,12 +74,12 @@ class NodesUpdateCommandTest extends BaseCommandTest
     public function testNodeUpdate($options)
     {
         $options = array_merge([
-            'query' => null,
-            'setProp' => [],
-            'removeProp' => [],
-            'addMixin' => [],
+            'query'       => null,
+            'setProp'     => [],
+            'removeProp'  => [],
+            'addMixin'    => [],
             'removeMixin' => [],
-            'exception' => null,
+            'exception'   => null,
         ], $options);
 
         if ($options['exception']) {
@@ -94,12 +89,12 @@ class NodesUpdateCommandTest extends BaseCommandTest
         $this->setupQueryManager($options);
 
         $args = [
-            '--query' => $options['query'],
+            '--query'          => $options['query'],
             '--no-interaction' => true,
-            '--set-prop' => [],
-            '--remove-prop' => [],
-            '--add-mixin' => [],
-            '--remove-mixin' => [],
+            '--set-prop'       => [],
+            '--remove-prop'    => [],
+            '--add-mixin'      => [],
+            '--remove-mixin'   => [],
         ];
 
         foreach ($options['setProp'] as $setProp) {
@@ -141,13 +136,13 @@ class NodesUpdateCommandTest extends BaseCommandTest
     public function testApplyClosure()
     {
         $args = [
-            '--query' => "SELECT foo FROM bar",
+            '--query'          => 'SELECT foo FROM bar',
             '--no-interaction' => true,
-            '--apply-closure' => [
+            '--apply-closure'  => [
                 '$session->getNodeByIdentifier("/foo"); $node->setProperty("foo", "bar");',
                 function ($session, $node) {
                     $node->setProperty('foo', 'bar');
-                }
+                },
             ],
         ];
 
@@ -155,13 +150,11 @@ class NodesUpdateCommandTest extends BaseCommandTest
 
         $this->node1->expects($this->exactly(2))
             ->method('setProperty')
-            ->with('foo', 'bar')
-        ;
+            ->with('foo', 'bar');
 
         $this->session->expects($this->once())
             ->method('getNodeByIdentifier')
-            ->with('/foo')
-        ;
+            ->with('/foo');
 
         $this->executeCommand('phpcr:nodes:update', $args);
     }

@@ -2,24 +2,23 @@
 
 namespace PHPCR\Util\Console\Command;
 
+use PHPCR\ImportUUIDBehaviorInterface;
+use PHPCR\RepositoryInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use PHPCR\RepositoryInterface;
-use PHPCR\ImportUUIDBehaviorInterface;
 
 /**
  * Command to import a system or document view XML into the repository.
  *
  * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
  * @license http://opensource.org/licenses/MIT MIT License
- *
  * @author David Buchmann <mail@davidbu.ch>
  */
 class WorkspaceImportCommand extends BaseCommand
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function configure()
     {
@@ -30,7 +29,7 @@ class WorkspaceImportCommand extends BaseCommand
             ->addArgument('filename', null, 'The xml file to import')
             ->addOption('parentpath', 'p', InputOption::VALUE_OPTIONAL, 'Repository path to the parent where to import the file contents', '/')
             ->setDescription('Import xml data into the repository, either in JCR system view format or arbitrary xml')
-            ->setHelp(<<<EOF
+            ->setHelp(<<<'EOF'
 The <info>import</info> command uses the PHPCR SessionInterface::importXml method
 to import an XML document into the repository. If the document is in the JCR
 system view format, it is interpreted according to the spec, otherwise it is
@@ -40,12 +39,11 @@ and XML attributes into properties.
 If the <info>parentpath</info> option is set, the document is imported to that
 path. Otherwise the document is imported at the repository root.
 EOF
-            )
-        ;
+            );
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

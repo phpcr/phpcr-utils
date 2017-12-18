@@ -5,7 +5,6 @@ namespace PHPCR\Util\CND\Reader;
 /**
  * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
  * @license http://opensource.org/licenses/MIT MIT License
- *
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  * @author Nikola Petkanski <nikola@petkanski.com>
  */
@@ -57,7 +56,7 @@ class BufferReader implements ReaderInterface
     public function __construct($buffer)
     {
         $this->eofMarker = chr(1);
-        $this->buffer = str_replace("\r\n", "\n", $buffer) . $this->eofMarker;
+        $this->buffer = str_replace("\r\n", "\n", $buffer).$this->eofMarker;
 
         $this->reset();
     }
@@ -96,7 +95,8 @@ class BufferReader implements ReaderInterface
     }
 
     /**
-     * Return the literal delimited by start and end position
+     * Return the literal delimited by start and end position.
+     *
      * @return string
      */
     public function current()
@@ -110,7 +110,7 @@ class BufferReader implements ReaderInterface
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isEof()
     {
@@ -121,7 +121,7 @@ class BufferReader implements ReaderInterface
     }
 
     /**
-     * Advance the forward position and return the literal delimited by start and end position
+     * Advance the forward position and return the literal delimited by start and end position.
      *
      * @return string
      */

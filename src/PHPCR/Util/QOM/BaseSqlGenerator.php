@@ -3,8 +3,8 @@
 namespace PHPCR\Util\QOM;
 
 use DateTime;
-use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants;
 use PHPCR\PropertyType;
+use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants;
 use PHPCR\Util\ValueConverter;
 
 /**
@@ -12,7 +12,6 @@ use PHPCR\Util\ValueConverter;
  *
  * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
  * @license http://opensource.org/licenses/MIT MIT License
- *
  */
 abstract class BaseSqlGenerator
 {
@@ -30,7 +29,7 @@ abstract class BaseSqlGenerator
      * Query ::= 'SELECT' columns
      *     'FROM' Source
      *     ['WHERE' Constraint]
-     *     ['ORDER BY' orderings]
+     *     ['ORDER BY' orderings].
      *
      * @param string $source
      * @param string $columns
@@ -55,7 +54,7 @@ abstract class BaseSqlGenerator
     }
 
     /**
-     * And ::= constraint1 'AND' constraint2
+     * And ::= constraint1 'AND' constraint2.
      *
      * @param string $constraint1
      * @param string $constraint2
@@ -68,7 +67,7 @@ abstract class BaseSqlGenerator
     }
 
     /**
-     * Or ::= constraint1 'OR' constraint2
+     * Or ::= constraint1 'OR' constraint2.
      *
      * @param string $constraint1
      * @param string $constraint2
@@ -81,7 +80,7 @@ abstract class BaseSqlGenerator
     }
 
     /**
-     * Not ::= 'NOT' Constraint
+     * Not ::= 'NOT' Constraint.
      *
      * @param string $constraint
      *
@@ -93,7 +92,7 @@ abstract class BaseSqlGenerator
     }
 
     /**
-     * Comparison ::= DynamicOperand Operator StaticOperand
+     * Comparison ::= DynamicOperand Operator StaticOperand.
      *
      * @param string $operand1
      * @param string $operator
@@ -109,7 +108,7 @@ abstract class BaseSqlGenerator
     /**
      * Operator ::= EqualTo | NotEqualTo | LessThan |
      *        LessThanOrEqualTo | GreaterThan |
-     *        GreaterThanOrEqualTo | Like
+     *        GreaterThanOrEqualTo | Like.
      *
      * @param string $operator
      *
@@ -138,7 +137,7 @@ abstract class BaseSqlGenerator
     }
 
     /**
-     * LowerCase ::= 'LOWER(' DynamicOperand ')'
+     * LowerCase ::= 'LOWER(' DynamicOperand ')'.
      *
      * @param string $operand
      *
@@ -150,7 +149,7 @@ abstract class BaseSqlGenerator
     }
 
     /**
-     * LowerCase ::= 'UPPER(' DynamicOperand ')'
+     * LowerCase ::= 'UPPER(' DynamicOperand ')'.
      *
      * @param string $operand
      *
@@ -162,7 +161,7 @@ abstract class BaseSqlGenerator
     }
 
     /**
-     * orderings ::= Ordering {',' Ordering}
+     * orderings ::= Ordering {',' Ordering}.
      *
      * @param $orderings
      *
@@ -184,7 +183,7 @@ abstract class BaseSqlGenerator
     }
 
     /**
-     * Ordering ::= DynamicOperand [Order]
+     * Ordering ::= DynamicOperand [Order].
      *
      * @param $operand
      * @param $order
@@ -199,7 +198,7 @@ abstract class BaseSqlGenerator
     /**
      * Order ::= Ascending | Descending
      * Ascending ::= 'ASC'
-     * Descending ::= 'DESC'
+     * Descending ::= 'DESC'.
      *
      * @param $order
      *
@@ -219,7 +218,7 @@ abstract class BaseSqlGenerator
 
     /**
      * BindVariableValue ::= '$'bindVariableName
-     * bindVariableName ::= Prefix
+     * bindVariableName ::= Prefix.
      *
      * @param $var
      *
@@ -227,7 +226,7 @@ abstract class BaseSqlGenerator
      */
     public function evalBindVariable($var)
     {
-        return '$' . $var;
+        return '$'.$var;
     }
 
     /**
@@ -242,8 +241,8 @@ abstract class BaseSqlGenerator
     public function evalFullText($string)
     {
         $illegalCharacters = [
-            '!' => '\\!', '(' => '\\(', ':' => '\\:', '^' => '\\^',
-            '[' => '\\[', ']' => '\\]', '{' => '\\{', '}' => '\\}',
+            '!'  => '\\!', '(' => '\\(', ':' => '\\:', '^' => '\\^',
+            '['  => '\\[', ']' => '\\]', '{' => '\\{', '}' => '\\}',
             '\"' => '\\\"', '?' => '\\?', "'" => "''",
         ];
 
@@ -251,7 +250,7 @@ abstract class BaseSqlGenerator
     }
 
     /**
-     * Literal ::= CastLiteral | UncastLiteral
+     * Literal ::= CastLiteral | UncastLiteral.
      *
      * @param mixed $literal
      *

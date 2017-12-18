@@ -2,8 +2,8 @@
 
 namespace PHPCR\Tests\Util\Console\Command;
 
-use PHPCR\Util\Console\Command\WorkspaceDeleteCommand;
 use PHPCR\RepositoryInterface;
+use PHPCR\Util\Console\Command\WorkspaceDeleteCommand;
 
 class WorkspaceDeleteCommandTest extends BaseCommandTest
 {
@@ -18,32 +18,27 @@ class WorkspaceDeleteCommandTest extends BaseCommandTest
     {
         $this->session->expects($this->once())
             ->method('getWorkspace')
-            ->will($this->returnValue($this->workspace))
-        ;
+            ->will($this->returnValue($this->workspace));
 
         $this->workspace->expects($this->once())
             ->method('getAccessibleWorkspaceNames')
-            ->will($this->returnValue(['default', 'test_workspace', 'other']))
-        ;
+            ->will($this->returnValue(['default', 'test_workspace', 'other']));
 
         $this->session->expects($this->once())
             ->method('getRepository')
-            ->will($this->returnValue($this->repository))
-        ;
+            ->will($this->returnValue($this->repository));
 
         $this->repository->expects($this->once())
             ->method('getDescriptor')
             ->with(RepositoryInterface::OPTION_WORKSPACE_MANAGEMENT_SUPPORTED)
-            ->will($this->returnValue(true))
-        ;
+            ->will($this->returnValue(true));
 
         $this->workspace->expects($this->once())
             ->method('deleteWorkspace')
-            ->with('test_workspace')
-        ;
+            ->with('test_workspace');
 
         $ct = $this->executeCommand('phpcr:workspace:delete', [
-            'name' => 'test_workspace',
+            'name'    => 'test_workspace',
             '--force' => 'true',
         ]);
 
@@ -54,16 +49,14 @@ class WorkspaceDeleteCommandTest extends BaseCommandTest
     {
         $this->session->expects($this->once())
             ->method('getWorkspace')
-            ->will($this->returnValue($this->workspace))
-        ;
+            ->will($this->returnValue($this->workspace));
 
         $this->workspace->expects($this->once())
             ->method('getAccessibleWorkspaceNames')
-            ->will($this->returnValue(['default', 'other']))
-        ;
+            ->will($this->returnValue(['default', 'other']));
 
         $ct = $this->executeCommand('phpcr:workspace:delete', [
-            'name' => 'test_workspace',
+            'name'    => 'test_workspace',
             '--force' => 'true',
         ]);
 
