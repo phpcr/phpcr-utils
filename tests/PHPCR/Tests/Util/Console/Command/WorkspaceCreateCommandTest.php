@@ -2,8 +2,8 @@
 
 namespace PHPCR\Tests\Util\Console\Command;
 
-use PHPCR\Util\Console\Command\WorkspaceCreateCommand;
 use PHPCR\RepositoryInterface;
+use PHPCR\Util\Console\Command\WorkspaceCreateCommand;
 
 class WorkspaceCreateCommandTest extends BaseCommandTest
 {
@@ -18,32 +18,27 @@ class WorkspaceCreateCommandTest extends BaseCommandTest
     {
         $this->session->expects($this->once())
             ->method('getWorkspace')
-            ->will($this->returnValue($this->workspace))
-        ;
+            ->will($this->returnValue($this->workspace));
 
         $this->session->expects($this->once())
             ->method('getRepository')
-            ->will($this->returnValue($this->repository))
-        ;
+            ->will($this->returnValue($this->repository));
 
         $this->repository->expects($this->once())
             ->method('getDescriptor')
             ->with(RepositoryInterface::OPTION_WORKSPACE_MANAGEMENT_SUPPORTED)
-            ->will($this->returnValue(true))
-        ;
+            ->will($this->returnValue(true));
 
         $this->workspace->expects($this->once())
             ->method('createWorkspace')
-            ->with('test_workspace')
-        ;
+            ->with('test_workspace');
 
         $this->workspace->expects($this->once())
             ->method('getAccessibleWorkspaceNames')
-            ->will($this->returnValue(['default']))
-        ;
+            ->will($this->returnValue(['default']));
 
         $this->executeCommand('phpcr:workspace:create', [
-            'name' => 'test_workspace'
+            'name' => 'test_workspace',
         ]);
     }
 
@@ -54,24 +49,20 @@ class WorkspaceCreateCommandTest extends BaseCommandTest
     {
         $this->session->expects($this->exactly(2))
             ->method('getWorkspace')
-            ->will($this->returnValue($this->workspace))
-        ;
+            ->will($this->returnValue($this->workspace));
 
         $this->session->expects($this->exactly(2))
             ->method('getRepository')
-            ->will($this->returnValue($this->repository))
-        ;
+            ->will($this->returnValue($this->repository));
 
         $this->repository->expects($this->exactly(2))
             ->method('getDescriptor')
             ->with(RepositoryInterface::OPTION_WORKSPACE_MANAGEMENT_SUPPORTED)
-            ->will($this->returnValue(true))
-        ;
+            ->will($this->returnValue(true));
 
         $this->workspace->expects($this->exactly(2))
             ->method('getAccessibleWorkspaceNames')
-            ->will($this->returnValue(['default', 'test']))
-        ;
+            ->will($this->returnValue(['default', 'test']));
 
         $tester = $this->executeCommand(
             'phpcr:workspace:create',
@@ -84,8 +75,8 @@ class WorkspaceCreateCommandTest extends BaseCommandTest
         $tester = $this->executeCommand(
             'phpcr:workspace:create',
             [
-                'name' => 'test',
-                '--ignore-existing' => true
+                'name'              => 'test',
+                '--ignore-existing' => true,
             ],
             0
         );

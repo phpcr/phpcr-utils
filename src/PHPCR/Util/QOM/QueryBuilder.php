@@ -4,15 +4,15 @@ namespace PHPCR\Util\QOM;
 
 use InvalidArgumentException;
 use PHPCR\Query\QOM\ColumnInterface;
-use PHPCR\Query\QOM\OrderingInterface;
-use PHPCR\Query\QOM\QueryObjectModelFactoryInterface;
-use PHPCR\Query\QOM\DynamicOperandInterface;
 use PHPCR\Query\QOM\ConstraintInterface;
-use PHPCR\Query\QOM\SourceInterface;
+use PHPCR\Query\QOM\DynamicOperandInterface;
 use PHPCR\Query\QOM\JoinConditionInterface;
+use PHPCR\Query\QOM\OrderingInterface;
 use PHPCR\Query\QOM\QueryObjectModelConstantsInterface;
-use PHPCR\Query\QueryInterface;
+use PHPCR\Query\QOM\QueryObjectModelFactoryInterface;
 use PHPCR\Query\QOM\QueryObjectModelInterface;
+use PHPCR\Query\QOM\SourceInterface;
+use PHPCR\Query\QueryInterface;
 use PHPCR\Query\QueryResultInterface;
 use RuntimeException;
 
@@ -21,7 +21,6 @@ use RuntimeException;
  *
  * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
  * @license http://opensource.org/licenses/MIT MIT License
- *
  * @author      Nacho Martín <nitram.ohcan@gmail.com>
  * @author      Guilherme Blanco <guilhermeblanco@hotmail.com>
  * @author      Benjamin Eberlei <kontakt@beberlei.de>
@@ -33,7 +32,7 @@ class QueryBuilder
     const STATE_CLEAN = 1;
 
     /**
-     * @var integer The state of the query object. Can be dirty or clean.
+     * @var int The state of the query object. Can be dirty or clean.
      */
     private $state = self::STATE_CLEAN;
 
@@ -43,12 +42,12 @@ class QueryBuilder
     private $qomFactory;
 
     /**
-     * @var integer The maximum number of results to retrieve.
+     * @var int The maximum number of results to retrieve.
      */
     private $firstResult = null;
 
     /**
-     * @var integer The maximum number of results to retrieve.
+     * @var int The maximum number of results to retrieve.
      */
     private $maxResults = null;
 
@@ -73,7 +72,7 @@ class QueryBuilder
     private $source = null;
 
     /**
-     * QOM tree
+     * QOM tree.
      *
      * @var QueryObjectModelInterface
      */
@@ -85,7 +84,7 @@ class QueryBuilder
     private $params = [];
 
     /**
-     * Initializes a new QueryBuilder
+     * Initializes a new QueryBuilder.
      *
      * @param QueryObjectModelFactoryInterface $qomFactory
      */
@@ -95,14 +94,14 @@ class QueryBuilder
     }
 
     /**
-     * Get a query builder instance from an existing query
+     * Get a query builder instance from an existing query.
      *
      * @param string $statement the statement in the specified language
      * @param string $language  the query language
      *
-     * @return QueryBuilder This QueryBuilder instance.
-     *
      * @throws InvalidArgumentException
+     *
+     * @return QueryBuilder This QueryBuilder instance.
      */
     public function setFromQuery($statement, $language)
     {
@@ -125,7 +124,7 @@ class QueryBuilder
     }
 
     /**
-     * Get the associated QOMFactory for this query builder
+     * Get the associated QOMFactory for this query builder.
      *
      * @return QueryObjectModelFactoryInterface
      */
@@ -135,7 +134,7 @@ class QueryBuilder
     }
 
     /**
-     * Shortcut for getQOMFactory()
+     * Shortcut for getQOMFactory().
      */
     public function qomf()
     {
@@ -145,7 +144,7 @@ class QueryBuilder
     /**
      * sets the position of the first result to retrieve (the "offset").
      *
-     * @param integer $firstResult The First result to return.
+     * @param int $firstResult The First result to return.
      *
      * @return QueryBuilder This QueryBuilder instance.
      */
@@ -160,7 +159,7 @@ class QueryBuilder
      * Gets the position of the first result the query object was set to retrieve (the "offset").
      * Returns NULL if {@link setFirstResult} was not applied to this QueryBuilder.
      *
-     * @return integer The position of the first result.
+     * @return int The position of the first result.
      */
     public function getFirstResult()
     {
@@ -168,10 +167,9 @@ class QueryBuilder
     }
 
     /**
-     *
      * Sets the maximum number of results to retrieve (the "limit").
      *
-     * @param integer $maxResults The maximum number of results to retrieve.
+     * @param int $maxResults The maximum number of results to retrieve.
      *
      * @return QueryBuilder This QueryBuilder instance.
      */
@@ -186,7 +184,7 @@ class QueryBuilder
      * Gets the maximum number of results the query object was set to retrieve (the "limit").
      * Returns NULL if {@link setMaxResults} was not applied to this query builder.
      *
-     * @return integer Maximum number of results.
+     * @return int Maximum number of results.
      */
     public function getMaxResults()
     {
@@ -209,9 +207,9 @@ class QueryBuilder
      * @param DynamicOperandInterface $sort  The ordering expression.
      * @param string                  $order The ordering direction.
      *
-     * @return QueryBuilder This QueryBuilder instance.
-     *
      * @throws InvalidArgumentException
+     *
+     * @return QueryBuilder This QueryBuilder instance.
      */
     public function addOrderBy(DynamicOperandInterface $sort, $order = 'ASC')
     {
@@ -266,7 +264,7 @@ class QueryBuilder
     }
 
     /**
-     * Returns the constraint to apply
+     * Returns the constraint to apply.
      *
      * @return ConstraintInterface the constraint to be applied
      */
@@ -277,7 +275,7 @@ class QueryBuilder
 
     /**
      * Creates a new constraint formed by applying a logical AND to the
-     * existing constraint and the new one
+     * existing constraint and the new one.
      *
      * Order of ands is important:
      *
@@ -307,7 +305,7 @@ class QueryBuilder
 
     /**
      * Creates a new constraint formed by applying a logical OR to the
-     * existing constraint and the new one
+     * existing constraint and the new one.
      *
      * Order of ands is important:
      *
@@ -336,7 +334,7 @@ class QueryBuilder
     }
 
     /**
-     * Returns the columns to be selected
+     * Returns the columns to be selected.
      *
      * @return ColumnInterface[] The columns to be selected
      */
@@ -346,7 +344,7 @@ class QueryBuilder
     }
 
     /**
-     * Sets the columns to be selected
+     * Sets the columns to be selected.
      *
      * @param ColumnInterface[] $columns The columns to be selected
      *
@@ -427,9 +425,9 @@ class QueryBuilder
      * @param SourceInterface        $rightSource
      * @param JoinConditionInterface $joinCondition
      *
-     * @return QueryBuilder This QueryBuilder instance.
-     *
      * @throws RuntimeException if there is not an existing source.
+     *
+     * @return QueryBuilder This QueryBuilder instance.
      */
     public function join(SourceInterface $rightSource, JoinConditionInterface $joinCondition)
     {
@@ -442,9 +440,9 @@ class QueryBuilder
      * @param SourceInterface        $rightSource
      * @param JoinConditionInterface $joinCondition
      *
-     * @return QueryBuilder This QueryBuilder instance.
-     *
      * @throws RuntimeException if there is not an existing source.
+     *
+     * @return QueryBuilder This QueryBuilder instance.
      */
     public function innerJoin(SourceInterface $rightSource, JoinConditionInterface $joinCondition)
     {
@@ -457,9 +455,9 @@ class QueryBuilder
      * @param SourceInterface        $rightSource
      * @param JoinConditionInterface $joinCondition
      *
-     * @return QueryBuilder This QueryBuilder instance.
-     *
      * @throws RuntimeException if there is not an existing source.
+     *
+     * @return QueryBuilder This QueryBuilder instance.
      */
     public function leftJoin(SourceInterface $rightSource, JoinConditionInterface $joinCondition)
     {
@@ -472,9 +470,9 @@ class QueryBuilder
      * @param SourceInterface        $rightSource
      * @param JoinConditionInterface $joinCondition
      *
-     * @return QueryBuilder This QueryBuilder instance.
-     *
      * @throws RuntimeException if there is not an existing source.
+     *
+     * @return QueryBuilder This QueryBuilder instance.
      */
     public function rightJoin(SourceInterface $rightSource, JoinConditionInterface $joinCondition)
     {
@@ -488,9 +486,9 @@ class QueryBuilder
      * @param string                 $joinType      as specified in PHPCR\Query\QOM\QueryObjectModelConstantsInterface
      * @param JoinConditionInterface $joinCondition
      *
-     * @return QueryBuilder This QueryBuilder instance.
-     *
      * @throws RuntimeException if there is not an existing source.
+     *
+     * @return QueryBuilder This QueryBuilder instance.
      */
     public function joinWithType(SourceInterface $rightSource, $joinType, JoinConditionInterface $joinCondition)
     {
@@ -505,7 +503,7 @@ class QueryBuilder
     }
 
     /**
-     * Gets the query built
+     * Gets the query built.
      *
      * @return QueryObjectModelInterface
      */

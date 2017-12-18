@@ -2,10 +2,10 @@
 
 namespace PHPCR\Util\Console\Command;
 
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use PHPCR\Util\NodeHelper;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Command to remove all non-system nodes and properties in the workspace of
@@ -13,13 +13,12 @@ use PHPCR\Util\NodeHelper;
  *
  * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
  * @license http://opensource.org/licenses/MIT MIT License
- *
  * @author Daniel Leech <daniel@dantleech.com>
  */
 class WorkspacePurgeCommand extends BaseCommand
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function configure()
     {
@@ -29,16 +28,15 @@ class WorkspacePurgeCommand extends BaseCommand
             ->setName('phpcr:workspace:purge')
             ->setDescription('Remove all nodes from a workspace')
             ->addOption('force', null, InputOption::VALUE_NONE, 'Use to bypass the confirmation dialog')
-            ->setHelp(<<<EOF
+            ->setHelp(<<<'EOF'
 The <info>phpcr:workspace:purge</info> command removes all nodes except the
 system nodes and all non-system properties of the root node from the workspace.
 EOF
-            )
-        ;
+            );
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

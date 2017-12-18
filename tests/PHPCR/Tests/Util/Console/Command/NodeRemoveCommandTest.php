@@ -22,7 +22,7 @@ class NodeRemoveCommandTest extends BaseCommandTest
 
         $this->executeCommand('phpcr:node:remove', [
             '--force' => true,
-            'path' => '/cms',
+            'path'    => '/cms',
         ]);
     }
 
@@ -32,7 +32,7 @@ class NodeRemoveCommandTest extends BaseCommandTest
 
         $this->executeCommand('phpcr:node:remove', [
             '--force' => true,
-            'path' => '/',
+            'path'    => '/',
         ]);
     }
 }

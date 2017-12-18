@@ -3,24 +3,23 @@
 namespace PHPCR\Util\Console\Command;
 
 use PHPCR\RepositoryInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * A command to create a workspace in the PHPCR repository
+ * A command to create a workspace in the PHPCR repository.
  *
  * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
  * @license http://opensource.org/licenses/MIT MIT License
- *
  * @author Lukas Kahwe Smith <smith@pooteeweet.org>
  * @author David Buchmann <mail@davidbu.ch>
  */
 class WorkspaceCreateCommand extends BaseCommand
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function configure()
     {
@@ -34,17 +33,16 @@ class WorkspaceCreateCommand extends BaseCommand
                'If set, an existing workspace will return a success code'
             )
             ->setDescription('Create a workspace in the configured repository')
-            ->setHelp(<<<EOT
+            ->setHelp(<<<'EOT'
 The <info>workspace:create</info> command creates a workspace with the specified name.
 It will fail if a workspace with that name already exists or if the repository implementation
 does not support the workspace creation operation.
 EOT
-            )
-        ;
+            );
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

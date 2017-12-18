@@ -3,31 +3,31 @@
 namespace PHPCR\Util\Console\Helper\TreeDumper;
 
 use Exception;
-use Symfony\Component\Console\Output\OutputInterface;
 use PHPCR\ItemInterface;
 use PHPCR\NodeInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * TODO: this should base on the TraversingItemVisitor
+ * TODO: this should base on the TraversingItemVisitor.
  *
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  */
 class ConsoleDumperNodeVisitor extends ConsoleDumperItemVisitor
 {
     /**
-     * Whether to print the UUIDs or not
+     * Whether to print the UUIDs or not.
      *
      * @var bool
      */
     protected $identifiers;
 
     /**
-     * Show the full path for the node
+     * Show the full path for the node.
      */
     protected $showFullPath;
 
     /**
-     * Instantiate the console dumper visitor
+     * Instantiate the console dumper visitor.
      *
      * @param OutputInterface $output
      * @param bool            $identifiers whether to output the node UUID
@@ -39,7 +39,7 @@ class ConsoleDumperNodeVisitor extends ConsoleDumperItemVisitor
     }
 
     /**
-     * If to show the full path or not
+     * If to show the full path or not.
      *
      * @param bool $showFullPath
      */
@@ -57,7 +57,7 @@ class ConsoleDumperNodeVisitor extends ConsoleDumperItemVisitor
      */
     public function visit(ItemInterface $item)
     {
-        if (! $item instanceof NodeInterface) {
+        if (!$item instanceof NodeInterface) {
             throw new Exception("Internal error: did not expect to visit a non-node object: $item");
         }
 
@@ -70,7 +70,7 @@ class ConsoleDumperNodeVisitor extends ConsoleDumperItemVisitor
         }
 
         $out = str_repeat('  ', $this->level)
-            . '<comment>' . $name . '</comment>';
+            .'<comment>'.$name.'</comment>';
         if ($this->identifiers) {
             $identifier = $item->getIdentifier();
             if ($identifier) {

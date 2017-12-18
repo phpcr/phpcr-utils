@@ -3,8 +3,8 @@
 use PHPCR\Util\Console\Helper\PhpcrConsoleDumperHelper;
 use PHPCR\Util\Console\Helper\TreeDumper\ConsoleDumperPropertyVisitor;
 use PHPCR\Util\TreeWalker;
-use Symfony\Component\Console\Output\OutputInterface;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class PhpcrConsoleDumperHelperTest extends TestCase
 {
@@ -17,7 +17,7 @@ class PhpcrConsoleDumperHelperTest extends TestCase
     public function setUp()
     {
         $this->outputMock = $this->createMock(OutputInterface::class);
-        $this->helper = new PhpcrConsoleDumperHelper;
+        $this->helper = new PhpcrConsoleDumperHelper();
     }
 
     public function provideHelper()
@@ -31,9 +31,9 @@ class PhpcrConsoleDumperHelperTest extends TestCase
     public function testGetTreeWalker($options)
     {
         $options = array_merge([
-            'dump_uuids' => false,
-            'ref_format' => 'uuid',
-            'show_props' => false,
+            'dump_uuids'     => false,
+            'ref_format'     => 'uuid',
+            'show_props'     => false,
             'show_sys_nodes' => false,
         ], $options);
 

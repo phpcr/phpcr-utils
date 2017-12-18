@@ -22,13 +22,13 @@ class WorkspaceListCommandTest extends BaseCommandTest
         $this->workspace->expects($this->once())
             ->method('getAccessibleWorkspaceNames')
             ->will($this->returnValue([
-                'foo', 'bar'
+                'foo', 'bar',
             ]));
 
         $ct = $this->executeCommand('phpcr:workspace:list', [
         ]);
 
-        $expected = <<<HERE
+        $expected = <<<'HERE'
 The following 2 workspaces are available:
 foo
 bar

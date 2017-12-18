@@ -14,12 +14,13 @@ use PHPCR\Query\QOM;
 class QomToSql1QueryConverter extends BaseQomToSqlQueryConverter
 {
     /**
-     * Source ::= Selector
+     * Source ::= Selector.
      *
-     * @param  QOM\SourceInterface $source
-     * @return string
+     * @param QOM\SourceInterface $source
      *
      * @throws InvalidArgumentException
+     *
+     * @return string
      */
     protected function convertSource(QOM\SourceInterface $source)
     {
@@ -33,18 +34,18 @@ class QomToSql1QueryConverter extends BaseQomToSqlQueryConverter
     /**
      * Constraint ::= And | Or | Not | Comparison |
      *          PropertyExistence | FullTextSearch |
-     *          SameNode | ChildNode | DescendantNode
+     *          SameNode | ChildNode | DescendantNode.
      *
      * And ::= constraint1 'AND' constraint2
      * Or ::= constraint1 'OR' constraint2
      * Not ::= 'NOT' Constraint
      *
-     * @param  QOM\ConstraintInterface $constraint
-     *
-     * @return string
+     * @param QOM\ConstraintInterface $constraint
      *
      * @throws InvalidArgumentException
      * @throws NotSupportedConstraintException
+     *
+     * @return string
      */
     protected function convertConstraint(QOM\ConstraintInterface $constraint)
     {
@@ -90,21 +91,22 @@ class QomToSql1QueryConverter extends BaseQomToSqlQueryConverter
 
         // This should not happen, but who knows...
         $class = get_class($constraint);
+
         throw new InvalidArgumentException("Invalid operand: $class");
     }
 
     /**
-     * DynamicOperand ::= PropertyValue | LowerCase | UpperCase
+     * DynamicOperand ::= PropertyValue | LowerCase | UpperCase.
      *
      * LowerCase ::= 'LOWER(' DynamicOperand ')'
      * UpperCase ::= 'UPPER(' DynamicOperand ')'
      *
-     * @param  QOM\DynamicOperandInterface $operand
-     *
-     * @return string
+     * @param QOM\DynamicOperandInterface $operand
      *
      * @throws NotSupportedOperandException
      * @throws InvalidArgumentException
+     *
+     * @return string
      */
     protected function convertDynamicOperand(QOM\DynamicOperandInterface $operand)
     {

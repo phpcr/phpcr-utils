@@ -7,13 +7,13 @@ use PHPCR\NodeType\NodeTypeManagerInterface;
 use PHPCR\NodeType\NodeTypeTemplateInterface;
 use PHPCR\NodeType\PropertyDefinitionTemplateInterface;
 use PHPCR\PropertyType;
+use PHPCR\Util\CND\Exception\ParserException;
 use PHPCR\Util\CND\Reader\BufferReader;
 use PHPCR\Util\CND\Reader\FileReader;
 use PHPCR\Util\CND\Reader\ReaderInterface;
 use PHPCR\Util\CND\Scanner\Context\DefaultScannerContextWithoutSpacesAndComments;
 use PHPCR\Util\CND\Scanner\GenericScanner;
 use PHPCR\Util\CND\Scanner\GenericToken as Token;
-use PHPCR\Util\CND\Exception\ParserException;
 use PHPCR\Version\OnParentVersionAction;
 
 /**
@@ -29,19 +29,18 @@ use PHPCR\Version\OnParentVersionAction;
  *
  * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
  * @license http://opensource.org/licenses/MIT MIT License
- *
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  * @author David Buchmann <mail@davidbu.ch>
  */
 class CndParser extends AbstractParser
 {
     // node type attributes
-    private $ORDERABLE = ['o', 'ord', 'orderable'];//, 'variant' => true);
-    private $MIXIN     = ['m', 'mix', 'mixin'];//, 'variant' => true);
-    private $ABSTRACT  = ['a', 'abs', 'abstract'];//, 'variant' => true);
-    private $NOQUERY   = ['noquery', 'nq'];//, 'variant' => false);
-    private $QUERY      = ['query', 'q'];//, 'variant' => false);
-    private $PRIMARYITEM = ['primaryitem', '!'];//, 'variant' => false);
+    private $ORDERABLE = ['o', 'ord', 'orderable']; //, 'variant' => true);
+    private $MIXIN = ['m', 'mix', 'mixin']; //, 'variant' => true);
+    private $ABSTRACT = ['a', 'abs', 'abstract']; //, 'variant' => true);
+    private $NOQUERY = ['noquery', 'nq']; //, 'variant' => false);
+    private $QUERY = ['query', 'q']; //, 'variant' => false);
+    private $PRIMARYITEM = ['primaryitem', '!']; //, 'variant' => false);
 
     // common for properties and child definitions
     private $PRIMARY = ['!', 'pri', 'primary']; //, 'variant' => true),
@@ -90,7 +89,7 @@ class CndParser extends AbstractParser
      * @param string $filename absolute path to the CND file to read
      *
      * @return array with the namespaces map and the nodeTypes which is a
-     *      hashmap of typename = > NodeTypeDefinitionInterface
+     *               hashmap of typename = > NodeTypeDefinitionInterface
      */
     public function parseFile($filename)
     {
@@ -105,7 +104,7 @@ class CndParser extends AbstractParser
      * @param string $cnd string with CND content
      *
      * @return array with the namespaces map and the nodeTypes which is a
-     *      hashmap of typename = > NodeTypeDefinitionInterface
+     *               hashmap of typename = > NodeTypeDefinitionInterface
      */
     public function parseString($cnd)
     {
@@ -131,7 +130,7 @@ class CndParser extends AbstractParser
 
         return [
             'namespaces' => $this->namespaces,
-            'nodeTypes' => $this->nodeTypes,
+            'nodeTypes'  => $this->nodeTypes,
         ];
     }
 
@@ -283,7 +282,7 @@ class CndParser extends AbstractParser
     }
 
     /**
-     * Parse both the children propery and nodes definitions
+     * Parse both the children propery and nodes definitions.
      *
      *      {PropertyDef | ChildNodeDef}
      */
@@ -369,11 +368,11 @@ class CndParser extends AbstractParser
      */
     protected function parsePropertyType(PropertyDefinitionTemplateInterface $property)
     {
-        $types = ["STRING", "BINARY", "LONG", "DOUBLE", "BOOLEAN",  "DATE", "NAME", "PATH",
-                       "REFERENCE", "WEAKREFERENCE", "DECIMAL", "URI", "UNDEFINED", "*", "?"];
+        $types = ['STRING', 'BINARY', 'LONG', 'DOUBLE', 'BOOLEAN',  'DATE', 'NAME', 'PATH',
+                       'REFERENCE', 'WEAKREFERENCE', 'DECIMAL', 'URI', 'UNDEFINED', '*', '?', ];
 
-        if (! $this->checkTokenIn(Token::TK_IDENTIFIER, $types, true)) {
-            throw new ParserException($this->tokenQueue, sprintf("Invalid property type: %s", $this->tokenQueue->get()->getData()));
+        if (!$this->checkTokenIn(Token::TK_IDENTIFIER, $types, true)) {
+            throw new ParserException($this->tokenQueue, sprintf('Invalid property type: %s', $this->tokenQueue->get()->getData()));
         }
 
         $data = $this->tokenQueue->get()->getData();
@@ -387,7 +386,7 @@ class CndParser extends AbstractParser
      * The default values, if any, are listed after a '='. The attribute is a
      * list in order to accommodate multi-value properties. The absence of this
      * element indicates that there is no static default value reportable. A '?'
-     * indicates that this attribute is a variant
+     * indicates that this attribute is a variant.
      *
      *      DefaultValues ::= '=' (StringList | '?')
      */
@@ -405,7 +404,7 @@ class CndParser extends AbstractParser
     /**
      * The value constraints, if any, are listed after a '<'. The absence of
      * this element indicates that no value constraints reportable within the
-     * value constraint syntax. A '?' indicates that this attribute is a variant
+     * value constraint syntax. A '?' indicates that this attribute is a variant.
      *
      *      ValueConstraints ::= '<' (StringList | '?')
      */
@@ -500,7 +499,7 @@ class CndParser extends AbstractParser
                 $property->setQueryOrderable(false);
             } elseif ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->OPV)) {
                 if ($opvSeen) {
-                    throw new ParserException($this->tokenQueue, 'More than one on parent version action specified on property ' . $property->getName());
+                    throw new ParserException($this->tokenQueue, 'More than one on parent version action specified on property '.$property->getName());
                 }
                 $token = $this->tokenQueue->get();
                 $property->setOnParentVersion(OnParentVersionAction::valueFromName($token->getData()));
@@ -624,7 +623,7 @@ class CndParser extends AbstractParser
     }
 
     /**
-     * Parse a string list
+     * Parse a string list.
      *
      *      StringList ::= String {',' String}
      *
@@ -643,7 +642,7 @@ class CndParser extends AbstractParser
     }
 
     /**
-     * Parse a string
+     * Parse a string.
      *
      *      String ::= QuotedString | UnquotedString
      *      QuotedString ::= SingleQuotedString | DoubleQuotedString

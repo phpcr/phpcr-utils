@@ -13,7 +13,7 @@ class BufferReaderTest extends TestCase
         $reader = new BufferReader($buffer);
 
         $this->assertInstanceOf(BufferReader::class, $reader);
-        $this->assertAttributeEquals(str_replace("\r\n", "\n", $buffer) . $reader->getEofMarker(), 'buffer', $reader);
+        $this->assertAttributeEquals(str_replace("\r\n", "\n", $buffer).$reader->getEofMarker(), 'buffer', $reader);
         $this->assertAttributeEquals(0, 'startPos', $reader);
         $this->assertAttributeEquals(0, 'forwardPos', $reader);
 

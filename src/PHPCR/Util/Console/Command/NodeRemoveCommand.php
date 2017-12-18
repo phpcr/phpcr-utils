@@ -6,8 +6,8 @@ use InvalidArgumentException;
 use PHPCR\NodeInterface;
 use Symfony\Component\Console\Exception\InvalidArgumentException as CliInvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -16,14 +16,13 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
  * @license http://opensource.org/licenses/MIT MIT License
- *
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  * @author Daniel Leech <daniel@dantleech.com>
  */
 class NodeRemoveCommand extends BaseCommand
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @throws CliInvalidArgumentException
      */
@@ -37,7 +36,7 @@ class NodeRemoveCommand extends BaseCommand
             ->addArgument('path', InputArgument::REQUIRED, 'Path of the node to purge')
             ->addOption('force', null, InputOption::VALUE_NONE, 'Use to bypass the confirmation dialog')
             ->addOption('only-children', null, InputOption::VALUE_NONE, 'Use to only purge children of specified path')
-            ->setHelp(<<<EOF
+            ->setHelp(<<<'EOF'
 The <info>phpcr:node:remove</info> command will remove the given node or the
 children of the given node according to the options given.
 
@@ -49,12 +48,11 @@ Remove only the children of the specified node
 
     $ php bin/phpcr phpcr:node:remove /cms/content/blog --only-children
 EOF
-            )
-        ;
+            );
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @throws CliInvalidArgumentException
      * @throws InvalidArgumentException

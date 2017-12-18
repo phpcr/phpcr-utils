@@ -6,11 +6,11 @@ use Exception;
 use PHPCR\NodeType\NodeTypeInterface;
 use PHPCR\PathNotFoundException;
 use PHPCR\Tests\Stubs\MockNode;
-use PHPCR\Util\Console\Helper\PhpcrHelper;
 use PHPCR\Util\Console\Command\NodeTouchCommand;
+use PHPCR\Util\Console\Helper\PhpcrHelper;
 
 /**
- * Currently very minimal test for touch command
+ * Currently very minimal test for touch command.
  */
 class NodeTouchCommandTest extends BaseCommandTest
 {
@@ -23,24 +23,21 @@ class NodeTouchCommandTest extends BaseCommandTest
     {
         parent::setUp();
 
-        $command = new NodeTouchCommand;
+        $command = new NodeTouchCommand();
         $this->application->add($command);
 
         // Override default concrete instance with mock
         $this->phpcrHelper = $this->getMockBuilder(PhpcrHelper::class)
             ->disableOriginalConstructor()
-            ->getMock()
-        ;
+            ->getMock();
 
         $this->phpcrHelper->expects($this->any())
             ->method('getSession')
-            ->will($this->returnValue($this->session))
-        ;
+            ->will($this->returnValue($this->session));
 
         $this->phpcrHelper->expects($this->any())
             ->method('getName')
-            ->will($this->returnValue('phpcr'))
-        ;
+            ->will($this->returnValue('phpcr'));
 
         $this->helperSet->set($this->phpcrHelper);
     }
@@ -59,14 +56,14 @@ class NodeTouchCommandTest extends BaseCommandTest
                     case '/cms':
                         throw new PathNotFoundException();
                 }
-                throw new Exception('Unexpected ' . $path);
+
+                throw new Exception('Unexpected '.$path);
             }));
 
         $this->node1->expects($this->once())
             ->method('addNode')
             ->with('cms')
-            ->will($this->returnValue($child))
-        ;
+            ->will($this->returnValue($child));
 
         $this->session->expects($this->once())
             ->method('save');
@@ -79,19 +76,16 @@ class NodeTouchCommandTest extends BaseCommandTest
         $nodeType = $this->createMock(NodeTypeInterface::class);
         $nodeType->expects($this->once())
             ->method('getName')
-            ->will($this->returnValue('nt:unstructured'))
-        ;
+            ->will($this->returnValue('nt:unstructured'));
 
         $this->session->expects($this->exactly(1))
             ->method('getNode')
             ->with('/cms')
-            ->will($this->returnValue($this->node1))
-        ;
+            ->will($this->returnValue($this->node1));
 
         $this->node1->expects($this->once())
             ->method('getPrimaryNodeType')
-            ->will($this->returnValue($nodeType))
-        ;
+            ->will($this->returnValue($nodeType));
 
         $me = $this;
 
@@ -100,21 +94,21 @@ class NodeTouchCommandTest extends BaseCommandTest
             ->will($this->returnCallback(function ($output, $node, $options) use ($me) {
                 $me->assertEquals($me->node1, $node);
                 $me->assertEquals([
-                    'setProp' => ['foo=bar'],
-                    'removeProp' => ['bar'],
-                    'addMixins' => ['foo:bar'],
+                    'setProp'      => ['foo=bar'],
+                    'removeProp'   => ['bar'],
+                    'addMixins'    => ['foo:bar'],
                     'removeMixins' => ['bar:foo'],
-                    'dump' => true,
+                    'dump'         => true,
                 ], $options);
             }));
 
         $this->executeCommand('phpcr:node:touch', [
-            'path' => '/cms',
-            '--set-prop' => ['foo=bar'],
-            '--remove-prop' => ['bar'],
-            '--add-mixin' => ['foo:bar'],
+            'path'           => '/cms',
+            '--set-prop'     => ['foo=bar'],
+            '--remove-prop'  => ['bar'],
+            '--add-mixin'    => ['foo:bar'],
             '--remove-mixin' => ['bar:foo'],
-            '--dump' => true,
+            '--dump'         => true,
         ]);
     }
 }

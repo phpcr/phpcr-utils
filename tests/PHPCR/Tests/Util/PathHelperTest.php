@@ -5,8 +5,8 @@ namespace PHPCR\Tests\Util;
 use PHPCR\NamespaceException;
 use PHPCR\RepositoryException;
 use PHPCR\Util\PathHelper;
-use stdClass;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 
 class PathHelperTest extends TestCase
 {
@@ -124,7 +124,7 @@ class PathHelperTest extends TestCase
             ['jcr:nodename'],
             ['/path'],
             ['.'],
-            ['..']
+            ['..'],
         ];
     }
 

@@ -3,13 +3,13 @@
 namespace PHPCR\Util\CND\Writer;
 
 use PHPCR\NamespaceRegistryInterface;
-use PHPCR\PropertyType;
-use PHPCR\Version\OnParentVersionAction;
 use PHPCR\NodeType\NodeDefinitionInterface;
 use PHPCR\NodeType\NodeTypeDefinitionInterface;
 use PHPCR\NodeType\NodeTypeManagerInterface;
 use PHPCR\NodeType\NodeTypeTemplateInterface;
 use PHPCR\NodeType\PropertyDefinitionInterface;
+use PHPCR\PropertyType;
+use PHPCR\Version\OnParentVersionAction;
 
 /**
  * Generator for JCR-2.0 CND files.
@@ -22,7 +22,6 @@ use PHPCR\NodeType\PropertyDefinitionInterface;
  *
  * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
  * @license http://opensource.org/licenses/MIT MIT License
- *
  * @author David Buchmann <mail@davidbu.ch>
  */
 class CndWriter
@@ -49,7 +48,7 @@ class CndWriter
      * @param NodeTypeTemplateInterface[] $nodeTypes
      *
      * @return string with declarations for all non-system namespaces and for
-     *      all node types in that array.
+     *                all node types in that array.
      */
     public function writeString(array $nodeTypes)
     {
@@ -58,7 +57,7 @@ class CndWriter
             $cnd .= $this->writeNodeType($nodeType);
         }
 
-        return $this->writeNamespaces() . $cnd;
+        return $this->writeNamespaces().$cnd;
     }
 
     /**
@@ -86,7 +85,7 @@ class CndWriter
         list($prefix) = explode(':', $name);
 
         // namespace registry will throw exception if namespace prefix not found
-        $this->namespaces[$prefix] = "'" . $this->ns->getURI($prefix) . "'";
+        $this->namespaces[$prefix] = "'".$this->ns->getURI($prefix)."'";
     }
 
     /**
@@ -101,12 +100,12 @@ class CndWriter
     protected function writeNodeType(NodeTypeDefinitionInterface $nodeType)
     {
         $this->checkNamespace($nodeType->getName());
-        $s = '[' . $nodeType->getName() . ']';
+        $s = '['.$nodeType->getName().']';
         if ($superTypes = $nodeType->getDeclaredSupertypeNames()) {
             foreach ($superTypes as $superType) {
                 $this->checkNamespace($superType);
             }
-            $s .= ' > ' . implode(', ', $superTypes);
+            $s .= ' > '.implode(', ', $superTypes);
         }
         $s .= "\n";
 
@@ -123,10 +122,10 @@ class CndWriter
         }
         $attributes .= $nodeType->isQueryable() ? 'query ' : 'noquery ';
         if ($nodeType->getPrimaryItemName()) {
-            $attributes .= 'primaryitem ' . $nodeType->getPrimaryItemName() . ' ';
+            $attributes .= 'primaryitem '.$nodeType->getPrimaryItemName().' ';
         }
         if ($attributes) {
-            $s .= trim($attributes) . "\n";
+            $s .= trim($attributes)."\n";
         }
 
         $s .= $this->writeProperties($nodeType->getDeclaredPropertyDefinitions());
@@ -149,14 +148,14 @@ class CndWriter
         /** @var $property PropertyDefinitionInterface */
         foreach ($properties as $property) {
             $this->checkNamespace($property->getName());
-            $s .= '- ' . $property->getName();
+            $s .= '- '.$property->getName();
 
             if ($property->getRequiredType()) {
-                $s .= ' (' . PropertyType::nameFromValue($property->getRequiredType()) . ')';
+                $s .= ' ('.PropertyType::nameFromValue($property->getRequiredType()).')';
             }
             $s .= "\n";
             if ($property->getDefaultValues()) {
-                $s .= "= '" . implode("', '", $property->getDefaultValues()) . "'\n";
+                $s .= "= '".implode("', '", $property->getDefaultValues())."'\n";
             }
             $attributes = '';
             if ($property->isMandatory()) {
@@ -174,23 +173,23 @@ class CndWriter
             if ($property->getAvailableQueryOperators()) {
                 $attributes .= implode("', '", $property->getAvailableQueryOperators());
             }
-            if (! $property->isFullTextSearchable()) {
+            if (!$property->isFullTextSearchable()) {
                 $attributes .= 'nofulltext ';
             }
-            if (! $property->isQueryOrderable()) {
+            if (!$property->isQueryOrderable()) {
                 $attributes .= 'noqueryorder ';
             }
 
             if (OnParentVersionAction::COPY !== $property->getOnParentVersion()) {
-                $attributes .= OnParentVersionAction::nameFromValue($property->getOnParentVersion()) . ' ';
+                $attributes .= OnParentVersionAction::nameFromValue($property->getOnParentVersion()).' ';
             }
 
             if ($attributes) {
-                $s .= trim($attributes) . "\n";
+                $s .= trim($attributes)."\n";
             }
 
             if ($property->getValueConstraints()) {
-                $s .= "< '" . implode("', '", $property->getValueConstraints()) . "'\n";
+                $s .= "< '".implode("', '", $property->getValueConstraints())."'\n";
             }
         }
 
@@ -210,17 +209,17 @@ class CndWriter
         /** @var $child NodeDefinitionInterface */
         foreach ($children as $child) {
             $this->checkNamespace($child->getName());
-            $s .= '+ ' . $child->getName();
+            $s .= '+ '.$child->getName();
 
             if ($child->getRequiredPrimaryTypeNames()) {
                 foreach ($child->getRequiredPrimaryTypeNames() as $typeName) {
                     $this->checkNamespace($typeName);
                 }
-                $s .= ' (' . implode(', ', $child->getRequiredPrimaryTypeNames()) . ')';
+                $s .= ' ('.implode(', ', $child->getRequiredPrimaryTypeNames()).')';
             }
             if ($child->getDefaultPrimaryTypeName()) {
                 $this->checkNamespace($child->getDefaultPrimaryTypeName());
-                $s .= "\n= " . $child->getDefaultPrimaryTypeName();
+                $s .= "\n= ".$child->getDefaultPrimaryTypeName();
             }
             $s .= "\n";
 
@@ -235,14 +234,14 @@ class CndWriter
                 $attributes .= 'protected ';
             }
             if (OnParentVersionAction::COPY != $child->getOnParentVersion()) {
-                $attributes .= OnParentVersionAction::nameFromValue($child->getOnParentVersion()) . ' ';
+                $attributes .= OnParentVersionAction::nameFromValue($child->getOnParentVersion()).' ';
             }
             if ($child->allowsSameNameSiblings()) {
                 $attributes .= 'sns ';
             }
 
             if ($attributes) {
-                $s .= trim($attributes) . "\n";
+                $s .= trim($attributes)."\n";
             }
         }
 

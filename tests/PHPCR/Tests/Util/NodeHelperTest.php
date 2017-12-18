@@ -4,8 +4,8 @@ namespace PHPCR\Tests\Util;
 
 use PHPCR\Tests\Stubs\MockNode;
 use PHPCR\Util\NodeHelper;
-use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit\Framework\TestCase;
+use PHPUnit_Framework_MockObject_MockObject;
 
 require_once __DIR__.'/../Stubs/MockNode.php';
 
@@ -89,26 +89,22 @@ class NodeHelperTest extends TestCase
 
         $sys->expects($this->once())
             ->method('getDepth')
-            ->will($this->returnValue(0))
-        ;
+            ->will($this->returnValue(0));
 
         $sys->expects($this->once())
             ->method('getName')
-            ->will($this->returnValue('jcr:root'))
-        ;
+            ->will($this->returnValue('jcr:root'));
 
         $this->assertTrue(NodeHelper::isSystemItem($sys));
 
         $sys = $this->createMock(MockNode::class);
         $sys->expects($this->once())
             ->method('getDepth')
-            ->will($this->returnValue(1))
-        ;
+            ->will($this->returnValue(1));
 
         $sys->expects($this->once())
             ->method('getName')
-            ->will($this->returnValue('jcr:system'))
-        ;
+            ->will($this->returnValue('jcr:system'));
 
         $this->assertTrue(NodeHelper::isSystemItem($sys));
 
@@ -116,13 +112,12 @@ class NodeHelperTest extends TestCase
         $top = $this->createMock(MockNode::class);
         $top->expects($this->once())
             ->method('getDepth')
-            ->will($this->returnValue(1))
-        ;
+            ->will($this->returnValue(1));
 
         $top->expects($this->once())
             ->method('getName')
             ->will($this->returnValue('jcrname')) // this is NOT in the jcr namespace
-        ;
+;
 
         $this->assertFalse(NodeHelper::isSystemItem($top));
 
@@ -130,8 +125,7 @@ class NodeHelperTest extends TestCase
         $deep = $this->createMock(MockNode::class);
         $deep->expects($this->once())
             ->method('getDepth')
-            ->will($this->returnValue(2))
-        ;
+            ->will($this->returnValue(2));
 
         $this->assertFalse(NodeHelper::isSystemItem($deep));
     }
@@ -189,7 +183,7 @@ class NodeHelperTest extends TestCase
         $reorders = NodeHelper::calculateOrderBefore($old, $new);
 
         $expected = [
-            'two' => null,
+            'two'   => null,
             'one'   => 'three', // TODO: this is an unnecessary but harmless NOOP. we should try to eliminate
         ];
 
@@ -204,7 +198,7 @@ class NodeHelperTest extends TestCase
         $nodes = [];
 
         for ($i = 0; $i < 100000; $i++) {
-            $nodes[] = 'test' . $i;
+            $nodes[] = 'test'.$i;
         }
 
         $start = microtime(true);

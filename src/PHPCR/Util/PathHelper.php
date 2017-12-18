@@ -6,22 +6,22 @@ use PHPCR\NamespaceException;
 use PHPCR\RepositoryException;
 
 /**
- * Static methods to handle path operations for PHPCR implementations
+ * Static methods to handle path operations for PHPCR implementations.
  *
  * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
  * @license http://opensource.org/licenses/MIT MIT License
- *
  * @author David Buchmann <mail@davidbu.ch>
  */
 class PathHelper
 {
     /**
-     * Do not create an instance of this class
+     * Do not create an instance of this class.
      */
     // @codeCoverageIgnoreStart
     private function __construct()
     {
     }
+
     // @codeCoverageIgnoreEnd
 
     /**
@@ -32,17 +32,17 @@ class PathHelper
      *
      * Non-normalized paths are considered invalid, i.e. /node/. is /node and /my/node/.. is /my
      *
-     * @param string $path        The path to validate
-     * @param bool   $destination whether this is a destination path (by copy or
-     *      move), meaning [] is not allowed. If your implementation does not
-     *      support same name siblings, just always pass true for this
-     * @param bool $throw whether to throw an exception on validation errors
+     * @param string     $path              The path to validate
+     * @param bool       $destination       whether this is a destination path (by copy or
+     *                                      move), meaning [] is not allowed. If your implementation does not
+     *                                      support same name siblings, just always pass true for this
+     * @param bool       $throw             whether to throw an exception on validation errors
      * @param array|bool $namespacePrefixes List of all known namespace prefixes.
-     *      If specified, this method validates that the path contains no unknown prefixes.
-     *
-     * @return bool true if valid, false if not valid and $throw was false
+     *                                      If specified, this method validates that the path contains no unknown prefixes.
      *
      * @throws RepositoryException if the path contains invalid characters and $throw is true
+     *
+     * @return bool true if valid, false if not valid and $throw was false
      */
     public static function assertValidAbsolutePath($path, $destination = false, $throw = true, $namespacePrefixes = false)
     {
@@ -65,6 +65,7 @@ class PathHelper
                 if (!$throw) {
                     return false;
                 }
+
                 throw new NamespaceException(sprintf('Unknown namespace prefix(es) (%s) in path %s', implode(' and ', $unknown), $path));
             }
         }
@@ -83,12 +84,12 @@ class PathHelper
      * encode and decode characters that are not natively allowed by a storage
      * engine.
      *
-     * @param string  $name  The name to check
-     * @param boolean $throw whether to throw an exception on validation errors.
-     *
-     * @return bool true if valid, false if not valid and $throw was false
+     * @param string $name  The name to check
+     * @param bool   $throw whether to throw an exception on validation errors.
      *
      * @throws RepositoryException if the name is invalid and $throw is true
+     *
+     * @return bool true if valid, false if not valid and $throw was false
      *
      * @see http://www.day.com/specs/jcr/2.0/3_Repository_Model.html#3.2.2%20Local%20Names
      */
@@ -118,19 +119,19 @@ class PathHelper
      *
      * @param string $path        The path to normalize.
      * @param bool   $destination whether this is a destination path (by copy or
-     *      move), meaning [] is not allowed in validation.
-     * @param bool $throw whether to throw an exception if validation fails or
-     *      just to return false.
-     *
-     * @return string The normalized path or false if $throw was false and the path invalid
+     *                            move), meaning [] is not allowed in validation.
+     * @param bool   $throw       whether to throw an exception if validation fails or
+     *                            just to return false.
      *
      * @throws RepositoryException if the path is not a valid absolute path and
-     *      $throw is true
+     *                             $throw is true
+     *
+     * @return string The normalized path or false if $throw was false and the path invalid
      */
     public static function normalizePath($path, $destination = false, $throw = true)
     {
         if (!is_string($path) && !is_numeric($path)) {
-            return self::error('Expected string but got ' . gettype($path), $throw);
+            return self::error('Expected string but got '.gettype($path), $throw);
         }
         if (strlen($path) === 0) {
             return self::error('Path must not be of zero length', $throw);
@@ -144,7 +145,7 @@ class PathHelper
             return self::error("Not an absolute path '$path'", $throw);
         }
 
-        $finalParts= [];
+        $finalParts = [];
         $parts = explode('/', $path);
 
         foreach ($parts as $pathPart) {
@@ -162,12 +163,12 @@ class PathHelper
                     break;
             }
         }
-        $normalizedPath =  count($finalParts) > 1 ?
+        $normalizedPath = count($finalParts) > 1 ?
             implode('/', $finalParts) :
             '/'  // first element is always the empty-name root element. this might have been a path like /x/..
-        ;
+;
 
-        if (! self::assertValidAbsolutePath($normalizedPath, $destination, $throw)) {
+        if (!self::assertValidAbsolutePath($normalizedPath, $destination, $throw)) {
             return false;
         }
 
@@ -181,23 +182,23 @@ class PathHelper
      * @param string $path        A relative or absolute path
      * @param string $context     The absolute path context to make $path absolute if needed
      * @param bool   $destination whether this is a destination path (by copy or
-     *      move), meaning [] is not allowed in validation.
-     * @param bool $throw whether to throw an exception if validation fails or
-     *      just to return false.
-     *
-     * @return string The normalized, absolute path or false if $throw was
-     *      false and the path invalid
+     *                            move), meaning [] is not allowed in validation.
+     * @param bool   $throw       whether to throw an exception if validation fails or
+     *                            just to return false.
      *
      * @throws RepositoryException if the path can not be made into a valid
-     *      absolute path and $throw is true
+     *                             absolute path and $throw is true
+     *
+     * @return string The normalized, absolute path or false if $throw was
+     *                false and the path invalid
      */
     public static function absolutizePath($path, $context, $destination = false, $throw = true)
     {
         if (!is_string($path) && !is_numeric($path)) {
-            return self::error('Expected string path but got ' . gettype($path), $throw);
+            return self::error('Expected string path but got '.gettype($path), $throw);
         }
         if (!is_string($context)) {
-            return self::error('Expected string context but got ' . gettype($context), $throw);
+            return self::error('Expected string context but got '.gettype($context), $throw);
         }
         if (strlen($path) === 0) {
             return self::error('Path must not be of zero length', $throw);
@@ -219,7 +220,7 @@ class PathHelper
      *
      * @param string $path    The absolute path to a node
      * @param string $context The absolute path to an ancestor of $path
-     * @param bool $throw     Whether to throw exceptions on invalid data.
+     * @param bool   $throw   Whether to throw exceptions on invalid data.
      *
      * @return string The relative path from $context to $path
      */
@@ -261,9 +262,9 @@ class PathHelper
      *
      * @param string $path a valid absolute path, like /content/jobs/data
      *
-     * @return string the name, that is the string after the last "/"
-     *
      * @throws RepositoryException
+     *
+     * @return string the name, that is the string after the last "/"
      */
     public static function getNodeName($path)
     {
@@ -280,13 +281,13 @@ class PathHelper
 
     /**
      * Return the localname of the node at the given path.
-     * The local name is the node name minus the namespace
+     * The local name is the node name minus the namespace.
      *
      * @param string $path a valid absolute path
      *
-     * @return string The localname
-     *
      * @throws RepositoryException
+     *
+     * @return string The localname
      */
     public static function getLocalNodeName($path)
     {
@@ -301,11 +302,11 @@ class PathHelper
     }
 
     /**
-     * Get the depth of the path, ignore trailing slashes, root starts counting at 0
+     * Get the depth of the path, ignore trailing slashes, root starts counting at 0.
      *
      * @param string $path a valid absolute path, like /content/jobs/data
      *
-     * @return integer with the path depth
+     * @return int with the path depth
      */
     public static function getPathDepth($path)
     {
@@ -316,12 +317,12 @@ class PathHelper
      * If $throw is true, throw a RepositoryException with $msg. Otherwise
      * return false.
      *
-     * @param string  $msg   the exception message to use in case of throw being true
-     * @param boolean $throw whether to throw the exception or return false
-     *
-     * @return boolean false
+     * @param string $msg   the exception message to use in case of throw being true
+     * @param bool   $throw whether to throw the exception or return false
      *
      * @throws RepositoryException
+     *
+     * @return bool false
      */
     private static function error($msg, $throw)
     {

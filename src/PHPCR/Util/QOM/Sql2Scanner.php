@@ -13,35 +13,35 @@ use PHPCR\Query\InvalidQueryException;
 class Sql2Scanner
 {
     /**
-     * The SQL2 query currently being parsed
+     * The SQL2 query currently being parsed.
      *
      * @var string
      */
     protected $sql2;
 
     /**
-     * Token scanning result of the SQL2 string
+     * Token scanning result of the SQL2 string.
      *
      * @var array
      */
     protected $tokens;
 
     /**
-     * Delimiters between tokens
+     * Delimiters between tokens.
      *
      * @var array
      */
     protected $delimiters;
 
     /**
-     * Parsing position in the SQL string
+     * Parsing position in the SQL string.
      *
      * @var int
      */
     protected $curpos = 0;
 
     /**
-     * Construct a scanner with the given SQL2 statement
+     * Construct a scanner with the given SQL2 statement.
      *
      * @param string $sql2
      */
@@ -69,7 +69,7 @@ class Sql2Scanner
     }
 
     /**
-     * Get the delimiter that separated the two previous tokens
+     * Get the delimiter that separated the two previous tokens.
      *
      * @return string
      */
@@ -99,15 +99,15 @@ class Sql2Scanner
      * not the case. The equality test is done case sensitively/insensitively
      * depending on the second parameter.
      *
-     * @param string  $token            The expected token
-     * @param boolean $case_insensitive
+     * @param string $token            The expected token
+     * @param bool   $case_insensitive
      *
      * @throws InvalidQueryException
      */
     public function expectToken($token, $case_insensitive = true)
     {
         $nextToken = $this->fetchNextToken();
-        if (! $this->tokenIs($nextToken, $token, $case_insensitive)) {
+        if (!$this->tokenIs($nextToken, $token, $case_insensitive)) {
             throw new InvalidQueryException("Syntax error: Expected '$token', found '$nextToken' in {$this->sql2}");
         }
     }
@@ -115,10 +115,11 @@ class Sql2Scanner
     /**
      * Expect the next tokens to be the one given in the array of tokens and
      * throws an exception if it's not the case.
+     *
      * @see expectToken
      *
-     * @param array   $tokens
-     * @param boolean $case_insensitive
+     * @param array $tokens
+     * @param bool  $case_insensitive
      *
      * @throws InvalidQueryException
      */
@@ -130,12 +131,13 @@ class Sql2Scanner
     }
 
     /**
-     * Test the equality of two tokens
+     * Test the equality of two tokens.
      *
-     * @param  string  $token
-     * @param  string  $value
-     * @param  boolean $case_insensitive
-     * @return boolean
+     * @param string $token
+     * @param string $value
+     * @param bool   $case_insensitive
+     *
+     * @return bool
      */
     public function tokenIs($token, $value, $case_insensitive = true)
     {
@@ -149,9 +151,10 @@ class Sql2Scanner
     }
 
     /**
-     * Scan a SQL2 string a extract the tokens
+     * Scan a SQL2 string a extract the tokens.
      *
-     * @param  string $sql2
+     * @param string $sql2
+     *
      * @return array
      */
     protected function scan($sql2)

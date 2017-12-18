@@ -4,8 +4,8 @@ namespace PHPCR\Util\Console\Helper\TreeDumper;
 
 use PHPCR\ItemInterface;
 use PHPCR\RepositoryException;
-use PHPCR\Util\TreeWalkerFilterInterface;
 use PHPCR\Util\NodeHelper;
+use PHPCR\Util\TreeWalkerFilterInterface;
 
 /**
  * Filter system properties and nodes based on their name.
@@ -15,16 +15,16 @@ use PHPCR\Util\NodeHelper;
 class SystemNodeFilter implements TreeWalkerFilterInterface
 {
     /**
-     * Checks whether this item is a system item
+     * Checks whether this item is a system item.
      *
      * @param ItemInterface $item
      *
-     * @return boolean
-     *
      * @throws RepositoryException
+     *
+     * @return bool
      */
     public function mustVisit(ItemInterface $item)
     {
-        return ! NodeHelper::isSystemItem($item);
+        return !NodeHelper::isSystemItem($item);
     }
 }

@@ -6,17 +6,17 @@ use PHPCR\NodeInterface;
 use PHPCR\Query\QueryManagerInterface;
 use PHPCR\Query\RowInterface;
 use PHPCR\RepositoryInterface;
+use PHPCR\SessionInterface;
 use PHPCR\Tests\Stubs\MockNode;
 use PHPCR\Tests\Stubs\MockRow;
-use PHPUnit_Framework_MockObject_MockObject;
-use PHPUnit\Framework\TestCase;
-use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Tester\CommandTester;
-use Symfony\Component\Console\Helper\HelperSet;
-use PHPCR\SessionInterface;
-use PHPCR\WorkspaceInterface;
 use PHPCR\Util\Console\Helper\PhpcrConsoleDumperHelper;
 use PHPCR\Util\Console\Helper\PhpcrHelper;
+use PHPCR\WorkspaceInterface;
+use PHPUnit\Framework\TestCase;
+use PHPUnit_Framework_MockObject_MockObject;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Helper\HelperSet;
+use Symfony\Component\Console\Tester\CommandTester;
 
 require_once __DIR__.'/../../../Stubs/MockNode.php';
 require_once __DIR__.'/../../../Stubs/MockNodeTypeManager.php';
@@ -81,33 +81,28 @@ abstract class BaseCommandTest extends TestCase
 
         $this->dumperHelper = $this->getMockBuilder(PhpcrConsoleDumperHelper::class)
             ->disableOriginalConstructor()
-            ->getMock()
-        ;
+            ->getMock();
 
         $this->helperSet = new HelperSet([
-            'phpcr' => new PhpcrHelper($this->session),
+            'phpcr'                => new PhpcrHelper($this->session),
             'phpcr_console_dumper' => $this->dumperHelper,
         ]);
 
         $this->session->expects($this->any())
             ->method('getWorkspace')
-            ->will($this->returnValue($this->workspace))
-        ;
+            ->will($this->returnValue($this->workspace));
 
         $this->workspace->expects($this->any())
             ->method('getName')
-            ->will($this->returnValue('test'))
-        ;
+            ->will($this->returnValue('test'));
 
         $this->workspace->expects($this->any())
             ->method('getQueryManager')
-            ->will($this->returnValue($this->queryManager))
-        ;
+            ->will($this->returnValue($this->queryManager));
 
         $this->queryManager->expects($this->any())
             ->method('getSupportedQueryLanguages')
-            ->will($this->returnValue(['JCR-SQL2']))
-        ;
+            ->will($this->returnValue(['JCR-SQL2']));
 
         $this->application = new Application();
         $this->application->setHelperSet($this->helperSet);

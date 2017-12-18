@@ -5,30 +5,29 @@ namespace PHPCR\Util;
 use InvalidArgumentException;
 use PHPCR\ItemExistsException;
 use PHPCR\ItemInterface;
+use PHPCR\ItemNotFoundException;
 use PHPCR\Lock\LockException;
+use PHPCR\NamespaceException;
 use PHPCR\NodeInterface;
 use PHPCR\NodeType\ConstraintViolationException;
 use PHPCR\PathNotFoundException;
 use PHPCR\PropertyInterface;
-use PHPCR\SessionInterface;
 use PHPCR\RepositoryException;
-use PHPCR\ItemNotFoundException;
-use PHPCR\NamespaceException;
+use PHPCR\SessionInterface;
 use PHPCR\Version\VersionException;
 
 /**
- * Helper with only static methods to work with PHPCR nodes
+ * Helper with only static methods to work with PHPCR nodes.
  *
  * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
  * @license http://opensource.org/licenses/MIT MIT License
- *
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  * @author David Buchmann <mail@davidbu.ch>
  */
 class NodeHelper
 {
     /**
-     * Do not create an instance of this class
+     * Do not create an instance of this class.
      */
     private function __construct()
     {
@@ -40,8 +39,6 @@ class NodeHelper
      * @param SessionInterface $session the PHPCR session to create the path
      * @param string           $path    full path, like /content/jobs/data
      *
-     * @return NodeInterface the last node of the path, i.e. data
-     *
      * @throws InvalidArgumentException
      * @throws RepositoryException
      * @throws PathNotFoundException
@@ -49,6 +46,8 @@ class NodeHelper
      * @throws LockException
      * @throws ConstraintViolationException
      * @throws VersionException
+     *
+     * @return NodeInterface the last node of the path, i.e. data
      */
     public static function createPath(SessionInterface $session, $path)
     {
@@ -77,7 +76,7 @@ class NodeHelper
      * node which you are not allowed to remove.
      *
      * @param SessionInterface $session the session to remove all children of
-     *      the root node
+     *                                  the root node
      *
      * @throws RepositoryException
      *
@@ -89,21 +88,21 @@ class NodeHelper
 
         /** @var $property PropertyInterface */
         foreach ($root->getProperties() as $property) {
-            if (! self::isSystemItem($property)) {
+            if (!self::isSystemItem($property)) {
                 $property->remove();
             }
         }
 
         /** @var $node NodeInterface */
         foreach ($root->getNodes() as $node) {
-            if (! self::isSystemItem($node)) {
+            if (!self::isSystemItem($node)) {
                 $node->remove();
             }
         }
     }
 
     /**
-     * Kept as alias of purgeWorkspace for BC compatibility
+     * Kept as alias of purgeWorkspace for BC compatibility.
      *
      * @param SessionInterface $session
      *
@@ -123,9 +122,9 @@ class NodeHelper
      *
      * @param ItemInterface $item
      *
-     * @return boolean true if $item is a system item, false otherwise
-     *
      * @throws RepositoryException
+     *
+     * @return bool true if $item is a system item, false otherwise
      */
     public static function isSystemItem(ItemInterface $item)
     {
@@ -138,7 +137,7 @@ class NodeHelper
     }
 
     /**
-     * Helper method to implement NodeInterface::addNodeAutoNamed
+     * Helper method to implement NodeInterface::addNodeAutoNamed.
      *
      * This method only checks for valid namespaces. All other exceptions must
      * be thrown by the addNodeAutoNamed implementation.
@@ -148,13 +147,12 @@ class NodeHelper
      * @param string   $defaultNamespace namespace prefix to use if the hint does not specify.
      * @param string   $nameHint         the name hint according to the API definition
      *
-     * @return string A valid node name for this node
-     *
-     * @throws NamespaceException if a namespace prefix is provided in the
-     *      $nameHint which does not exist and this implementation performs
-     *      this validation immediately.
-     *
+     * @throws NamespaceException  if a namespace prefix is provided in the
+     *                             $nameHint which does not exist and this implementation performs
+     *                             this validation immediately.
      * @throws RepositoryException
+     *
+     * @return string A valid node name for this node
      */
     public static function generateAutoNodeName($usedNames, $namespaces, $defaultNamespace, $nameHint = null)
     {
@@ -164,7 +162,7 @@ class NodeHelper
          * null: The new node name will be generated entirely by the repository.
          */
         if (null === $nameHint) {
-            return self::generateWithPrefix($usedNames, $defaultNamespace . ':');
+            return self::generateWithPrefix($usedNames, $defaultNamespace.':');
         }
 
         /*
@@ -180,16 +178,16 @@ class NodeHelper
          * "<i>somePrefix</i>:" where <i>somePrefix</i> is a syntactically
          * valid namespace prefix
          */
-        if (':' === $nameHint[strlen($nameHint)-1]
+        if (':' === $nameHint[strlen($nameHint) - 1]
             && substr_count($nameHint, ':') === 1
             && preg_match('#^[a-zA-Z][a-zA-Z0-9]*:$#', $nameHint)
         ) {
             $prefix = substr($nameHint, 0, -1);
-            if (! isset($namespaces[$prefix])) {
+            if (!isset($namespaces[$prefix])) {
                 throw new NamespaceException("Invalid nameHint '$nameHint'");
             }
 
-            return self::generateWithPrefix($usedNames, $prefix . ':');
+            return self::generateWithPrefix($usedNames, $prefix.':');
         }
 
         /*
@@ -198,15 +196,15 @@ class NodeHelper
          */
         if (strlen($nameHint) > 2
             && '{' === $nameHint[0]
-            && '}' === $nameHint[strlen($nameHint)-1]
+            && '}' === $nameHint[strlen($nameHint) - 1]
             && filter_var(substr($nameHint, 1, -1), FILTER_VALIDATE_URL)
         ) {
             $prefix = array_search(substr($nameHint, 1, -1), $namespaces);
-            if (! $prefix) {
+            if (!$prefix) {
                 throw new NamespaceException("Invalid nameHint '$nameHint'");
             }
 
-            return self::generateWithPrefix($usedNames, $prefix . ':');
+            return self::generateWithPrefix($usedNames, $prefix.':');
         }
 
         /*
@@ -223,11 +221,11 @@ class NodeHelper
             if (preg_match('#^[a-zA-Z][a-zA-Z0-9]*$#', $prefix)
                 && preg_match('#^[a-zA-Z][a-zA-Z0-9]*$#', $name)
             ) {
-                if (! isset($namespaces[$prefix])) {
+                if (!isset($namespaces[$prefix])) {
                     throw new NamespaceException("Invalid nameHint '$nameHint'");
                 }
 
-                return self::generateWithPrefix($usedNames, $prefix . ':', $name);
+                return self::generateWithPrefix($usedNames, $prefix.':', $name);
             }
         }
 
@@ -246,11 +244,11 @@ class NodeHelper
             $name = $matches[2];
 
             $prefix = array_search($ns, $namespaces);
-            if (! $prefix) {
+            if (!$prefix) {
                 throw new NamespaceException("Invalid nameHint '$nameHint'");
             }
 
-            return self::generateWithPrefix($usedNames, $prefix . ':', $name);
+            return self::generateWithPrefix($usedNames, $prefix.':', $name);
         }
 
         throw new RepositoryException("Invalid nameHint '$nameHint'");
@@ -269,7 +267,7 @@ class NodeHelper
     private static function generateWithPrefix($usedNames, $prefix, $namepart = '')
     {
         do {
-            $name = $prefix . $namepart . mt_rand();
+            $name = $prefix.$namepart.mt_rand();
         } while (isset($usedNames[$name]));
 
         return $name;
@@ -290,7 +288,7 @@ class NodeHelper
      * @param array $new new order
      *
      * @return array the keys are elements to move, values the destination to
-     *      move before or null to move to the end.
+     *               move before or null to move to the end.
      */
     public static function calculateOrderBefore(array $old, array $new)
     {
@@ -345,12 +343,12 @@ class NodeHelper
      *
      * @param string $name        name of the element to move
      * @param string $destination name of the element $srcChildRelPath has
-     *      to be ordered before, null to move to the end
-     * @param array $list the array of names
-     *
-     * @return array The updated $nodes array with new order
+     *                            to be ordered before, null to move to the end
+     * @param array  $list        the array of names
      *
      * @throws ItemNotFoundException if $srcChildRelPath or $destChildRelPath are not found in $nodes
+     *
+     * @return array The updated $nodes array with new order
      */
     public static function orderBeforeArray($name, $destination, $list)
     {

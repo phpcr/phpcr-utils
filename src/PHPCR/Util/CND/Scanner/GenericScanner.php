@@ -2,8 +2,8 @@
 
 namespace PHPCR\Util\CND\Scanner;
 
-use PHPCR\Util\CND\Reader\ReaderInterface;
 use PHPCR\Util\CND\Exception\ScannerException;
+use PHPCR\Util\CND\Reader\ReaderInterface;
 
 /**
  * Generic scanner detecting GenericTokens.
@@ -13,7 +13,6 @@ use PHPCR\Util\CND\Exception\ScannerException;
  *
  * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
  * @license http://opensource.org/licenses/MIT MIT License
- *
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  * @author Nikola Petkanski <nikola@petkanski.com>
  */
@@ -54,11 +53,11 @@ class GenericScanner extends AbstractScanner
     }
 
     /**
-     * Detect and consume whitespaces
+     * Detect and consume whitespaces.
      *
      * @param ReaderInterface $reader
      *
-     * @return boolean
+     * @return bool
      */
     protected function consumeSpaces(ReaderInterface $reader)
     {
@@ -80,11 +79,11 @@ class GenericScanner extends AbstractScanner
     }
 
     /**
-     * Detect and consume newlines
+     * Detect and consume newlines.
      *
      * @param ReaderInterface $reader
      *
-     * @return boolean
+     * @return bool
      */
     protected function consumeNewLine(ReaderInterface $reader)
     {
@@ -105,13 +104,13 @@ class GenericScanner extends AbstractScanner
     }
 
     /**
-     * Detect and consume strings
+     * Detect and consume strings.
      *
-     * @param ReaderInterface  $reader
-     *
-     * @return boolean
+     * @param ReaderInterface $reader
      *
      * @throws ScannerException
+     *
+     * @return bool
      */
     protected function consumeString(ReaderInterface $reader)
     {
@@ -120,7 +119,7 @@ class GenericScanner extends AbstractScanner
             $char = $reader->forwardChar();
             while ($char !== $curDelimiter) {
                 if ($char === "\n") {
-                    throw new ScannerException($reader, "Newline detected in string");
+                    throw new ScannerException($reader, 'Newline detected in string');
                 }
 
                 $char = $reader->forwardChar();
@@ -137,11 +136,11 @@ class GenericScanner extends AbstractScanner
     }
 
     /**
-     * Detect and consume comments
+     * Detect and consume comments.
      *
      * @param ReaderInterface $reader
      *
-     * @return boolean
+     * @return bool
      */
     protected function consumeComments(ReaderInterface $reader)
     {
@@ -153,13 +152,13 @@ class GenericScanner extends AbstractScanner
     }
 
     /**
-     * Detect and consume block comments
+     * Detect and consume block comments.
      *
-     * @param ReaderInterface  $reader
-     *
-     * @return boolean
+     * @param ReaderInterface $reader
      *
      * @throws ScannerException
+     *
+     * @return bool
      */
     protected function consumeBlockComments(ReaderInterface $reader)
     {
@@ -176,7 +175,7 @@ class GenericScanner extends AbstractScanner
                     // Start delimiter found, let's try to find the end delimiter
                     $nextChar = $reader->forwardChar();
 
-                    while (! $reader->isEof()) {
+                    while (!$reader->isEof()) {
                         if ($nextChar === $endDelim[0]) {
                             for ($i = 1; $i <= strlen($endDelim); $i++) {
                                 $reader->forward();
@@ -194,7 +193,7 @@ class GenericScanner extends AbstractScanner
                     }
 
                     // End of file reached and no end delimiter found, error
-                    throw new ScannerException($reader, "Unterminated block comment");
+                    throw new ScannerException($reader, 'Unterminated block comment');
                 }
 
                 // Start delimiter not found, rewind the looked up characters
@@ -208,11 +207,11 @@ class GenericScanner extends AbstractScanner
     }
 
     /**
-     * Detect and consume line comments
+     * Detect and consume line comments.
      *
      * @param ReaderInterface $reader
      *
-     * @return boolean
+     * @return bool
      */
     protected function consumeLineComments(ReaderInterface $reader)
     {
@@ -247,11 +246,11 @@ class GenericScanner extends AbstractScanner
     }
 
     /**
-     * Detect and consume identifiers
+     * Detect and consume identifiers.
      *
      * @param ReaderInterface $reader
      *
-     * @return boolean
+     * @return bool
      */
     protected function consumeIdentifiers(ReaderInterface $reader)
     {
@@ -272,11 +271,11 @@ class GenericScanner extends AbstractScanner
     }
 
     /**
-     * Detect and consume symbols
+     * Detect and consume symbols.
      *
      * @param ReaderInterface $reader
      *
-     * @return boolean
+     * @return bool
      */
     protected function consumeSymbols(ReaderInterface $reader)
     {

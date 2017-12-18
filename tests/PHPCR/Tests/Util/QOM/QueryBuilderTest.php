@@ -11,8 +11,8 @@ use PHPCR\Query\QOM\QueryObjectModelInterface;
 use PHPCR\Query\QOM\SameNodeJoinConditionInterface;
 use PHPCR\Query\QOM\SourceInterface;
 use PHPCR\Util\QOM\QueryBuilder;
-use PHPUnit_Framework_MockObject_MockObject;
 use PHPUnit\Framework\TestCase;
+use PHPUnit_Framework_MockObject_MockObject;
 use RuntimeException;
 
 class QueryBuilderTest extends TestCase
@@ -53,8 +53,7 @@ class QueryBuilderTest extends TestCase
         $dynamicOperand = $this->getMockBuilder(DynamicOperandInterface::class)
             ->setMethods([])
             ->setConstructorArgs([])
-            ->getMock()
-        ;
+            ->getMock();
 
         return $dynamicOperand;
     }
@@ -146,8 +145,7 @@ class QueryBuilderTest extends TestCase
         $constraint = $this->getMockBuilder(ConstraintInterface::class)
             ->setMethods([])
             ->setConstructorArgs([])
-            ->getMock()
-        ;
+            ->getMock();
 
         return $constraint;
     }
@@ -268,8 +266,7 @@ class QueryBuilderTest extends TestCase
                 $source2,
                 $this->equalTo(QueryObjectModelConstantsInterface::JCR_JOIN_TYPE_INNER),
                 $joinCondition
-            )
-        ;
+            );
 
         $qb = new QueryBuilder($this->qf);
         $qb->from($source1);
@@ -289,8 +286,7 @@ class QueryBuilderTest extends TestCase
                      $source2,
                      $this->equalTo(QueryObjectModelConstantsInterface::JCR_JOIN_TYPE_RIGHT_OUTER),
                      $joinCondition
-                 )
-        ;
+                 );
 
         $qb = new QueryBuilder($this->qf);
         $qb->from($source1);
@@ -310,8 +306,7 @@ class QueryBuilderTest extends TestCase
                 $source2,
                 $this->equalTo(QueryObjectModelConstantsInterface::JCR_JOIN_TYPE_LEFT_OUTER),
                 $joinCondition
-            )
-        ;
+            );
 
         $qb = new QueryBuilder($this->qf);
         $qb->from($source1);
@@ -343,8 +338,7 @@ class QueryBuilderTest extends TestCase
         $query = $this->getMockBuilder(QueryObjectModelInterface::class)
             ->setMethods([])
             ->setConstructorArgs([])
-            ->getMock()
-        ;
+            ->getMock();
 
         return $query;
     }

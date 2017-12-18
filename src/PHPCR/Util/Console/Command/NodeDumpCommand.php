@@ -4,28 +4,27 @@ namespace PHPCR\Util\Console\Command;
 
 use Exception;
 use PHPCR\ItemNotFoundException;
-use PHPCR\RepositoryException;
 use PHPCR\PathNotFoundException;
+use PHPCR\RepositoryException;
 use PHPCR\Util\UUIDHelper;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Command subtrees under a path to the console
+ * Command subtrees under a path to the console.
  *
  * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
  * @license http://opensource.org/licenses/MIT MIT License
- *
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  * @author Daniel Leech <daniel@dantleech.com>
  */
 class NodeDumpCommand extends BaseCommand
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @throws InvalidArgumentException
      */
@@ -36,12 +35,12 @@ class NodeDumpCommand extends BaseCommand
             ->addOption('sys-nodes', null, InputOption::VALUE_NONE, 'Also dump system nodes (recommended to use with a depth limit)')
             ->addOption('props', null, InputOption::VALUE_NONE, 'Also dump properties of the nodes')
             ->addOption('identifiers', null, InputOption::VALUE_NONE, 'Also output node UUID')
-            ->addOption('depth', null, InputOption::VALUE_OPTIONAL, 'Limit how many level of children to show', "-1")
-            ->addOption('max_line_length', null, InputOption::VALUE_OPTIONAL, 'Limit the maximum characters per property', "120")
+            ->addOption('depth', null, InputOption::VALUE_OPTIONAL, 'Limit how many level of children to show', '-1')
+            ->addOption('max_line_length', null, InputOption::VALUE_OPTIONAL, 'Limit the maximum characters per property', '120')
             ->addOption('ref-format', 'uuid', InputOption::VALUE_REQUIRED, 'Set the way references should be displayed when dumping reference properties - either "uuid" (default) or "path"')
             ->addArgument('identifier', InputArgument::OPTIONAL, 'Root path to dump', '/')
             ->setDescription('Dump subtrees of the content repository')
-            ->setHelp(<<<HERE
+            ->setHelp(<<<'HERE'
 The <info>dump</info> command recursively outputs the name of the node specified
 by the <info>identifier</info> argument and its subnodes in a yaml-like style.
 
@@ -52,12 +51,11 @@ By default the command filters out system nodes and properties (i.e. nodes and
 properties with names starting with 'jcr:'), the <info>--sys-nodes</info> option
 allows to turn this filter off.
 HERE
-            )
-        ;
+            );
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      *
      * @throws InvalidArgumentException
      * @throws Exception

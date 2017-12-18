@@ -3,12 +3,12 @@
 namespace PHPCR\Tests\Util\CND\Scanner;
 
 use ArrayIterator;
-use PHPCR\Util\CND\Scanner\GenericScanner;
 use PHPCR\Util\CND\Reader\FileReader;
-use PHPCR\Util\CND\Scanner\GenericToken as Token;
-use PHPCR\Util\CND\Scanner\TokenQueue;
-use PHPCR\Util\CND\Scanner\TokenFilter;
 use PHPCR\Util\CND\Scanner\Context\DefaultScannerContext;
+use PHPCR\Util\CND\Scanner\GenericScanner;
+use PHPCR\Util\CND\Scanner\GenericToken as Token;
+use PHPCR\Util\CND\Scanner\TokenFilter;
+use PHPCR\Util\CND\Scanner\TokenQueue;
 use PHPUnit\Framework\TestCase;
 use Test;
 use TestClass;
@@ -120,7 +120,7 @@ class GenericScannerTest extends TestCase
 
     public function testScan()
     {
-        $reader = new FileReader(__DIR__ . '/../Fixtures/files/TestFile.php');
+        $reader = new FileReader(__DIR__.'/../Fixtures/files/TestFile.php');
 
         // Test the raw file with newlines and whitespaces
         $scanner = new GenericScanner(new DefaultScannerContext());
@@ -130,7 +130,7 @@ class GenericScannerTest extends TestCase
 
     public function testFilteredScan()
     {
-        $reader = new FileReader(__DIR__ . '/../Fixtures/files/TestFile.php');
+        $reader = new FileReader(__DIR__.'/../Fixtures/files/TestFile.php');
 
         // Test the raw file with newlines and whitespaces
         $context = new DefaultScannerContext();
@@ -153,7 +153,7 @@ class GenericScannerTest extends TestCase
         while ($it->valid()) {
             $expectedToken = $it->current();
 
-            $this->assertFalse($queue->isEof(), 'There is no more tokens, expected = ' . $expectedToken[1]);
+            $this->assertFalse($queue->isEof(), 'There is no more tokens, expected = '.$expectedToken[1]);
 
             $this->assertToken($expectedToken[0], $expectedToken[1], $token);
 

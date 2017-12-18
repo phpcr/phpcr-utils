@@ -9,17 +9,16 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * A command to delete a workspace in the PHPCR repository
+ * A command to delete a workspace in the PHPCR repository.
  *
  * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
  * @license http://opensource.org/licenses/MIT MIT License
- *
  * @author David Buchmann <mail@davidbu.ch>
  */
 class WorkspaceDeleteCommand extends BaseCommand
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function configure()
     {
@@ -28,18 +27,17 @@ class WorkspaceDeleteCommand extends BaseCommand
             ->addArgument('name', InputArgument::REQUIRED, 'Name of the workspace to delete')
             ->addOption('force', null, InputOption::VALUE_NONE, 'Use to bypass the confirmation dialog')
             ->setDescription('Delete a workspace from the configured repository')
-            ->setHelp(<<<EOT
+            ->setHelp(<<<'EOT'
 The <info>workspace:delete</info> command deletes the workspace with the specified name if it
 exists. If the workspace with that name does not yet exist, the command will not fail.
 However, if the workspace does exist but the repository implementation does not support
 the delete operation, the command will fail.
 EOT
-            )
-        ;
+            );
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -50,7 +48,7 @@ EOT
         $workspace = $session->getWorkspace();
         $repo = $session->getRepository();
 
-        if (! in_array($workspaceName, $workspace->getAccessibleWorkspaceNames())) {
+        if (!in_array($workspaceName, $workspace->getAccessibleWorkspaceNames())) {
             $output->writeln("Workspace '$workspaceName' does not exist.");
 
             return 0;
