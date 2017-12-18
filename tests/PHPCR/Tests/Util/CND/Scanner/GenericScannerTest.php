@@ -44,7 +44,7 @@ class GenericScannerTest extends TestCase
 
         // /** ... */
         [Token::TK_WHITESPACE, ''],
-        [Token::TK_COMMENT, "/**\n     * Block comment\n     */"],
+        [Token::TK_COMMENT, "/**\n     * Block comment.\n     */"],
         [Token::TK_NEWLINE, ''],
 
         // public function testMethod($testParam) {
@@ -86,7 +86,7 @@ class GenericScannerTest extends TestCase
         [Token::TK_WHITESPACE, ''],
         [Token::TK_IDENTIFIER, 'return'],
         [Token::TK_WHITESPACE, ''],
-        [Token::TK_STRING, '"Test string"'],
+        [Token::TK_STRING, '\'Test string\''],
         [Token::TK_SYMBOL, ';'],
         [Token::TK_NEWLINE, ''],
 
