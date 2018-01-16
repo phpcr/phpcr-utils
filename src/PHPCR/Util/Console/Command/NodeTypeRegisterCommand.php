@@ -167,10 +167,6 @@ EOT
 
     protected function fileIsNodeType($filename)
     {
-        if (substr($filename, -4) === '.cnd') {
-            return true;
-        }
-
-        return false;
+        return substr($filename, -4) === '.cnd';
     }
 }
