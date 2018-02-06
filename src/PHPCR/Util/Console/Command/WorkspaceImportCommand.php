@@ -46,6 +46,15 @@ and XML attributes into properties.
 
 If the <info>parentpath</info> option is set, the document is imported to that
 path. Otherwise the document is imported at the repository root.
+
+The optional <info>uuid-behavior</info> option describes how uuids should be
+handled. Following options are available:
+
+* <info>new</info> recreate the uuid foreach node
+* <info>remove</info> remove the node from imported dataset on uuid collision
+* <info>replace</info> replace the node in the database on uuid collision
+* <info>throw</info> throw exception on uuid collision
+
 EOF
             );
     }
@@ -69,6 +78,7 @@ EOF
         $uuidBehavior = $input->getOption('uuid-behavior');
         if (!array_key_exists($uuidBehavior, self::UUID_BEHAVIOR)) {
             $output->writeln(sprintf('<error>UUID-Behavior "%s" is not supported</error>', $uuidBehavior));
+            $output->writeln(sprintf('Supported behaviors are %s', implode(', ', array_keys(self::UUID_BEHAVIOR))));
 
             return 1;
         }
