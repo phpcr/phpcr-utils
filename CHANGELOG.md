@@ -1,6 +1,25 @@
 Changelog
 =========
 
+1.4.0
+-----
+
+* Added option to phpcr:workspace:import command to be able to specify the UUID behavior on collisions during import
+
+1.3.2
+-----
+
+* Support Symfony 4
+
+1.3.1
+-----
+
+* Support for PHP 7.2
+
+1.3.0
+-----
+
+* Support for PHP 5.6/7.0/7.1
 * **2017-11-18**: Removed hhvm test
 
 1.2.7
