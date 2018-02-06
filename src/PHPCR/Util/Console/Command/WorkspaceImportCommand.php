@@ -17,6 +17,13 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class WorkspaceImportCommand extends BaseCommand
 {
+    const UUID_BEHAVIOR = [
+        'new'     => ImportUUIDBehaviorInterface::IMPORT_UUID_CREATE_NEW,
+        'remove'  => ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_REMOVE_EXISTING,
+        'replace' => ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_REPLACE_EXISTING,
+        'throw'   => ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW,
+    ];
+
     /**
      * {@inheritdoc}
      */
@@ -28,6 +35,7 @@ class WorkspaceImportCommand extends BaseCommand
             ->setName('phpcr:workspace:import')
             ->addArgument('filename', null, 'The xml file to import')
             ->addOption('parentpath', 'p', InputOption::VALUE_OPTIONAL, 'Repository path to the parent where to import the file contents', '/')
+            ->addOption('uuid-behavior', null, InputOption::VALUE_REQUIRED, 'Behavior to handle uuid on import', 'new')
             ->setDescription('Import xml data into the repository, either in JCR system view format or arbitrary xml')
             ->setHelp(<<<'EOF'
 The <info>import</info> command uses the PHPCR SessionInterface::importXml method
@@ -38,6 +46,15 @@ and XML attributes into properties.
 
 If the <info>parentpath</info> option is set, the document is imported to that
 path. Otherwise the document is imported at the repository root.
+
+The optional <info>uuid-behavior</info> option describes how uuids should be
+handled. Following options are available:
+
+* <info>new</info> recreate the uuid foreach node
+* <info>remove</info> remove the node from imported dataset on uuid collision
+* <info>replace</info> replace the node in the database on uuid collision
+* <info>throw</info> throw exception on uuid collision
+
 EOF
             );
     }
@@ -58,11 +75,15 @@ EOF
             return 1;
         }
 
-        $session->importXML(
-            $parentPath,
-            $filename,
-            ImportUUIDBehaviorInterface::IMPORT_UUID_CREATE_NEW
-        );
+        $uuidBehavior = $input->getOption('uuid-behavior');
+        if (!array_key_exists($uuidBehavior, self::UUID_BEHAVIOR)) {
+            $output->writeln(sprintf('<error>UUID-Behavior "%s" is not supported</error>', $uuidBehavior));
+            $output->writeln(sprintf('Supported behaviors are %s', implode(', ', array_keys(self::UUID_BEHAVIOR))));
+
+            return 1;
+        }
+
+        $session->importXML($parentPath, $filename, self::UUID_BEHAVIOR[$uuidBehavior]);
         $session->save();
 
         $output->writeln(sprintf(
