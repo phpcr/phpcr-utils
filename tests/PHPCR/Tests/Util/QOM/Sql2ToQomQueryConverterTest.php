@@ -2,12 +2,26 @@
 
 namespace PHPCR\Tests\Util\QOM;
 
+use PHPCR\Query\QOM\QueryObjectModelFactoryInterface;
 use PHPCR\Util\QOM\Sql2ToQomQueryConverter;
+use PHPCR\Util\ValueConverter;
 
 class Sql2ToQomQueryConverterTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var QueryObjectModelFactoryInterface
+     */
     protected $qomFactory;
+
+    /**
+     * @var ValueConverter
+     */
     protected $valueConverter;
+
+    /**
+     * @var Sql2ToQomQueryConverter
+     */
+    protected $converter;
 
     public function setUp()
     {
