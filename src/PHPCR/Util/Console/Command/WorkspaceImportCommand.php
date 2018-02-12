@@ -18,12 +18,12 @@ use PHPCR\ImportUUIDBehaviorInterface;
  */
 class WorkspaceImportCommand extends BaseCommand
 {
-    private static $uuidBehavior = array(
+    const UUID_BEHAVIOR = [
         'new'     => ImportUUIDBehaviorInterface::IMPORT_UUID_CREATE_NEW,
         'remove'  => ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_REMOVE_EXISTING,
         'replace' => ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_REPLACE_EXISTING,
         'throw'   => ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW,
-    );
+    ];
 
     /**
      * {@inheritDoc}
@@ -80,14 +80,14 @@ EOF
         }
 
         $uuidBehavior = $input->getOption('uuid-behavior');
-        if (!array_key_exists($uuidBehavior, self::$uuidBehavior)) {
+        if (!array_key_exists($uuidBehavior, self::UUID_BEHAVIOR)) {
             $output->writeln(sprintf('<error>UUID-Behavior "%s" is not supported</error>', $uuidBehavior));
-            $output->writeln(sprintf('Supported behaviors are %s', implode(', ', array_keys(self::$uuidBehavior))));
+            $output->writeln(sprintf('Supported behaviors are %s', implode(', ', array_keys(self::UUID_BEHAVIOR))));
 
             return 1;
         }
 
-        $session->importXML($parentPath, $filename, self::$uuidBehavior[$uuidBehavior]);
+        $session->importXML($parentPath, $filename, self::UUID_BEHAVIOR[$uuidBehavior]);
         $session->save();
 
         $output->writeln(sprintf(
