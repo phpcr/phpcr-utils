@@ -94,6 +94,7 @@ class NodesUpdateCommandTest extends BaseCommandTest
         $this->setupQueryManager($options);
 
         $args = [
+            '--query-language' => 'jcr-sql2',
             '--query' => $options['query'],
             '--no-interaction' => true,
             '--set-prop' => [],
