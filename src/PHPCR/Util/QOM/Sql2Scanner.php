@@ -159,7 +159,7 @@ class Sql2Scanner
             $token = strtok(" \n\t");
         }
 
-        $regexp = '';
+        $regexp = array();
         foreach ($tokens as $token) {
             $regexp[] = preg_quote($token, '/');
         }
