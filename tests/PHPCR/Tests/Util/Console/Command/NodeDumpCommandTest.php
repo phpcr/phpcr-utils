@@ -7,10 +7,11 @@ use PHPCR\ItemNotFoundException;
 use PHPCR\Util\Console\Command\NodeDumpCommand;
 use PHPCR\Util\TreeWalker;
 use PHPCR\Util\UUIDHelper;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class NodeDumpCommandTest extends BaseCommandTest
 {
-    /** @var TreeWalker|\PHPUnit_Framework_MockObject_MockObject */
+    /** @var TreeWalker|MockObject */
     protected $treeWalker;
 
     public function setUp()

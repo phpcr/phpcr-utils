@@ -4,12 +4,12 @@ namespace PHPCR\Tests\Util\Console\Command;
 
 use PHPCR\Tests\Stubs\MockNodeTypeManager;
 use PHPCR\Util\Console\Command\NodeTypeRegisterCommand;
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class NodeTypeRegisterCommandTest extends BaseCommandTest
 {
     /**
-     * @var MockNodeTypeManager|PHPUnit_Framework_MockObject_MockObject
+     * @var MockNodeTypeManager|MockObject
      */
     private $nodeTypeManager;
 

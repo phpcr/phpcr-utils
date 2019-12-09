@@ -4,8 +4,8 @@ namespace PHPCR\Tests\Util;
 
 use PHPCR\Tests\Stubs\MockNode;
 use PHPCR\Util\NodeHelper;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject;
 
 require_once __DIR__.'/../Stubs/MockNode.php';
 
@@ -84,7 +84,7 @@ class NodeHelperTest extends TestCase
 
     public function testIsSystemItem()
     {
-        /** @var MockNode|PHPUnit_Framework_MockObject_MockObject $sys */
+        /** @var MockNode|MockObject $sys */
         $sys = $this->createMock(MockNode::class);
 
         $sys->expects($this->once())
@@ -108,7 +108,7 @@ class NodeHelperTest extends TestCase
 
         $this->assertTrue(NodeHelper::isSystemItem($sys));
 
-        /** @var MockNode|PHPUnit_Framework_MockObject_MockObject $top */
+        /** @var MockNode|MockObject $top */
         $top = $this->createMock(MockNode::class);
         $top->expects($this->once())
             ->method('getDepth')
@@ -121,7 +121,7 @@ class NodeHelperTest extends TestCase
 
         $this->assertFalse(NodeHelper::isSystemItem($top));
 
-        /** @var MockNode|PHPUnit_Framework_MockObject_MockObject $deep */
+        /** @var MockNode|MockObject $deep */
         $deep = $this->createMock(MockNode::class);
         $deep->expects($this->once())
             ->method('getDepth')

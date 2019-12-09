@@ -12,8 +12,8 @@ use PHPCR\Tests\Stubs\MockRow;
 use PHPCR\Util\Console\Helper\PhpcrConsoleDumperHelper;
 use PHPCR\Util\Console\Helper\PhpcrHelper;
 use PHPCR\WorkspaceInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -25,37 +25,37 @@ require_once __DIR__.'/../../../Stubs/MockRow.php';
 abstract class BaseCommandTest extends TestCase
 {
     /**
-     * @var SessionInterface|PHPUnit_Framework_MockObject_MockObject
+     * @var SessionInterface|MockObject
      * */
     public $session;
 
     /**
-     * @var WorkspaceInterface|PHPUnit_Framework_MockObject_MockObject
+     * @var WorkspaceInterface|MockObject
      */
     public $workspace;
 
     /**
-     * @var RepositoryInterface|PHPUnit_Framework_MockObject_MockObject
+     * @var RepositoryInterface|MockObject
      */
     public $repository;
 
     /**
-     * @var PhpcrConsoleDumperHelper|PHPUnit_Framework_MockObject_MockObject
+     * @var PhpcrConsoleDumperHelper|MockObject
      */
     public $dumperHelper;
 
     /**
-     * @var NodeInterface|PHPUnit_Framework_MockObject_MockObject
+     * @var NodeInterface|MockObject
      */
     public $node1;
 
     /**
-     * @var RowInterface|PHPUnit_Framework_MockObject_MockObject
+     * @var RowInterface|MockObject
      */
     public $row1;
 
     /**
-     * @var QueryManagerInterface|PHPUnit_Framework_MockObject_MockObject
+     * @var QueryManagerInterface|MockObject
      */
     public $queryManager;
 
