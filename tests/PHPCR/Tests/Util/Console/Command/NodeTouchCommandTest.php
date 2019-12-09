@@ -8,6 +8,7 @@ use PHPCR\PathNotFoundException;
 use PHPCR\Tests\Stubs\MockNode;
 use PHPCR\Util\Console\Command\NodeTouchCommand;
 use PHPCR\Util\Console\Helper\PhpcrHelper;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Currently very minimal test for touch command.
@@ -15,7 +16,7 @@ use PHPCR\Util\Console\Helper\PhpcrHelper;
 class NodeTouchCommandTest extends BaseCommandTest
 {
     /**
-     * @var PhpcrHelper|\PHPUnit_Framework_MockObject_MockObject
+     * @var PhpcrHelper|MockObject
      */
     public $phpcrHelper;
 

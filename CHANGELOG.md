@@ -1,6 +1,12 @@
 Changelog
 =========
 
+1.4.1
+-----
+
+* Support Symfony 5
+* Test with PHP 7.3 and 7.4
+
 1.4.0
 -----
 

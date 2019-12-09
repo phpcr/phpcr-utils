@@ -4,12 +4,12 @@ namespace PHPCR\Tests\Util\Console\Command;
 
 use PHPCR\Query\QueryInterface;
 use PHPCR\Util\Console\Command\WorkspaceQueryCommand;
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class WorkspaceQueryCommandTest extends BaseCommandTest
 {
     /**
-     * @var QueryInterface|PHPUnit_Framework_MockObject_MockObject
+     * @var QueryInterface|MockObject
      */
     protected $query;
 

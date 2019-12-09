@@ -5,12 +5,12 @@ namespace PHPCR\Tests\Util\Console\Command;
 use InvalidArgumentException;
 use PHPCR\Query\QueryInterface;
 use PHPCR\Util\Console\Command\NodesUpdateCommand;
-use PHPUnit_Framework_MockObject_MockObject;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class NodesUpdateCommandTest extends BaseCommandTest
 {
     /**
-     * @var QueryInterface|PHPUnit_Framework_MockObject_MockObject
+     * @var QueryInterface|MockObject
      */
     private $query;
 
