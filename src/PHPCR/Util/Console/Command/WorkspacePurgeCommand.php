@@ -28,7 +28,8 @@ class WorkspacePurgeCommand extends BaseCommand
             ->setName('phpcr:workspace:purge')
             ->setDescription('Remove all nodes from a workspace')
             ->addOption('force', null, InputOption::VALUE_NONE, 'Use to bypass the confirmation dialog')
-            ->setHelp(<<<'EOF'
+            ->setHelp(
+                <<<'EOF'
 The <info>phpcr:workspace:purge</info> command removes all nodes except the
 system nodes and all non-system properties of the root node from the workspace.
 EOF

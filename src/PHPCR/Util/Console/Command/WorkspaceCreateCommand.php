@@ -27,13 +27,14 @@ class WorkspaceCreateCommand extends BaseCommand
             ->setName('phpcr:workspace:create')
             ->addArgument('name', InputArgument::REQUIRED, 'Name of the workspace to create')
             ->addOption(
-               'ignore-existing',
-               null,
-               InputOption::VALUE_NONE,
-               'If set, an existing workspace will return a success code'
+                'ignore-existing',
+                null,
+                InputOption::VALUE_NONE,
+                'If set, an existing workspace will return a success code'
             )
             ->setDescription('Create a workspace in the configured repository')
-            ->setHelp(<<<'EOT'
+            ->setHelp(
+                <<<'EOT'
 The <info>workspace:create</info> command creates a workspace with the specified name.
 It will fail if a workspace with that name already exists or if the repository implementation
 does not support the workspace creation operation.

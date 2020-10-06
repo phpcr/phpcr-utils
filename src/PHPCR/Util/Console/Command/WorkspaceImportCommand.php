@@ -37,7 +37,8 @@ class WorkspaceImportCommand extends BaseCommand
             ->addOption('parentpath', 'p', InputOption::VALUE_OPTIONAL, 'Repository path to the parent where to import the file contents', '/')
             ->addOption('uuid-behavior', null, InputOption::VALUE_REQUIRED, 'How to handle UUID collisions during the import', 'new')
             ->setDescription('Import xml data into the repository, either in JCR system view format or arbitrary xml')
-            ->setHelp(<<<'EOF'
+            ->setHelp(
+                <<<'EOF'
 The <info>import</info> command uses the PHPCR SessionInterface::importXml method
 to import an XML document into the repository. If the document is in the JCR
 system view format, it is interpreted according to the spec, otherwise it is

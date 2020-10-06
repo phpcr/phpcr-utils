@@ -36,7 +36,8 @@ class NodeTypeRegisterCommand extends BaseCommand
             ->setDescription('Register node types in the PHPCR repository')
             ->addArgument('cnd-file', InputArgument::IS_ARRAY, 'Register namespaces and node types from a "Compact Node Type Definition" .cnd file(s)')
             ->addOption('allow-update', null, InputOption::VALUE_NONE, 'Overwrite existig node type')
-            ->setHelp(<<<'EOT'
+            ->setHelp(
+                <<<'EOT'
 Register node types in the PHPCR repository.
 
 This command allows to register node types in the repository that are defined

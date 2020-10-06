@@ -39,17 +39,21 @@ class NodeTouchCommand extends BaseNodeManipulationCommand
                 'Path at which to create the new node'
             )
             ->addOption(
-                'type', 't',
+                'type',
+                't',
                 InputOption::VALUE_OPTIONAL,
                 'Node type, default nt:unstructured',
                 'nt:unstructured'
             )
-            ->addOption('dump', 'd',
+            ->addOption(
+                'dump',
+                'd',
                 InputOption::VALUE_NONE,
                 'Dump a string reperesentation of the created / modified node.'
             )
             ->setDescription('Create or modify a node')
-            ->setHelp(<<<'HERE'
+            ->setHelp(
+                <<<'HERE'
 This command allows you to create or modify a node at the specified path.
 
 For example::
@@ -65,7 +69,7 @@ to output a string reperesentation of the node.
 
   $ ./bin/phpcr phpcr:touch /foobar --type=my:nodetype --set-prop=bar=myvalue --remove-prop=foo --dump
 HERE
-);
+            );
     }
 
     /**
@@ -104,7 +108,8 @@ HERE
             if ($nodeType != $type) {
                 $output->writeln(sprintf(
                     '<error>You have specified node type "%s" but the existing node is of type "%s"</error>',
-                    $type, $nodeType
+                    $type,
+                    $nodeType
                 ));
 
                 return 1;
@@ -125,7 +130,9 @@ HERE
             }
 
             $output->writeln(sprintf(
-                '<info>Creating node: </info> %s [%s]', $path, $type
+                '<info>Creating node: </info> %s [%s]',
+                $path,
+                $type
             ));
 
             $node = $parentNode->addNode($nodeName, $type);

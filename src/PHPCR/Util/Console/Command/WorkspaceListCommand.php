@@ -22,7 +22,8 @@ class WorkspaceListCommand extends BaseCommand
         $this
             ->setName('phpcr:workspace:list')
             ->setDescription('List all available workspaces in the configured repository')
-            ->setHelp(<<<'EOT'
+            ->setHelp(
+                <<<'EOT'
 The <info>workspace:list</info> command lists all avaialable workspaces.
 EOT
             );

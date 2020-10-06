@@ -31,7 +31,8 @@ class WorkspaceExportCommand extends BaseCommand
             ->addOption('skip_binary', null, InputOption::VALUE_OPTIONAL, 'Set to "yes" to skip binaries', 'no')
             ->addOption('recurse', null, InputOption::VALUE_OPTIONAL, 'Set to "no" to prevent recursion', 'yes')
             ->setDescription('Export nodes from the repository, either to the JCR system view format or the document view format')
-            ->setHelp(<<<'EOF'
+            ->setHelp(
+                <<<'EOF'
 The <info>export</info> command uses the PHPCR SessionInterface::exportSystemView
 method to export parts of the repository into an XML document.
 

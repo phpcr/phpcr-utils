@@ -76,7 +76,8 @@ class PhpcrHelper extends Helper
             $parts = explode('=', $set);
             $output->writeln(sprintf(
                 '<comment> > Setting property </comment>%s<comment> to </comment>%s',
-                $parts[0], $parts[1]
+                $parts[0],
+                $parts[1]
             ));
             $node->setProperty($parts[0], $parts[1]);
         }
@@ -134,7 +135,8 @@ class PhpcrHelper extends Helper
                 if (!is_string($value)) {
                     $value = print_r($value, true);
                 }
-                $output->writeln(sprintf('<comment> - %s = </comment>%s',
+                $output->writeln(sprintf(
+                    '<comment> - %s = </comment>%s',
                     $property->getName(),
                     $value
                 ));
@@ -181,7 +183,8 @@ class PhpcrHelper extends Helper
 
         throw new Exception(sprintf(
             'Query language "%s" not supported, available query languages: %s',
-            $language, implode(',', $langs)
+            $language,
+            implode(',', $langs)
         ));
     }
 }

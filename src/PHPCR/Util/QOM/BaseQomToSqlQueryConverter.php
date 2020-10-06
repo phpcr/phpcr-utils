@@ -143,7 +143,8 @@ abstract class BaseQomToSqlQueryConverter
     {
         return $this->generator->evalPropertyExistence(
             $constraint->getSelectorName(),
-            $constraint->getPropertyName());
+            $constraint->getPropertyName()
+        );
     }
 
     /**
@@ -229,7 +230,8 @@ abstract class BaseQomToSqlQueryConverter
     {
         return $this->generator->evalPropertyValue(
             $value->getPropertyName(),
-            $value->getSelectorName());
+            $value->getSelectorName()
+        );
     }
 
     /**

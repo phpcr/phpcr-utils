@@ -23,7 +23,8 @@ class NodeTypeListCommand extends BaseCommand
         $this
             ->setName('phpcr:node-type:list')
             ->setDescription('List all available node types in the repository')
-            ->setHelp(<<<'EOT'
+            ->setHelp(
+                <<<'EOT'
 This command lists all of the available node types and their subtypes
 in the PHPCR repository.
 EOT

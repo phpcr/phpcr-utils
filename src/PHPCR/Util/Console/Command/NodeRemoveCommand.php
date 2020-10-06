@@ -36,7 +36,8 @@ class NodeRemoveCommand extends BaseCommand
             ->addArgument('path', InputArgument::REQUIRED, 'Path of the node to purge')
             ->addOption('force', null, InputOption::VALUE_NONE, 'Use to bypass the confirmation dialog')
             ->addOption('only-children', null, InputOption::VALUE_NONE, 'Use to only purge children of specified path')
-            ->setHelp(<<<'EOF'
+            ->setHelp(
+                <<<'EOF'
 The <info>phpcr:node:remove</info> command will remove the given node or the
 children of the given node according to the options given.
 

@@ -369,7 +369,7 @@ class CndParser extends AbstractParser
     protected function parsePropertyType(PropertyDefinitionTemplateInterface $property)
     {
         $types = ['STRING', 'BINARY', 'LONG', 'DOUBLE', 'BOOLEAN',  'DATE', 'NAME', 'PATH',
-                       'REFERENCE', 'WEAKREFERENCE', 'DECIMAL', 'URI', 'UNDEFINED', '*', '?', ];
+            'REFERENCE', 'WEAKREFERENCE', 'DECIMAL', 'URI', 'UNDEFINED', '*', '?', ];
 
         if (!$this->checkTokenIn(Token::TK_IDENTIFIER, $types, true)) {
             throw new ParserException($this->tokenQueue, sprintf('Invalid property type: %s', $this->tokenQueue->get()->getData()));

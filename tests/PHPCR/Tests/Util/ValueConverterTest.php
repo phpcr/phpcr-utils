@@ -331,9 +331,11 @@ class ValueConverterTest extends TestCase
 
     public function testConvertTypeArray()
     {
-        $result = $this->valueConverter->convertType(['2012-01-10', '2012-02-12'],
+        $result = $this->valueConverter->convertType(
+            ['2012-01-10', '2012-02-12'],
             PropertyType::DATE,
-            PropertyType::STRING);
+            PropertyType::STRING
+        );
         $this->assertInternalType('array', $result);
         $this->assertCount(2, $result);
 
