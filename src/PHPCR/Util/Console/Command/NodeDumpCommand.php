@@ -40,7 +40,8 @@ class NodeDumpCommand extends BaseCommand
             ->addOption('ref-format', 'uuid', InputOption::VALUE_REQUIRED, 'Set the way references should be displayed when dumping reference properties - either "uuid" (default) or "path"')
             ->addArgument('identifier', InputArgument::OPTIONAL, 'Root path to dump', '/')
             ->setDescription('Dump subtrees of the content repository')
-            ->setHelp(<<<'HERE'
+            ->setHelp(
+                <<<'HERE'
 The <info>dump</info> command recursively outputs the name of the node specified
 by the <info>identifier</info> argument and its subnodes in a yaml-like style.
 

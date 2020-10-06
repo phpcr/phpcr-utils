@@ -106,7 +106,8 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
             $condition->getSelector1Name(),
             $condition->getProperty1Name(),
             $condition->getSelector2Name(),
-            $condition->getProperty2Name());
+            $condition->getProperty2Name()
+        );
     }
 
     /**
@@ -125,7 +126,8 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
         return $this->generator->evalSameNodeJoinCondition(
             $condition->getSelector1Name(),
             $condition->getSelector2Name(),
-            null !== $condition->getSelector2Path() ? $this->convertPath($condition->getSelector2Path()) : null);
+            null !== $condition->getSelector2Path() ? $this->convertPath($condition->getSelector2Path()) : null
+        );
     }
 
     /**
@@ -143,7 +145,8 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
     {
         return $this->generator->evalChildNodeJoinCondition(
             $condition->getChildSelectorName(),
-            $condition->getParentSelectorName());
+            $condition->getParentSelectorName()
+        );
     }
 
     /**
@@ -161,7 +164,8 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
     {
         return $this->generator->evalDescendantNodeJoinCondition(
             $condition->getDescendantSelectorName(),
-            $condition->getAncestorSelectorName());
+            $condition->getAncestorSelectorName()
+        );
     }
 
     /**
@@ -196,13 +200,15 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
         if ($constraint instanceof QOM\AndInterface) {
             return $this->generator->evalAnd(
                 $this->convertConstraint($constraint->getConstraint1()),
-                $this->convertConstraint($constraint->getConstraint2()));
+                $this->convertConstraint($constraint->getConstraint2())
+            );
         }
 
         if ($constraint instanceof QOM\OrInterface) {
             return $this->generator->evalOr(
                 $this->convertConstraint($constraint->getConstraint1()),
-                $this->convertConstraint($constraint->getConstraint2()));
+                $this->convertConstraint($constraint->getConstraint2())
+            );
         }
 
         if ($constraint instanceof QOM\NotInterface) {
@@ -222,19 +228,22 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
         if ($constraint instanceof QOM\SameNodeInterface) {
             return $this->generator->evalSameNode(
                 $this->convertPath($constraint->getPath()),
-                $constraint->getSelectorName());
+                $constraint->getSelectorName()
+            );
         }
 
         if ($constraint instanceof QOM\ChildNodeInterface) {
             return $this->generator->evalChildNode(
                 $this->convertPath($constraint->getParentPath()),
-                $constraint->getSelectorName());
+                $constraint->getSelectorName()
+            );
         }
 
         if ($constraint instanceof QOM\DescendantNodeInterface) {
             return $this->generator->evalDescendantNode(
                 $this->convertPath($constraint->getAncestorPath()),
-                $constraint->getSelectorName());
+                $constraint->getSelectorName()
+            );
         }
 
         // This should not happen, but who knows...

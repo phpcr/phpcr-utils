@@ -29,7 +29,8 @@ class NodeMoveCommand extends BaseCommand
             ->addArgument('source', InputArgument::REQUIRED, 'Path of node to move')
             ->addArgument('destination', InputArgument::REQUIRED, 'Destination for node')
             ->setDescription('Moves a node from one path to another')
-            ->setHelp(<<<'EOF'
+            ->setHelp(
+                <<<'EOF'
 This command simply moves a node from one path (the source path)
 to another (the destination path), it can also be considered
 as a rename command.
@@ -55,7 +56,8 @@ EOF
 
         $output->writeln(sprintf(
             '<info>Moving </info>%s<info> to </info>%s',
-            $sourcePath, $destPath
+            $sourcePath,
+            $destPath
         ));
 
         $session->move($sourcePath, $destPath);

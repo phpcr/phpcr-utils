@@ -272,7 +272,8 @@ class PathHelper
 
         if (false === $strrpos) {
             self::error(sprintf(
-                'Path "%s" must be an absolute path', $path
+                'Path "%s" must be an absolute path',
+                $path
             ), true);
         }
 

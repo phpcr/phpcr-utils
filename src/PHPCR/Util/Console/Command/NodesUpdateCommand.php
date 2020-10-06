@@ -33,24 +33,28 @@ class NodesUpdateCommand extends BaseNodeManipulationCommand
 
         $this->setName('phpcr:nodes:update')
             ->addOption(
-                'query', null,
+                'query',
+                null,
                 InputOption::VALUE_REQUIRED,
                 'Query used to select the nodes'
             )
             ->addOption(
-                'query-language', 'l',
+                'query-language',
+                'l',
                 InputOption::VALUE_OPTIONAL,
                 'The query language (e.g. sql, jcr_sql2)',
                 'jcr-sql2'
             )
             ->addOption(
-                'persist-counter', 'c',
+                'persist-counter',
+                'c',
                 InputOption::VALUE_OPTIONAL,
                 'Save the session every x requests',
                 '100'
             )
             ->setDescription('Command to manipulate the nodes in the workspace.')
-            ->setHelp(<<<HERE
+            ->setHelp(
+                <<<HERE
 The <info>phpcr:nodes:update</info> can manipulate the properties of nodes
 found using the given query.
 
@@ -77,7 +81,7 @@ If you have an advanced use case you can use the <comment>--apply-closure</comme
 For each node in the result set, the closure will be passed the current
 <comment>PHPCR\SessionInterface</comment> implementation and the node (<comment>PHPCR\NodeInterface</comment>) as <comment>\$session</comment> and <comment>\$node</comment>.
 HERE
-);
+            );
     }
 
     /**

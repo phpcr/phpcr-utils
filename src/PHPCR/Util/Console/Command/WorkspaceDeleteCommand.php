@@ -27,7 +27,8 @@ class WorkspaceDeleteCommand extends BaseCommand
             ->addArgument('name', InputArgument::REQUIRED, 'Name of the workspace to delete')
             ->addOption('force', null, InputOption::VALUE_NONE, 'Use to bypass the confirmation dialog')
             ->setDescription('Delete a workspace from the configured repository')
-            ->setHelp(<<<'EOT'
+            ->setHelp(
+                <<<'EOT'
 The <info>workspace:delete</info> command deletes the workspace with the specified name if it
 exists. If the workspace with that name does not yet exist, the command will not fail.
 However, if the workspace does exist but the repository implementation does not support

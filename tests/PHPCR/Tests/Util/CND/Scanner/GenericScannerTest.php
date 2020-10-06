@@ -166,10 +166,16 @@ class GenericScannerTest extends TestCase
 
     protected function assertToken($type, $data, Token $token)
     {
-        $this->assertEquals($type, $token->getType(),
-            sprintf('Expected token [%s, %s], found [%s, %s]', Token::getTypeName($type), $data, Token::getTypeName($token->getType()), $token->getData()));
+        $this->assertEquals(
+            $type,
+            $token->getType(),
+            sprintf('Expected token [%s, %s], found [%s, %s]', Token::getTypeName($type), $data, Token::getTypeName($token->getType()), $token->getData())
+        );
 
-        $this->assertEquals($data, trim($token->getData()),
-            sprintf('Expected token [%s, %s], found [%s, %s]', Token::getTypeName($type), $data, Token::getTypeName($token->getType()), $token->getData()));
+        $this->assertEquals(
+            $data,
+            trim($token->getData()),
+            sprintf('Expected token [%s, %s], found [%s, %s]', Token::getTypeName($type), $data, Token::getTypeName($token->getType()), $token->getData())
+        );
     }
 }

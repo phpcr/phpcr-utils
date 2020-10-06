@@ -17,27 +17,37 @@ abstract class BaseNodeManipulationCommand extends BaseCommand
      */
     protected function configureNodeManipulationInput()
     {
-        $this->addOption('set-prop', 'p',
+        $this->addOption(
+            'set-prop',
+            'p',
             InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
             'Set node property on nodes use foo=bar'
         );
 
-        $this->addOption('remove-prop', 'r',
+        $this->addOption(
+            'remove-prop',
+            'r',
             InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
             'Remove property from nodes'
         );
 
-        $this->addOption('add-mixin', null,
+        $this->addOption(
+            'add-mixin',
+            null,
             InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
             'Add a mixin to the nodes'
         );
 
-        $this->addOption('remove-mixin', null,
+        $this->addOption(
+            'remove-mixin',
+            null,
             InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
             'Remove mixin from the nodes'
         );
 
-        $this->addOption('apply-closure', null,
+        $this->addOption(
+            'apply-closure',
+            null,
             InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
             'Apply a closure to each node, closures are passed PHPCR\Session and PHPCR\NodeInterface'
         );
