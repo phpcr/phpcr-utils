@@ -2,6 +2,7 @@
 
 namespace PHPCR\Tests\Util;
 
+use PHPCR\RepositoryException;
 use PHPCR\Tests\Stubs\MockNode;
 use PHPCR\Util\NodeHelper;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -67,7 +68,7 @@ class NodeHelperTest extends TestCase
     {
         $result = NodeHelper::generateAutoNodeName($this->usedNames, $this->namespaces, 'a', $hint);
         if (true === $expect) {
-            $this->assertNotContains(':', $result);
+            $this->assertStringNotContainsString(':', $result);
         } else {
             $this->assertEquals($expect, substr($result, 0, strlen($expect)));
         }
@@ -75,10 +76,10 @@ class NodeHelperTest extends TestCase
 
     /**
      * @dataProvider invalidHints
-     * @expectedException \PHPCR\RepositoryException
      */
     public function testGenerateAutoNodeNameInvalid($hint)
     {
+        $this->expectException(RepositoryException::class);
         NodeHelper::generateAutoNodeName($this->usedNames, $this->namespaces, 'a', $hint);
     }
 
@@ -89,22 +90,22 @@ class NodeHelperTest extends TestCase
 
         $sys->expects($this->once())
             ->method('getDepth')
-            ->will($this->returnValue(0));
+            ->willReturn(0);
 
         $sys->expects($this->once())
             ->method('getName')
-            ->will($this->returnValue('jcr:root'));
+            ->willReturn('jcr:root');
 
         $this->assertTrue(NodeHelper::isSystemItem($sys));
 
         $sys = $this->createMock(MockNode::class);
         $sys->expects($this->once())
             ->method('getDepth')
-            ->will($this->returnValue(1));
+            ->willReturn(1);
 
         $sys->expects($this->once())
             ->method('getName')
-            ->will($this->returnValue('jcr:system'));
+            ->willReturn('jcr:system');
 
         $this->assertTrue(NodeHelper::isSystemItem($sys));
 
@@ -112,11 +113,11 @@ class NodeHelperTest extends TestCase
         $top = $this->createMock(MockNode::class);
         $top->expects($this->once())
             ->method('getDepth')
-            ->will($this->returnValue(1));
+            ->willReturn(1);
 
         $top->expects($this->once())
             ->method('getName')
-            ->will($this->returnValue('jcrname')) // this is NOT in the jcr namespace
+            ->willReturn('jcrname') // this is NOT in the jcr namespace
 ;
 
         $this->assertFalse(NodeHelper::isSystemItem($top));
@@ -125,7 +126,7 @@ class NodeHelperTest extends TestCase
         $deep = $this->createMock(MockNode::class);
         $deep->expects($this->once())
             ->method('getDepth')
-            ->will($this->returnValue(2));
+            ->willReturn(2);
 
         $this->assertFalse(NodeHelper::isSystemItem($deep));
     }

@@ -13,7 +13,7 @@ class NodeTypeListCommandTest extends BaseCommandTest
      */
     private $nodeTypeManager;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -27,15 +27,15 @@ class NodeTypeListCommandTest extends BaseCommandTest
     {
         $this->session->expects($this->once())
             ->method('getWorkspace')
-            ->will($this->returnValue($this->workspace));
+            ->willReturn($this->workspace);
 
         $this->workspace->expects($this->once())
             ->method('getNodeTypeManager')
-            ->will($this->returnValue($this->nodeTypeManager));
+            ->willReturn($this->nodeTypeManager);
 
         $this->nodeTypeManager->expects($this->once())
             ->method('getAllNodeTypes')
-            ->will($this->returnValue([]));
+            ->willReturn([]);
 
         $this->executeCommand('phpcr:node-type:list', []);
     }

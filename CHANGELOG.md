@@ -1,6 +1,12 @@
 Changelog
 =========
 
+1.5.0
+-----
+
+* Support PHP 8
+* Drop support for PHP 5.6 and 7.0
+
 1.4.1
 -----
 

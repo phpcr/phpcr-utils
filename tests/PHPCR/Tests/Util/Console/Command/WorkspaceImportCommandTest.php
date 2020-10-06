@@ -8,7 +8,7 @@ use PHPCR\Util\Console\Command\WorkspaceImportCommand;
 
 class WorkspaceImportCommandTest extends BaseCommandTest
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -19,12 +19,12 @@ class WorkspaceImportCommandTest extends BaseCommandTest
     {
         $this->session->expects($this->once())
             ->method('getRepository')
-            ->will($this->returnValue($this->repository));
+            ->willReturn($this->repository);
 
         $this->repository->expects($this->once())
             ->method('getDescriptor')
             ->with(RepositoryInterface::OPTION_XML_IMPORT_SUPPORTED)
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         $this->session->expects($this->once())
             ->method('importXml')
@@ -34,19 +34,19 @@ class WorkspaceImportCommandTest extends BaseCommandTest
             'filename' => 'test_import.xml',
         ]);
 
-        $this->assertContains('Successfully imported', $ct->getDisplay());
+        $this->assertStringContainsString('Successfully imported', $ct->getDisplay());
     }
 
     public function testImportUuidBehaviorThrow()
     {
         $this->session->expects($this->once())
             ->method('getRepository')
-            ->will($this->returnValue($this->repository));
+            ->willReturn($this->repository);
 
         $this->repository->expects($this->once())
             ->method('getDescriptor')
             ->with(RepositoryInterface::OPTION_XML_IMPORT_SUPPORTED)
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         $this->session->expects($this->once())
             ->method('importXml')
@@ -57,6 +57,6 @@ class WorkspaceImportCommandTest extends BaseCommandTest
             '--uuid-behavior' => 'throw',
         ]);
 
-        $this->assertContains('Successfully imported', $ct->getDisplay());
+        $this->assertStringContainsString('Successfully imported', $ct->getDisplay());
     }
 }

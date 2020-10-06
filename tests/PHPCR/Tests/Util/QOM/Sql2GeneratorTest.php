@@ -13,7 +13,7 @@ class Sql2GeneratorTest extends BaseSqlGeneratorTest
      */
     protected $generator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->generator = new Sql2Generator(new ValueConverter());
     }

@@ -33,7 +33,7 @@ class TokenQueueTest extends TestCase
      */
     private $queue;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->token0 = new Token(0, 'token 0');
         $this->token1 = new Token(1, 'token 1');
@@ -50,13 +50,16 @@ class TokenQueueTest extends TestCase
     public function testAdd()
     {
         $queue = new TokenQueue();
-        $this->assertAttributeEquals([], 'tokens', $queue);
+        $reflection = new \ReflectionClass($queue);
+        $tokens = $reflection->getProperty('tokens');
+        $tokens->setAccessible(true);
+        $this->assertSame([], $tokens->getValue($queue));
 
         $queue->add($this->token0);
-        $this->assertAttributeEquals([$this->token0], 'tokens', $queue);
+        $this->assertSame([$this->token0], $tokens->getValue($queue));
 
         $queue->add($this->token1);
-        $this->assertAttributeEquals([$this->token0, $this->token1], 'tokens', $queue);
+        $this->assertSame([$this->token0, $this->token1], $tokens->getValue($queue));
     }
 
     public function testResetAndPeek()

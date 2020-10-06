@@ -25,19 +25,17 @@ class Sql2ToQomQueryConverterTest extends TestCase
      */
     protected $converter;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->qomFactory = $this->createMock(QueryObjectModelFactoryInterface::class);
         $this->valueConverter = $this->createMock(ValueConverter::class);
         $this->converter = new Sql2ToQomQueryConverter($this->qomFactory, $this->valueConverter);
     }
 
-    /**
-     * @expectedExceptionMessage Error parsing query
-     */
     public function testInvalid()
     {
         $this->expectException(InvalidQueryException::class);
+        $this->expectExceptionMessage('Error parsing query');
 
         $this->converter->parse('SELECTING WITH AN INVALID QUERY');
     }

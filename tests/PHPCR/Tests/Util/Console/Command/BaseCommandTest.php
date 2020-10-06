@@ -69,7 +69,7 @@ abstract class BaseCommandTest extends TestCase
      */
     public $application;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->session = $this->createMock(SessionInterface::class);
         $this->workspace = $this->createMock(WorkspaceInterface::class);
@@ -88,21 +88,21 @@ abstract class BaseCommandTest extends TestCase
             'phpcr_console_dumper' => $this->dumperHelper,
         ]);
 
-        $this->session->expects($this->any())
+        $this->session
             ->method('getWorkspace')
-            ->will($this->returnValue($this->workspace));
+            ->willReturn($this->workspace);
 
-        $this->workspace->expects($this->any())
+        $this->workspace
             ->method('getName')
-            ->will($this->returnValue('test'));
+            ->willReturn('test');
 
-        $this->workspace->expects($this->any())
+        $this->workspace
             ->method('getQueryManager')
-            ->will($this->returnValue($this->queryManager));
+            ->willReturn($this->queryManager);
 
-        $this->queryManager->expects($this->any())
+        $this->queryManager
             ->method('getSupportedQueryLanguages')
-            ->will($this->returnValue(['JCR-SQL2']));
+            ->willReturn(['JCR-SQL2']);
 
         $this->application = new Application();
         $this->application->setHelperSet($this->helperSet);

@@ -20,7 +20,7 @@ class NodeTouchCommandTest extends BaseCommandTest
      */
     public $phpcrHelper;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -32,13 +32,13 @@ class NodeTouchCommandTest extends BaseCommandTest
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->phpcrHelper->expects($this->any())
+        $this->phpcrHelper
             ->method('getSession')
-            ->will($this->returnValue($this->session));
+            ->willReturn($this->session);
 
-        $this->phpcrHelper->expects($this->any())
+        $this->phpcrHelper
             ->method('getName')
-            ->will($this->returnValue('phpcr'));
+            ->willReturn('phpcr');
 
         $this->helperSet->set($this->phpcrHelper);
     }
@@ -50,7 +50,7 @@ class NodeTouchCommandTest extends BaseCommandTest
 
         $this->session->expects($this->exactly(2))
             ->method('getNode')
-            ->will($this->returnCallback(function ($path) use ($node) {
+            ->willReturnCallback(function ($path) use ($node) {
                 switch ($path) {
                     case '/':
                         return $node;
@@ -59,12 +59,12 @@ class NodeTouchCommandTest extends BaseCommandTest
                 }
 
                 throw new Exception('Unexpected '.$path);
-            }));
+            });
 
         $this->node1->expects($this->once())
             ->method('addNode')
             ->with('cms')
-            ->will($this->returnValue($child));
+            ->willReturn($child);
 
         $this->session->expects($this->once())
             ->method('save');
@@ -77,31 +77,31 @@ class NodeTouchCommandTest extends BaseCommandTest
         $nodeType = $this->createMock(NodeTypeInterface::class);
         $nodeType->expects($this->once())
             ->method('getName')
-            ->will($this->returnValue('nt:unstructured'));
+            ->willReturn('nt:unstructured');
 
         $this->session->expects($this->exactly(1))
             ->method('getNode')
             ->with('/cms')
-            ->will($this->returnValue($this->node1));
+            ->willReturn($this->node1);
 
         $this->node1->expects($this->once())
             ->method('getPrimaryNodeType')
-            ->will($this->returnValue($nodeType));
+            ->willReturn($nodeType);
 
         $me = $this;
 
         $this->phpcrHelper->expects($this->once())
             ->method('processNode')
-            ->will($this->returnCallback(function ($output, $node, $options) use ($me) {
+            ->willReturnCallback(function ($output, $node, $options) use ($me) {
                 $me->assertEquals($me->node1, $node);
                 $me->assertEquals([
-                    'setProp'      => ['foo=bar'],
-                    'removeProp'   => ['bar'],
-                    'addMixins'    => ['foo:bar'],
+                    'setProp' => ['foo=bar'],
+                    'removeProp' => ['bar'],
+                    'addMixins' => ['foo:bar'],
                     'removeMixins' => ['bar:foo'],
-                    'dump'         => true,
+                    'dump' => true,
                 ], $options);
-            }));
+            });
 
         $this->executeCommand('phpcr:node:touch', [
             'path'           => '/cms',

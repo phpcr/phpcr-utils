@@ -14,7 +14,7 @@ class PhpcrConsoleDumperHelperTest extends TestCase
      */
     private $helper;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->outputMock = $this->createMock(OutputInterface::class);
         $this->helper = new PhpcrConsoleDumperHelper();

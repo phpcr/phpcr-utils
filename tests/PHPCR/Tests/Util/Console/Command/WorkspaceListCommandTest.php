@@ -6,7 +6,7 @@ use PHPCR\Util\Console\Command\WorkspaceListCommand;
 
 class WorkspaceListCommandTest extends BaseCommandTest
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -17,13 +17,11 @@ class WorkspaceListCommandTest extends BaseCommandTest
     {
         $this->session->expects($this->once())
             ->method('getWorkspace')
-            ->will($this->returnValue($this->workspace));
+            ->willReturn($this->workspace);
 
         $this->workspace->expects($this->once())
             ->method('getAccessibleWorkspaceNames')
-            ->will($this->returnValue([
-                'foo', 'bar',
-            ]));
+            ->willReturn(['foo', 'bar']);
 
         $ct = $this->executeCommand('phpcr:workspace:list', [
         ]);

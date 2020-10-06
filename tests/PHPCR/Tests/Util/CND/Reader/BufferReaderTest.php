@@ -7,15 +7,21 @@ use PHPUnit\Framework\TestCase;
 
 class BufferReaderTest extends TestCase
 {
-    public function test__construct()
+    public function test__construct(): void
     {
         $buffer = "Some random\nor\r\nstring";
         $reader = new BufferReader($buffer);
 
-        $this->assertInstanceOf(BufferReader::class, $reader);
-        $this->assertAttributeEquals(str_replace("\r\n", "\n", $buffer).$reader->getEofMarker(), 'buffer', $reader);
-        $this->assertAttributeEquals(0, 'startPos', $reader);
-        $this->assertAttributeEquals(0, 'forwardPos', $reader);
+        $reflection = new \ReflectionClass($reader);
+        $bufferProperty = $reflection->getProperty('buffer');
+        $bufferProperty->setAccessible(true);
+        $this->assertSame(str_replace("\r\n", "\n", $buffer).$reader->getEofMarker(), $bufferProperty->getValue($reader));
+        $startPos = $reflection->getProperty('startPos');
+        $startPos->setAccessible(true);
+        $this->assertSame(0, $startPos->getValue($reader));
+        $forwardPos = $reflection->getProperty('forwardPos');
+        $forwardPos->setAccessible(true);
+        $this->assertSame(0, $forwardPos->getValue($reader));
 
         $this->assertEquals(1, $reader->getCurrentLine());
         $this->assertEquals(1, $reader->getCurrentColumn());
@@ -90,10 +96,16 @@ class BufferReaderTest extends TestCase
     {
         $reader = new BufferReader('');
 
-        $this->assertInstanceOf(BufferReader::class, $reader);
-        $this->assertAttributeEquals($reader->getEofMarker(), 'buffer', $reader);
-        $this->assertAttributeEquals(0, 'startPos', $reader);
-        $this->assertAttributeEquals(0, 'forwardPos', $reader);
+        $reflection = new \ReflectionClass($reader);
+        $buffer = $reflection->getProperty('buffer');
+        $buffer->setAccessible(true);
+        $this->assertSame($reader->getEofMarker(), $buffer->getValue($reader));
+        $startPos = $reflection->getProperty('startPos');
+        $startPos->setAccessible(true);
+        $this->assertSame(0, $startPos->getValue($reader));
+        $forwardPos = $reflection->getProperty('forwardPos');
+        $forwardPos->setAccessible(true);
+        $this->assertSame(0, $forwardPos->getValue($reader));
 
         $this->assertEquals(1, $reader->getCurrentLine());
         $this->assertEquals(1, $reader->getCurrentColumn());
