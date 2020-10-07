@@ -14,7 +14,7 @@ class NodeDumpCommandTest extends BaseCommandTest
     /** @var TreeWalker|MockObject */
     protected $treeWalker;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->treeWalker = $this->getMockBuilder(TreeWalker::class)
@@ -30,13 +30,13 @@ class NodeDumpCommandTest extends BaseCommandTest
         $this->dumperHelper
             ->expects($this->once())
             ->method('getTreeWalker')
-            ->will($this->returnValue($this->treeWalker));
+            ->willReturn($this->treeWalker);
 
         $this->session
             ->expects($this->once())
             ->method('getNode')
             ->with('/')
-            ->will($this->returnValue($this->node1));
+            ->willReturn($this->node1);
 
         $this->treeWalker
             ->expects($this->once())
@@ -53,13 +53,13 @@ class NodeDumpCommandTest extends BaseCommandTest
         $this->dumperHelper
             ->expects($this->once())
             ->method('getTreeWalker')
-            ->will($this->returnValue($this->treeWalker));
+            ->willReturn($this->treeWalker);
 
         $this->session
             ->expects($this->once())
             ->method('getNodeByIdentifier')
             ->with($uuid)
-            ->will($this->returnValue($this->node1));
+            ->willReturn($this->node1);
 
         $this->treeWalker
             ->expects($this->once())
@@ -86,6 +86,6 @@ class NodeDumpCommandTest extends BaseCommandTest
             ->will($this->throwException(new ItemNotFoundException()));
 
         $ct = $this->executeCommand('phpcr:node:dump', [], 1);
-        $this->assertContains('does not exist', $ct->getDisplay());
+        $this->assertStringContainsString('does not exist', $ct->getDisplay());
     }
 }

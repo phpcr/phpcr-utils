@@ -6,7 +6,7 @@ use PHPCR\Util\Console\Command\WorkspacePurgeCommand;
 
 class WorkspacePurgeCommandTest extends BaseCommandTest
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -17,15 +17,15 @@ class WorkspacePurgeCommandTest extends BaseCommandTest
     {
         $this->session->expects($this->once())
             ->method('getRootNode')
-            ->will($this->returnValue($this->node1));
+            ->willReturn($this->node1);
 
         $this->node1->expects($this->once())
             ->method('getProperties')
-            ->will($this->returnValue([]));
+            ->willReturn([]);
 
         $this->node1->expects($this->once())
             ->method('getNodes')
-            ->will($this->returnValue([]));
+            ->willReturn([]);
 
         $this->executeCommand('phpcr:workspace:purge', [
             '--force' => true,

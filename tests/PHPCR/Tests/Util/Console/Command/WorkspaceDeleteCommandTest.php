@@ -7,7 +7,7 @@ use PHPCR\Util\Console\Command\WorkspaceDeleteCommand;
 
 class WorkspaceDeleteCommandTest extends BaseCommandTest
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -18,20 +18,20 @@ class WorkspaceDeleteCommandTest extends BaseCommandTest
     {
         $this->session->expects($this->once())
             ->method('getWorkspace')
-            ->will($this->returnValue($this->workspace));
+            ->willReturn($this->workspace);
 
         $this->workspace->expects($this->once())
             ->method('getAccessibleWorkspaceNames')
-            ->will($this->returnValue(['default', 'test_workspace', 'other']));
+            ->willReturn(['default', 'test_workspace', 'other']);
 
         $this->session->expects($this->once())
             ->method('getRepository')
-            ->will($this->returnValue($this->repository));
+            ->willReturn($this->repository);
 
         $this->repository->expects($this->once())
             ->method('getDescriptor')
             ->with(RepositoryInterface::OPTION_WORKSPACE_MANAGEMENT_SUPPORTED)
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         $this->workspace->expects($this->once())
             ->method('deleteWorkspace')
@@ -42,24 +42,24 @@ class WorkspaceDeleteCommandTest extends BaseCommandTest
             '--force' => 'true',
         ]);
 
-        $this->assertContains("Deleted workspace 'test_workspace'.", $ct->getDisplay());
+        $this->assertStringContainsString("Deleted workspace 'test_workspace'.", $ct->getDisplay());
     }
 
     public function testDeleteNonexistent()
     {
         $this->session->expects($this->once())
             ->method('getWorkspace')
-            ->will($this->returnValue($this->workspace));
+            ->willReturn($this->workspace);
 
         $this->workspace->expects($this->once())
             ->method('getAccessibleWorkspaceNames')
-            ->will($this->returnValue(['default', 'other']));
+            ->willReturn(['default', 'other']);
 
         $ct = $this->executeCommand('phpcr:workspace:delete', [
             'name'    => 'test_workspace',
             '--force' => 'true',
         ]);
 
-        $this->assertContains("Workspace 'test_workspace' does not exist.", $ct->getDisplay());
+        $this->assertStringContainsString("Workspace 'test_workspace' does not exist.", $ct->getDisplay());
     }
 }

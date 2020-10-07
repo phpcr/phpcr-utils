@@ -108,7 +108,7 @@ class GenericScannerTest extends TestCase
 
     protected $expectedTokensNoEmptyToken;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->expectedTokensNoEmptyToken = [];
         foreach ($this->expectedTokens as $token) {

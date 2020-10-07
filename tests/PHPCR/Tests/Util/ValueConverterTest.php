@@ -22,7 +22,7 @@ class ValueConverterTest extends TestCase
      */
     private $valueConverter;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->valueConverter = new ValueConverter();
     }
@@ -54,15 +54,13 @@ class ValueConverterTest extends TestCase
 
         $nodeMock = $this->createMock(MockNode::class);
         $nodeMock
-            ->expects($this->any())
             ->method('getIdentifier')
-            ->will($this->returnValue('38b7cf18-c417-477a-af0b-c1e92a290c9a'));
+            ->willReturn('38b7cf18-c417-477a-af0b-c1e92a290c9a');
 
         $nodeMock
-            ->expects($this->any())
             ->method('isNodeType')
             ->with('mix:referenceable')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         return [
             // String to...
@@ -303,18 +301,18 @@ class ValueConverterTest extends TestCase
     public function testConvertTypeToBinary()
     {
         $stream = $this->valueConverter->convertType('test string', PropertyType::BINARY);
-        $this->assertInternalType('resource', $stream);
+        $this->assertIsResource($stream);
         $string = stream_get_contents($stream);
         $this->assertEquals('test string', $string);
 
         $stream = $this->valueConverter->convertType('test string', PropertyType::BINARY, PropertyType::BINARY);
-        $this->assertInternalType('resource', $stream);
+        $this->assertIsResource($stream);
         $string = stream_get_contents($stream);
         $this->assertEquals('test string', $string);
 
         $date = new DateTime('20.12.2012');
         $stream = $this->valueConverter->convertType($date, PropertyType::BINARY);
-        $this->assertInternalType('resource', $stream);
+        $this->assertIsResource($stream);
         $string = stream_get_contents($stream);
         $readDate = new DateTime($string);
         $this->assertEquals($date->getTimestamp(), $readDate->getTimestamp());
@@ -336,7 +334,7 @@ class ValueConverterTest extends TestCase
             PropertyType::DATE,
             PropertyType::STRING
         );
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
         $this->assertCount(2, $result);
 
         $this->assertInstanceOf(DateTime::class, $result[0]);
@@ -397,7 +395,7 @@ class ValueConverterTest extends TestCase
         $nodeMock
             ->expects($this->never())
             ->method('isNew')
-            ->will($this->returnValue(true));
+            ->willReturn(true);
         $this->valueConverter->convertType($nodeMock, PropertyType::STRING);
     }
 
@@ -409,12 +407,12 @@ class ValueConverterTest extends TestCase
         $nodeMock
             ->expects($this->never())
             ->method('isNew')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
         $nodeMock
             ->expects($this->once())
             ->method('isNodeType')
             ->with('mix:referenceable')
-            ->will($this->returnValue(false));
+            ->willReturn(false);
         $this->valueConverter->convertType($nodeMock, PropertyType::STRING);
     }
 

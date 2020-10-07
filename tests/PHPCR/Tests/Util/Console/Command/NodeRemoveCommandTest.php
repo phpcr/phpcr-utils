@@ -7,7 +7,7 @@ use PHPCR\Util\Console\Command\NodeRemoveCommand;
 
 class NodeRemoveCommandTest extends BaseCommandTest
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

@@ -13,7 +13,7 @@ class WorkspaceQueryCommandTest extends BaseCommandTest
      */
     protected $query;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -23,30 +23,30 @@ class WorkspaceQueryCommandTest extends BaseCommandTest
 
     public function testQuery()
     {
-        $this->queryManager->expects($this->any())
+        $this->queryManager
             ->method('getSupportedQueryLanguages')
-            ->will($this->returnValue(['JCR-SQL2']));
+            ->willReturn(['JCR-SQL2']);
 
-        $this->session->expects($this->any())
+        $this->session
             ->method('getWorkspace')
-            ->will($this->returnValue($this->workspace));
+            ->willReturn($this->workspace);
 
-        $this->workspace->expects($this->any())
+        $this->workspace
             ->method('getQueryManager')
-            ->will($this->returnValue($this->queryManager));
+            ->willReturn($this->queryManager);
 
         $this->queryManager->expects($this->once())
             ->method('createQuery')
             ->with('SELECT foo FROM foo', 'JCR-SQL2')
-            ->will($this->returnValue($this->query));
+            ->willReturn($this->query);
 
         $this->query->expects($this->once())
             ->method('getLanguage')
-            ->will($this->returnValue('FOOBAR'));
+            ->willReturn('FOOBAR');
 
         $this->query->expects($this->once())
             ->method('execute')
-            ->will($this->returnValue([]));
+            ->willReturn([]);
 
         $this->executeCommand('phpcr:workspace:query', [
             'query' => 'SELECT foo FROM foo',

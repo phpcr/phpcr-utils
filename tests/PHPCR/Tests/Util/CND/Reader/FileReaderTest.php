@@ -23,7 +23,7 @@ class FileReaderTest extends TestCase
      */
     private $lines;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->filepath = __DIR__.'/../Fixtures/files/TestFile.txt';
         $this->reader = new FileReader($this->filepath);

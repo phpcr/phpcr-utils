@@ -14,7 +14,7 @@ class Sql1GeneratorTest extends TestCase
      */
     protected $generator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->generator = new Sql1Generator(new ValueConverter());
     }

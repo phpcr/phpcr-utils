@@ -7,14 +7,14 @@ use PHPCR\Util\Console\Command\WorkspaceExportCommand;
 
 class WorkspaceExportCommandTest extends BaseCommandTest
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
         $this->application->add(new WorkspaceExportCommand());
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unlink('test');
     }
@@ -23,17 +23,22 @@ class WorkspaceExportCommandTest extends BaseCommandTest
     {
         $this->session->expects($this->once())
             ->method('getRepository')
-            ->will($this->returnValue($this->repository));
+            ->willReturn($this->repository);
 
         $this->repository->expects($this->once())
             ->method('getDescriptor')
             ->with(RepositoryInterface::OPTION_XML_EXPORT_SUPPORTED)
-            ->will($this->returnValue(true));
+            ->willReturn(true);
 
         $this->session->expects($this->once())
             ->method('exportSystemView');
 
-        $this->assertFileNotExists('test', 'test export file must not exist, it will be overwritten');
+        if (method_exists($this, 'assertFileDoesNotExist')) {
+            $this->assertFileDoesNotExist('test', 'test export file must not exist, it will be overwritten');
+        } else {
+            // support phpunit 8 and older, can be removed when we only support php 9 or newer
+            $this->assertFileNotExists('test', 'test export file must not exist, it will be overwritten');
+        }
 
         $ct = $this->executeCommand('phpcr:workspace:export', [
             'filename' => 'test',

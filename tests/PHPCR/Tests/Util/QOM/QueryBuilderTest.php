@@ -22,7 +22,7 @@ class QueryBuilderTest extends TestCase
      */
     protected $qf;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->qf = $this->getMockBuilder(QueryObjectModelFactoryInterface::class)
             ->setMethods([])
@@ -324,7 +324,7 @@ class QueryBuilderTest extends TestCase
 
         $this->qf->expects($this->once())
                  ->method('createQuery')
-                 ->will($this->returnValue('true'));
+                 ->willReturn('true');
 
         $qb->getQuery();
     }
@@ -363,7 +363,7 @@ class QueryBuilderTest extends TestCase
 
         $this->qf->expects($this->once())
                  ->method('createQuery')
-                 ->will($this->returnValue($query));
+                 ->willReturn($query);
 
         $qb->getQuery();
     }
@@ -405,7 +405,7 @@ class QueryBuilderTest extends TestCase
         $this->qf->expects($this->once())
                  ->method('createQuery')
                  ->with($source, $constraint, [], [])
-                 ->will($this->returnValue($query));
+                 ->willReturn($query);
 
         $qb = new QueryBuilder($this->qf);
         $qb->from($source)

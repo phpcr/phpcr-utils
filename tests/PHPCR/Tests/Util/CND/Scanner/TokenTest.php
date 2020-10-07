@@ -12,15 +12,15 @@ class TokenTest extends TestCase
      */
     private $token;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->token = new Token(123, 'foobar');
     }
 
     public function test__construct()
     {
-        $this->assertAttributeEquals(123, 'type', $this->token);
-        $this->assertAttributeEquals('foobar', 'data', $this->token);
+        $this->assertSame(123, $this->token->type);
+        $this->assertSame('foobar', $this->token->data);
     }
 
     public function testGetData()

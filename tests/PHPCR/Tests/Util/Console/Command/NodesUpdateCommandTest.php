@@ -14,7 +14,7 @@ class NodesUpdateCommandTest extends BaseCommandTest
      */
     private $query;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -44,28 +44,26 @@ class NodesUpdateCommandTest extends BaseCommandTest
     {
         $options = array_merge(['query' => ''], $options);
 
-        $this->session->expects($this->any())
+        $this->session
             ->method('getWorkspace')
-            ->will($this->returnValue($this->workspace));
+            ->willReturn($this->workspace);
 
-        $this->workspace->expects($this->any())
+        $this->workspace
             ->method('getQueryManager')
-            ->will($this->returnValue($this->queryManager));
+            ->willReturn($this->queryManager);
 
-        $this->queryManager->expects($this->any())
+        $this->queryManager
             ->method('createQuery')
             ->with($options['query'], 'JCR-SQL2')
-            ->will($this->returnValue($this->query));
+            ->willReturn($this->query);
 
-        $this->query->expects($this->any())
+        $this->query
             ->method('execute')
-            ->will($this->returnValue([
-                $this->row1,
-            ]));
+            ->willReturn([$this->row1]);
 
-        $this->row1->expects($this->any())
+        $this->row1
             ->method('getNode')
-            ->will($this->returnValue($this->node1));
+            ->willReturn($this->node1);
     }
 
     /**

@@ -65,12 +65,10 @@ class PathHelperTest extends TestCase
         ];
     }
 
-    /**
-     * @expectedExceptionMessage invalidprefix and other-ns
-     */
     public function testAssertInvalidNamespaceAbsolutePath()
     {
         $this->expectException(NamespaceException::class);
+        $this->expectExceptionMessage('invalidprefix and other-ns');
 
         PathHelper::assertValidAbsolutePath('/invalidprefix:localname/other-ns:test/invalidprefix:node/bla', false, true, ['jcr', 'nt']);
     }
@@ -199,11 +197,11 @@ class PathHelperTest extends TestCase
     }
 
     /**
-     * @expectedException \PHPCR\RepositoryException
      * @dataProvider dataproviderAbsolutizePathInvalid
      */
     public function testAbsolutizePathInvalidThrow($inputPath, $context, $target)
     {
+        $this->expectException(RepositoryException::class);
         PathHelper::absolutizePath($inputPath, $context, $target);
     }
 
@@ -328,12 +326,10 @@ class PathHelperTest extends TestCase
         ];
     }
 
-    /**
-     * @expectedExceptionMessage must be an absolute path
-     */
     public function testGetNodeNameMustBeAbsolute()
     {
         $this->expectException(RepositoryException::class);
+        $this->expectExceptionMessage('must be an absolute path');
 
         PathHelper::getNodeName('foobar');
     }
