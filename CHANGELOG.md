@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.5.1
+-----
+
+* Fix issues with PHPUnit 9
+
 1.5.0
 -----
 
