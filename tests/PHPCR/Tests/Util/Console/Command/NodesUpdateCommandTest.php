@@ -95,22 +95,21 @@ class NodesUpdateCommandTest extends BaseCommandTest
             '--remove-mixin'   => [],
         ];
 
+        $setPropertyArguments = [];
         foreach ($options['setProp'] as $setProp) {
             list($prop, $value) = $setProp;
-            $this->node1->expects($this->at(0))
-                ->method('setProperty')
-                ->with($prop, $value);
-
+            $setPropertyArguments[] = [$prop, $value, null];
             $args['--set-prop'][] = $prop.'='.$value;
         }
 
         foreach ($options['removeProp'] as $prop) {
-            $this->node1->expects($this->at(1))
-                ->method('setProperty')
-                ->with($prop, null);
-
+            $setPropertyArguments[] = [$prop, null, null];
             $args['--remove-prop'][] = $prop;
         }
+
+        $this->node1
+            ->method('setProperty')
+            ->withConsecutive(...$setPropertyArguments);
 
         foreach ($options['addMixin'] as $mixin) {
             $this->node1->expects($this->once())
