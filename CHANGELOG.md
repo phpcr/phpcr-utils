@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.5.2
+-----
+
+* Fix SQL 2 scanner delimiter detection to handle that tokens don't necessarily have whitespace between them.
+
 1.5.1
 -----
 

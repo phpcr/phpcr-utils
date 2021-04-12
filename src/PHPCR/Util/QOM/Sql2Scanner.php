@@ -171,7 +171,7 @@ class Sql2Scanner
             $regexpTokens[] = preg_quote($token, '/');
         }
 
-        $regexp = '/^'.implode('([ \t\n]+)', $regexpTokens).'$/';
+        $regexp = '/^'.implode('([ \t\n]*)', $regexpTokens).'$/';
         preg_match($regexp, $sql2, $this->delimiters);
         $this->delimiters[0] = '';
 
