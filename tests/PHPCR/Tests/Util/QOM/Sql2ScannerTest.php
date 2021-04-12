@@ -21,9 +21,9 @@ class Sql2ScannerTest extends TestCase
             'page',
         ];
 
-       while($token = $scanner->fetchNextToken()) {
-           $this->assertEquals(array_shift($expected), $token);
-       }
+        while($token = $scanner->fetchNextToken()) {
+            $this->assertEquals(array_shift($expected), $token);
+        }
     }
 
     public function testDelimiter()
