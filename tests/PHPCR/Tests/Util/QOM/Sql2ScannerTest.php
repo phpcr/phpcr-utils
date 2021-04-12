@@ -21,7 +21,7 @@ class Sql2ScannerTest extends TestCase
             'page',
         ];
 
-        while($token = $scanner->fetchNextToken()) {
+        while ($token = $scanner->fetchNextToken()) {
             $this->assertEquals(array_shift($expected), $token);
         }
     }
@@ -40,7 +40,7 @@ class Sql2ScannerTest extends TestCase
             ' ',
         ];
 
-        while($token = $scanner->fetchNextToken()) {
+        while ($token = $scanner->fetchNextToken()) {
             $this->assertEquals(array_shift($expected), $scanner->getPreviousDelimiter());
         }
     }
