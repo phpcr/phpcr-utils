@@ -1,6 +1,12 @@
 Changelog
 =========
 
+1.5.3
+-----
+
+* Compatible with Symfony 6
+* Compatible with PHP 8.1
+
 1.5.2
 -----
 
