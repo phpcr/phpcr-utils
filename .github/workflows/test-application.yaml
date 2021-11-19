@@ -11,7 +11,7 @@ on:
 
 jobs:
     test:
-        name: 'PHP ${{ matrix.php-version }} ${{ matrix.dependencies}}'
+        name: "PHP ${{ matrix.php-version }} ${{ matrix.dependencies }} ${{ matrix.dev-dependencies && 'dev' }}"
         runs-on: ubuntu-20.04
 
         strategy:
