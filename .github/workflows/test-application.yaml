@@ -11,7 +11,7 @@ on:
 
 jobs:
     test:
-        name: 'PHP ${{ matrix.php-version }} ${{ matrix.dependencies}}'
+        name: "PHP ${{ matrix.php-version }} ${{ matrix.dependencies }} ${{ matrix.dev-dependencies && 'dev' }}"
         runs-on: ubuntu-20.04
 
         strategy:
@@ -22,6 +22,8 @@ jobs:
                       dependencies: 'lowest'
                     - php-version: '7.4'
                     - php-version: '8.0'
+                    - php-version: '8.0'
+                      dev-dependencies: true
 
         steps:
             - name: Checkout project
@@ -32,6 +34,10 @@ jobs:
               with:
                   php-version: ${{ matrix.php-version }}
                   tools: 'composer:v2'
+
+            - name: Allow unstable dependencies
+              if: matrix.dev-dependencies == true
+              run: composer config minimum-stability dev
 
             - name: Install dependencies with Composer
               uses: ramsey/composer-install@v1
