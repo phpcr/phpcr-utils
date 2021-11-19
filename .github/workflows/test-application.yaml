@@ -24,6 +24,7 @@ jobs:
                     - php-version: '8.0'
                     - php-version: '8.0'
                       dev-dependencies: true
+                    - php-version: '8.1'
 
         steps:
             - name: Checkout project
