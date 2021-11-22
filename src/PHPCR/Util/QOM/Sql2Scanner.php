@@ -27,13 +27,6 @@ class Sql2Scanner
     protected $tokens;
 
     /**
-     * Delimiters between tokens.
-     *
-     * @var array
-     */
-    protected $delimiters;
-
-    /**
      * Parsing position in the SQL string.
      *
      * @var int
@@ -66,16 +59,6 @@ class Sql2Scanner
         }
 
         return '';
-    }
-
-    /**
-     * Get the delimiter that separated the two previous tokens.
-     *
-     * @return string
-     */
-    public function getPreviousDelimiter()
-    {
-        return isset($this->delimiters[$this->curpos - 1]) ? $this->delimiters[$this->curpos - 1] : ' ';
     }
 
     /**
@@ -116,12 +99,12 @@ class Sql2Scanner
      * Expect the next tokens to be the one given in the array of tokens and
      * throws an exception if it's not the case.
      *
-     * @see expectToken
-     *
      * @param array $tokens
      * @param bool  $case_insensitive
      *
      * @throws InvalidQueryException
+     *
+     * @see expectToken
      */
     public function expectTokens($tokens, $case_insensitive = true)
     {
@@ -151,7 +134,7 @@ class Sql2Scanner
     }
 
     /**
-     * Scan a SQL2 string a extract the tokens.
+     * Scan a SQL2 string and extract the tokens.
      *
      * @param string $sql2
      *
@@ -160,49 +143,45 @@ class Sql2Scanner
     protected function scan($sql2)
     {
         $tokens = [];
-        $token = strtok($sql2, " \n\t");
-        while ($token !== false) {
-            $this->tokenize($tokens, $token);
-            $token = strtok(" \n\t");
-        }
-
-        $regexpTokens = [];
-        foreach ($tokens as $token) {
-            $regexpTokens[] = preg_quote($token, '/');
-        }
-
-        $regexp = '/^'.implode('([ \t\n]*)', $regexpTokens).'$/';
-        preg_match($regexp, $sql2, $this->delimiters);
-        $this->delimiters[0] = '';
-
-        return $tokens;
-    }
-
-    /**
-     * Tokenize a string returned by strtok to split the string at '.', ',', '(', '='
-     * and ')' characters.
-     *
-     * @param array  $tokens
-     * @param string $token
-     */
-    protected function tokenize(&$tokens, $token)
-    {
-        $buffer = '';
-        for ($i = 0; $i < strlen($token); $i++) {
-            $char = trim(substr($token, $i, 1));
-            if (in_array($char, ['.', ',', '(', ')', '='])) {
-                if ($buffer !== '') {
-                    $tokens[] = $buffer;
-                    $buffer = '';
+        $currentToken = '';
+        $tokenEndChars = ['.', ',', '(', ')', '='];
+        $isString = false;
+        foreach (\str_split($sql2) as $character) {
+            if (!$isString && in_array($character, [' ', "\t", "\n"], true)) {
+                if ($currentToken !== '') {
+                    $tokens[] = $currentToken;
                 }
-                $tokens[] = $char;
-            } else {
-                $buffer .= $char;
+                $currentToken = '';
+                continue;
+            }
+            if (!$isString && in_array($character, $tokenEndChars, true)) {
+                if ($currentToken !== '') {
+                    $tokens[] = $currentToken;
+                }
+                $tokens[] = $character;
+                $currentToken = '';
+                continue;
+            }
+            $currentToken .= $character;
+            if (in_array($character, ['"', "'"], true)) {
+                if ($isString) {
+                    // reached the end of the string
+                    $isString = false;
+                    $tokens[] = $currentToken;
+                    $currentToken = '';
+                } else {
+                    $isString = true;
+                }
             }
         }
-
-        if ($buffer !== '') {
-            $tokens[] = $buffer;
+        if ($currentToken !== '') {
+            $tokens[] = $currentToken;
         }
+
+        if ($isString) {
+            throw new InvalidQueryException("Syntax error: unterminated quoted string $currentToken in '$sql2'");
+        }
+
+        return $tokens;
     }
 }

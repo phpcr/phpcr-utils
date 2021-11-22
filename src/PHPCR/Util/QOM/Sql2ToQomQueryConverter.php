@@ -756,27 +756,13 @@ class Sql2ToQomQueryConverter
         $this->scanner->expectToken('(');
         $token = $this->scanner->fetchNextToken();
 
-        $quoteString = false;
-        if (substr($token, 0, 1) === '\'') {
-            $quoteString = "'";
-        } elseif (substr($token, 0, 1) === '"') {
-            $quoteString = '"';
-        }
+        $quoteString = in_array($token[0], ['\'', '"'], true);
 
         if ($quoteString) {
-            while (substr($token, -1) !== $quoteString) {
-                $nextToken = $this->scanner->fetchNextToken();
-                if ('' === $nextToken) {
-                    break;
-                }
-                $token .= $nextToken;
-            }
-
-            if (substr($token, -1) !== $quoteString) {
-                throw new InvalidQueryException("Syntax error: unterminated quoted string '$token' in '{$this->sql2}'");
-            }
+            $quotesUsed = $token[0];
             $token = substr($token, 1, -1);
-            $token = str_replace('\\'.$quoteString, $quoteString, $token);
+            // Un-escaping quotes
+            $token = str_replace('\\'.$quotesUsed, $quotesUsed, $token);
         }
 
         $this->scanner->expectToken('AS');
@@ -813,28 +799,13 @@ class Sql2ToQomQueryConverter
             return $this->parseCastLiteral($token);
         }
 
-        $quoteString = false;
-        if (substr($token, 0, 1) === '\'') {
-            $quoteString = "'";
-        } elseif (substr($token, 0, 1) === '"') {
-            $quoteString = '"';
-        }
+        $quoteString = in_array($token[0], ['"', "'"], true);
 
         if ($quoteString) {
-            while (substr($token, -1) !== $quoteString) {
-                $nextToken = $this->scanner->fetchNextToken();
-                if ('' === $nextToken) {
-                    break;
-                }
-                $token .= $this->scanner->getPreviousDelimiter();
-                $token .= $nextToken;
-            }
-
-            if (substr($token, -1) !== $quoteString) {
-                throw new InvalidQueryException("Syntax error: unterminated quoted string $token in '{$this->sql2}'");
-            }
+            $quotesUsed = $token[0];
             $token = substr($token, 1, -1);
-            $token = str_replace('\\'.$quoteString, $quoteString, $token);
+            // Unescape quotes
+            $token = str_replace('\\'.$quotesUsed, $quotesUsed, $token);
             $token = str_replace("''", "'", $token);
             if (preg_match('/^\d{4}-\d{2}-\d{2}( \d{2}:\d{2}:\d+)?$/', $token)) {
                 if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $token)) {
