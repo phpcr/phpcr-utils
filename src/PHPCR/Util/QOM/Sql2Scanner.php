@@ -145,16 +145,18 @@ class Sql2Scanner
         $tokens = [];
         $currentToken = '';
         $tokenEndChars = ['.', ',', '(', ')', '='];
-        $isString = false;
+
+        $stringStartCharacter = false;
+        $isEscaped = false;
         foreach (\str_split($sql2) as $character) {
-            if (!$isString && in_array($character, [' ', "\t", "\n"], true)) {
+            if (!$stringStartCharacter && in_array($character, [' ', "\t", "\n"], true)) {
                 if ($currentToken !== '') {
                     $tokens[] = $currentToken;
                 }
                 $currentToken = '';
                 continue;
             }
-            if (!$isString && in_array($character, $tokenEndChars, true)) {
+            if (!$stringStartCharacter && in_array($character, $tokenEndChars, true)) {
                 if ($currentToken !== '') {
                     $tokens[] = $currentToken;
                 }
@@ -163,22 +165,24 @@ class Sql2Scanner
                 continue;
             }
             $currentToken .= $character;
-            if (in_array($character, ['"', "'"], true)) {
-                if ($isString) {
+            if (!$isEscaped && in_array($character, ['"', "'"], true)) {
+                if ($character === $stringStartCharacter) {
                     // reached the end of the string
-                    $isString = false;
+                    $stringStartCharacter = false;
                     $tokens[] = $currentToken;
                     $currentToken = '';
-                } else {
-                    $isString = true;
+                } elseif (!$stringStartCharacter) {
+                    // If there is no start character already we have found the beginning of a new string
+                    $stringStartCharacter = $character;
                 }
             }
+            $isEscaped = $character === '\\';
         }
         if ($currentToken !== '') {
             $tokens[] = $currentToken;
         }
 
-        if ($isString) {
+        if ($stringStartCharacter) {
             throw new InvalidQueryException("Syntax error: unterminated quoted string $currentToken in '$sql2'");
         }
 

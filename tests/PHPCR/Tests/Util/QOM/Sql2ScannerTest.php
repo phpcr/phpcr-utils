@@ -28,6 +28,9 @@ class Sql2ScannerTest extends TestCase
         $this->assertCount(0, $expected);
     }
 
+    /**
+     * @dataProvider dataTestStringTokenization
+     */
     public function testStringTokenization()
     {
         $scanner = new Sql2Scanner('SELECT page.* FROM [nt:unstructured] AS page WHERE name ="Hello world"');
@@ -52,11 +55,24 @@ class Sql2ScannerTest extends TestCase
         $this->assertCount(0, $expected);
     }
 
-    public function testStringTokenizationWithNewLines()
+    public function dataTestStringTokenization()
     {
-        $scanner = new Sql2Scanner(<<<'SQL'
+        $multilineQuery = <<<'SQL'
 SELECT page.* 
-FROM [nt:unstructured] AS page WHERE name ="Hello world"
+FROM [nt:unstructured] AS page 
+WHERE name ="Hello world"
+SQL;
+
+        return [
+            'single line query' => ['SELECT page.* FROM [nt:unstructured] AS page WHERE name ="Hello world"'],
+            'multi line query' => [$multilineQuery],
+        ];
+    }
+
+    public function testEscapingStrings()
+    {
+        $scanner = new Sql2Scanner(<<<SQL
+SELECT page.* FROM [nt:unstructured] AS page WHERE page.quotes = "\"'"
 SQL);
         $expected = [
             'SELECT',
@@ -68,15 +84,16 @@ SQL);
             'AS',
             'page',
             'WHERE',
-            'name',
+            'page',
+            '.',
+            'quotes',
             '=',
-            '"Hello world"',
+            '"\"\'"',
         ];
 
         while ($token = $scanner->fetchNextToken()) {
             $this->assertEquals(array_shift($expected), $token);
         }
-        $this->assertCount(0, $expected);
     }
 
     public function testThrowingErrorOnUnclosedString()
