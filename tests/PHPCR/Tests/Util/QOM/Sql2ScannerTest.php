@@ -57,7 +57,7 @@ class Sql2ScannerTest extends TestCase
 
     public function dataTestStringTokenization()
     {
-        $multilineQuery = <<<'SQL'
+        $multilineQuery = <<<SQL
 SELECT page.* 
 FROM [nt:unstructured] AS page 
 WHERE name ="Hello world"
@@ -71,9 +71,10 @@ SQL;
 
     public function testEscapingStrings()
     {
-        $scanner = new Sql2Scanner(<<<SQL
+        $sql = <<<SQL
 SELECT page.* FROM [nt:unstructured] AS page WHERE page.quotes = "\"'"
-SQL);
+SQL;
+        $scanner = new Sql2Scanner($sql);
         $expected = [
             'SELECT',
             'page',
