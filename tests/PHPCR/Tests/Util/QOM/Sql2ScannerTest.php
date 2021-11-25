@@ -22,10 +22,7 @@ class Sql2ScannerTest extends TestCase
             'page',
         ];
 
-        while ($token = $scanner->fetchNextToken()) {
-            $this->assertEquals(array_shift($expected), $token);
-        }
-        $this->assertCount(0, $expected);
+        $this->expectTokensFromScanner($scanner, $expected);
     }
 
     /**
@@ -49,15 +46,12 @@ class Sql2ScannerTest extends TestCase
             '"Hello world"',
         ];
 
-        while ($token = $scanner->fetchNextToken()) {
-            $this->assertEquals(array_shift($expected), $token);
-        }
-        $this->assertCount(0, $expected);
+        $this->expectTokensFromScanner($scanner, $expected);
     }
 
     public function dataTestStringTokenization()
     {
-        $multilineQuery = <<<SQL
+        $multilineQuery = <<<'SQL'
 SELECT page.* 
 FROM [nt:unstructured] AS page 
 WHERE name ="Hello world"
@@ -92,14 +86,64 @@ SQL;
             '"\"\'"',
         ];
 
-        while ($token = $scanner->fetchNextToken()) {
-            $this->assertEquals(array_shift($expected), $token);
-        }
+        $this->expectTokensFromScanner($scanner, $expected);
+    }
+
+    public function testSQLEscapedStrings()
+    {
+        $sql = "WHERE page.name = 'Hello, it''s me.'";
+
+        $scanner = new Sql2Scanner($sql);
+        $expected = [
+            'WHERE',
+            'page',
+            '.',
+            'name',
+            '=',
+            "'Hello, it''s me.'",
+        ];
+
+        $this->expectTokensFromScanner($scanner, $expected);
+    }
+
+    public function testSQLEscapedStrings2()
+    {
+        $sql = "WHERE page.name = 'Hello, it''' AND";
+
+        $scanner = new Sql2Scanner($sql);
+        $expected = [
+            'WHERE',
+            'page',
+            '.',
+            'name',
+            '=',
+            "'Hello, it'''",
+            'AND',
+        ];
+
+        $this->expectTokensFromScanner($scanner, $expected);
     }
 
     public function testThrowingErrorOnUnclosedString()
     {
         $this->expectException(InvalidQueryException::class);
         new Sql2Scanner('SELECT page.* FROM [nt:unstructured] AS page WHERE name ="Hello ');
+    }
+
+    /**
+     * Function to assert that the tokens the scanner finds match the expected output
+     * and the entire expected output is consumed.
+     *
+     * @param Sql2Scanner   $scanner
+     * @param array<string> $expected
+     */
+    private function expectTokensFromScanner(Sql2Scanner $scanner, array $expected)
+    {
+        $actualTokens = [];
+        while ($token = $scanner->fetchNextToken()) {
+            $actualTokens[] = $token;
+        }
+
+        $this->assertEquals($expected, $actualTokens);
     }
 }

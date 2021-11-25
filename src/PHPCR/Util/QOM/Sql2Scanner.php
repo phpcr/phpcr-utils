@@ -148,7 +148,8 @@ class Sql2Scanner
 
         $stringStartCharacter = false;
         $isEscaped = false;
-        foreach (\str_split($sql2) as $character) {
+        $escapedQuotesCount = 0;
+        foreach (\str_split($sql2) as $index => $character) {
             if (!$stringStartCharacter && in_array($character, [' ', "\t", "\n"], true)) {
                 if ($currentToken !== '') {
                     $tokens[] = $currentToken;
@@ -165,7 +166,20 @@ class Sql2Scanner
                 continue;
             }
             $currentToken .= $character;
+
             if (!$isEscaped && in_array($character, ['"', "'"], true)) {
+                // Checking if the previous or next value is a ' to handle the weird SQL strings
+                // This will not check if the amount of quotes is even
+                $nextCharacter = $this->getCharacterAtIndex($sql2, $index + 1);
+                if ($character === "'" && $nextCharacter === "'") {
+                    $isEscaped = true;
+                    $escapedQuotesCount++;
+                    continue;
+                }
+                // If the escaped quotes are not paired up. eg. "I'''m cool" would be a parsing error
+                if ($escapedQuotesCount % 2 == 1 && $stringStartCharacter !== "'") {
+                    throw new InvalidQueryException("Syntax error: Number of single quotes to be even: $currentToken");
+                }
                 if ($character === $stringStartCharacter) {
                     // reached the end of the string
                     $stringStartCharacter = false;
@@ -187,5 +201,14 @@ class Sql2Scanner
         }
 
         return $tokens;
+    }
+
+    private function getCharacterAtIndex($string, $index)
+    {
+        if ($index < strlen($string)) {
+            return $string[$index];
+        }
+
+        return '';
     }
 }
