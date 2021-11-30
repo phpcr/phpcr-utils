@@ -1,6 +1,6 @@
 # PHPCR Utilities
 
-[![Build Status](https://secure.travis-ci.org/phpcr/phpcr-utils.png)](http://travis-ci.org/phpcr/phpcr-utils)
+[![Build Status](https://github.com/phpcr/phpcr-utils/actions/workflows/test-application.yaml/badge.svg)](https://github.com/phpcr/phpcr-utils/actions)
 [![Latest Stable Version](https://poser.pugx.org/phpcr/phpcr-utils/version.png)](https://packagist.org/packages/phpcr/phpcr-utils)
 [![Total Downloads](https://poser.pugx.org/phpcr/phpcr-utils/d/total.png)](https://packagist.org/packages/phpcr/phpcr-utils)
 
