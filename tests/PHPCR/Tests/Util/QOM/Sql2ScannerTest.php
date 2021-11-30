@@ -124,6 +124,41 @@ SQL;
         $this->expectTokensFromScanner($scanner, $expected);
     }
 
+    public function testSquareBrakets()
+    {
+        $sql = 'WHERE ISSAMENODE(file, ["/home node"])';
+
+        $scanner = new Sql2Scanner($sql);
+        $expected = [
+            'WHERE',
+            'ISSAMENODE',
+            '(',
+            'file',
+            ',',
+            '[',
+            '"/home node"',
+            ']',
+            ')',
+        ];
+
+        $this->expectTokensFromScanner($scanner, $expected);
+    }
+
+    public function testTokenizingWithMissingSpaces()
+    {
+        $sql = 'SELECT * AS"all"';
+
+        $scanner = new Sql2Scanner($sql);
+        $expected = [
+            'SELECT',
+            '*',
+            'AS',
+            '"all"',
+        ];
+
+        $this->expectTokensFromScanner($scanner, $expected);
+    }
+
     public function testThrowingErrorOnUnclosedString()
     {
         $this->expectException(InvalidQueryException::class);

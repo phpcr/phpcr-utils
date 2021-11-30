@@ -188,6 +188,12 @@ class Sql2Scanner
                 } elseif (!$stringStartCharacter) {
                     // If there is no start character already we have found the beginning of a new string
                     $stringStartCharacter = $character;
+
+                    // When tokenizing `AS"abc"` add the current token (AS) as token already
+                    if (strlen($currentToken) > 1) {
+                        $tokens[] = substr($currentToken, 0, strlen($currentToken) - 1);
+                        $currentToken = $character;
+                    }
                 }
             }
             $isEscaped = $character === '\\';
