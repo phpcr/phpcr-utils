@@ -28,9 +28,9 @@ class Sql2ScannerTest extends TestCase
     /**
      * @dataProvider dataTestStringTokenization
      */
-    public function testStringTokenization()
+    public function testStringTokenization(string $query)
     {
-        $scanner = new Sql2Scanner('SELECT page.* FROM [nt:unstructured] AS page WHERE name ="Hello world"');
+        $scanner = new Sql2Scanner($query);
         $expected = [
             'SELECT',
             'page',
@@ -49,7 +49,7 @@ class Sql2ScannerTest extends TestCase
         $this->expectTokensFromScanner($scanner, $expected);
     }
 
-    public function dataTestStringTokenization()
+    public function dataTestStringTokenization(): array
     {
         $multilineQuery = <<<'SQL'
 SELECT page.* 
@@ -124,7 +124,7 @@ SQL;
         $this->expectTokensFromScanner($scanner, $expected);
     }
 
-    public function testSquareBrakets()
+    public function testSquareBrackets()
     {
         $sql = 'WHERE ISSAMENODE(file, ["/home node"])';
 
@@ -138,6 +138,25 @@ SQL;
             '[',
             '"/home node"',
             ']',
+            ')',
+        ];
+
+        $this->expectTokensFromScanner($scanner, $expected);
+    }
+
+    public function testSquareBracketsWithoutQuotes()
+    {
+        $sql = 'WHERE ISSAMENODE(file, [/home node])';
+
+        $scanner = new Sql2Scanner($sql);
+        $expected = [
+            'WHERE',
+            'ISSAMENODE',
+            '(',
+            'file',
+            ',',
+            '[/home',
+            'node]',
             ')',
         ];
 
