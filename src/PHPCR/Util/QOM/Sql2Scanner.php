@@ -149,7 +149,9 @@ class Sql2Scanner
         $stringStartCharacter = false;
         $isEscaped = false;
         $escapedQuotesCount = 0;
-        foreach (\str_split($sql2) as $index => $character) {
+        $splitString = \str_split($sql2);
+        for ($index = 0; $index < count($splitString); $index++) {
+            $character = $splitString[$index];
             if (!$stringStartCharacter && in_array($character, [' ', "\t", "\n"], true)) {
                 if ($currentToken !== '') {
                     $tokens[] = $currentToken;
@@ -165,6 +167,19 @@ class Sql2Scanner
                 $currentToken = '';
                 continue;
             }
+
+            // Handling the squared brackets in queries
+            if (!$isEscaped && $character === '[') {
+                if ($currentToken !== '') {
+                    $tokens[] = $currentToken;
+                }
+                $stringSize = $this->parseBrackets($sql2, $index);
+                $tokens[] = substr($sql2, $index, $stringSize);
+                // We need to subtract one here because the for loop will automatically increment the index
+                $index += $stringSize - 1;
+                continue;
+            }
+
             $currentToken .= $character;
 
             if (!$isEscaped && in_array($character, ['"', "'"], true)) {
@@ -216,5 +231,12 @@ class Sql2Scanner
         }
 
         return '';
+    }
+
+    private function parseBrackets(string $query, int $index): int
+    {
+        $endPosition = strpos($query, ']', $index) + 1;
+
+        return $endPosition - $index;
     }
 }
