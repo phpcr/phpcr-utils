@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.6.0
+-----
+
+* Refactored SQL2 parsing to be more efficient.
+
 1.5.3
 -----
 
