@@ -135,7 +135,7 @@ SQL;
             '(',
             'file',
             ',',
-            '["/home node"]',
+            '[/home node]',
             ')',
         ];
 

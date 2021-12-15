@@ -174,7 +174,9 @@ class Sql2Scanner
                     $tokens[] = $currentToken;
                 }
                 $stringSize = $this->parseBrackets($sql2, $index);
-                $tokens[] = substr($sql2, $index, $stringSize);
+                $bracketContent = substr($sql2, $index + 1, $stringSize - 2);
+                $tokens[] = '[' . trim($bracketContent, '"') . ']';
+
                 // We need to subtract one here because the for loop will automatically increment the index
                 $index += $stringSize - 1;
                 continue;
