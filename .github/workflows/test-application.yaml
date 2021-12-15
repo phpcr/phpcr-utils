@@ -50,3 +50,37 @@ jobs:
 
             - name: Execute test cases
               run: vendor/bin/phpunit
+
+
+    php-windows:
+        name: "PHP Windows ${{ matrix.php-version }} ${{ matrix.dependencies }} ${{ matrix.dev-dependencies && 'dev' }}"
+        runs-on: windows-latest
+
+        strategy:
+            fail-fast: false
+            matrix:
+                include:
+                    - php-version: '7.4'
+
+        steps:
+            - name: Checkout project
+              uses: actions/checkout@v2
+
+            - name: Install and configure PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: ${{ matrix.php-version }}
+                  tools: 'composer:v2'
+
+            - name: Allow unstable dependencies
+              if: matrix.dev-dependencies == true
+              run: composer config minimum-stability dev
+
+            - name: Install dependencies with Composer
+              uses: ramsey/composer-install@v1
+              with:
+                  dependency-versions: ${{ matrix.dependencies }}
+                  composer-options: --prefer-dist
+
+            - name: Execute test cases
+              run: vendor/bin/phpunit
