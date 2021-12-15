@@ -51,7 +51,6 @@ jobs:
             - name: Execute test cases
               run: vendor/bin/phpunit
 
-
     php-windows:
         name: "PHP Windows ${{ matrix.php-version }} ${{ matrix.dependencies }} ${{ matrix.dev-dependencies && 'dev' }}"
         runs-on: windows-latest
