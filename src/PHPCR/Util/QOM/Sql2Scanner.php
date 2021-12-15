@@ -149,7 +149,9 @@ class Sql2Scanner
         $stringStartCharacter = false;
         $isEscaped = false;
         $escapedQuotesCount = 0;
-        foreach (\str_split($sql2) as $index => $character) {
+        $splitString = \str_split($sql2);
+        for ($index = 0; $index < count($splitString); $index++) {
+            $character = $splitString[$index];
             if (!$stringStartCharacter && in_array($character, [' ', "\t", "\n"], true)) {
                 if ($currentToken !== '') {
                     $tokens[] = $currentToken;
@@ -165,12 +167,27 @@ class Sql2Scanner
                 $currentToken = '';
                 continue;
             }
+
+            // Handling the squared brackets in queries
+            if (!$isEscaped && $character === '[') {
+                if ($currentToken !== '') {
+                    $tokens[] = $currentToken;
+                }
+                $stringSize = $this->parseBrackets($sql2, $index);
+                $bracketContent = substr($sql2, $index + 1, $stringSize - 2);
+                $tokens[] = '['.trim($bracketContent, '"').']';
+
+                // We need to subtract one here because the for loop will automatically increment the index
+                $index += $stringSize - 1;
+                continue;
+            }
+
             $currentToken .= $character;
 
             if (!$isEscaped && in_array($character, ['"', "'"], true)) {
                 // Checking if the previous or next value is a ' to handle the weird SQL strings
                 // This will not check if the amount of quotes is even
-                $nextCharacter = $this->getCharacterAtIndex($sql2, $index + 1);
+                $nextCharacter = $splitString[$index + 1] ?? '';
                 if ($character === "'" && $nextCharacter === "'") {
                     $isEscaped = true;
                     $escapedQuotesCount++;
@@ -188,6 +205,12 @@ class Sql2Scanner
                 } elseif (!$stringStartCharacter) {
                     // If there is no start character already we have found the beginning of a new string
                     $stringStartCharacter = $character;
+
+                    // When tokenizing `AS"abc"` add the current token (AS) as token already
+                    if (strlen($currentToken) > 1) {
+                        $tokens[] = substr($currentToken, 0, strlen($currentToken) - 1);
+                        $currentToken = $character;
+                    }
                 }
             }
             $isEscaped = $character === '\\';
@@ -203,12 +226,10 @@ class Sql2Scanner
         return $tokens;
     }
 
-    private function getCharacterAtIndex($string, $index)
+    private function parseBrackets(string $query, int $index): int
     {
-        if ($index < strlen($string)) {
-            return $string[$index];
-        }
+        $endPosition = strpos($query, ']', $index) + 1;
 
-        return '';
+        return $endPosition - $index;
     }
 }
