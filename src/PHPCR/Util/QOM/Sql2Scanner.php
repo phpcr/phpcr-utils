@@ -175,7 +175,7 @@ class Sql2Scanner
                 }
                 $stringSize = $this->parseBrackets($sql2, $index);
                 $bracketContent = substr($sql2, $index + 1, $stringSize - 2);
-                $tokens[] = '[' . trim($bracketContent, '"') . ']';
+                $tokens[] = '['.trim($bracketContent, '"').']';
 
                 // We need to subtract one here because the for loop will automatically increment the index
                 $index += $stringSize - 1;
@@ -187,7 +187,7 @@ class Sql2Scanner
             if (!$isEscaped && in_array($character, ['"', "'"], true)) {
                 // Checking if the previous or next value is a ' to handle the weird SQL strings
                 // This will not check if the amount of quotes is even
-                $nextCharacter = $this->getCharacterAtIndex($sql2, $index + 1);
+                $nextCharacter = $splitString[$index + 1] ?? '';
                 if ($character === "'" && $nextCharacter === "'") {
                     $isEscaped = true;
                     $escapedQuotesCount++;
@@ -224,15 +224,6 @@ class Sql2Scanner
         }
 
         return $tokens;
-    }
-
-    private function getCharacterAtIndex($string, $index)
-    {
-        if ($index < strlen($string)) {
-            return $string[$index];
-        }
-
-        return '';
     }
 
     private function parseBrackets(string $query, int $index): int
