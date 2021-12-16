@@ -5,7 +5,6 @@ namespace PHPCR\Util\QOM;
 use DateTime;
 use Exception;
 use InvalidArgumentException;
-use Jackalope\Query\QOM\Selector;
 use LogicException;
 use PHPCR\PropertyType;
 use PHPCR\Query\InvalidQueryException;
@@ -21,7 +20,6 @@ use PHPCR\Query\QOM\JoinConditionInterface;
 use PHPCR\Query\QOM\JoinInterface;
 use PHPCR\Query\QOM\NotInterface;
 use PHPCR\Query\QOM\OrderingInterface;
-use PHPCR\Query\QOM\PropertyExistenceInterface;
 use PHPCR\Query\QOM\PropertyValueInterface;
 use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants;
 use PHPCR\Query\QOM\QueryObjectModelFactoryInterface;
@@ -133,9 +131,7 @@ class Sql2ToQomQueryConverter
 
         $columns = $this->buildColumns($columnData);
 
-        $query = $this->factory->createQuery($source, $constraint, $orderings, $columns);
-
-        return $query;
+        return $this->factory->createQuery($source, $constraint, $orderings, $columns);
     }
 
     /**
@@ -161,7 +157,7 @@ class Sql2ToQomQueryConverter
 
     /**
      * 6.7.3. Selector
-     * Parse an SQL2 selector and return a QOM\Selector.
+     * Parse an SQL2 selector and return a QOM\SelectorInterface.
      *
      * @return SelectorInterface
      */
@@ -519,7 +515,7 @@ class Sql2ToQomQueryConverter
     /**
      * 6.7.18 PropertyExistence.
      *
-     * @return PropertyExistenceInterface
+     * @return ConstraintInterface
      */
     protected function parsePropertyExistence()
     {
