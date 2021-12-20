@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.6.1
+-----
+
+* Fixed handling of windows style newlines in SQL2 parsing.
+
 1.6.0
 -----
 
