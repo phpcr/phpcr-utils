@@ -152,7 +152,7 @@ class Sql2Scanner
         $splitString = \str_split($sql2);
         for ($index = 0; $index < count($splitString); $index++) {
             $character = $splitString[$index];
-            if (!$stringStartCharacter && in_array($character, [' ', "\t", "\n"], true)) {
+            if (!$stringStartCharacter && in_array($character, [' ', "\t", "\n", "\r"], true)) {
                 if ($currentToken !== '') {
                     $tokens[] = $currentToken;
                 }
