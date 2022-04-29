@@ -65,6 +65,7 @@ class TokenQueue implements \IteratorAggregate
         return next($this->tokens);
     }
 
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return new \ArrayIterator($this->tokens);
