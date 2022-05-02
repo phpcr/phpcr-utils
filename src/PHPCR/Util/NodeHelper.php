@@ -53,7 +53,7 @@ class NodeHelper
     {
         $current = $session->getRootNode();
 
-        $segments = preg_split('#/#', $path, null, PREG_SPLIT_NO_EMPTY);
+        $segments = preg_split('#/#', $path, -1, PREG_SPLIT_NO_EMPTY);
         foreach ($segments as $segment) {
             if ($current->hasNode($segment)) {
                 $current = $current->getNode($segment);
