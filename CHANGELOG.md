@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.6.3
+-----
+
+* Fix more deprecations with PHP 8.1. Round floats when using them as a timestamp, rather than the implicit conversion that floored them.
+
 1.6.2
 -----
 
