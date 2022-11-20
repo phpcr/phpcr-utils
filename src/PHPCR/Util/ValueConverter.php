@@ -246,13 +246,13 @@ class ValueConverter
                         try {
                             return new DateTime($value);
                         } catch (Exception $e) {
-                            throw new ValueFormatException("String '$value' is not a valid date", null, $e);
+                            throw new ValueFormatException("String '$value' is not a valid date", 0, $e);
                         }
                     case PropertyType::LONG:
                     case PropertyType::DOUBLE:
                     case PropertyType::DECIMAL:
                         $datetime = new DateTime();
-                        $datetime = $datetime->setTimestamp($value);
+                        $datetime = $datetime->setTimestamp(round($value));
 
                         return $datetime;
                 }
