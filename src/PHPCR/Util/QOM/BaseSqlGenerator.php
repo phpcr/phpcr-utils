@@ -40,17 +40,17 @@ abstract class BaseSqlGenerator
      */
     public function evalQuery($source, $columns, $constraint = '', $orderings = '')
     {
-        $sql1 = "SELECT $columns FROM $source";
+        $sql = "SELECT $columns FROM $source";
 
         if ($constraint) {
-            $sql1 .= " WHERE $constraint";
+            $sql .= " WHERE $constraint";
         }
 
         if ($orderings) {
-            $sql1 .= " ORDER BY $orderings";
+            $sql .= " ORDER BY $orderings";
         }
 
-        return $sql1;
+        return $sql;
     }
 
     /**
@@ -169,17 +169,17 @@ abstract class BaseSqlGenerator
      */
     public function evalOrderings($orderings)
     {
-        $sql2 = '';
+        $sql = '';
 
         foreach ($orderings as $ordering) {
-            if ($sql2 !== '') {
-                $sql2 .= ', ';
+            if ($sql !== '') {
+                $sql .= ', ';
             }
 
-            $sql2 .= $ordering;
+            $sql .= $ordering;
         }
 
-        return $sql2;
+        return $sql;
     }
 
     /**
@@ -293,11 +293,82 @@ abstract class BaseSqlGenerator
     abstract public function evalCastLiteral($literal, $type);
 
     /**
+     * @param string      $nodeTypeName The node type of the selector. If it does not contain starting and ending
+     *                                  brackets ([]), they will be added automatically.
+     * @param string|null $selectorName The selector name. If it is different than the nodeTypeName, the alias is
+     *                                  declared if supported by the SQL dialect.
+     *
+     * @return string
+     */
+    abstract public function evalSelector($nodeTypeName, $selectorName = null);
+
+    /**
      * Evaluate a path. This is different between SQL1 and SQL2.
      *
      * @param string $path
      *
-     * @return string
+     * @return string|null
      */
     abstract public function evalPath($path);
+
+    /**
+     * columns ::= (Column ',' {Column}) | '*'.
+     *
+     * With empty columns, SQL1 is different from SQL2
+     *
+     * @param $columns
+     *
+     * @return string
+     */
+    abstract public function evalColumns($columns);
+
+    /**
+     * @param string $selectorName
+     * @param string $propertyName
+     * @param string $colname
+     *
+     * @return string
+     */
+    abstract public function evalColumn($selectorName, $propertyName = null, $colname = null);
+
+    /**
+     * @param $selectorName
+     * @param $propertyName
+     *
+     * @return string
+     */
+    abstract public function evalPropertyExistence($selectorName, $propertyName);
+
+    /**
+     * @param string $propertyName
+     * @param string $selectorName
+     *
+     * @return string
+     */
+    abstract public function evalPropertyValue($propertyName, $selectorName = null);
+
+    /**
+     * @param string $path
+     * @param string $selectorName
+     *
+     * @return string
+     */
+    abstract public function evalChildNode($path, $selectorName = null);
+
+    /**
+     * @param string $path
+     * @param string $selectorName
+     *
+     * @return string
+     */
+    abstract public function evalDescendantNode($path, $selectorName = null);
+
+    /**
+     * @param string $selectorName
+     * @param string $searchExpression
+     * @param string $propertyName
+     *
+     * @return string
+     */
+    abstract public function evalFullTextSearch($selectorName, $searchExpression, $propertyName = null);
 }

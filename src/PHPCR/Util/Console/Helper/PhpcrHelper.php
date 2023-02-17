@@ -129,7 +129,7 @@ class PhpcrHelper extends Helper
 
         if ($operations['dump']) {
             $output->writeln('<info>Node dump: </info>');
-            /** @var $property PropertyInterface */
+            /** @var PropertyInterface $property */
             foreach ($node->getProperties() as $property) {
                 $value = $property->getValue();
                 if (!is_string($value)) {

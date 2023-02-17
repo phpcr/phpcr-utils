@@ -125,7 +125,7 @@ HERE
 
         $persistIn = $persistCounter;
 
-        /** @var $row RowInterface */
+        /** @var RowInterface $row */
         foreach ($result as $i => $row) {
             $output->writeln(sprintf(
                 '<info>Updating node:</info> [%d] %s.',
@@ -169,7 +169,7 @@ HERE
         )));
 
         if ($response === 'L') {
-            /** @var $row RowInterface */
+            /** @var RowInterface $row */
             foreach ($result as $i => $row) {
                 $output->writeln(sprintf(' - [%d] %s', $i, $row->getPath()));
             }

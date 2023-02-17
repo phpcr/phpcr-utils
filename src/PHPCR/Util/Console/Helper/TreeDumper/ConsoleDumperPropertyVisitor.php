@@ -28,6 +28,11 @@ class ConsoleDumperPropertyVisitor extends ConsoleDumperItemVisitor
     protected $expandReferences;
 
     /**
+     * @var string
+     */
+    private $refFormat;
+
+    /**
      * Instantiate property visitor.
      *
      * @param OutputInterface $output

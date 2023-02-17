@@ -5,7 +5,6 @@ namespace PHPCR\Util\CND\Writer;
 use PHPCR\NamespaceRegistryInterface;
 use PHPCR\NodeType\NodeDefinitionInterface;
 use PHPCR\NodeType\NodeTypeDefinitionInterface;
-use PHPCR\NodeType\NodeTypeManagerInterface;
 use PHPCR\NodeType\NodeTypeTemplateInterface;
 use PHPCR\NodeType\PropertyDefinitionInterface;
 use PHPCR\PropertyType;
@@ -34,9 +33,6 @@ class CndWriter
     /** @var array hashmap of prefix => namespace uri */
     private $namespaces = [];
 
-    /**
-     * @param NodeTypeManagerInterface $ntm
-     */
     public function __construct(NamespaceRegistryInterface $ns)
     {
         $this->ns = $ns;
@@ -135,6 +131,11 @@ class CndWriter
         return $s;
     }
 
+    /**
+     * @param PropertyDefinitionInterface[] $properties
+     *
+     * @return string
+     */
     private function writeProperties($properties)
     {
         if (null === $properties) {
@@ -145,7 +146,6 @@ class CndWriter
 
         $s = '';
 
-        /** @var $property PropertyDefinitionInterface */
         foreach ($properties as $property) {
             $this->checkNamespace($property->getName());
             $s .= '- '.$property->getName();
@@ -196,6 +196,11 @@ class CndWriter
         return $s;
     }
 
+    /**
+     * @param NodeDefinitionInterface[] $children
+     *
+     * @return string
+     */
     private function writeChildren($children)
     {
         if (null === $children) {
@@ -206,7 +211,6 @@ class CndWriter
 
         $s = '';
 
-        /** @var $child NodeDefinitionInterface */
         foreach ($children as $child) {
             $this->checkNamespace($child->getName());
             $s .= '+ '.$child->getName();

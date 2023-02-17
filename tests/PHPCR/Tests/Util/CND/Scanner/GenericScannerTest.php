@@ -10,8 +10,6 @@ use PHPCR\Util\CND\Scanner\GenericToken as Token;
 use PHPCR\Util\CND\Scanner\TokenFilter;
 use PHPCR\Util\CND\Scanner\TokenQueue;
 use PHPUnit\Framework\TestCase;
-use Test;
-use TestClass;
 
 class GenericScannerTest extends TestCase
 {
@@ -27,7 +25,7 @@ class GenericScannerTest extends TestCase
         // namespace Test\Foobar;
         [Token::TK_IDENTIFIER, 'namespace'],
         [Token::TK_WHITESPACE, ''],
-        [Token::TK_IDENTIFIER, Test::class],
+        [Token::TK_IDENTIFIER, 'Test'],
         [Token::TK_SYMBOL, '\\'],
         [Token::TK_IDENTIFIER, 'Foobar'],
         [Token::TK_SYMBOL, ';'],
@@ -37,7 +35,7 @@ class GenericScannerTest extends TestCase
         // class TestClass {
         [Token::TK_IDENTIFIER, 'class'],
         [Token::TK_WHITESPACE, ''],
-        [Token::TK_IDENTIFIER, TestClass::class],
+        [Token::TK_IDENTIFIER, 'TestClass'],
         [Token::TK_NEWLINE, ''],
         [Token::TK_SYMBOL, '{'],
         [Token::TK_NEWLINE, ''],

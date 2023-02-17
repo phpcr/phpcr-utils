@@ -237,7 +237,7 @@ class Sql2Generator extends BaseSqlGenerator
      *                    FullTextSearchExpression ')'
      * FullTextSearchExpression ::= BindVariable | ''' FullTextSearchLiteral '''.
      *
-     * @param string $selectorName     unusued
+     * @param string $selectorName
      * @param string $searchExpression
      * @param string $propertyName
      *
@@ -389,18 +389,19 @@ class Sql2Generator extends BaseSqlGenerator
      */
     public function evalPath($path)
     {
-        if ($path) {
-            $sql2 = $path;
-            // only ensure proper quoting if the user did not quote himself, we trust him to get it right if he did.
-            if (substr($path, 0, 1) !== '[' && substr($path, -1) !== ']') {
-                if (false !== strpos($sql2, ' ') || false !== strpos($sql2, '.')) {
-                    $sql2 = '"'.$sql2.'"';
-                }
-                $sql2 = '['.$sql2.']';
-            }
-
-            return $sql2;
+        if (!$path) {
+            return $path;
         }
+        $sql2 = $path;
+        // only ensure proper quoting if the user did not quote himself, we trust him to get it right if he did.
+        if (strpos($path, '[') !== 0 && substr($path, -1) !== ']') {
+            if (false !== strpos($sql2, ' ') || false !== strpos($sql2, '.')) {
+                $sql2 = '"'.$sql2.'"';
+            }
+            $sql2 = '['.$sql2.']';
+        }
+
+        return $sql2;
     }
 
     /**

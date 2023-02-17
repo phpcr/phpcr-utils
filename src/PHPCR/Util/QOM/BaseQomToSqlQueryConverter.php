@@ -248,7 +248,6 @@ abstract class BaseQomToSqlQueryConverter
     protected function convertOrderings(array $orderings)
     {
         $list = [];
-        /** @var $ordering QOM\OrderingInterface */
         foreach ($orderings as $ordering) {
             $order = $this->generator->evalOrder($ordering->getOrder());
             $operand = $this->convertDynamicOperand($ordering->getOperand());
@@ -314,7 +313,6 @@ abstract class BaseQomToSqlQueryConverter
     {
         $list = [];
 
-        /** @var $column QOM\ColumnInterface */
         foreach ($columns as $column) {
             $selector = $column->getSelectorName();
             $property = $column->getPropertyName();

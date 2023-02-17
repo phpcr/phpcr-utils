@@ -70,6 +70,11 @@ class Sql2ToQomQueryConverter
     protected $implicitSelectorName = null;
 
     /**
+     * @var ValueConverter
+     */
+    private $valueConverter;
+
+    /**
      * Instantiate a converter.
      *
      * @param QueryObjectModelFactoryInterface $factory

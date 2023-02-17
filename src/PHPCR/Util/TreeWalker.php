@@ -122,20 +122,26 @@ class TreeWalker
      * @param int           $recurse Max recursion level
      * @param int           $level   Recursion level
      */
-    public function traverse(NodeInterface $node, $recurse = -1, $level = 0)
+    public function traverse(NodeInterface $node, $recurse = -1, $level = 0): void
     {
         if ($this->mustVisitNode($node)) {
 
             // Visit node
-            $this->nodeVisitor->setLevel($level);
-            $this->nodeVisitor->setShowFullPath(0 === $level);
+            if (method_exists($this->nodeVisitor, 'setLevel')) {
+                $this->nodeVisitor->setLevel($level);
+            }
+            if (method_exists($this->nodeVisitor, 'setShowFullPath')) {
+                $this->nodeVisitor->setShowFullPath(0 === $level);
+            }
             $node->accept($this->nodeVisitor);
 
             // Visit properties
             if ($this->propertyVisitor !== null) {
                 foreach ($node->getProperties() as $prop) {
                     if ($this->mustVisitProperty($prop)) {
-                        $this->propertyVisitor->setLevel($level);
+                        if (method_exists($this->propertyVisitor, 'setLevel')) {
+                            $this->propertyVisitor->setLevel($level);
+                        }
                         $prop->accept($this->propertyVisitor);
                     }
                 }

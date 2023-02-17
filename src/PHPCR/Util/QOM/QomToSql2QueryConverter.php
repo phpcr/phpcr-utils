@@ -51,6 +51,10 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
      */
     protected function convertJoin(QOM\JoinInterface $join)
     {
+        if (!$this->generator instanceof Sql2Generator) {
+            throw new NotSupportedOperandException('Only SQL2 supports join');
+        }
+
         $left = $this->convertSource($join->getLeft());
         $right = $this->convertSource($join->getRight());
         $condition = $this->convertJoinCondition($join->getJoinCondition());
@@ -73,19 +77,20 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
     protected function convertJoinCondition(QOM\JoinConditionInterface $condition)
     {
         if ($condition instanceof QOM\EquiJoinConditionInterface) {
-            $sql2 = $this->convertEquiJoinCondition($condition);
-        } elseif ($condition instanceof QOM\SameNodeJoinConditionInterface) {
-            $sql2 = $this->convertSameNodeJoinCondition($condition);
-        } elseif ($condition instanceof QOM\ChildNodeJoinConditionInterface) {
-            $sql2 = $this->convertChildNodeJoinCondition($condition);
-        } elseif ($condition instanceof QOM\DescendantNodeJoinConditionInterface) {
-            $sql2 = $this->convertDescendantNodeJoinCondition($condition);
-        } else {
-            // This should not happen, but who knows...
-            throw new InvalidArgumentException('Invalid operand');
+            return $this->convertEquiJoinCondition($condition);
+        }
+        if ($condition instanceof QOM\SameNodeJoinConditionInterface) {
+            return $this->convertSameNodeJoinCondition($condition);
+        }
+        if ($condition instanceof QOM\ChildNodeJoinConditionInterface) {
+            return $this->convertChildNodeJoinCondition($condition);
+        }
+        if ($condition instanceof QOM\DescendantNodeJoinConditionInterface) {
+            return $this->convertDescendantNodeJoinCondition($condition);
         }
 
-        return $sql2;
+        // This should not happen, but who knows...
+        throw new InvalidArgumentException('Invalid operand');
     }
 
     /**
@@ -102,6 +107,10 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
      */
     protected function convertEquiJoinCondition(QOM\EquiJoinConditionInterface $condition)
     {
+        if (!$this->generator instanceof Sql2Generator) {
+            throw new NotSupportedOperandException('Only SQL2 supports equi join condition');
+        }
+
         return $this->generator->evalEquiJoinCondition(
             $condition->getSelector1Name(),
             $condition->getProperty1Name(),
@@ -123,6 +132,10 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
      */
     protected function convertSameNodeJoinCondition(QOM\SameNodeJoinConditionInterface $condition)
     {
+        if (!$this->generator instanceof Sql2Generator) {
+            throw new NotSupportedOperandException('Only SQL2 supports same node join condition');
+        }
+
         return $this->generator->evalSameNodeJoinCondition(
             $condition->getSelector1Name(),
             $condition->getSelector2Name(),
@@ -143,6 +156,10 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
      */
     protected function convertChildNodeJoinCondition(QOM\ChildNodeJoinConditionInterface $condition)
     {
+        if (!$this->generator instanceof Sql2Generator) {
+            throw new NotSupportedOperandException('Only SQL2 supports child node join condition');
+        }
+
         return $this->generator->evalChildNodeJoinCondition(
             $condition->getChildSelectorName(),
             $condition->getParentSelectorName()
@@ -162,6 +179,10 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
      */
     protected function convertDescendantNodeJoinCondition(QOM\DescendantNodeJoinConditionInterface $condition)
     {
+        if (!$this->generator instanceof Sql2Generator) {
+            throw new NotSupportedOperandException('Only SQL2 supports descendant node join condition');
+        }
+
         return $this->generator->evalDescendantNodeJoinCondition(
             $condition->getDescendantSelectorName(),
             $condition->getAncestorSelectorName()
@@ -221,11 +242,16 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
 
         if ($constraint instanceof QOM\PropertyExistenceInterface) {
             return $this->convertPropertyExistence($constraint);
-        } elseif ($constraint instanceof QOM\FullTextSearchInterface) {
+        }
+        if ($constraint instanceof QOM\FullTextSearchInterface) {
             return $this->convertFullTextSearch($constraint);
         }
 
         if ($constraint instanceof QOM\SameNodeInterface) {
+            if (!$this->generator instanceof Sql2Generator) {
+                throw new NotSupportedConstraintException('Only SQL2 supports same node constraint');
+            }
+
             return $this->generator->evalSameNode(
                 $this->convertPath($constraint->getPath()),
                 $constraint->getSelectorName()
@@ -275,31 +301,47 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
         }
 
         if ($operand instanceof QOM\LengthInterface) {
+            if (!$this->generator instanceof Sql2Generator) {
+                throw new NotSupportedOperandException('Only SQL2 supports length operand');
+            }
+
             return $this->generator->evalLength($this->convertPropertyValue($operand->getPropertyValue()));
         }
 
         if ($operand instanceof QOM\NodeNameInterface) {
+            if (!$this->generator instanceof Sql2Generator) {
+                throw new NotSupportedOperandException('Only SQL2 supports node operand');
+            }
+
             return $this->generator->evalNodeName($operand->getSelectorName());
         }
 
         if ($operand instanceof QOM\NodeLocalNameInterface) {
+            if (!$this->generator instanceof Sql2Generator) {
+                throw new NotSupportedOperandException('Only SQL2 supports local node name operand');
+            }
+
             return $this->generator->evalNodeLocalName($operand->getSelectorName());
         }
 
         if ($operand instanceof QOM\FullTextSearchScoreInterface) {
+            if (!$this->generator instanceof Sql2Generator) {
+                throw new NotSupportedOperandException('Only SQL2 supports fulltext search score operand');
+            }
+
             return $this->generator->evalFullTextSearchScore($operand->getSelectorName());
         }
 
         if ($operand instanceof QOM\LowerCaseInterface) {
-            $operand = $this->convertDynamicOperand($operand->getOperand());
+            $operandName = $this->convertDynamicOperand($operand->getOperand());
 
-            return $this->generator->evalLower($operand);
+            return $this->generator->evalLower($operandName);
         }
 
         if ($operand instanceof QOM\UpperCaseInterface) {
-            $operand = $this->convertDynamicOperand($operand->getOperand());
+            $operandName = $this->convertDynamicOperand($operand->getOperand());
 
-            return $this->generator->evalUpper($operand);
+            return $this->generator->evalUpper($operandName);
         }
 
         // This should not happen, but who knows...

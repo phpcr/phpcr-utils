@@ -6,6 +6,8 @@ use PHPCR\SessionInterface;
 use PHPCR\Util\Console\Helper\PhpcrConsoleDumperHelper;
 use PHPCR\Util\Console\Helper\PhpcrHelper;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\DialogHelper;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
@@ -51,20 +53,20 @@ abstract class BaseCommand extends Command
      *
      * @param InputInterface  $input
      * @param OutputInterface $output
-     * @param string          $question
+     * @param string          $questionText
      * @param string          $default
      *
      * @return string
      */
-    protected function ask(InputInterface $input, OutputInterface $output, $question, $default = null)
+    protected function ask(InputInterface $input, OutputInterface $output, $questionText, $default = null)
     {
         if ($this->getHelperSet()->has('question')) {
-            $question = new Question($question, $default);
+            $question = new Question($questionText, $default);
 
-            return $this->getHelper('question')->ask($input, $output, $question);
+            return $this->getQuestionHelper()->ask($input, $output, $question);
         }
 
-        return $this->getHelper('dialog')->ask($output, $question, $default);
+        return $this->getDialogHelper()->ask($output, $questionText, $default);
     }
 
     /**
@@ -72,19 +74,29 @@ abstract class BaseCommand extends Command
      *
      * @param InputInterface  $input
      * @param OutputInterface $output
-     * @param string          $question
+     * @param string          $questionText
      * @param bool            $default
      *
      * @return string
      */
-    protected function askConfirmation(InputInterface $input, OutputInterface $output, $question, $default = true)
+    protected function askConfirmation(InputInterface $input, OutputInterface $output, $questionText, $default = true)
     {
         if ($this->getHelperSet()->has('question')) {
-            $question = new ConfirmationQuestion($question, $default);
+            $question = new ConfirmationQuestion($questionText, $default);
 
-            return $this->getHelper('question')->ask($input, $output, $question);
+            return $this->getQuestionHelper()->ask($input, $output, $question);
         }
 
-        return $this->getHelper('dialog')->askConfirmation($output, $question, $default);
+        return $this->getDialogHelper()->askConfirmation($output, $questionText, $default);
+    }
+
+    private function getQuestionHelper(): QuestionHelper
+    {
+        return $this->getHelper('question');
+    }
+
+    private function getDialogHelper(): DialogHelper
+    {
+        return $this->getHelper('dialog');
     }
 }

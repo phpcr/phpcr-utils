@@ -159,7 +159,15 @@ abstract class TraversingItemVisitor implements ItemVisitorInterface
             $this->entering($item, $this->currentDepth);
             $this->leaving($item, $this->currentDepth);
         } else {
-            /* @var $item NodeInterface */
+            if (!$item instanceof NodeInterface) {
+                throw new RepositoryException(sprintf(
+                    'Internal error in TraversingItemVisitor: item %s at %s is not a node but %s',
+                    $item->getName(),
+                    $item->getPath(),
+                    get_class($item)
+                ));
+            }
+
             try {
                 if ($this->breadthFirst === false) {
                     $this->entering($item, $this->currentDepth);

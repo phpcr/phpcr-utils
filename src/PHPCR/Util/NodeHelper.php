@@ -86,14 +86,14 @@ class NodeHelper
     {
         $root = $session->getRootNode();
 
-        /** @var $property PropertyInterface */
+        /** @var PropertyInterface $property */
         foreach ($root->getProperties() as $property) {
             if (!self::isSystemItem($property)) {
                 $property->remove();
             }
         }
 
-        /** @var $node NodeInterface */
+        /** @var NodeInterface $node */
         foreach ($root->getNodes() as $node) {
             if (!self::isSystemItem($node)) {
                 $node->remove();
