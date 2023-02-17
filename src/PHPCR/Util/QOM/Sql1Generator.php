@@ -64,11 +64,12 @@ class Sql1Generator extends BaseSqlGenerator
     /**
      * Emulate descendant query with LIKE query.
      *
-     * @param string $path
+     * @param string      $path
+     * @param string|null $selectorName Unused
      *
      * @return string
      */
-    public function evalDescendantNode($path)
+    public function evalDescendantNode($path, $selectorName = null)
     {
         $path = $this->getPathForDescendantQuery($path);
 
@@ -161,10 +162,11 @@ class Sql1Generator extends BaseSqlGenerator
      *
      * @param string $selectorName unused in SQL1
      * @param string $propertyName
+     * @param string $colname      unused in SQL1
      *
      * @return string
      */
-    public function evalColumn($selectorName = null, $propertyName = null)
+    public function evalColumn($selectorName = null, $propertyName = null, $colname = null)
     {
         return $propertyName;
     }

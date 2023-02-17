@@ -18,15 +18,15 @@ jobs:
             fail-fast: false
             matrix:
                 include:
-                    - php-version: '7.1'
-                      dependencies: 'lowest'
                     - php-version: '7.2'
+                      dependencies: 'lowest'
                     - php-version: '7.3'
                     - php-version: '7.4'
                     - php-version: '8.0'
                     - php-version: '8.0'
                       dev-dependencies: true
                     - php-version: '8.1'
+                    - php-version: '8.2'
 
         steps:
             - name: Checkout project

@@ -13,7 +13,7 @@ class FileReader extends BufferReader
     /**
      * @var string
      */
-    protected $filePath;
+    protected $path;
 
     /**
      * @param string $path

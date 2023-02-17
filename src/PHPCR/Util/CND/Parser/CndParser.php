@@ -733,11 +733,6 @@ class CndParser extends AbstractParser
             $ops[] = $op;
         } while ($op && $this->checkAndExpectToken(Token::TK_SYMBOL, ','));
 
-        if (empty($ops)) {
-            // There must be at least an operator if this attribute is not variant
-            throw new ParserException($this->tokenQueue, 'Operator expected');
-        }
-
         return $ops;
     }
 

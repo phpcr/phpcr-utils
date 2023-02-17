@@ -23,6 +23,11 @@ class FileReaderTest extends TestCase
      */
     private $lines;
 
+    /**
+     * @var string[]
+     */
+    private $chars;
+
     public function setUp(): void
     {
         $this->filepath = __DIR__.'/../Fixtures/files/TestFile.txt';

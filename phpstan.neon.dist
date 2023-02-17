@@ -1,0 +1,9 @@
+parameters:
+    level: 2
+    paths:
+        - src
+    ignoreErrors:
+        -
+            message: "#Symfony\\\\Component\\\\Console\\\\Helper\\\\DialogHelper#"
+            count: 3
+            path: src/PHPCR/Util/Console/Command/BaseCommand.php

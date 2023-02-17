@@ -58,7 +58,7 @@ class ConsoleDumperNodeVisitor extends ConsoleDumperItemVisitor
     public function visit(ItemInterface $item)
     {
         if (!$item instanceof NodeInterface) {
-            throw new Exception("Internal error: did not expect to visit a non-node object: $item");
+            throw new Exception('Internal error: did not expect to visit a non-node object: '.get_class($item));
         }
 
         if ($item->getDepth() === 0) {

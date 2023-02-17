@@ -107,7 +107,7 @@ EOF
         if ($onlyChildren) {
             $baseNode = $session->getNode($path, 0);
 
-            /** @var $childNode NodeInterface */
+            /** @var NodeInterface $childNode */
             foreach ($baseNode->getNodes() as $childNode) {
                 $childNodePath = $childNode->getPath();
                 $childNode->remove();
