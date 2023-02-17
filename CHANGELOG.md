@@ -1,6 +1,13 @@
 Changelog
 =========
 
+1.7.0
+-----
+
+* Introduced phpstan and fixed a couple of undeclared properties and other findings.
+* Test with PHP 8.2
+* Drop support for PHP 7.1
+
 1.6.3
 -----
 
