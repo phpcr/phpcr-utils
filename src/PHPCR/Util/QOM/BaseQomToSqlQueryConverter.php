@@ -190,9 +190,9 @@ abstract class BaseQomToSqlQueryConverter
             throw new InvalidArgumentException('Unknown full text search expression type '.get_class($expr));
         }
 
-        $expr = $this->generator->evalFullText($expr);
+        $literal = $this->generator->evalFullText($literal);
 
-        return "'$expr'";
+        return "'$literal'";
     }
 
     /**
