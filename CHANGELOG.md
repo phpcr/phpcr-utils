@@ -1,6 +1,11 @@
 Changelog
 =========
 
+1.8.0
+-----
+
+* Fixed handling of QOM fulltext search expression which should never be string but a `QOM\StaticOperandInterface`. 
+
 1.7.0
 -----
 

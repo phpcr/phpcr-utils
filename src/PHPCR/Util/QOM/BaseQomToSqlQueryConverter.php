@@ -4,6 +4,7 @@ namespace PHPCR\Util\QOM;
 
 use InvalidArgumentException;
 use PHPCR\Query\QOM;
+use PHPCR\Query\QOM\StaticOperandInterface;
 
 /**
  * Common base class for the SQL(1) and SQL2 converters.
@@ -170,14 +171,23 @@ abstract class BaseQomToSqlQueryConverter
     /**
      * FullTextSearchExpression ::= BindVariable | ''' FullTextSearchLiteral '''.
      *
-     * @param string $expr
+     * @param string|QOM\StaticOperandInterface $expr
      *
      * @return string
      */
     protected function convertFullTextSearchExpression($expr)
     {
         if ($expr instanceof QOM\BindVariableValueInterface) {
-            return $this->convertBindVariable($expr);
+            return $this->convertBindVariable($expr->getBindVariableName());
+        }
+        if ($expr instanceof QOM\LiteralInterface) {
+            $literal = $expr->getLiteralValue();
+        } elseif (is_string($expr)) {
+            // this should not happen, the interface for full text search declares the return type to be StaticOperandInterface
+            // however, without type checks, jackalope 1.0 got this wrong and returned a string.
+            $literal = $expr;
+        } else {
+            throw new InvalidArgumentException('Unknown full text search expression type '.get_class($expr));
         }
 
         $expr = $this->generator->evalFullText($expr);
