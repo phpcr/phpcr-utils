@@ -114,8 +114,9 @@ class BufferReader implements ReaderInterface
      */
     public function isEof()
     {
-        return $this->currentChar() === $this->getEofMarker()
-            || $this->currentChar() === false
+        $currentChar = $this->currentChar();
+        // substr after end of string returned false in PHP 5 and returns '' since PHP 7
+        return in_array($currentChar, [$this->getEofMarker(), false, ''], true)
             || $this->startPos > strlen($this->buffer)
             || $this->forwardPos > strlen($this->buffer);
     }
