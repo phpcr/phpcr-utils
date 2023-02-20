@@ -4,7 +4,8 @@ Changelog
 1.8.0
 -----
 
-* Fixed handling of QOM fulltext search expression which should never be string but a `QOM\StaticOperandInterface`. 
+* Fixed handling of QOM fulltext search expression which should never be string but a `QOM\StaticOperandInterface`.
+* Fixed EOF detection while parsing CND with PHP 7+. 
 
 1.7.0
 -----
