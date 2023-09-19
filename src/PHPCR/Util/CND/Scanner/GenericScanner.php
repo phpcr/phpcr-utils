@@ -165,13 +165,11 @@ class GenericScanner extends AbstractScanner
         $nextChar = $reader->currentChar();
         foreach ($this->context->getBlockCommentDelimiters() as $beginDelim => $endDelim) {
             if ($nextChar === $beginDelim[0]) {
-
                 // Lookup the start delimiter
                 for ($i = 1; $i <= strlen($beginDelim); $i++) {
                     $reader->forward();
                 }
                 if ($reader->current() === $beginDelim) {
-
                     // Start delimiter found, let's try to find the end delimiter
                     $nextChar = $reader->forwardChar();
 
@@ -223,7 +221,6 @@ class GenericScanner extends AbstractScanner
                 }
 
                 if ($reader->current() === $delimiter) {
-
                     // consume to end of line
                     $char = $reader->currentChar();
                     while (!$reader->isEof() && $char !== "\n") {

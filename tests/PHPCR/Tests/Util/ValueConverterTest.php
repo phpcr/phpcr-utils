@@ -269,9 +269,9 @@ class ValueConverterTest extends TestCase
      * Skip binary target as its a special case.
      *
      * @param mixed $value
-     * @param int   $srcType PropertyType constant to convert from
-     * @param $expected
-     * @param $targetType
+     * @param int   $srcType    PropertyType constant to convert from
+     * @param       $expected
+     * @param       $targetType
      *
      * @dataProvider dataConversionMatrix
      */

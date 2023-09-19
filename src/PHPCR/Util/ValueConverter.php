@@ -167,7 +167,7 @@ class ValueConverter
                     case PropertyType::NAME:
                     case PropertyType::PATH:
                         // TODO: The name/path is converted to qualified form according to the current local namespace mapping (see §3.2.5.2 Qualified Form).
-                         return $value;
+                        return $value;
                     default:
                         if (is_object($value)) {
                             throw new ValueFormatException('Cannot convert object of class "'.get_class($value).'" to STRING');
