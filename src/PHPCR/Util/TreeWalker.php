@@ -125,7 +125,6 @@ class TreeWalker
     public function traverse(NodeInterface $node, $recurse = -1, $level = 0): void
     {
         if ($this->mustVisitNode($node)) {
-
             // Visit node
             if (method_exists($this->nodeVisitor, 'setLevel')) {
                 $this->nodeVisitor->setLevel($level);

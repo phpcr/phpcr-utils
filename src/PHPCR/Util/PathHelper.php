@@ -165,8 +165,7 @@ class PathHelper
         }
         $normalizedPath = count($finalParts) > 1 ?
             implode('/', $finalParts) :
-            '/'  // first element is always the empty-name root element. this might have been a path like /x/..
-;
+            '/';  // first element is always the empty-name root element. this might have been a path like /x/..
 
         if (!self::assertValidAbsolutePath($normalizedPath, $destination, $throw)) {
             return false;

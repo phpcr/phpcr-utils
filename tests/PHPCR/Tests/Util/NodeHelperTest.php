@@ -117,8 +117,7 @@ class NodeHelperTest extends TestCase
 
         $top->expects($this->once())
             ->method('getName')
-            ->willReturn('jcrname') // this is NOT in the jcr namespace
-;
+            ->willReturn('jcrname'); // this is NOT in the jcr namespace
 
         $this->assertFalse(NodeHelper::isSystemItem($top));
 
