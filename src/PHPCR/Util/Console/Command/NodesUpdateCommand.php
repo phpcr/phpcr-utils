@@ -20,12 +20,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class NodesUpdateCommand extends BaseNodeManipulationCommand
 {
-    /**
-     * {@inheritdoc}
-     *
-     * @throws CliInvalidArgumentException
-     */
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
 
@@ -85,12 +80,10 @@ HERE
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @throws CliInvalidArgumentException
      * @throws InvalidArgumentException
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $query = $input->getOption('query');
         $queryLanguage = strtoupper($input->getOption('query-language'));

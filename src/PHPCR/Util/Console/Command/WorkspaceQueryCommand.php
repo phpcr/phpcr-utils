@@ -18,10 +18,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class WorkspaceQueryCommand extends BaseCommand
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
 
@@ -34,10 +31,7 @@ class WorkspaceQueryCommand extends BaseCommand
             ->setHelp('The <info>query</info> command executes a JCR query statement on the content repository');
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $sql = $input->getArgument('query');
         $language = $input->getOption('language');

@@ -24,10 +24,7 @@ class WorkspaceImportCommand extends BaseCommand
         'throw'   => ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW,
     ];
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
 
@@ -62,10 +59,7 @@ EOF
             );
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $filename = $input->getArgument('filename');
         $parentPath = $input->getOption('parentpath');

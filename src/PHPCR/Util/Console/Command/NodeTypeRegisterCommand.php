@@ -26,10 +26,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class NodeTypeRegisterCommand extends BaseCommand
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('phpcr:node-type:register')
@@ -62,11 +59,9 @@ EOT
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @throws InvalidArgumentException
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $definitions = $input->getArgument('cnd-file');
 

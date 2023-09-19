@@ -44,10 +44,7 @@ class PhpcrHelper extends Helper
         return $this->session;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
+    public function getName(): string
     {
         return 'phpcr';
     }

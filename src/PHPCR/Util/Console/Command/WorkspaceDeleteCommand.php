@@ -17,10 +17,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class WorkspaceDeleteCommand extends BaseCommand
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('phpcr:workspace:delete')
@@ -37,10 +34,7 @@ EOT
             );
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $session = $this->getPhpcrSession();
 

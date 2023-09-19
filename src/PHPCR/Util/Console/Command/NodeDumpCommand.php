@@ -23,12 +23,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class NodeDumpCommand extends BaseCommand
 {
-    /**
-     * {@inheritdoc}
-     *
-     * @throws InvalidArgumentException
-     */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('phpcr:node:dump')
@@ -56,13 +51,11 @@ HERE
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @throws InvalidArgumentException
      * @throws Exception
      * @throws RepositoryException
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $session = $this->getPhpcrSession();
         $dumperHelper = $this->getPhpcrConsoleDumperHelper();
