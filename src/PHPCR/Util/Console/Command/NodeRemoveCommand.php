@@ -8,6 +8,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 /**
  * Command to remove all nodes from a path in the workspace of the configured
@@ -79,13 +80,8 @@ EOF
                     'Are you sure you want to recursively delete the path "%s" '.
                     'from workspace "%s"';
             }
-
-            $force = $this->askConfirmation(
-                $input,
-                $output,
-                sprintf('<question>'.$question.' Y/N ?</question>', $path, $workspaceName),
-                false
-            );
+            $confirmationQuestion = new ConfirmationQuestion(sprintf('<question>'.$question.' Y/N ?</question>', $path, $workspaceName), false);
+            $force = $this->getQuestionHelper()->ask($input, $output, $confirmationQuestion);
         }
 
         if (!$force) {

@@ -7,6 +7,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 /**
  * A command to delete a workspace in the PHPCR repository.
@@ -61,10 +62,11 @@ EOT
 
         $force = $input->getOption('force');
         if (!$force) {
-            $force = $this->askConfirmation($input, $output, sprintf(
+            $confirmationQuestion = new ConfirmationQuestion(sprintf(
                 '<question>Are you sure you want to delete workspace "%s" Y/N ?</question>',
                 $workspaceName
             ), false);
+            $force = $this->getQuestionHelper()->ask($input, $output, $confirmationQuestion);
         }
         if (!$force) {
             $output->writeln('<error>Aborted</error>');

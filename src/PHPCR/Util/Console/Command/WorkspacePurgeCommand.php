@@ -6,6 +6,7 @@ use PHPCR\Util\NodeHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 /**
  * Command to remove all non-system nodes and properties in the workspace of
@@ -40,10 +41,11 @@ EOF
 
         $workspaceName = $session->getWorkspace()->getName();
         if (!$force) {
-            $force = $this->askConfirmation($input, $output, sprintf(
+            $confirmationQuestion = new ConfirmationQuestion(sprintf(
                 '<question>Are you sure you want to purge workspace "%s" Y/N ?</question>',
                 $workspaceName
             ), false);
+            $force = $this->getQuestionHelper()->ask($input, $output, $confirmationQuestion);
         }
 
         if (!$force) {

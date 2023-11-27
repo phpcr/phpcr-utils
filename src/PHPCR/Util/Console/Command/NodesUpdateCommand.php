@@ -8,6 +8,7 @@ use Symfony\Component\Console\Exception\InvalidArgumentException as CliInvalidAr
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 /**
  * Command which can update the properties of nodes found
@@ -102,7 +103,7 @@ HERE
             );
         }
 
-        if ('SELECT' !== strtoupper(substr($query, 0, 6))) {
+        if (0 !== stripos($query, 'SELECT')) {
             throw new \InvalidArgumentException("Query doesn't look like a SELECT query: '$query'");
         }
 
@@ -150,16 +151,14 @@ HERE
         return 0;
     }
 
-    /**
-     * @return bool whether to execute the action or not
-     */
-    private function shouldExecute(InputInterface $input, OutputInterface $output, QueryResultInterface $result)
+    private function shouldExecute(InputInterface $input, OutputInterface $output, QueryResultInterface $result): bool
     {
-        $response = strtoupper($this->ask($input, $output, sprintf(
+        $question = new ConfirmationQuestion(sprintf(
             '<question>About to update %d nodes. Enter "Y" to continue, "N" to cancel or "L" to list.</question>',
             count($result->getRows())
-        )));
+        ));
 
+        $response = $this->getQuestionHelper()->ask($input, $output, $question);
         if ('L' === $response) {
             /** @var RowInterface $row */
             foreach ($result as $i => $row) {
