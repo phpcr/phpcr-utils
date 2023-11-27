@@ -1,6 +1,16 @@
 Changelog
 =========
 
+2.x
+---
+
+2.0.0 (unreleased)
+------------------
+
+* Support Symfony 7
+* Test with PHP 8.3
+* Adjusted commands to have the return type declarations.
+
 1.x
 ---
 

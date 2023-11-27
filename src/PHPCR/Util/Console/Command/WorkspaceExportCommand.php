@@ -17,10 +17,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class WorkspaceExportCommand extends BaseCommand
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
 
@@ -42,10 +39,7 @@ EOF
             );
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $session = $this->getPhpcrSession();
         $repo = $session->getRepository();

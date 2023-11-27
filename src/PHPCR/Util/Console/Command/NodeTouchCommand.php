@@ -21,12 +21,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class NodeTouchCommand extends BaseNodeManipulationCommand
 {
-    /**
-     * {@inheritdoc}
-     *
-     * @throws InvalidArgumentException
-     */
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
 
@@ -73,11 +68,9 @@ HERE
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @throws InvalidArgumentException
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $helper = $this->getPhpcrHelper();
         $session = $this->getPhpcrSession();

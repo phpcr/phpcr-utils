@@ -21,12 +21,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class NodeRemoveCommand extends BaseCommand
 {
-    /**
-     * {@inheritdoc}
-     *
-     * @throws CliInvalidArgumentException
-     */
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
 
@@ -53,12 +48,10 @@ EOF
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @throws CliInvalidArgumentException
      * @throws InvalidArgumentException
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $session = $this->getPhpcrSession();
 
