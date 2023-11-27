@@ -15,10 +15,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: PHPStan
-        uses: docker://oskarstark/phpstan-ga
+        uses: docker://oskarstark/phpstan-ga:1.8.0
         with:
           args: analyze --no-progress
 
@@ -30,13 +30,13 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install dependencies
         run: |
           composer update --no-progress
 
       - name: PHPStan
-        uses: docker://oskarstark/phpstan-ga
+        uses: docker://oskarstark/phpstan-ga:1.8.0
         with:
           args: analyze --no-progress -c phpstan.tests.neon.dist
