@@ -26,9 +26,7 @@ class ConsoleDumperNodeVisitor extends ConsoleDumperItemVisitor
     protected bool $showFullPath = false;
 
     /**
-     * Instantiate the console dumper visitor.
-     *
-     * @param bool $identifiers whether to output the node UUID
+     * @param bool $identifiers whether to output the node UUIDs
      */
     public function __construct(OutputInterface $output, bool $identifiers = false)
     {
@@ -36,9 +34,6 @@ class ConsoleDumperNodeVisitor extends ConsoleDumperItemVisitor
         $this->identifiers = $identifiers;
     }
 
-    /**
-     * If to show the full path or not.
-     */
     public function setShowFullPath(bool $showFullPath): void
     {
         $this->showFullPath = $showFullPath;
@@ -46,8 +41,6 @@ class ConsoleDumperNodeVisitor extends ConsoleDumperItemVisitor
 
     /**
      * Print information about the visited node.
-     *
-     * @param ItemInterface $item the node to visit
      *
      * @throws \Exception
      */

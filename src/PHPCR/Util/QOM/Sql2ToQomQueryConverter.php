@@ -6,10 +6,12 @@ namespace PHPCR\Util\QOM;
 
 use PHPCR\PropertyType;
 use PHPCR\Query\InvalidQueryException;
+use PHPCR\Query\QOM\ChildNodeInterface;
 use PHPCR\Query\QOM\ChildNodeJoinConditionInterface;
 use PHPCR\Query\QOM\ColumnInterface;
 use PHPCR\Query\QOM\ComparisonInterface;
 use PHPCR\Query\QOM\ConstraintInterface;
+use PHPCR\Query\QOM\DescendantNodeInterface;
 use PHPCR\Query\QOM\DescendantNodeJoinConditionInterface;
 use PHPCR\Query\QOM\DynamicOperandInterface;
 use PHPCR\Query\QOM\EquiJoinConditionInterface;
@@ -22,6 +24,7 @@ use PHPCR\Query\QOM\PropertyValueInterface;
 use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants;
 use PHPCR\Query\QOM\QueryObjectModelFactoryInterface;
 use PHPCR\Query\QOM\QueryObjectModelInterface;
+use PHPCR\Query\QOM\SameNodeInterface;
 use PHPCR\Query\QOM\SameNodeJoinConditionInterface;
 use PHPCR\Query\QOM\SelectorInterface;
 use PHPCR\Query\QOM\SourceInterface;
@@ -36,16 +39,8 @@ use PHPCR\Util\ValueConverter;
  */
 class Sql2ToQomQueryConverter
 {
-    /**
-     * The factory to create QOM objects.
-     */
     protected QueryObjectModelFactoryInterface $factory;
 
-    /**
-     * Scanner to parse SQL2.
-     *
-     * @var Sql2Scanner;
-     */
     protected Sql2Scanner $scanner;
 
     /**
@@ -64,8 +59,6 @@ class Sql2ToQomQueryConverter
     private ValueConverter $valueConverter;
 
     /**
-     * Instantiate a converter.
-     *
      * @param ValueConverter|null $valueConverter to override default converter
      */
     public function __construct(QueryObjectModelFactoryInterface $factory, ValueConverter $valueConverter = null)
@@ -128,8 +121,6 @@ class Sql2ToQomQueryConverter
     /**
      * 6.7.2. Source
      * Parse an SQL2 source definition and return the corresponding QOM Source.
-     *
-     * @return SourceInterface
      */
     protected function parseSource(): JoinInterface|SourceInterface|SelectorInterface
     {
@@ -225,10 +216,8 @@ class Sql2ToQomQueryConverter
     /**
      * 6.7.7. JoinCondition
      * Parse an SQL2 join condition and return a JoinConditionInterface.
-     *
-     * @return JoinConditionInterface
      */
-    protected function parseJoinCondition(): SameNodeJoinConditionInterface|EquiJoinConditionInterface|DescendantNodeJoinConditionInterface|ChildNodeJoinConditionInterface|JoinConditionInterface
+    protected function parseJoinCondition(): JoinConditionInterface
     {
         $this->scanner->expectToken('ON');
 
@@ -324,7 +313,7 @@ class Sql2ToQomQueryConverter
      *
      * @throws \Exception
      */
-    protected function parseConstraint(ConstraintInterface $lhs = null, int $minprec = 0): FullTextSearchInterface|ComparisonInterface|NotInterface|ConstraintInterface|null
+    protected function parseConstraint(ConstraintInterface $lhs = null, int $minprec = 0): ConstraintInterface|null
     {
         if (null === $lhs) {
             $lhs = $this->parsePrimaryConstraint();
@@ -370,10 +359,8 @@ class Sql2ToQomQueryConverter
 
     /**
      * 6.7.12 Constraint.
-     *
-     * @return ConstraintInterface
      */
-    protected function parsePrimaryConstraint()
+    protected function parsePrimaryConstraint(): ConstraintInterface
     {
         $constraint = null;
         $token = $this->scanner->lookupNextToken();
@@ -519,7 +506,7 @@ class Sql2ToQomQueryConverter
     /**
      * 6.7.20 SameNode.
      */
-    protected function parseSameNode()
+    protected function parseSameNode(): SameNodeInterface
     {
         $this->scanner->expectTokens(['ISSAMENODE', '(']);
         if ($this->scanner->tokenIs($this->scanner->lookupNextToken(1), ',')) {
@@ -538,7 +525,7 @@ class Sql2ToQomQueryConverter
     /**
      * 6.7.21 ChildNode.
      */
-    protected function parseChildNode(): \PHPCR\Query\QOM\ChildNodeInterface
+    protected function parseChildNode(): ChildNodeInterface
     {
         $this->scanner->expectTokens(['ISCHILDNODE', '(']);
         if ($this->scanner->tokenIs($this->scanner->lookupNextToken(1), ',')) {
@@ -557,7 +544,7 @@ class Sql2ToQomQueryConverter
     /**
      * 6.7.22 DescendantNode.
      */
-    protected function parseDescendantNode(): \PHPCR\Query\QOM\DescendantNodeInterface
+    protected function parseDescendantNode(): DescendantNodeInterface
     {
         $this->scanner->expectTokens(['ISDESCENDANTNODE', '(']);
         if ($this->scanner->tokenIs($this->scanner->lookupNextToken(1), ',')) {
@@ -583,7 +570,7 @@ class Sql2ToQomQueryConverter
     protected function parsePath()
     {
         $path = $this->parseLiteralValue();
-        if ('[' === substr($path, 0, 1) && ']' === substr($path, -1)) {
+        if (str_starts_with($path, '[') && str_ends_with($path, ']')) {
             $path = substr($path, 1, -1);
         }
 
@@ -598,7 +585,7 @@ class Sql2ToQomQueryConverter
     protected function parseStaticOperand(): StaticOperandInterface
     {
         $token = $this->scanner->lookupNextToken();
-        if ('$' === substr($token, 0, 1)) {
+        if (str_starts_with($token, '$')) {
             return $this->factory->bindVariable(substr($this->scanner->fetchNextToken(), 1));
         }
 
@@ -614,8 +601,6 @@ class Sql2ToQomQueryConverter
      * 6.7.32 LowerCase
      * 6.7.33 UpperCase
      * Parse an SQL2 dynamic operand.
-     *
-     * @return DynamicOperandInterface
      */
     protected function parseDynamicOperand(): DynamicOperandInterface|PropertyValueInterface
     {
@@ -893,8 +878,8 @@ class Sql2ToQomQueryConverter
      *
      * @param bool $checkSelector whether we need to ensure a valid selector
      *
-     * @return array with selectorName and propertyName. If no selectorName is
-     *               specified, defaults to $this->defaultSelectorName
+     * @return string[] with selectorName and propertyName. If no selectorName is
+     *                  specified, defaults to $this->defaultSelectorName
      */
     private function parseIdentifier(bool $checkSelector = true): array
     {
@@ -939,14 +924,12 @@ class Sql2ToQomQueryConverter
 
     /**
      * Ensure that the parsedName is a valid selector, or return the implicit
-     * selector if its non-ambigous.
-     *
-     * @return string the selector to use
+     * selector if its non-ambiguous.
      *
      * @throws InvalidQueryException if there was no explicit selector and
      *                               there is more than one selector available
      */
-    protected function ensureSelectorName(?string $parsedName): array|string|null
+    protected function ensureSelectorName(?string $parsedName): string|null
     {
         if (null !== $parsedName) {
             if ((is_array($this->implicitSelectorName) && !isset($this->implicitSelectorName[$parsedName]))

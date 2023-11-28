@@ -61,8 +61,6 @@ abstract class TraversingItemVisitor implements ItemVisitorInterface
     protected int $currentDepth;
 
     /**
-     * Constructs a new instance of this class.
-     *
      * @param bool $breadthFirst if $breadthFirst is true then traversal is
      *                           done in a breadth-first manner; otherwise it is done in a
      *                           depth-first manner (which is the default behavior)
@@ -70,8 +68,6 @@ abstract class TraversingItemVisitor implements ItemVisitorInterface
      *                           to which the hierarchy should be traversed (if it's -1, the
      *                           hierarchy will be traversed until there are no more children of the
      *                           current item)
-     *
-     * @api
      */
     public function __construct(bool $breadthFirst = false, int $maxDepth = -1)
     {

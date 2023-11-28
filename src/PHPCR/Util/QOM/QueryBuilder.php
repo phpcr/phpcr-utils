@@ -47,14 +47,14 @@ class QueryBuilder
     private int $maxResults = 0;
 
     /**
-     * @var OrderingInterface[] with the orderings that determine the order of the result
+     * @var OrderingInterface[]
      */
     private array $orderings = [];
 
     private ?ConstraintInterface $constraint = null;
 
     /**
-     * @var ColumnInterface[] the columns to be selected
+     * @var ColumnInterface[]
      */
     private array $columns = [];
 
@@ -67,9 +67,6 @@ class QueryBuilder
      */
     private array $params = [];
 
-    /**
-     * Initializes a new QueryBuilder.
-     */
     public function __construct(
         private QueryObjectModelFactoryInterface $qomFactory
     ) {
@@ -79,19 +76,18 @@ class QueryBuilder
      * Get a query builder instance from an existing query.
      *
      * @param string|QueryObjectModelInterface $statement the statement in the specified language
-     * @param string                           $language  the query language
      *
      * @throws \InvalidArgumentException
      */
-    public function setFromQuery(string|QueryObjectModelInterface $statement, string $language): static
+    public function setFromQuery(string|QueryObjectModelInterface $statement, string $queryLanguage): static
     {
-        if (QueryInterface::JCR_SQL2 === $language) {
+        if (QueryInterface::JCR_SQL2 === $queryLanguage) {
             $converter = new Sql2ToQomQueryConverter($this->qomFactory);
             $statement = $converter->parse($statement);
         }
 
         if (!$statement instanceof QueryObjectModelInterface) {
-            throw new \InvalidArgumentException("Language '$language' not supported");
+            throw new \InvalidArgumentException("Language '$queryLanguage' not supported");
         }
 
         $this->state = self::STATE_DIRTY;
@@ -103,9 +99,6 @@ class QueryBuilder
         return $this;
     }
 
-    /**
-     * Get the associated QOMFactory for this query builder.
-     */
     public function getQOMFactory(): QueryObjectModelFactoryInterface
     {
         return $this->qomFactory;
@@ -121,8 +114,6 @@ class QueryBuilder
 
     /**
      * sets the position of the first result to retrieve (the "offset").
-     *
-     * @param int $firstResult the First result to return
      */
     public function setFirstResult(int $firstResult): static
     {
@@ -144,8 +135,6 @@ class QueryBuilder
 
     /**
      * Sets the maximum number of results to retrieve (the "limit").
-     *
-     * @param int $maxResults the maximum number of results to retrieve
      */
     public function setMaxResults(int $maxResults): static
     {
@@ -164,9 +153,7 @@ class QueryBuilder
     }
 
     /**
-     * Gets the array of orderings.
-     *
-     * @return OrderingInterface[] orderings to apply
+     * @return OrderingInterface[]
      */
     public function getOrderings(): array
     {
@@ -288,9 +275,7 @@ class QueryBuilder
     }
 
     /**
-     * Returns the columns to be selected.
-     *
-     * @return ColumnInterface[] The columns to be selected
+     * @return ColumnInterface[]
      */
     public function getColumns(): array
     {
@@ -298,9 +283,7 @@ class QueryBuilder
     }
 
     /**
-     * Sets the columns to be selected.
-     *
-     * @param ColumnInterface[] $columns The columns to be selected
+     * @param ColumnInterface[] $columns
      */
     public function setColumns(array $columns): static
     {
@@ -348,7 +331,7 @@ class QueryBuilder
     /**
      * Gets the default Selector.
      *
-     * @return SourceInterface the default selector
+     * @return SourceInterface|null the default selector
      */
     public function getSource(): ?SourceInterface
     {
@@ -455,13 +438,10 @@ class QueryBuilder
 
     /**
      * Sets a query parameter for the query being constructed.
-     *
-     * @param string $key   the parameter name
-     * @param mixed  $value the parameter value
      */
-    public function setParameter(string $key, mixed $value): static
+    public function setParameter(string $parameterName, mixed $parameterValue): static
     {
-        $this->params[$key] = $value;
+        $this->params[$parameterName] = $parameterValue;
 
         return $this;
     }
@@ -469,9 +449,9 @@ class QueryBuilder
     /**
      * Gets a (previously set) query parameter of the query being constructed.
      */
-    public function getParameter(string $key): mixed
+    public function getParameter(string $parameterName): mixed
     {
-        return $this->params[$key] ?? null;
+        return $this->params[$parameterName] ?? null;
     }
 
     /**
@@ -487,9 +467,7 @@ class QueryBuilder
     }
 
     /**
-     * Gets all defined query parameters for the query being constructed.
-     *
-     * @return array<string, mixed>
+     * @return array<string, mixed> Map of parameter name => parameter value
      */
     public function getParameters(): array
     {

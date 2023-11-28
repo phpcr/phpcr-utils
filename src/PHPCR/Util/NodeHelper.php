@@ -12,7 +12,6 @@ use PHPCR\NamespaceException;
 use PHPCR\NodeInterface;
 use PHPCR\NodeType\ConstraintViolationException;
 use PHPCR\PathNotFoundException;
-use PHPCR\PropertyInterface;
 use PHPCR\RepositoryException;
 use PHPCR\SessionInterface;
 use PHPCR\Version\VersionException;
@@ -35,7 +34,9 @@ class NodeHelper
     }
 
     /**
-     * Create a node and it's parents, if necessary.  Like mkdir -p.
+     * Create a node and it's parents, if necessary.
+     *
+     * Like mkdir -p.
      *
      * @param SessionInterface $session the PHPCR session to create the path
      * @param string           $path    full path, like /content/jobs/data
@@ -87,14 +88,12 @@ class NodeHelper
     {
         $root = $session->getRootNode();
 
-        /** @var PropertyInterface $property */
         foreach ($root->getProperties() as $property) {
             if (!self::isSystemItem($property)) {
                 $property->remove();
             }
         }
 
-        /** @var NodeInterface $node */
         foreach ($root->getNodes() as $node) {
             if (!self::isSystemItem($node)) {
                 $node->remove();
@@ -106,8 +105,6 @@ class NodeHelper
      * Determine whether this item is to be considered a system item that you
      * usually want to hide and that should not be removed when purging the
      * repository.
-     *
-     * @return bool true if $item is a system item, false otherwise
      *
      * @throws RepositoryException
      */
@@ -282,7 +279,7 @@ class NodeHelper
         $newIndex = array_flip($new);
 
         foreach ($old as $key => $value) {
-            if (!isset($newIndex[$value])) {
+            if (!array_key_exists($value, $newIndex)) {
                 unset($old[$key]);
             }
         }

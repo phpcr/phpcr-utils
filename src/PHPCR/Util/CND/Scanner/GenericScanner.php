@@ -93,11 +93,6 @@ class GenericScanner extends AbstractScanner
         return false;
     }
 
-    /**
-     * Detect and consume strings.
-     *
-     * @throws ScannerException
-     */
     protected function consumeString(ReaderInterface $reader): bool
     {
         $curDelimiter = $reader->currentChar();
@@ -121,9 +116,6 @@ class GenericScanner extends AbstractScanner
         return false;
     }
 
-    /**
-     * Detect and consume comments.
-     */
     protected function consumeComments(ReaderInterface $reader): bool
     {
         if ($this->consumeBlockComments($reader)) {
@@ -133,11 +125,6 @@ class GenericScanner extends AbstractScanner
         return $this->consumeLineComments($reader);
     }
 
-    /**
-     * Detect and consume block comments.
-     *
-     * @throws ScannerException
-     */
     protected function consumeBlockComments(ReaderInterface $reader): bool
     {
         $nextChar = $reader->currentChar();
@@ -184,15 +171,13 @@ class GenericScanner extends AbstractScanner
         return false;
     }
 
-    /**
-     * Detect and consume line comments.
-     */
     protected function consumeLineComments(ReaderInterface $reader): bool
     {
         $nextChar = $reader->currentChar();
         foreach ($this->context->getLineCommentDelimiters() as $delimiter) {
             if ($delimiter && $nextChar === $delimiter[0]) {
-                for ($i = 1; $i <= strlen($delimiter); ++$i) {
+                $delimiterLength = strlen($delimiter);
+                for ($i = 1; $i <= $delimiterLength; ++$i) {
                     $reader->forward();
                 }
 
@@ -218,9 +203,6 @@ class GenericScanner extends AbstractScanner
         return false;
     }
 
-    /**
-     * Detect and consume identifiers.
-     */
     protected function consumeIdentifiers(ReaderInterface $reader): bool
     {
         $nextChar = $reader->currentChar();
@@ -239,9 +221,6 @@ class GenericScanner extends AbstractScanner
         return false;
     }
 
-    /**
-     * Detect and consume symbols.
-     */
     protected function consumeSymbols(ReaderInterface $reader): bool
     {
         $found = false;

@@ -23,9 +23,6 @@ use PHPCR\Util\CND\Scanner\TokenQueue;
  */
 abstract class AbstractParser
 {
-    /**
-     * The token queue.
-     */
     protected TokenQueue $tokenQueue;
 
     /**
@@ -105,7 +102,7 @@ abstract class AbstractParser
      * @param int         $type The expected token type
      * @param string|null $data The expected token data or null
      */
-    protected function checkAndExpectToken(int $type, string $data = null): bool|Token
+    protected function checkAndExpectToken(int $type, string $data = null): false|Token
     {
         if ($this->checkToken($type, $data)) {
             $token = $this->tokenQueue->peek();

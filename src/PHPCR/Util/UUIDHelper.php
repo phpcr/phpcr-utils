@@ -18,8 +18,6 @@ class UUIDHelper
      * Checks if the string could be a UUID.
      *
      * @param string $id Possible uuid
-     *
-     * @return bool true if the test was passed, else false
      */
     public static function isUUID(string $id): bool
     {

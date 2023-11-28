@@ -17,14 +17,8 @@ use PHPCR\PropertyInterface;
  */
 class TreeWalker
 {
-    /**
-     * Visitor for nodes.
-     */
     protected ItemVisitorInterface $nodeVisitor;
 
-    /**
-     * Visitor for properties.
-     */
     protected ?ItemVisitorInterface $propertyVisitor;
 
     /**
@@ -42,8 +36,6 @@ class TreeWalker
     protected array $propertyFilters = [];
 
     /**
-     * Instantiate a tree walker.
-     *
      * @param ItemVisitorInterface      $nodeVisitor     The visitor for the nodes
      * @param ItemVisitorInterface|null $propertyVisitor The visitor for the nodes properties
      */
@@ -53,9 +45,6 @@ class TreeWalker
         $this->propertyVisitor = $propertyVisitor;
     }
 
-    /**
-     * Add a filter to select the nodes that will be traversed.
-     */
     public function addNodeFilter(TreeWalkerFilterInterface $filter): void
     {
         if (!in_array($filter, $this->nodeFilters, true)) {
@@ -63,12 +52,9 @@ class TreeWalker
         }
     }
 
-    /**
-     * Add a filter to select the properties that will be traversed.
-     */
     public function addPropertyFilter(TreeWalkerFilterInterface $filter): void
     {
-        if (!in_array($filter, $this->propertyFilters)) {
+        if (!in_array($filter, $this->propertyFilters, true)) {
             $this->propertyFilters[] = $filter;
         }
     }
@@ -102,10 +88,8 @@ class TreeWalker
     }
 
     /**
-     * Traverse a node.
-     *
      * @param int $recurse Max recursion level
-     * @param int $level   Recursion level
+     * @param int $level   Current recursion level
      */
     public function traverse(NodeInterface $node, int $recurse = -1, int $level = 0): void
     {

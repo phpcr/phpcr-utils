@@ -124,13 +124,12 @@ class PathHelper
      * @param bool   $throw       whether to throw an exception if validation fails or
      *                            just to return false
      *
-     * @return string The normalized path or false if $throw was false and the path invalid
-     * @return string The normalized path or false if $throw was false and the path invalid
+     * @return false|string The normalized path or false if $throw was false and the path invalid
      *
      * @throws RepositoryException if the path is not a valid absolute path and
      *                             $throw is true
      */
-    public static function normalizePath(string $path, bool $destination = false, bool $throw = true): bool|string
+    public static function normalizePath(string $path, bool $destination = false, bool $throw = true): false|string
     {
         if ('' === $path) {
             return self::error('Path must not be of zero length', $throw);
@@ -184,13 +183,13 @@ class PathHelper
      * @param bool   $throw       whether to throw an exception if validation fails or
      *                            just to return false
      *
-     * @return string The normalized, absolute path or false if $throw was
-     *                false and the path invalid
+     * @return false|string The normalized, absolute path or false if $throw was
+     *                      false and the path invalid
      *
      * @throws RepositoryException if the path can not be made into a valid
      *                             absolute path and $throw is true
      */
-    public static function absolutizePath(string $path, string $context, bool $destination = false, bool $throw = true): bool|string
+    public static function absolutizePath(string $path, string $context, bool $destination = false, bool $throw = true): false|string
     {
         if ('' === $path) {
             return self::error('Path must not be of zero length', $throw);
@@ -214,9 +213,9 @@ class PathHelper
      * @param string $context The absolute path to an ancestor of $path
      * @param bool   $throw   whether to throw exceptions on invalid data
      *
-     * @return string The relative path from $context to $path
+     * @return false|string The relative path from $context to $path
      */
-    public static function relativizePath(string $path, string $context, bool $throw = true): bool|string
+    public static function relativizePath(string $path, string $context, bool $throw = true): false|string
     {
         if (!str_starts_with($path, $context)) {
             return self::error("$path is not within $context", $throw);
@@ -278,8 +277,6 @@ class PathHelper
      *
      * @param string $path a valid absolute path
      *
-     * @return string The localname
-     *
      * @throws RepositoryException
      */
     public static function getLocalNodeName(string $path): string
@@ -313,7 +310,7 @@ class PathHelper
      * @param string $msg   the exception message to use in case of throw being true
      * @param bool   $throw whether to throw the exception or return false
      *
-     * @return bool false
+     * @return false
      *
      * @throws RepositoryException
      */

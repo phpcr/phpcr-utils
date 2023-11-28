@@ -68,8 +68,8 @@ class Sql1Generator extends BaseSqlGenerator
      * PropertyExistence ::=
      *   propertyName 'IS NOT NULL'.
      *
-     * @param string $selectorName declared to simplifiy interface - as there
-     *                             are no joins in SQL1 there is no need for a selector
+     * @param string|null $selectorName declared to simplifiy interface - as there
+     *                                  are no joins in SQL1 there is no need for a selector
      */
     public function evalPropertyExistence(?string $selectorName, string $propertyName): string
     {
