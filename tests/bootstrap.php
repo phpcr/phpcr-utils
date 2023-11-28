@@ -5,7 +5,7 @@
  * @author Nacho Martín <nitram.ohcan@gmail.com>
  * @license http://www.apache.org/licenses/LICENSE-2.0 Apache Software License 2.0
  *
- * @link http://phpcr.github.io/
+ * @see http://phpcr.github.io/
  */
 
 // $file2 for run tests if phpcr-utils lib inside of vendor directory.

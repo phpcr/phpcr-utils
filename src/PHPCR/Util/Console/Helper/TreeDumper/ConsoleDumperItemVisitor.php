@@ -28,8 +28,6 @@ abstract class ConsoleDumperItemVisitor implements ItemVisitorInterface
 
     /**
      * Instantiate the console dumper visitor.
-     *
-     * @param OutputInterface $output
      */
     public function __construct(OutputInterface $output)
     {

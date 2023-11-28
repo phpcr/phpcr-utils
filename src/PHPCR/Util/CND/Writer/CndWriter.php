@@ -44,7 +44,7 @@ class CndWriter
      * @param NodeTypeTemplateInterface[] $nodeTypes
      *
      * @return string with declarations for all non-system namespaces and for
-     *                all node types in that array.
+     *                all node types in that array
      */
     public function writeString(array $nodeTypes)
     {

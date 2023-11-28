@@ -34,7 +34,7 @@ abstract class AbstractParser
      * Return false otherwise.
      *
      * @param int         $type       The expected token type
-     * @param null|string $data       The expected data or null
+     * @param string|null $data       The expected data or null
      * @param bool        $ignoreCase whether to do string comparisons case insensitive or sensitive
      *
      * @return bool
@@ -65,8 +65,7 @@ abstract class AbstractParser
     /**
      * Check if the token data is one of the elements of the data array.
      *
-     * @param int   $type
-     * @param array $data
+     * @param int $type
      *
      * @return bool
      */
@@ -86,11 +85,11 @@ abstract class AbstractParser
      * otherwise throw an exception.
      *
      * @param int         $type The expected token type
-     * @param null|string $data The expected token data or null
-     *
-     * @throws ParserException
+     * @param string|null $data The expected token data or null
      *
      * @return Token
+     *
+     * @throws ParserException
      */
     protected function expectToken($type, $data = null)
     {
@@ -110,7 +109,7 @@ abstract class AbstractParser
      * return false.
      *
      * @param int         $type The expected token type
-     * @param null|string $data The expected token data or null
+     * @param string|null $data The expected token data or null
      *
      * @return bool|Token
      */

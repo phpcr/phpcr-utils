@@ -1,6 +1,0 @@
-preset: recommended
-
-enabled:
-  - no_useless_else
-disabled:
-  - align_double_arrow

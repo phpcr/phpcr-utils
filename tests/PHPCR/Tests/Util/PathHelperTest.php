@@ -6,7 +6,6 @@ use PHPCR\NamespaceException;
 use PHPCR\RepositoryException;
 use PHPCR\Util\PathHelper;
 use PHPUnit\Framework\TestCase;
-use stdClass;
 
 class PathHelperTest extends TestCase
 {
@@ -172,7 +171,7 @@ class PathHelperTest extends TestCase
             ['bar'],
             ['/foo/bar/'],
             [''],
-            [new stdClass()],
+            [new \stdClass()],
         ];
     }
 
@@ -219,7 +218,7 @@ class PathHelperTest extends TestCase
             ['', '/context', false],
             [null,    '/context',    false],
             ['foo',        null,    false],
-            [new stdClass(), '/context', false],
+            [new \stdClass(), '/context', false],
             ['foo[2]',  '/bar', true],
         ];
     }

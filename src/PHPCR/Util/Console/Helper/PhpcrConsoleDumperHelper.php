@@ -20,9 +20,9 @@ class PhpcrConsoleDumperHelper extends Helper
     public function getTreeWalker(OutputInterface $output, $options)
     {
         $options = array_merge([
-            'dump_uuids'     => false,
-            'ref_format'     => 'uuid',
-            'show_props'     => false,
+            'dump_uuids' => false,
+            'ref_format' => 'uuid',
+            'show_props' => false,
             'show_sys_nodes' => false,
         ], $options);
 

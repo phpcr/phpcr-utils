@@ -139,7 +139,7 @@ class NodeHelperTest extends TestCase
 
         $expected = [
             'three' => null,
-            'two'   => 'four', // TODO: this is an unnecessary but harmless NOOP. we should try to eliminate
+            'two' => 'four', // TODO: this is an unnecessary but harmless NOOP. we should try to eliminate
         ];
 
         $this->assertEquals($expected, $reorders);
@@ -154,7 +154,7 @@ class NodeHelperTest extends TestCase
 
         $expected = [
             'three' => 'two',
-            'two'   => null,
+            'two' => null,
         ];
 
         $this->assertEquals($expected, $reorders);
@@ -169,8 +169,8 @@ class NodeHelperTest extends TestCase
 
         $expected = [
             'three' => 'two',
-            'two'   => 'one',
-            'one'   => null,
+            'two' => 'one',
+            'one' => null,
         ];
         $this->assertEquals($expected, $reorders);
     }
@@ -183,8 +183,8 @@ class NodeHelperTest extends TestCase
         $reorders = NodeHelper::calculateOrderBefore($old, $new);
 
         $expected = [
-            'two'   => null,
-            'one'   => 'three', // TODO: this is an unnecessary but harmless NOOP. we should try to eliminate
+            'two' => null,
+            'one' => 'three', // TODO: this is an unnecessary but harmless NOOP. we should try to eliminate
         ];
 
         $this->assertEquals($expected, $reorders);
@@ -197,7 +197,7 @@ class NodeHelperTest extends TestCase
     {
         $nodes = [];
 
-        for ($i = 0; $i < 100000; $i++) {
+        for ($i = 0; $i < 100000; ++$i) {
             $nodes[] = 'test'.$i;
         }
 

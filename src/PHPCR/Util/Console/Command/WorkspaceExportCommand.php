@@ -58,7 +58,7 @@ EOF
 
             return 2;
         }
-        $session->exportSystemView($path, $stream, $input->getOption('skip_binary') === 'yes', $input->getOption('recurse') === 'no');
+        $session->exportSystemView($path, $stream, 'yes' === $input->getOption('skip_binary'), 'no' === $input->getOption('recurse'));
 
         $output->writeln(sprintf(
             '<info>Successfully exported workspace "%s", path "%s" to file "%s".</info>',

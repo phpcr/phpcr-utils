@@ -31,7 +31,7 @@ class TokenQueue implements \IteratorAggregate
 
     public function isEof()
     {
-        return current($this->tokens) === false;
+        return false === current($this->tokens);
     }
 
     public function peek($offset = 0)
@@ -52,7 +52,7 @@ class TokenQueue implements \IteratorAggregate
     public function get($count = 1)
     {
         $item = null;
-        for ($i = 1; $i <= $count; $i++) {
+        for ($i = 1; $i <= $count; ++$i) {
             $item = $this->peek();
             $this->next();
         }

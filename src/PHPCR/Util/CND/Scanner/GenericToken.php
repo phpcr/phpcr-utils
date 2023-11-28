@@ -9,14 +9,14 @@ namespace PHPCR\Util\CND\Scanner;
  */
 class GenericToken extends Token
 {
-    const TK_WHITESPACE = 0;
-    const TK_NEWLINE = 1;
-    const TK_STRING = 2;
-    const TK_COMMENT = 3;
-    const TK_IDENTIFIER = 4;
-    const TK_KEYWORD = 5;
-    const TK_SYMBOL = 6;
-    const TK_UNKNOWN = 99;
+    public const TK_WHITESPACE = 0;
+    public const TK_NEWLINE = 1;
+    public const TK_STRING = 2;
+    public const TK_COMMENT = 3;
+    public const TK_IDENTIFIER = 4;
+    public const TK_KEYWORD = 5;
+    public const TK_SYMBOL = 6;
+    public const TK_UNKNOWN = 99;
 
     public static function getTypeName($type)
     {

@@ -53,7 +53,7 @@ class WorkspaceImportCommandTest extends BaseCommandTest
             ->with('/', 'test_import.xml', ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW);
 
         $ct = $this->executeCommand('phpcr:workspace:import', [
-            'filename'        => 'test_import.xml',
+            'filename' => 'test_import.xml',
             '--uuid-behavior' => 'throw',
         ]);
 

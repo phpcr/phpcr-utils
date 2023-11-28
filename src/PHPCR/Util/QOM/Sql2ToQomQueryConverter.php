@@ -2,10 +2,6 @@
 
 namespace PHPCR\Util\QOM;
 
-use DateTime;
-use Exception;
-use InvalidArgumentException;
-use LogicException;
 use PHPCR\PropertyType;
 use PHPCR\Query\InvalidQueryException;
 use PHPCR\Query\QOM\ChildNodeJoinConditionInterface;
@@ -67,7 +63,7 @@ class Sql2ToQomQueryConverter
      *
      * @var string|array
      */
-    protected $implicitSelectorName = null;
+    protected $implicitSelectorName;
 
     /**
      * @var ValueConverter
@@ -77,8 +73,7 @@ class Sql2ToQomQueryConverter
     /**
      * Instantiate a converter.
      *
-     * @param QueryObjectModelFactoryInterface $factory
-     * @param ValueConverter                   $valueConverter To override default converter.
+     * @param ValueConverter $valueConverter to override default converter
      */
     public function __construct(QueryObjectModelFactoryInterface $factory, ValueConverter $valueConverter = null)
     {
@@ -92,9 +87,9 @@ class Sql2ToQomQueryConverter
      *
      * @param string $sql2
      *
-     * @throws InvalidQueryException
-     *
      * @return QueryObjectModelInterface
+     *
+     * @throws InvalidQueryException
      */
     public function parse($sql2)
     {
@@ -106,7 +101,7 @@ class Sql2ToQomQueryConverter
         $constraint = null;
         $orderings = [];
 
-        while ($this->scanner->lookupNextToken() !== '') {
+        while ('' !== $this->scanner->lookupNextToken()) {
             switch (strtoupper($this->scanner->lookupNextToken())) {
                 case 'SELECT':
                     $this->scanner->expectToken('SELECT');
@@ -213,9 +208,9 @@ class Sql2ToQomQueryConverter
     /**
      * 6.7.6. Join type.
      *
-     * @throws InvalidQueryException
-     *
      * @return string
+     *
+     * @throws InvalidQueryException
      */
     protected function parseJoinType()
     {
@@ -352,18 +347,18 @@ class Sql2ToQomQueryConverter
      * @param ConstraintInterface $lhs     Left hand side
      * @param int                 $minprec Precedence
      *
-     * @throws Exception
-     *
      * @return ConstraintInterface
+     *
+     * @throws \Exception
      */
     protected function parseConstraint($lhs = null, $minprec = 0)
     {
-        if ($lhs === null) {
+        if (null === $lhs) {
             $lhs = $this->parsePrimaryConstraint();
         }
 
         $opprec = [
-            'OR'  => 1,
+            'OR' => 1,
             'AND' => 2,
         ];
 
@@ -391,7 +386,7 @@ class Sql2ToQomQueryConverter
                     // this only happens if the operator is
                     // in the $opprec-array but there is no
                     // "elseif"-branch here for this operator.
-                    throw new Exception("Internal error: No action is defined for operator '$op'");
+                    throw new \Exception("Internal error: No action is defined for operator '$op'");
             }
 
             $op = strtoupper($this->scanner->lookupNextToken());
@@ -442,14 +437,14 @@ class Sql2ToQomQueryConverter
                 }
             }
 
-            if ($constraint === null) {
+            if (null === $constraint) {
                 // It's not a property existence neither, then it's a comparison
                 $constraint = $this->parseComparison();
             }
         }
 
         // No constraint read,
-        if ($constraint === null) {
+        if (null === $constraint) {
             throw new InvalidQueryException("Syntax error: constraint expected in '{$this->sql2}'");
         }
 
@@ -471,9 +466,9 @@ class Sql2ToQomQueryConverter
     /**
      * 6.7.16 Comparison.
      *
-     * @throws InvalidQueryException
-     *
      * @return ComparisonInterface
+     *
+     * @throws InvalidQueryException
      */
     protected function parseComparison()
     {
@@ -623,7 +618,7 @@ class Sql2ToQomQueryConverter
     protected function parsePath()
     {
         $path = $this->parseLiteralValue();
-        if (substr($path, 0, 1) === '[' && substr($path, -1) === ']') {
+        if ('[' === substr($path, 0, 1) && ']' === substr($path, -1)) {
             $path = substr($path, 1, -1);
         }
 
@@ -640,7 +635,7 @@ class Sql2ToQomQueryConverter
     protected function parseStaticOperand()
     {
         $token = $this->scanner->lookupNextToken();
-        if (substr($token, 0, 1) === '$') {
+        if ('$' === substr($token, 0, 1)) {
             return $this->factory->bindVariable(substr($this->scanner->fetchNextToken(), 1));
         }
 
@@ -751,7 +746,7 @@ class Sql2ToQomQueryConverter
     protected function parseCastLiteral($token)
     {
         if (!$this->scanner->tokenIs($token, 'CAST')) {
-            throw new LogicException('parseCastLiteral when not a CAST');
+            throw new \LogicException('parseCastLiteral when not a CAST');
         }
 
         $this->scanner->expectToken('(');
@@ -772,7 +767,7 @@ class Sql2ToQomQueryConverter
 
         try {
             $typeValue = PropertyType::valueFromName($type);
-        } catch (InvalidArgumentException $e) {
+        } catch (\InvalidArgumentException $e) {
             throw new InvalidQueryException("Syntax error: attempting to cast to an invalid type '$type'");
         }
 
@@ -780,7 +775,7 @@ class Sql2ToQomQueryConverter
 
         try {
             $token = $this->valueConverter->convertType($token, $typeValue, PropertyType::STRING);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw new InvalidQueryException("Syntax error: attempting to cast string '$token' to type '$type'");
         }
 
@@ -790,8 +785,6 @@ class Sql2ToQomQueryConverter
     /**
      * 6.7.34 Literal
      * Parse an SQL2 literal value.
-     *
-     * @return mixed
      */
     protected function parseLiteralValue()
     {
@@ -812,13 +805,13 @@ class Sql2ToQomQueryConverter
                 if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $token)) {
                     $token .= ' 00:00:00';
                 }
-                $token = DateTime::createFromFormat('Y-m-d H:i:s', $token);
+                $token = \DateTime::createFromFormat('Y-m-d H:i:s', $token);
             }
         } elseif (is_numeric($token)) {
-            $token = strpos($token, '.') === false ? (int) $token : (float) $token;
-        } elseif ($token === 'true') {
+            $token = false === strpos($token, '.') ? (int) $token : (float) $token;
+        } elseif ('true' === $token) {
             $token = true;
-        } elseif ($token === 'false') {
+        } elseif ('false' === $token) {
             $token = false;
         }
 
@@ -883,7 +876,7 @@ class Sql2ToQomQueryConverter
     protected function scanColumns()
     {
         // Wildcard
-        if ($this->scanner->lookupNextToken() === '*') {
+        if ('*' === $this->scanner->lookupNextToken()) {
             $this->scanner->fetchNextToken();
 
             return [];
@@ -896,7 +889,7 @@ class Sql2ToQomQueryConverter
             $columns[] = $this->scanColumn();
 
             // Are there more columns?
-            if ($this->scanner->lookupNextToken() !== ',') {
+            if (',' !== $this->scanner->lookupNextToken()) {
                 $hasNext = false;
             } else {
                 $this->scanner->fetchNextToken();
@@ -933,7 +926,7 @@ class Sql2ToQomQueryConverter
     {
         $token = $this->scanner->fetchNextToken();
 
-        if (substr($token, 0, 1) === '[' && substr($token, -1) === ']') {
+        if ('[' === substr($token, 0, 1) && ']' === substr($token, -1)) {
             // Remove brackets around the selector name
             $token = substr($token, 1, -1);
         }
@@ -944,7 +937,7 @@ class Sql2ToQomQueryConverter
     /**
      * Parse something that is expected to be a property identifier.
      *
-     * @param bool $checkSelector whether we need to ensure a valid selector.
+     * @param bool $checkSelector whether we need to ensure a valid selector
      *
      * @return array with selectorName and propertyName. If no selectorName is
      *               specified, defaults to $this->defaultSelectorName
@@ -954,7 +947,7 @@ class Sql2ToQomQueryConverter
         $token = $this->fetchTokenWithoutBrackets();
 
         // selector.property
-        if ($this->scanner->lookupNextToken() === '.') {
+        if ('.' === $this->scanner->lookupNextToken()) {
             $selectorName = $token;
             $this->scanner->fetchNextToken();
             $propertyName = $this->fetchTokenWithoutBrackets();
@@ -998,10 +991,10 @@ class Sql2ToQomQueryConverter
      *
      * @param string|null $parsedName
      *
-     * @throws InvalidQueryException if there was no explicit selector and
-     *                               there is more than one selector available.
-     *
      * @return string the selector to use
+     *
+     * @throws InvalidQueryException if there was no explicit selector and
+     *                               there is more than one selector available
      */
     protected function ensureSelectorName($parsedName)
     {
@@ -1044,7 +1037,7 @@ class Sql2ToQomQueryConverter
     /**
      * Build a single SQL2 column definition.
      *
-     * @param array $data with selector name, property name and column name.
+     * @param array $data with selector name, property name and column name
      *
      * @return ColumnInterface
      */

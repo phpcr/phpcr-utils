@@ -2,7 +2,6 @@
 
 namespace PHPCR\Util\Console\Helper;
 
-use Exception;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 use PHPCR\SessionInterface;
@@ -54,19 +53,19 @@ class PhpcrHelper extends Helper
      *
      * Provides common processing for both touch and update commands.
      *
-     * @param OutputInterface $output     used for status updates.
-     * @param NodeInterface   $node       the node to manipulate.
-     * @param array           $operations to execute on that node.
+     * @param OutputInterface $output     used for status updates
+     * @param NodeInterface   $node       the node to manipulate
+     * @param array           $operations to execute on that node
      */
     public function processNode(OutputInterface $output, NodeInterface $node, array $operations)
     {
         $operations = array_merge([
-            'setProp'       => [],
-            'removeProp'    => [],
-            'addMixins'     => [],
-            'removeMixins'  => [],
+            'setProp' => [],
+            'removeProp' => [],
+            'addMixins' => [],
+            'removeMixins' => [],
             'applyClosures' => [],
-            'dump'          => false,
+            'dump' => false,
         ], $operations);
 
         foreach ($operations['setProp'] as $set) {
@@ -164,9 +163,9 @@ class PhpcrHelper extends Helper
     /**
      * Check if this is a supported query language.
      *
-     * @param string $language Language name.
+     * @param string $language language name
      *
-     * @throws \Exception if the language is not supported.
+     * @throws \Exception if the language is not supported
      */
     protected function validateQueryLanguage($language)
     {
@@ -178,7 +177,7 @@ class PhpcrHelper extends Helper
             }
         }
 
-        throw new Exception(sprintf(
+        throw new \Exception(sprintf(
             'Query language "%s" not supported, available query languages: %s',
             $language,
             implode(',', $langs)

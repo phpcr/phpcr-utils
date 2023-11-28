@@ -2,7 +2,6 @@
 
 namespace PHPCR\Util\Console\Command;
 
-use Exception;
 use PHPCR\ItemNotFoundException;
 use PHPCR\PathNotFoundException;
 use PHPCR\RepositoryException;
@@ -52,7 +51,7 @@ HERE
 
     /**
      * @throws InvalidArgumentException
-     * @throws Exception
+     * @throws \Exception
      * @throws RepositoryException
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -72,7 +71,7 @@ HERE
         $options['max_line_length'] = $input->getOption('max_line_length');
 
         if (null !== $options['ref_format'] && !in_array($options['ref_format'], ['uuid', 'path'])) {
-            throw new Exception('The ref-format option must be set to either "path" or "uuid"');
+            throw new \Exception('The ref-format option must be set to either "path" or "uuid"');
         }
 
         $walker = $dumperHelper->getTreeWalker($output, $options);

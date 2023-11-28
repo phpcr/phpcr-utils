@@ -84,7 +84,7 @@ abstract class BaseCommandTest extends TestCase
             ->getMock();
 
         $this->helperSet = new HelperSet([
-            'phpcr'                => new PhpcrHelper($this->session),
+            'phpcr' => new PhpcrHelper($this->session),
             'phpcr_console_dumper' => $this->dumperHelper,
         ]);
 

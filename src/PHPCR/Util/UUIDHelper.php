@@ -17,7 +17,7 @@ class UUIDHelper
      *
      * @param string $id Possible uuid
      *
-     * @return bool True if the test was passed, else false.
+     * @return bool true if the test was passed, else false
      */
     public static function isUUID($id)
     {

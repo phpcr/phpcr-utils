@@ -115,6 +115,7 @@ class BufferReader implements ReaderInterface
     public function isEof()
     {
         $currentChar = $this->currentChar();
+
         // substr after end of string returned false in PHP 5 and returns '' since PHP 7
         return in_array($currentChar, [$this->getEofMarker(), false, ''], true)
             || $this->startPos > strlen($this->buffer)
@@ -129,12 +130,12 @@ class BufferReader implements ReaderInterface
     public function forward()
     {
         if ($this->forwardPos < strlen($this->buffer)) {
-            $this->forwardPos++;
-            $this->nextCurCol++;
+            ++$this->forwardPos;
+            ++$this->nextCurCol;
         }
 
-        if ($this->current() === "\n") {
-            $this->nextCurLine++;
+        if ("\n" === $this->current()) {
+            ++$this->nextCurLine;
             $this->nextCurCol = 1;
         }
 

@@ -2,7 +2,6 @@
 
 namespace PHPCR\Tests\Util\QOM;
 
-use DateTime;
 use PHPCR\Util\QOM\Sql1Generator;
 use PHPCR\Util\ValueConverter;
 use PHPUnit\Framework\TestCase;
@@ -27,7 +26,7 @@ class Sql1GeneratorTest extends TestCase
 
     public function testDateTimeLiteral()
     {
-        $literal = $this->generator->evalLiteral(new DateTime('2011-12-23T00:00:00.000+00:00'));
+        $literal = $this->generator->evalLiteral(new \DateTime('2011-12-23T00:00:00.000+00:00'));
         $this->assertEquals("TIMESTAMP '2011-12-23T00:00:00.000+00:00'", $literal);
     }
 

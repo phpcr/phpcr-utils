@@ -70,8 +70,8 @@ class Sql2Scanner
     public function fetchNextToken()
     {
         $token = $this->lookupNextToken();
-        if ($token !== '') {
-            $this->curpos += 1;
+        if ('' !== $token) {
+            ++$this->curpos;
         }
 
         return trim($token);
@@ -150,17 +150,17 @@ class Sql2Scanner
         $isEscaped = false;
         $escapedQuotesCount = 0;
         $splitString = \str_split($sql2);
-        for ($index = 0; $index < count($splitString); $index++) {
+        for ($index = 0; $index < count($splitString); ++$index) {
             $character = $splitString[$index];
             if (!$stringStartCharacter && in_array($character, [' ', "\t", "\n", "\r"], true)) {
-                if ($currentToken !== '') {
+                if ('' !== $currentToken) {
                     $tokens[] = $currentToken;
                 }
                 $currentToken = '';
                 continue;
             }
             if (!$stringStartCharacter && in_array($character, $tokenEndChars, true)) {
-                if ($currentToken !== '') {
+                if ('' !== $currentToken) {
                     $tokens[] = $currentToken;
                 }
                 $tokens[] = $character;
@@ -169,8 +169,8 @@ class Sql2Scanner
             }
 
             // Handling the squared brackets in queries
-            if (!$isEscaped && $character === '[') {
-                if ($currentToken !== '') {
+            if (!$isEscaped && '[' === $character) {
+                if ('' !== $currentToken) {
                     $tokens[] = $currentToken;
                 }
                 $stringSize = $this->parseBrackets($sql2, $index);
@@ -188,13 +188,13 @@ class Sql2Scanner
                 // Checking if the previous or next value is a ' to handle the weird SQL strings
                 // This will not check if the amount of quotes is even
                 $nextCharacter = $splitString[$index + 1] ?? '';
-                if ($character === "'" && $nextCharacter === "'") {
+                if ("'" === $character && "'" === $nextCharacter) {
                     $isEscaped = true;
-                    $escapedQuotesCount++;
+                    ++$escapedQuotesCount;
                     continue;
                 }
                 // If the escaped quotes are not paired up. eg. "I'''m cool" would be a parsing error
-                if ($escapedQuotesCount % 2 == 1 && $stringStartCharacter !== "'") {
+                if (1 == $escapedQuotesCount % 2 && "'" !== $stringStartCharacter) {
                     throw new InvalidQueryException("Syntax error: Number of single quotes to be even: $currentToken");
                 }
                 if ($character === $stringStartCharacter) {
@@ -213,9 +213,9 @@ class Sql2Scanner
                     }
                 }
             }
-            $isEscaped = $character === '\\';
+            $isEscaped = '\\' === $character;
         }
-        if ($currentToken !== '') {
+        if ('' !== $currentToken) {
             $tokens[] = $currentToken;
         }
 

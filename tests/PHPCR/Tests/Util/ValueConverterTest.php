@@ -2,7 +2,6 @@
 
 namespace PHPCR\Tests\Util;
 
-use DateTime;
 use PHPCR\PropertyType;
 use PHPCR\RepositoryException;
 use PHPCR\Tests\Stubs\MockNode;
@@ -49,7 +48,7 @@ class ValueConverterTest extends TestCase
         fwrite($uuidStream, '38b7cf18-c417-477a-af0b-c1e92a290c9a');
         rewind($uuidStream);
 
-        $datetimeLong = new DateTime();
+        $datetimeLong = new \DateTime();
         $datetimeLong->setTimestamp(123);
 
         $nodeMock = $this->createMock(MockNode::class);
@@ -70,7 +69,7 @@ class ValueConverterTest extends TestCase
             ['test string', PropertyType::STRING, 0.0, PropertyType::DOUBLE],
             ['249.39', PropertyType::STRING, 249.39, PropertyType::DOUBLE],
             ['test string', PropertyType::STRING, null, PropertyType::DATE],
-            ['17.12.2010 GMT', PropertyType::STRING, new DateTime('17.12.2010 GMT'), PropertyType::DATE],
+            ['17.12.2010 GMT', PropertyType::STRING, new \DateTime('17.12.2010 GMT'), PropertyType::DATE],
             ['test string', PropertyType::STRING, true, PropertyType::BOOLEAN],
             ['false', PropertyType::STRING, true, PropertyType::BOOLEAN],
             ['', PropertyType::STRING, false, PropertyType::BOOLEAN],
@@ -91,7 +90,7 @@ class ValueConverterTest extends TestCase
             [$stream, PropertyType::BINARY, 0.0, PropertyType::DOUBLE],
             [$numberStream, PropertyType::BINARY, 123.456, PropertyType::DOUBLE],
             [$stream, PropertyType::BINARY, null, PropertyType::DATE],
-            [$dateStream, PropertyType::BINARY, new DateTime('17.12.2010 GMT'), PropertyType::DATE],
+            [$dateStream, PropertyType::BINARY, new \DateTime('17.12.2010 GMT'), PropertyType::DATE],
             [$stream, PropertyType::BINARY, true, PropertyType::BOOLEAN],
             [$nameStream, PropertyType::BINARY, 'test', PropertyType::NAME],
             // TODO: should we move UUIDHelper to phpcr so we can check in PropertyType? [$stream, PropertyType::STRING, null, PropertyType::REFERENCE],
@@ -268,10 +267,7 @@ class ValueConverterTest extends TestCase
     /**
      * Skip binary target as its a special case.
      *
-     * @param mixed $value
-     * @param int   $srcType    PropertyType constant to convert from
-     * @param       $expected
-     * @param       $targetType
+     * @param int $srcType PropertyType constant to convert from
      *
      * @dataProvider dataConversionMatrix
      */
@@ -286,9 +282,9 @@ class ValueConverterTest extends TestCase
                 $this->assertTrue(true); // make it assert something
             }
         } else {
-            if ($expected instanceof DateTime) {
+            if ($expected instanceof \DateTime) {
                 $result = $this->valueConverter->convertType($value, $targetType, $srcType);
-                $this->assertInstanceOf(DateTime::class, $result);
+                $this->assertInstanceOf(\DateTime::class, $result);
                 $this->assertEquals($expected->getTimestamp(), $result->getTimestamp());
             } else {
                 $this->assertSame($expected, $this->valueConverter->convertType($value, $targetType, $srcType));
@@ -308,11 +304,11 @@ class ValueConverterTest extends TestCase
         $string = stream_get_contents($stream);
         $this->assertEquals('test string', $string);
 
-        $date = new DateTime('20.12.2012');
+        $date = new \DateTime('20.12.2012');
         $stream = $this->valueConverter->convertType($date, PropertyType::BINARY);
         $this->assertIsResource($stream);
         $string = stream_get_contents($stream);
-        $readDate = new DateTime($string);
+        $readDate = new \DateTime($string);
         $this->assertEquals($date->getTimestamp(), $readDate->getTimestamp());
 
         $stream = fopen('php://memory', '+rw');
@@ -335,8 +331,8 @@ class ValueConverterTest extends TestCase
         $this->assertIsArray($result);
         $this->assertCount(2, $result);
 
-        $this->assertInstanceOf(DateTime::class, $result[0]);
-        $this->assertInstanceOf(DateTime::class, $result[1]);
+        $this->assertInstanceOf(\DateTime::class, $result[0]);
+        $this->assertInstanceOf(\DateTime::class, $result[1]);
 
         $this->assertEquals('2012-01-10', $result[0]->format('Y-m-d'));
         $this->assertEquals('2012-02-12', $result[1]->format('Y-m-d'));
@@ -347,13 +343,13 @@ class ValueConverterTest extends TestCase
 
     public function testConvertTypeAutodetect()
     {
-        $date = new DateTime('2012-10-10');
+        $date = new \DateTime('2012-10-10');
         $result = $this->valueConverter->convertType($date, PropertyType::STRING);
-        $result = new DateTime($result);
+        $result = new \DateTime($result);
         $this->assertEquals($date->getTimestamp(), $result->getTimestamp());
 
         $result = $this->valueConverter->convertType('2012-03-13T21:00:55.000+01:00', PropertyType::DATE);
-        $this->assertInstanceOf(DateTime::class, $result);
+        $this->assertInstanceOf(\DateTime::class, $result);
         $this->assertEquals(1331668855, $result->getTimestamp());
     }
 

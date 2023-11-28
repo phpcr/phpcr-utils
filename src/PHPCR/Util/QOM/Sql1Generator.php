@@ -27,13 +27,11 @@ class Sql1Generator extends BaseSqlGenerator
     /**
      * Helper method to emulate descendant with LIKE query on path property.
      *
-     * @param $path
-     *
      * @return string
      */
     protected function getPathForDescendantQuery($path)
     {
-        if ($path === '/') {
+        if ('/' === $path) {
             $sql1 = '/%';
         } else {
             $path = trim($path, "\"'/");
@@ -81,7 +79,7 @@ class Sql1Generator extends BaseSqlGenerator
      *   propertyName 'IS NOT NULL'.
      *
      * @param string $selectorName declared to simplifiy interface - as there
-     *                             are no joins in SQL1 there is no need for a selector.
+     *                             are no joins in SQL1 there is no need for a selector
      * @param string $propertyName
      *
      * @return string
@@ -117,21 +115,19 @@ class Sql1Generator extends BaseSqlGenerator
     /**
      * columns ::= (Column ',' {Column}) | '*'.
      *
-     * @param $columns
-     *
      * @return string
      */
     public function evalColumns($columns)
     {
         if ((!is_array($columns) && !$columns instanceof \Countable)
-            || count($columns) === 0
+            || 0 === count($columns)
         ) {
             return 's';
         }
 
         $sql1 = '';
         foreach ($columns as $column) {
-            if ($sql1 !== '') {
+            if ('' !== $sql1) {
                 $sql1 .= ', ';
             }
 

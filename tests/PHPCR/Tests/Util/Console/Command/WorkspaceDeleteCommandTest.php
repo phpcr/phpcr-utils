@@ -38,7 +38,7 @@ class WorkspaceDeleteCommandTest extends BaseCommandTest
             ->with('test_workspace');
 
         $ct = $this->executeCommand('phpcr:workspace:delete', [
-            'name'    => 'test_workspace',
+            'name' => 'test_workspace',
             '--force' => 'true',
         ]);
 
@@ -56,7 +56,7 @@ class WorkspaceDeleteCommandTest extends BaseCommandTest
             ->willReturn(['default', 'other']);
 
         $ct = $this->executeCommand('phpcr:workspace:delete', [
-            'name'    => 'test_workspace',
+            'name' => 'test_workspace',
             '--force' => 'true',
         ]);
 

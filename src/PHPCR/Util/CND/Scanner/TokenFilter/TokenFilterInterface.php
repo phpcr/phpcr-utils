@@ -14,9 +14,7 @@ interface TokenFilterInterface
     /**
      * @abstract
      *
-     * @param Token $token
-     *
-     * @return Token | null
+     * @return Token|null
      */
     public function filter(Token $token);
 }

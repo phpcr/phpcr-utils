@@ -1,5 +1,5 @@
 cli-config.php
-
+.php-cs-fixer.cache
 vendor/
 composer.phar
 composer.lock

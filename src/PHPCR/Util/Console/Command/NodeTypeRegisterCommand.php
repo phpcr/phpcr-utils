@@ -2,7 +2,6 @@
 
 namespace PHPCR\Util\Console\Command;
 
-use InvalidArgumentException;
 use PHPCR\NodeType\NodeTypeExistsException;
 use PHPCR\RepositoryException;
 use PHPCR\SessionInterface;
@@ -17,7 +16,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * See the link below for the cnd definition.
  *
- * @link http://jackrabbit.apache.org/node-type-notation.html
+ * @see http://jackrabbit.apache.org/node-type-notation.html
  *
  * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
  * @license http://opensource.org/licenses/MIT MIT License
@@ -59,14 +58,14 @@ EOT
     }
 
     /**
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $definitions = $input->getArgument('cnd-file');
 
-        if (count($definitions) == 0) {
-            throw new InvalidArgumentException('At least one definition (i.e. file or folder) must be specified');
+        if (0 == count($definitions)) {
+            throw new \InvalidArgumentException('At least one definition (i.e. file or folder) must be specified');
         }
 
         $allowUpdate = $input->getOption('allow-update');
@@ -79,7 +78,7 @@ EOT
             $cnd = file_get_contents($filePath);
             $this->updateFromCnd($output, $session, $cnd, $allowUpdate);
             $output->writeln(sprintf('Node type definition: <info>%s</info>', $filePath));
-            $count++;
+            ++$count;
         }
 
         $output->writeln(sprintf('%d node definition(s) registered', $count));
@@ -93,7 +92,7 @@ EOT
      * @param OutputInterface  $output      the console output stream
      * @param SessionInterface $session     the PHPCR session to talk to
      * @param string           $cnd         the compact namespace and node type definition in string form
-     * @param bool             $allowUpdate whether to allow updating existing node types.
+     * @param bool             $allowUpdate whether to allow updating existing node types
      *
      * @throws RepositoryException on other errors
      */
@@ -120,9 +119,9 @@ EOT
      *
      * @param array $definitions List of files of folders
      *
-     * @throws InvalidArgumentException
+     * @return array array of full paths to all the type node definition files
      *
-     * @return array Array of full paths to all the type node definition files.
+     * @throws \InvalidArgumentException
      */
     protected function getFilePaths($definitions)
     {
@@ -140,7 +139,7 @@ EOT
                     $filePath = sprintf('%s/%s', $definition, $file);
 
                     if (!is_readable($filePath)) {
-                        throw new InvalidArgumentException(
+                        throw new \InvalidArgumentException(
                             sprintf("Node type definition file '<info>%s</info>' does not have read permissions.", $file)
                         );
                     }
@@ -149,7 +148,7 @@ EOT
                 }
             } else {
                 if (!file_exists($definition)) {
-                    throw new InvalidArgumentException(
+                    throw new \InvalidArgumentException(
                         sprintf("Node type definition file / folder '<info>%s</info>' does not exist.", $definition)
                     );
                 }
@@ -163,6 +162,6 @@ EOT
 
     protected function fileIsNodeType($filename)
     {
-        return substr($filename, -4) === '.cnd';
+        return '.cnd' === substr($filename, -4);
     }
 }

@@ -75,7 +75,7 @@ class WorkspaceCreateCommandTest extends BaseCommandTest
         $tester = $this->executeCommand(
             'phpcr:workspace:create',
             [
-                'name'              => 'test',
+                'name' => 'test',
                 '--ignore-existing' => true,
             ],
             0

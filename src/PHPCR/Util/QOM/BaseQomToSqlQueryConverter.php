@@ -2,7 +2,6 @@
 
 namespace PHPCR\Util\QOM;
 
-use InvalidArgumentException;
 use PHPCR\Query\QOM;
 use PHPCR\Query\QOM\StaticOperandInterface;
 
@@ -23,8 +22,6 @@ abstract class BaseQomToSqlQueryConverter
 
     /**
      * Instantiate the converter.
-     *
-     * @param BaseSqlGenerator $generator
      */
     public function __construct(BaseSqlGenerator $generator)
     {
@@ -37,8 +34,6 @@ abstract class BaseQomToSqlQueryConverter
      *     ['WHERE' Constraint]
      *     ['ORDER BY' orderings].
      *
-     * @param QOM\QueryObjectModelInterface $query
-     *
      * @return string
      */
     public function convert(QOM\QueryObjectModelInterface $query)
@@ -48,7 +43,7 @@ abstract class BaseQomToSqlQueryConverter
         $constraint = '';
         $orderings = '';
 
-        if ($query->getConstraint() !== null) {
+        if (null !== $query->getConstraint()) {
             $constraint = $this->convertConstraint($query->getConstraint());
         }
 
@@ -62,8 +57,6 @@ abstract class BaseQomToSqlQueryConverter
     /**
      * Convert a source. This is different between SQL1 and SQL2.
      *
-     * @param QOM\SourceInterface $source
-     *
      * @return string
      */
     abstract protected function convertSource(QOM\SourceInterface $source);
@@ -71,26 +64,18 @@ abstract class BaseQomToSqlQueryConverter
     /**
      * Convert a constraint. This is different between SQL1 and SQL2.
      *
-     * @param QOM\ConstraintInterface $constraint
-     *
      * @return string
      */
     abstract protected function convertConstraint(QOM\ConstraintInterface $constraint);
 
     /**
      * Convert dynamic operand. This is different between SQL1 and SQL2.
-     *
-     * @param QOM\DynamicOperandInterface $operand
-     *
-     * @return mixed
      */
     abstract protected function convertDynamicOperand(QOM\DynamicOperandInterface $operand);
 
     /**
      * Selector ::= nodeTypeName ['AS' selectorName]
      * nodeTypeName ::= Name.
-     *
-     * @param QOM\SelectorInterface $selector
      *
      * @return string
      */
@@ -113,8 +98,6 @@ abstract class BaseQomToSqlQueryConverter
      * GreaterThanOrEqualTo ::= '>='
      * Like ::= 'LIKE'
      *
-     * @param QOM\ComparisonInterface $comparison
-     *
      * @return string
      */
     protected function convertComparison(QOM\ComparisonInterface $comparison)
@@ -136,8 +119,6 @@ abstract class BaseQomToSqlQueryConverter
      *   Note: The negation, 'NOT x IS NOT NULL'
      *      can be written 'x IS NULL'
      *
-     * @param QOM\PropertyExistenceInterface $constraint
-     *
      * @return string
      */
     protected function convertPropertyExistence(QOM\PropertyExistenceInterface $constraint)
@@ -156,8 +137,6 @@ abstract class BaseQomToSqlQueryConverter
      *                      // If only one selector exists in this query,
      *                         explicit specification of the selectorName
      *                         preceding the propertyName is optional.
-     *
-     * @param QOM\FullTextSearchInterface $constraint
      *
      * @return string
      */
@@ -187,7 +166,7 @@ abstract class BaseQomToSqlQueryConverter
             // however, without type checks, jackalope 1.0 got this wrong and returned a string.
             $literal = $expr;
         } else {
-            throw new InvalidArgumentException('Unknown full text search expression type '.get_class($expr));
+            throw new \InvalidArgumentException('Unknown full text search expression type '.get_class($expr));
         }
 
         $literal = $this->generator->evalFullText($literal);
@@ -210,11 +189,9 @@ abstract class BaseQomToSqlQueryConverter
      * BindVariableValue ::= '$'bindVariableName
      * bindVariableName ::= Prefix
      *
-     * @param QOM\StaticOperandInterface $operand
-     *
-     * @throws InvalidArgumentException
-     *
      * @return string
+     *
+     * @throws \InvalidArgumentException
      */
     protected function convertStaticOperand(QOM\StaticOperandInterface $operand)
     {
@@ -226,13 +203,11 @@ abstract class BaseQomToSqlQueryConverter
         }
 
         // This should not happen, but who knows...
-        throw new InvalidArgumentException('Invalid operand');
+        throw new \InvalidArgumentException('Invalid operand');
     }
 
     /**
      * PropertyValue ::= [selectorName'.'] propertyName     // If only one selector exists.
-     *
-     * @param QOM\PropertyValueInterface $value
      *
      * @return string
      */
@@ -296,8 +271,6 @@ abstract class BaseQomToSqlQueryConverter
 
     /**
      * Literal ::= CastLiteral | UncastLiteral.
-     *
-     * @param mixed $literal
      *
      * @return string
      */

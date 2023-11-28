@@ -51,10 +51,8 @@ abstract class BaseCommand extends Command
     /**
      * Ask a question with the question helper or the dialog helper for symfony < 2.5 compatibility.
      *
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     * @param string          $questionText
-     * @param string          $default
+     * @param string $questionText
+     * @param string $default
      *
      * @return string
      */
@@ -72,10 +70,8 @@ abstract class BaseCommand extends Command
     /**
      * Ask for confirmation with the question helper or the dialog helper for symfony < 2.5 compatibility.
      *
-     * @param InputInterface  $input
-     * @param OutputInterface $output
-     * @param string          $questionText
-     * @param bool            $default
+     * @param string $questionText
+     * @param bool   $default
      *
      * @return string
      */

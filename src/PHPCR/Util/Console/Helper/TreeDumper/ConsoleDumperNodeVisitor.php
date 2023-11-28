@@ -2,7 +2,6 @@
 
 namespace PHPCR\Util\Console\Helper\TreeDumper;
 
-use Exception;
 use PHPCR\ItemInterface;
 use PHPCR\NodeInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -29,8 +28,7 @@ class ConsoleDumperNodeVisitor extends ConsoleDumperItemVisitor
     /**
      * Instantiate the console dumper visitor.
      *
-     * @param OutputInterface $output
-     * @param bool            $identifiers whether to output the node UUID
+     * @param bool $identifiers whether to output the node UUID
      */
     public function __construct(OutputInterface $output, $identifiers = false)
     {
@@ -53,15 +51,15 @@ class ConsoleDumperNodeVisitor extends ConsoleDumperItemVisitor
      *
      * @param ItemInterface $item the node to visit
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function visit(ItemInterface $item)
     {
         if (!$item instanceof NodeInterface) {
-            throw new Exception('Internal error: did not expect to visit a non-node object: '.get_class($item));
+            throw new \Exception('Internal error: did not expect to visit a non-node object: '.get_class($item));
         }
 
-        if ($item->getDepth() === 0) {
+        if (0 === $item->getDepth()) {
             $name = 'ROOT';
         } elseif ($this->showFullPath) {
             $name = $item->getPath();

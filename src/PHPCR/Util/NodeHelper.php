@@ -2,7 +2,6 @@
 
 namespace PHPCR\Util;
 
-use InvalidArgumentException;
 use PHPCR\ItemExistsException;
 use PHPCR\ItemInterface;
 use PHPCR\ItemNotFoundException;
@@ -39,15 +38,15 @@ class NodeHelper
      * @param SessionInterface $session the PHPCR session to create the path
      * @param string           $path    full path, like /content/jobs/data
      *
-     * @throws InvalidArgumentException
+     * @return NodeInterface the last node of the path, i.e. data
+     *
+     * @throws \InvalidArgumentException
      * @throws RepositoryException
      * @throws PathNotFoundException
      * @throws ItemExistsException
      * @throws LockException
      * @throws ConstraintViolationException
      * @throws VersionException
-     *
-     * @return NodeInterface the last node of the path, i.e. data
      */
     public static function createPath(SessionInterface $session, $path)
     {
@@ -104,8 +103,6 @@ class NodeHelper
     /**
      * Kept as alias of purgeWorkspace for BC compatibility.
      *
-     * @param SessionInterface $session
-     *
      * @throws RepositoryException
      *
      * @deprecated
@@ -120,11 +117,9 @@ class NodeHelper
      * usually want to hide and that should not be removed when purging the
      * repository.
      *
-     * @param ItemInterface $item
+     * @return bool true if $item is a system item, false otherwise
      *
      * @throws RepositoryException
-     *
-     * @return bool true if $item is a system item, false otherwise
      */
     public static function isSystemItem(ItemInterface $item)
     {
@@ -133,7 +128,7 @@ class NodeHelper
         }
         $name = $item->getName();
 
-        return strpos($name, 'jcr:') === 0 || strpos($name, 'rep:') === 0;
+        return 0 === strpos($name, 'jcr:') || 0 === strpos($name, 'rep:');
     }
 
     /**
@@ -142,17 +137,17 @@ class NodeHelper
      * This method only checks for valid namespaces. All other exceptions must
      * be thrown by the addNodeAutoNamed implementation.
      *
-     * @param string[] $usedNames        list of child names that is currently used and may not be chosen.
-     * @param string[] $namespaces       namespace prefix to uri map of all currently known namespaces.
-     * @param string   $defaultNamespace namespace prefix to use if the hint does not specify.
+     * @param string[] $usedNames        list of child names that is currently used and may not be chosen
+     * @param string[] $namespaces       namespace prefix to uri map of all currently known namespaces
+     * @param string   $defaultNamespace namespace prefix to use if the hint does not specify
      * @param string   $nameHint         the name hint according to the API definition
+     *
+     * @return string A valid node name for this node
      *
      * @throws NamespaceException  if a namespace prefix is provided in the
      *                             $nameHint which does not exist and this implementation performs
-     *                             this validation immediately.
+     *                             this validation immediately
      * @throws RepositoryException
-     *
-     * @return string A valid node name for this node
      */
     public static function generateAutoNodeName($usedNames, $namespaces, $defaultNamespace, $nameHint = null)
     {
@@ -179,7 +174,7 @@ class NodeHelper
          * valid namespace prefix
          */
         if (':' === $nameHint[strlen($nameHint) - 1]
-            && substr_count($nameHint, ':') === 1
+            && 1 === substr_count($nameHint, ':')
             && preg_match('#^[a-zA-Z][a-zA-Z0-9]*:$#', $nameHint)
         ) {
             $prefix = substr($nameHint, 0, -1);
@@ -288,13 +283,13 @@ class NodeHelper
      * @param array $new new order
      *
      * @return array the keys are elements to move, values the destination to
-     *               move before or null to move to the end.
+     *               move before or null to move to the end
      */
     public static function calculateOrderBefore(array $old, array $new)
     {
         $reorders = [];
 
-        //check for deleted items
+        // check for deleted items
         $newIndex = array_flip($new);
 
         foreach ($old as $key => $value) {
@@ -310,22 +305,22 @@ class NodeHelper
         $len = count($new) - 1;
         $oldIndex = array_flip($old);
 
-        //go backwards on the new node order and arrange them this way
-        for ($i = $len; $i >= 0; $i--) {
-            //get the name of the child node
+        // go backwards on the new node order and arrange them this way
+        for ($i = $len; $i >= 0; --$i) {
+            // get the name of the child node
             $current = $new[$i];
-            //check if it's not the last node
+            // check if it's not the last node
             if (isset($new[$i + 1])) {
                 // get the name of the next node
                 $next = $new[$i + 1];
-                //if in the old order $c and next are not neighbors already, do the reorder command
+                // if in the old order $c and next are not neighbors already, do the reorder command
                 if ($oldIndex[$current] + 1 != $oldIndex[$next]) {
                     $reorders[$current] = $next;
                     $old = self::orderBeforeArray($current, $next, $old);
                     $oldIndex = array_flip($old);
                 }
             } else {
-                //check if it's not already at the end of the nodes
+                // check if it's not already at the end of the nodes
                 if ($oldIndex[$current] != $len) {
                     $reorders[$current] = null;
                     $old = self::orderBeforeArray($current, null, $old);
@@ -346,9 +341,9 @@ class NodeHelper
      *                            to be ordered before, null to move to the end
      * @param array  $list        the array of names
      *
-     * @throws ItemNotFoundException if $srcChildRelPath or $destChildRelPath are not found in $nodes
-     *
      * @return array The updated $nodes array with new order
+     *
+     * @throws ItemNotFoundException if $srcChildRelPath or $destChildRelPath are not found in $nodes
      */
     public static function orderBeforeArray($name, $destination, $list)
     {
@@ -360,19 +355,19 @@ class NodeHelper
             throw new ItemNotFoundException("$name is not a child of this node");
         }
 
-        if ($destination == null) {
+        if (null == $destination) {
             // null means move to end
             unset($list[$oldpos]);
             $list[] = $name;
         } else {
             // insert before element $destination
             $newpos = array_search($destination, $list);
-            if ($newpos === false) {
+            if (false === $newpos) {
                 throw new ItemNotFoundException("$destination is not a child of this node");
             }
             if ($oldpos < $newpos) {
                 // we first unset, the position will change by one
-                $newpos--;
+                --$newpos;
             }
             unset($list[$oldpos]);
             array_splice($list, $newpos, 0, $name);

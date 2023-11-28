@@ -2,7 +2,6 @@
 
 namespace PHPCR\Util\Console\Helper\TreeDumper;
 
-use Exception;
 use PHPCR\ItemInterface;
 use PHPCR\PropertyInterface;
 use PHPCR\PropertyType;
@@ -35,14 +34,13 @@ class ConsoleDumperPropertyVisitor extends ConsoleDumperItemVisitor
     /**
      * Instantiate property visitor.
      *
-     * @param OutputInterface $output
-     * @param array           $options
+     * @param array $options
      */
     public function __construct(OutputInterface $output, $options = [])
     {
         $options = array_merge([
             'max_line_length' => 120,
-            'ref_format'      => 'uuid',
+            'ref_format' => 'uuid',
         ], $options);
 
         parent::__construct($output);
@@ -56,12 +54,12 @@ class ConsoleDumperPropertyVisitor extends ConsoleDumperItemVisitor
      *
      * @param ItemInterface $item the property to visit
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function visit(ItemInterface $item)
     {
         if (!$item instanceof PropertyInterface) {
-            throw new Exception(sprintf('Internal error: did not expect to visit a non-property object: %s', is_object($item) ? get_class($item) : $item));
+            throw new \Exception(sprintf('Internal error: did not expect to visit a non-property object: %s', is_object($item) ? get_class($item) : $item));
         }
 
         $value = $item->getString();
