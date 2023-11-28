@@ -11,12 +11,9 @@ use PHPCR\Util\CND\Reader\ReaderInterface;
  */
 abstract class AbstractScanner
 {
-    /**
-     * @var TokenQueue
-     */
-    private $queue;
+    private TokenQueue $queue;
 
-    protected $context;
+    protected Context\ScannerContext $context;
 
     public function __construct(Context\ScannerContext $context)
     {
@@ -24,15 +21,12 @@ abstract class AbstractScanner
         $this->context = $context;
     }
 
-    public function resetQueue()
+    public function resetQueue(): void
     {
         $this->queue = new TokenQueue();
     }
 
-    /**
-     * @return Token|void
-     */
-    public function applyFilters(Token $token)
+    public function applyFilters(Token $token): ?Token
     {
         foreach ($this->context->getTokenFilters() as $filter) {
             $token = $filter->filter($token);
@@ -45,12 +39,12 @@ abstract class AbstractScanner
         return $token;
     }
 
-    protected function getQueue()
+    protected function getQueue(): TokenQueue
     {
         return $this->queue;
     }
 
-    protected function addToken(ReaderInterface $reader, Token $token)
+    protected function addToken(ReaderInterface $reader, Token $token): void
     {
         $token->setLine($reader->getCurrentLine());
         $token->setRow($reader->getCurrentColumn());

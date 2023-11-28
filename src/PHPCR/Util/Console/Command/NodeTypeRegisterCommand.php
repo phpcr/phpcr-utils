@@ -64,7 +64,7 @@ EOT
     {
         $definitions = $input->getArgument('cnd-file');
 
-        if (0 == count($definitions)) {
+        if (0 === count($definitions)) {
             throw new \InvalidArgumentException('At least one definition (i.e. file or folder) must be specified');
         }
 
@@ -96,7 +96,7 @@ EOT
      *
      * @throws RepositoryException on other errors
      */
-    protected function updateFromCnd(OutputInterface $output, SessionInterface $session, $cnd, $allowUpdate)
+    protected function updateFromCnd(OutputInterface $output, SessionInterface $session, string $cnd, bool $allowUpdate): void
     {
         $ntm = $session->getWorkspace()->getNodeTypeManager();
 
@@ -117,13 +117,13 @@ EOT
      * Return a list of node type definition file paths from
      * the given definition files or folders.
      *
-     * @param array $definitions List of files of folders
+     * @param string[] $definitions List of files or folders
      *
-     * @return array array of full paths to all the type node definition files
+     * @return string[] list of available node type definition files
      *
      * @throws \InvalidArgumentException
      */
-    protected function getFilePaths($definitions)
+    protected function getFilePaths(array $definitions): array
     {
         $filePaths = [];
 
@@ -160,8 +160,8 @@ EOT
         return $filePaths;
     }
 
-    protected function fileIsNodeType($filename)
+    protected function fileIsNodeType(string $filename): bool
     {
-        return '.cnd' === substr($filename, -4);
+        return str_ends_with($filename, '.cnd');
     }
 }

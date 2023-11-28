@@ -14,23 +14,20 @@ class TokenFilterChain implements TokenFilterInterface
     /**
      * @var TokenFilterInterface[]
      */
-    protected $filters;
+    protected array $filters;
 
-    public function addFilter(TokenFilterInterface $filter)
+    public function addFilter(TokenFilterInterface $filter): void
     {
         $this->filters[] = $filter;
     }
 
-    /**
-     * @return Token|null
-     */
-    public function filter(Token $token)
+    public function filter(Token $token): ?Token
     {
         foreach ($this->filters as $filter) {
             $token = $filter->filter($token);
 
             if (!$token) {
-                return;
+                return null;
             }
         }
 

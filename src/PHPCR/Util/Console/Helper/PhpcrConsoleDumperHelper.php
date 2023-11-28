@@ -17,7 +17,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class PhpcrConsoleDumperHelper extends Helper
 {
-    public function getTreeWalker(OutputInterface $output, $options)
+    public function getTreeWalker(OutputInterface $output, $options): TreeWalker
     {
         $options = array_merge([
             'dump_uuids' => false,

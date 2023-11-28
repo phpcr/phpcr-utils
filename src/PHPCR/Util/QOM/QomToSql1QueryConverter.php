@@ -15,11 +15,9 @@ class QomToSql1QueryConverter extends BaseQomToSqlQueryConverter
     /**
      * Source ::= Selector.
      *
-     * @return string
-     *
      * @throws \InvalidArgumentException
      */
-    protected function convertSource(QOM\SourceInterface $source)
+    protected function convertSource(QOM\SourceInterface $source): string
     {
         if ($source instanceof QOM\SelectorInterface) {
             return $this->convertSelector($source);
@@ -37,12 +35,10 @@ class QomToSql1QueryConverter extends BaseQomToSqlQueryConverter
      * Or ::= constraint1 'OR' constraint2
      * Not ::= 'NOT' Constraint
      *
-     * @return string
-     *
      * @throws \InvalidArgumentException
      * @throws NotSupportedConstraintException
      */
-    protected function convertConstraint(QOM\ConstraintInterface $constraint)
+    protected function convertConstraint(QOM\ConstraintInterface $constraint): string
     {
         if ($constraint instanceof QOM\AndInterface) {
             return $this->generator->evalAnd(
@@ -68,12 +64,13 @@ class QomToSql1QueryConverter extends BaseQomToSqlQueryConverter
 
         if ($constraint instanceof QOM\PropertyExistenceInterface) {
             return $this->convertPropertyExistence($constraint);
-        } elseif ($constraint instanceof QOM\FullTextSearchInterface) {
+        }
+        if ($constraint instanceof QOM\FullTextSearchInterface) {
             return $this->convertFullTextSearch($constraint);
         }
 
         if ($constraint instanceof QOM\SameNodeInterface) {
-            throw new NotSupportedConstraintException($constraint);
+            throw NotSupportedConstraintException::fromConstraint($constraint);
         }
 
         if ($constraint instanceof QOM\ChildNodeInterface) {
@@ -100,43 +97,41 @@ class QomToSql1QueryConverter extends BaseQomToSqlQueryConverter
      * LowerCase ::= 'LOWER(' DynamicOperand ')'
      * UpperCase ::= 'UPPER(' DynamicOperand ')'
      *
-     * @return string
-     *
      * @throws NotSupportedOperandException
      * @throws \InvalidArgumentException
      */
-    protected function convertDynamicOperand(QOM\DynamicOperandInterface $operand)
+    protected function convertDynamicOperand(QOM\DynamicOperandInterface $operand): string
     {
         if ($operand instanceof QOM\PropertyValueInterface) {
             return $this->convertPropertyValue($operand);
         }
 
         if ($operand instanceof QOM\LengthInterface) {
-            throw new NotSupportedOperandException($operand);
+            throw NotSupportedOperandException::fromOperand($operand);
         }
 
         if ($operand instanceof QOM\NodeNameInterface) {
-            throw new NotSupportedOperandException($operand);
+            throw NotSupportedOperandException::fromOperand($operand);
         }
 
         if ($operand instanceof QOM\NodeLocalNameInterface) {
-            throw new NotSupportedOperandException($operand);
+            throw NotSupportedOperandException::fromOperand($operand);
         }
 
         if ($operand instanceof QOM\FullTextSearchScoreInterface) {
-            throw new NotSupportedOperandException($operand);
+            throw NotSupportedOperandException::fromOperand($operand);
         }
 
         if ($operand instanceof QOM\LowerCaseInterface) {
-            $operand = $this->convertDynamicOperand($operand->getOperand());
+            $operandText = $this->convertDynamicOperand($operand->getOperand());
 
-            return $this->generator->evalLower($operand);
+            return $this->generator->evalLower($operandText);
         }
 
         if ($operand instanceof QOM\UpperCaseInterface) {
-            $operand = $this->convertDynamicOperand($operand->getOperand());
+            $operandText = $this->convertDynamicOperand($operand->getOperand());
 
-            return $this->generator->evalUpper($operand);
+            return $this->generator->evalUpper($operandText);
         }
 
         // This should not happen, but who knows...

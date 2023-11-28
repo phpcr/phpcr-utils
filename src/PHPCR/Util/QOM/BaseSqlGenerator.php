@@ -14,10 +14,7 @@ use PHPCR\Util\ValueConverter;
  */
 abstract class BaseSqlGenerator
 {
-    /**
-     * @var ValueConverter
-     */
-    protected $valueConverter;
+    protected ValueConverter $valueConverter;
 
     public function __construct(ValueConverter $valueConverter)
     {
@@ -29,15 +26,8 @@ abstract class BaseSqlGenerator
      *     'FROM' Source
      *     ['WHERE' Constraint]
      *     ['ORDER BY' orderings].
-     *
-     * @param string $source
-     * @param string $columns
-     * @param string $constraint
-     * @param string $orderings
-     *
-     * @return string
      */
-    public function evalQuery($source, $columns, $constraint = '', $orderings = '')
+    public function evalQuery(string $source, string $columns, string $constraint = '', string $orderings = ''): string
     {
         $sql = "SELECT $columns FROM $source";
 
@@ -54,52 +44,32 @@ abstract class BaseSqlGenerator
 
     /**
      * And ::= constraint1 'AND' constraint2.
-     *
-     * @param string $constraint1
-     * @param string $constraint2
-     *
-     * @return string
      */
-    public function evalAnd($constraint1, $constraint2)
+    public function evalAnd(string $constraint1, string $constraint2): string
     {
         return "($constraint1 AND $constraint2)";
     }
 
     /**
      * Or ::= constraint1 'OR' constraint2.
-     *
-     * @param string $constraint1
-     * @param string $constraint2
-     *
-     * @return string
      */
-    public function evalOr($constraint1, $constraint2)
+    public function evalOr(string $constraint1, string $constraint2): string
     {
         return "($constraint1 OR $constraint2)";
     }
 
     /**
      * Not ::= 'NOT' Constraint.
-     *
-     * @param string $constraint
-     *
-     * @return string
      */
-    public function evalNot($constraint)
+    public function evalNot(string $constraint): string
     {
         return "(NOT $constraint)";
     }
 
     /**
      * Comparison ::= DynamicOperand Operator StaticOperand.
-     *
-     * @param string $operand1
-     * @param string $operator
-     * @param string $operand2
-     *
-     * @return string
      */
-    public function evalComparison($operand1, $operator, $operand2)
+    public function evalComparison(string $operand1, string $operator, string $operand2): string
     {
         return "$operand1 $operator $operand2";
     }
@@ -108,12 +78,8 @@ abstract class BaseSqlGenerator
      * Operator ::= EqualTo | NotEqualTo | LessThan |
      *        LessThanOrEqualTo | GreaterThan |
      *        GreaterThanOrEqualTo | Like.
-     *
-     * @param string $operator
-     *
-     * @return string
      */
-    public function evalOperator($operator)
+    public function evalOperator(string $operator): string
     {
         switch ($operator) {
             case Constants::JCR_OPERATOR_EQUAL_TO:
@@ -137,24 +103,16 @@ abstract class BaseSqlGenerator
 
     /**
      * LowerCase ::= 'LOWER(' DynamicOperand ')'.
-     *
-     * @param string $operand
-     *
-     * @return string
      */
-    public function evalLower($operand)
+    public function evalLower(string $operand): string
     {
         return "LOWER($operand)";
     }
 
     /**
      * LowerCase ::= 'UPPER(' DynamicOperand ')'.
-     *
-     * @param string $operand
-     *
-     * @return string
      */
-    public function evalUpper($operand)
+    public function evalUpper(string $operand): string
     {
         return "UPPER($operand)";
     }
@@ -162,9 +120,9 @@ abstract class BaseSqlGenerator
     /**
      * orderings ::= Ordering {',' Ordering}.
      *
-     * @return string
+     * @param string[] $orderings
      */
-    public function evalOrderings($orderings)
+    public function evalOrderings(array $orderings): string
     {
         $sql = '';
 
@@ -181,10 +139,8 @@ abstract class BaseSqlGenerator
 
     /**
      * Ordering ::= DynamicOperand [Order].
-     *
-     * @return string
      */
-    public function evalOrdering($operand, $order)
+    public function evalOrdering(string $operand, string $order): string
     {
         return "$operand $order";
     }
@@ -193,28 +149,21 @@ abstract class BaseSqlGenerator
      * Order ::= Ascending | Descending
      * Ascending ::= 'ASC'
      * Descending ::= 'DESC'.
-     *
-     * @return string
      */
-    public function evalOrder($order)
+    public function evalOrder($order): string
     {
-        switch ($order) {
-            case Constants::JCR_ORDER_ASCENDING:
-                return 'ASC';
-            case Constants::JCR_ORDER_DESCENDING:
-                return 'DESC';
-        }
-
-        return '';
+        return match ($order) {
+            Constants::JCR_ORDER_ASCENDING => 'ASC',
+            Constants::JCR_ORDER_DESCENDING => 'DESC',
+            default => '',
+        };
     }
 
     /**
      * BindVariableValue ::= '$'bindVariableName
      * bindVariableName ::= Prefix.
-     *
-     * @return string
      */
-    public function evalBindVariable($var)
+    public function evalBindVariable(string $var): string
     {
         return '$'.$var;
     }
@@ -222,13 +171,11 @@ abstract class BaseSqlGenerator
     /**
      * Escape the illegal characters for inclusion in a fulltext statement. Escape Character is \\.
      *
-     * @param string $string
-     *
      * @return string Escaped String
      *
      * @see http://jackrabbit.apache.org/api/1.4/org/apache/jackrabbit/util/Text.html #escapeIllegalJcrChars
      */
-    public function evalFullText($string)
+    public function evalFullText(string $string): string
     {
         $illegalCharacters = [
             '!' => '\\!', '(' => '\\(', ':' => '\\:', '^' => '\\^',
@@ -241,10 +188,8 @@ abstract class BaseSqlGenerator
 
     /**
      * Literal ::= CastLiteral | UncastLiteral.
-     *
-     * @return string
      */
-    public function evalLiteral($literal)
+    public function evalLiteral(mixed $literal): string
     {
         if ($literal instanceof \DateTime) {
             $string = $this->valueConverter->convertType($literal, PropertyType::STRING);
@@ -272,86 +217,40 @@ abstract class BaseSqlGenerator
 
     /**
      * Cast a literal. This is different between SQL1 and SQL2.
-     *
-     * @param string $literal
-     * @param string $type
-     *
-     * @return string
      */
-    abstract public function evalCastLiteral($literal, $type);
+    abstract public function evalCastLiteral(string $literal, string $type): string;
 
     /**
      * @param string      $nodeTypeName The node type of the selector. If it does not contain starting and ending
      *                                  brackets ([]), they will be added automatically.
      * @param string|null $selectorName The selector name. If it is different than the nodeTypeName, the alias is
      *                                  declared if supported by the SQL dialect.
-     *
-     * @return string
      */
-    abstract public function evalSelector($nodeTypeName, $selectorName = null);
+    abstract public function evalSelector(string $nodeTypeName, string $selectorName = null): string;
 
     /**
      * Evaluate a path. This is different between SQL1 and SQL2.
-     *
-     * @param string $path
-     *
-     * @return string|null
      */
-    abstract public function evalPath($path);
+    abstract public function evalPath(string $path): string;
 
     /**
      * columns ::= (Column ',' {Column}) | '*'.
      *
      * With empty columns, SQL1 is different from SQL2
      *
-     * @return string
+     * @param iterable<string> $columns
      */
-    abstract public function evalColumns($columns);
+    abstract public function evalColumns(iterable $columns): string;
 
-    /**
-     * @param string $selectorName
-     * @param string $propertyName
-     * @param string $colname
-     *
-     * @return string
-     */
-    abstract public function evalColumn($selectorName, $propertyName = null, $colname = null);
+    abstract public function evalColumn(string $selectorName, string $propertyName = null, string $colname = null): string;
 
-    /**
-     * @return string
-     */
-    abstract public function evalPropertyExistence($selectorName, $propertyName);
+    abstract public function evalPropertyExistence(?string $selectorName, string $propertyName): string;
 
-    /**
-     * @param string $propertyName
-     * @param string $selectorName
-     *
-     * @return string
-     */
-    abstract public function evalPropertyValue($propertyName, $selectorName = null);
+    abstract public function evalPropertyValue(string $propertyName, string $selectorName = null);
 
-    /**
-     * @param string $path
-     * @param string $selectorName
-     *
-     * @return string
-     */
-    abstract public function evalChildNode($path, $selectorName = null);
+    abstract public function evalChildNode(string $path, string $selectorName = null);
 
-    /**
-     * @param string $path
-     * @param string $selectorName
-     *
-     * @return string
-     */
-    abstract public function evalDescendantNode($path, $selectorName = null);
+    abstract public function evalDescendantNode(string $path, string $selectorName = null): string;
 
-    /**
-     * @param string $selectorName
-     * @param string $searchExpression
-     * @param string $propertyName
-     *
-     * @return string
-     */
-    abstract public function evalFullTextSearch($selectorName, $searchExpression, $propertyName = null);
+    abstract public function evalFullTextSearch(string $selectorName, string $searchExpression, string $propertyName = null): string;
 }

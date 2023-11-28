@@ -23,10 +23,8 @@ abstract class AbstractParser
 {
     /**
      * The token queue.
-     *
-     * @var TokenQueue
      */
-    protected $tokenQueue;
+    protected TokenQueue $tokenQueue;
 
     /**
      * Check the next token without consuming it and return true if it matches the given type and data.
@@ -36,10 +34,8 @@ abstract class AbstractParser
      * @param int         $type       The expected token type
      * @param string|null $data       The expected data or null
      * @param bool        $ignoreCase whether to do string comparisons case insensitive or sensitive
-     *
-     * @return bool
      */
-    protected function checkToken($type, $data = null, $ignoreCase = false)
+    protected function checkToken($type, string $data = null, bool $ignoreCase = false): bool
     {
         if ($this->tokenQueue->isEof()) {
             return false;
@@ -65,11 +61,9 @@ abstract class AbstractParser
     /**
      * Check if the token data is one of the elements of the data array.
      *
-     * @param int $type
-     *
-     * @return bool
+     * @param string[] $data
      */
-    protected function checkTokenIn($type, array $data, $ignoreCase = false)
+    protected function checkTokenIn(int $type, array $data, bool $ignoreCase = false): bool
     {
         foreach ($data as $d) {
             if ($this->checkToken($type, $d, $ignoreCase)) {
@@ -87,11 +81,9 @@ abstract class AbstractParser
      * @param int         $type The expected token type
      * @param string|null $data The expected token data or null
      *
-     * @return Token
-     *
      * @throws ParserException
      */
-    protected function expectToken($type, $data = null)
+    protected function expectToken(int $type, string $data = null): Token
     {
         $token = $this->tokenQueue->peek();
 
@@ -110,10 +102,8 @@ abstract class AbstractParser
      *
      * @param int         $type The expected token type
      * @param string|null $data The expected token data or null
-     *
-     * @return bool|Token
      */
-    protected function checkAndExpectToken($type, $data = null)
+    protected function checkAndExpectToken(int $type, string $data = null): bool|Token
     {
         if ($this->checkToken($type, $data)) {
             $token = $this->tokenQueue->peek();

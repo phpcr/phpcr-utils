@@ -8,19 +8,14 @@ namespace PHPCR\Util\CND\Reader;
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  * @author Nikola Petkanski <nikola@petkanski.com>
  */
-class FileReader extends BufferReader
+final class FileReader extends BufferReader
 {
-    /**
-     * @var string
-     */
-    protected $path;
+    private string $path;
 
     /**
-     * @param string $path
-     *
      * @throws \InvalidArgumentException
      */
-    public function __construct($path)
+    public function __construct(string $path)
     {
         if (!file_exists($path)) {
             throw new \InvalidArgumentException(sprintf("Invalid file '%s'", $path));
@@ -31,10 +26,7 @@ class FileReader extends BufferReader
         parent::__construct(file_get_contents($path));
     }
 
-    /**
-     * @return string
-     */
-    public function getPath()
+    public function getPath(): string
     {
         return $this->path;
     }

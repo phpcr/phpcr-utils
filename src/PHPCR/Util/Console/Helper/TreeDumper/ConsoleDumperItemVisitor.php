@@ -14,17 +14,13 @@ abstract class ConsoleDumperItemVisitor implements ItemVisitorInterface
 {
     /**
      * Target for printing information.
-     *
-     * @var OutputInterface
      */
-    protected $output;
+    protected OutputInterface $output;
 
     /**
      * Current depth in the tree.
-     *
-     * @var int
      */
-    protected $level = 0;
+    protected int $level = 0;
 
     /**
      * Instantiate the console dumper visitor.
@@ -36,10 +32,8 @@ abstract class ConsoleDumperItemVisitor implements ItemVisitorInterface
 
     /**
      * Set the current depth level for indention.
-     *
-     * @param int $level
      */
-    public function setLevel($level)
+    public function setLevel(int $level): void
     {
         $this->level = $level;
     }

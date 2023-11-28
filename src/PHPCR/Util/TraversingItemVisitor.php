@@ -33,40 +33,30 @@ abstract class TraversingItemVisitor implements ItemVisitorInterface
     /**
      * Indicates if traversal should be done in a breadth-first manner rather
      * than depth-first (which is the default).
-     *
-     * @var bool
      */
-    protected $breadthFirst = false;
+    protected bool $breadthFirst = false;
 
     /**
      * The 0-based depth up to which the hierarchy should be traversed (if it's
      * -1, the hierarchy will be traversed until there are no more children of
      * the current item).
-     *
-     * @var int
      */
-    protected $maxDepth = -1;
+    protected int $maxDepth = -1;
 
     /**
      * Queue used to implement breadth-first traversal.
-     *
-     * @var \SplQueue
      */
-    protected $currentQueue;
+    protected \SplQueue $currentQueue;
 
     /**
      * Queue used to implement breadth-first traversal.
-     *
-     * @var \SplQueue
      */
-    protected $nextQueue;
+    protected \SplQueue $nextQueue;
 
     /**
      * Used to track hierarchy depth of item currently being processed.
-     *
-     * @var int
      */
-    protected $currentDepth;
+    protected int $currentDepth;
 
     /**
      * Constructs a new instance of this class.
@@ -81,7 +71,7 @@ abstract class TraversingItemVisitor implements ItemVisitorInterface
      *
      * @api
      */
-    public function __construct($breadthFirst = false, $maxDepth = -1)
+    public function __construct(bool $breadthFirst = false, int $maxDepth = -1)
     {
         $this->breadthFirst = $breadthFirst;
         $this->maxDepth = $maxDepth;
@@ -95,10 +85,8 @@ abstract class TraversingItemVisitor implements ItemVisitorInterface
 
     /**
      * Update the current depth level for indention.
-     *
-     * @param int $level
      */
-    public function setLevel($level)
+    public function setLevel(int $level): void
     {
         $this->currentDepth = $level;
     }
@@ -116,7 +104,7 @@ abstract class TraversingItemVisitor implements ItemVisitorInterface
      *
      * @api
      */
-    abstract protected function entering(ItemInterface $item, $depth);
+    abstract protected function entering(ItemInterface $item, int $depth): void;
 
     /**
      * Implement this method to add behavior performed after a Property is
@@ -131,7 +119,7 @@ abstract class TraversingItemVisitor implements ItemVisitorInterface
      *
      * @api
      */
-    abstract protected function leaving(ItemInterface $item, $depth);
+    abstract protected function leaving(ItemInterface $item, int $depth): void;
 
     /**
      * Called when the Visitor is passed to an Item.
@@ -149,7 +137,7 @@ abstract class TraversingItemVisitor implements ItemVisitorInterface
      *
      * @api
      */
-    public function visit(ItemInterface $item)
+    public function visit(ItemInterface $item): void
     {
         if (0 === $this->currentDepth) {
             $this->currentDepth = $item->getDepth();

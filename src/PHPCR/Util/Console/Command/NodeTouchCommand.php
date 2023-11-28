@@ -98,7 +98,7 @@ HERE
                 $nodeType
             ));
 
-            if ($nodeType != $type) {
+            if ($nodeType !== $type) {
                 $output->writeln(sprintf(
                     '<error>You have specified node type "%s" but the existing node is of type "%s"</error>',
                     $type,

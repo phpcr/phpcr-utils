@@ -74,15 +74,15 @@ class Sql1GeneratorTest extends TestCase
 
     public function testFullTextSearch()
     {
-        $literal = $this->generator->evalFullTextSearch(null, "'foo'");
+        $literal = $this->generator->evalFullTextSearch('', "'foo'");
         $this->assertSame("CONTAINS(*, 'foo')", $literal);
-        $literal = $this->generator->evalFullTextSearch(null, "'foo'", 'bar');
+        $literal = $this->generator->evalFullTextSearch('', "'foo'", 'bar');
         $this->assertSame("CONTAINS(bar, 'foo')", $literal);
     }
 
     public function testColumns()
     {
-        $literal = $this->generator->evalColumns(null);
+        $literal = $this->generator->evalColumns([]);
         $this->assertSame('s', $literal);
         $literal = $this->generator->evalColumns(['bar', 'foo']);
         $this->assertSame('bar, foo', $literal);

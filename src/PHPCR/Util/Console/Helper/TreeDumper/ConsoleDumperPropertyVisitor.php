@@ -19,24 +19,19 @@ class ConsoleDumperPropertyVisitor extends ConsoleDumperItemVisitor
      *
      * @var int
      */
-    protected $maxLineLength;
-
-    /**
-     * Show the full path for each reference.
-     */
-    protected $expandReferences;
+    protected mixed $maxLineLength;
 
     /**
      * @var string
      */
-    private $refFormat;
+    private mixed $refFormat;
 
     /**
      * Instantiate property visitor.
      *
-     * @param array $options
+     * @param array<string, mixed> $options
      */
-    public function __construct(OutputInterface $output, $options = [])
+    public function __construct(OutputInterface $output, array $options = [])
     {
         $options = array_merge([
             'max_line_length' => 120,
@@ -56,7 +51,7 @@ class ConsoleDumperPropertyVisitor extends ConsoleDumperItemVisitor
      *
      * @throws \Exception
      */
-    public function visit(ItemInterface $item)
+    public function visit(ItemInterface $item): void
     {
         if (!$item instanceof PropertyInterface) {
             throw new \Exception(sprintf('Internal error: did not expect to visit a non-property object: %s', is_object($item) ? get_class($item) : $item));
@@ -77,10 +72,10 @@ class ConsoleDumperPropertyVisitor extends ConsoleDumperItemVisitor
         if (in_array($item->getType(), [
             PropertyType::WEAKREFERENCE,
             PropertyType::REFERENCE,
-        ])) {
+        ], true)) {
             $referenceStrings = [];
 
-            if ('path' == $this->refFormat) {
+            if ('path' === $this->refFormat) {
                 $references = (array) $item->getValue();
 
                 foreach ($references as $reference) {

@@ -15,11 +15,9 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
     /**
      * Source ::= Selector | Join.
      *
-     * @return string
-     *
      * @throws \InvalidArgumentException
      */
-    protected function convertSource(QOM\SourceInterface $source)
+    protected function convertSource(QOM\SourceInterface $source): string
     {
         if ($source instanceof QOM\SelectorInterface) {
             return $this->convertSelector($source);
@@ -41,10 +39,8 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
      * Inner ::= 'INNER'
      * LeftOuter ::= 'LEFT OUTER'
      * RightOuter ::= 'RIGHT OUTER'
-     *
-     * @return string
      */
-    protected function convertJoin(QOM\JoinInterface $join)
+    protected function convertJoin(QOM\JoinInterface $join): string
     {
         if (!$this->generator instanceof Sql2Generator) {
             throw new NotSupportedOperandException('Only SQL2 supports join');
@@ -63,11 +59,9 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
      *             ChildNodeJoinCondition |
      *             DescendantNodeJoinCondition.
      *
-     * @return string
-     *
      * @throws \InvalidArgumentException
      */
-    protected function convertJoinCondition(QOM\JoinConditionInterface $condition)
+    protected function convertJoinCondition(QOM\JoinConditionInterface $condition): string
     {
         if ($condition instanceof QOM\EquiJoinConditionInterface) {
             return $this->convertEquiJoinCondition($condition);
@@ -93,10 +87,8 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
      *   selector2Name ::= selectorName
      *   property1Name ::= propertyName
      *   property2Name ::= propertyName.
-     *
-     * @return string
      */
-    protected function convertEquiJoinCondition(QOM\EquiJoinConditionInterface $condition)
+    protected function convertEquiJoinCondition(QOM\EquiJoinConditionInterface $condition): string
     {
         if (!$this->generator instanceof Sql2Generator) {
             throw new NotSupportedOperandException('Only SQL2 supports equi join condition');
@@ -116,10 +108,8 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
      *                  selector2Name
      *                  [',' selector2Path] ')'
      *   selector2Path ::= Path.
-     *
-     * @return string
      */
-    protected function convertSameNodeJoinCondition(QOM\SameNodeJoinConditionInterface $condition)
+    protected function convertSameNodeJoinCondition(QOM\SameNodeJoinConditionInterface $condition): string
     {
         if (!$this->generator instanceof Sql2Generator) {
             throw new NotSupportedOperandException('Only SQL2 supports same node join condition');
@@ -138,10 +128,8 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
      *                  parentSelectorName ')'
      *   childSelectorName ::= selectorName
      *   parentSelectorName ::= selectorName.
-     *
-     * @return string
      */
-    protected function convertChildNodeJoinCondition(QOM\ChildNodeJoinConditionInterface $condition)
+    protected function convertChildNodeJoinCondition(QOM\ChildNodeJoinConditionInterface $condition): string
     {
         if (!$this->generator instanceof Sql2Generator) {
             throw new NotSupportedOperandException('Only SQL2 supports child node join condition');
@@ -159,10 +147,8 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
      *                       ancestorSelectorName ')'
      *   descendantSelectorName ::= selectorName
      *   ancestorSelectorName ::= selectorName.
-     *
-     * @return string
      */
-    protected function convertDescendantNodeJoinCondition(QOM\DescendantNodeJoinConditionInterface $condition)
+    protected function convertDescendantNodeJoinCondition(QOM\DescendantNodeJoinConditionInterface $condition): string
     {
         if (!$this->generator instanceof Sql2Generator) {
             throw new NotSupportedOperandException('Only SQL2 supports descendant node join condition');
@@ -195,11 +181,9 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
      *        // If only one selector exists in this query, explicit
      *           specification of the selectorName is optional
      *
-     * @return string
-     *
      * @throws \InvalidArgumentException
      */
-    protected function convertConstraint(QOM\ConstraintInterface $constraint)
+    protected function convertConstraint(QOM\ConstraintInterface $constraint): string
     {
         if ($constraint instanceof QOM\AndInterface) {
             return $this->generator->evalAnd(
@@ -271,11 +255,9 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
      * LowerCase ::= 'LOWER(' DynamicOperand ')'
      * UpperCase ::= 'UPPER(' DynamicOperand ')'
      *
-     * @return string
-     *
      * @throws \InvalidArgumentException
      */
-    protected function convertDynamicOperand(QOM\DynamicOperandInterface $operand)
+    protected function convertDynamicOperand(QOM\DynamicOperandInterface $operand): string
     {
         if ($operand instanceof QOM\PropertyValueInterface) {
             return $this->convertPropertyValue($operand);

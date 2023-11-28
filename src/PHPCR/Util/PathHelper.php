@@ -37,20 +37,19 @@ class PathHelper
      *                                      move), meaning [] is not allowed. If your implementation does not
      *                                      support same name siblings, just always pass true for this
      * @param bool       $throw             whether to throw an exception on validation errors
-     * @param array|bool $namespacePrefixes List of all known namespace prefixes.
+     * @param bool|array $namespacePrefixes List of all known namespace prefixes.
      *                                      If specified, this method validates that the path contains no unknown prefixes.
      *
      * @return bool true if valid, false if not valid and $throw was false
      *
      * @throws RepositoryException if the path contains invalid characters and $throw is true
      */
-    public static function assertValidAbsolutePath($path, $destination = false, $throw = true, $namespacePrefixes = false)
+    public static function assertValidAbsolutePath(string $path, bool $destination = false, bool $throw = true, bool|array $namespacePrefixes = false): bool
     {
-        if ((!is_string($path) && !is_numeric($path))
-            || 0 === strlen($path)
+        if ('' === $path
             || '/' !== $path[0]
-            || strlen($path) > 1 && '/' === $path[strlen($path) - 1]
             || preg_match('-//|/\./|/\.\./-', $path)
+            || (strlen($path) > 1 && '/' === $path[strlen($path) - 1])
         ) {
             return self::error("Invalid path '$path'", $throw);
         }
@@ -93,7 +92,7 @@ class PathHelper
      *
      * @see http://www.day.com/specs/jcr/2.0/3_Repository_Model.html#3.2.2%20Local%20Names
      */
-    public static function assertValidLocalName($name, $throw = true)
+    public static function assertValidLocalName(string $name, bool $throw = true): bool
     {
         if ('.' === $name || '..' === $name) {
             return self::error("Name may not be parent or self identifier: $name", $throw);
@@ -124,16 +123,14 @@ class PathHelper
      *                            just to return false
      *
      * @return string The normalized path or false if $throw was false and the path invalid
+     * @return string The normalized path or false if $throw was false and the path invalid
      *
      * @throws RepositoryException if the path is not a valid absolute path and
      *                             $throw is true
      */
-    public static function normalizePath($path, $destination = false, $throw = true)
+    public static function normalizePath(string $path, bool $destination = false, bool $throw = true): bool|string
     {
-        if (!is_string($path) && !is_numeric($path)) {
-            return self::error('Expected string but got '.gettype($path), $throw);
-        }
-        if (0 === strlen($path)) {
+        if ('' === $path) {
             return self::error('Path must not be of zero length', $throw);
         }
 
@@ -191,15 +188,9 @@ class PathHelper
      * @throws RepositoryException if the path can not be made into a valid
      *                             absolute path and $throw is true
      */
-    public static function absolutizePath($path, $context, $destination = false, $throw = true)
+    public static function absolutizePath(string $path, string $context, bool $destination = false, bool $throw = true): bool|string
     {
-        if (!is_string($path) && !is_numeric($path)) {
-            return self::error('Expected string path but got '.gettype($path), $throw);
-        }
-        if (!is_string($context)) {
-            return self::error('Expected string context but got '.gettype($context), $throw);
-        }
-        if (0 === strlen($path)) {
+        if ('' === $path) {
             return self::error('Path must not be of zero length', $throw);
         }
 
@@ -223,9 +214,9 @@ class PathHelper
      *
      * @return string The relative path from $context to $path
      */
-    public static function relativizePath($path, $context, $throw = true)
+    public static function relativizePath(string $path, string $context, bool $throw = true): bool|string
     {
-        if ($context !== substr($path, 0, strlen($context))) {
+        if (!str_starts_with($path, $context)) {
             return self::error("$path is not within $context", $throw);
         }
 
@@ -239,7 +230,7 @@ class PathHelper
      *
      * @return string the path with the last segment removed
      */
-    public static function getParentPath($path)
+    public static function getParentPath(string $path): string
     {
         if ('/' === $path) {
             return '/';
@@ -265,7 +256,7 @@ class PathHelper
      *
      * @throws RepositoryException
      */
-    public static function getNodeName($path)
+    public static function getNodeName(string $path): string
     {
         $strrpos = strrpos($path, '/');
 
@@ -289,7 +280,7 @@ class PathHelper
      *
      * @throws RepositoryException
      */
-    public static function getLocalNodeName($path)
+    public static function getLocalNodeName(string $path): string
     {
         $nodeName = self::getNodeName($path);
         $localName = strstr($nodeName, ':');
@@ -308,7 +299,7 @@ class PathHelper
      *
      * @return int with the path depth
      */
-    public static function getPathDepth($path)
+    public static function getPathDepth(string $path): int
     {
         return substr_count(rtrim($path, '/'), '/');
     }
@@ -324,7 +315,7 @@ class PathHelper
      *
      * @throws RepositoryException
      */
-    private static function error($msg, $throw)
+    private static function error(string $msg, bool $throw): bool
     {
         if ($throw) {
             throw new RepositoryException($msg);

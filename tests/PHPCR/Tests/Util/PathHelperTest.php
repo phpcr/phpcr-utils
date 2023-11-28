@@ -171,7 +171,7 @@ class PathHelperTest extends TestCase
             ['bar'],
             ['/foo/bar/'],
             [''],
-            [new \stdClass()],
+            ['//'],
         ];
     }
 
@@ -180,12 +180,12 @@ class PathHelperTest extends TestCase
     /**
      * @dataProvider dataproviderAbsolutizePath
      */
-    public function testAbsolutizePath($inputPath, $context, $outputPath)
+    public function testAbsolutizePath(string $inputPath, string $context, string $outputPath): void
     {
         $this->assertSame($outputPath, PathHelper::absolutizePath($inputPath, $context));
     }
 
-    public static function dataproviderAbsolutizePath()
+    public static function dataproviderAbsolutizePath(): array
     {
         return [
             ['/../foo',    '/',    '/foo'],
@@ -216,9 +216,8 @@ class PathHelperTest extends TestCase
     {
         return [
             ['', '/context', false],
-            [null,    '/context',    false],
-            ['foo',        null,    false],
-            [new \stdClass(), '/context', false],
+            ['//',    '/context',    false],
+            ['foo',        '//',    false],
             ['foo[2]',  '/bar', true],
         ];
     }

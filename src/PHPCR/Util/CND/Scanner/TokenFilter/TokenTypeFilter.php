@@ -13,23 +13,18 @@ class TokenTypeFilter implements TokenFilterInterface
 {
     /**
      * The filtered out token type.
-     *
-     * @var int
      */
-    protected $type;
+    protected int $type;
 
-    public function __construct($tokenType)
+    public function __construct(int $tokenType)
     {
         $this->type = $tokenType;
     }
 
-    /**
-     * @return Token|null
-     */
-    public function filter(Token $token)
+    public function filter(Token $token): ?Token
     {
         if ($token->getType() === $this->type) {
-            return;
+            return null;
         }
 
         return $token;

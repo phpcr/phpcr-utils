@@ -14,9 +14,9 @@ class ScannerContext
     /**
      * Characters to be considered as white spaces.
      *
-     * @var array
+     * @var string[]
      */
-    protected $whitespaces = [];
+    protected array $whitespaces = [];
 
     /**
      * Characters to be considered as paired string delimiters.
@@ -24,126 +24,110 @@ class ScannerContext
      * These characters will not be used as symbols, thus if you remove any from this list,
      * you must add it to the $symbols array to be taken in account as a symbol.
      *
-     * @var array
+     * @var string[]
      */
-    protected $stringDelimiters = [];
+    protected array $stringDelimiters = [];
 
     /**
      * Line comments start.
      *
-     * @var array
+     * @var string[]
      */
-    protected $lineCommentDelimiters = [];
+    protected array $lineCommentDelimiters = [];
 
     /**
      * Block comments delimiters.
      *
-     * @var array
+     * @var string[]
      */
-    protected $blockCommentDelimiters = [];
+    protected array $blockCommentDelimiters = [];
 
     /**
      * Characters to be considered as symbols.
      *
      * String delimiters must not appear in this array.
      *
-     * @var array
+     * @var string[]
      */
-    protected $symbols = [];
+    protected array $symbols = [];
 
     /**
      * @var TokenFilterInterface[]
      */
-    protected $tokenFilters = [];
+    protected array $tokenFilters = [];
 
-    /**
-     * @param string $startDelim
-     * @param string $endDelim
-     */
-    public function addBlockCommentDelimiter($startDelim, $endDelim)
+    public function addBlockCommentDelimiter(string $startDelim, string $endDelim): void
     {
         $this->blockCommentDelimiters[$startDelim] = $endDelim;
     }
 
     /**
-     * @return array
+     * @return string[]
      */
-    public function getBlockCommentDelimiters()
+    public function getBlockCommentDelimiters(): array
     {
         return $this->blockCommentDelimiters;
     }
 
-    /**
-     * @param string $delim
-     */
-    public function addLineCommentDelimiter($delim)
+    public function addLineCommentDelimiter(string $delim): void
     {
         $this->lineCommentDelimiters[] = $delim;
     }
 
     /**
-     * @return array
+     * @return string[]
      */
-    public function getLineCommentDelimiters()
+    public function getLineCommentDelimiters(): array
     {
         return $this->lineCommentDelimiters;
     }
 
-    /**
-     * @param string $delim
-     */
-    public function addStringDelimiter($delim)
+    public function addStringDelimiter(string $delim): void
     {
-        if (!in_array($delim, $this->stringDelimiters)) {
+        if (!in_array($delim, $this->stringDelimiters, true)) {
             $this->stringDelimiters[] = $delim;
         }
     }
 
     /**
-     * @return array
+     * @return string[]
      */
-    public function getStringDelimiters()
+    public function getStringDelimiters(): array
     {
         return $this->stringDelimiters;
     }
 
-    /**
-     * @param string $symbol
-     */
-    public function addSymbol($symbol)
+    public function addSymbol(string $symbol): void
     {
-        if (!in_array($symbol, $this->symbols)) {
+        if (!in_array($symbol, $this->symbols, true)) {
             $this->symbols[] = $symbol;
         }
     }
 
     /**
-     * @return array
+     * @return string[]
      */
-    public function getSymbols()
+    public function getSymbols(): array
     {
         return $this->symbols;
     }
 
-    /**
-     * @param array $whitespace
-     */
-    public function addWhitespace($whitespace)
+    public function addWhitespace(string $whitespace): void
     {
-        if (!in_array($whitespace, $this->whitespaces)) {
+        if (!in_array($whitespace, $this->whitespaces, true)) {
             $this->whitespaces[] = $whitespace;
         }
     }
 
     /**
-     * @return array
+     * @return string[]
      */
-    public function getWhitespaces()
+    public function getWhitespaces(): array
     {
         return $this->whitespaces;
     }
 
-    public function addTokenFilter(TokenFilterInterface $filter)
+    public function addTokenFilter(TokenFilterInterface $filter): void
     {
         $this->tokenFilters[] = $filter;
     }
@@ -151,7 +135,7 @@ class ScannerContext
     /**
      * @return TokenFilterInterface[]
      */
-    public function getTokenFilters()
+    public function getTokenFilters(): array
     {
         return $this->tokenFilters;
     }

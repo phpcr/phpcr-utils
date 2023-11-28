@@ -9,6 +9,7 @@ use PHPCR\Query\QOM\QueryObjectModelFactoryInterface;
 use PHPCR\Query\QOM\QueryObjectModelInterface;
 use PHPCR\Query\QOM\SameNodeJoinConditionInterface;
 use PHPCR\Query\QOM\SourceInterface;
+use PHPCR\Query\QueryResultInterface;
 use PHPCR\Util\QOM\QueryBuilder;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -322,7 +323,7 @@ class QueryBuilderTest extends TestCase
 
         $this->qf->expects($this->once())
                  ->method('createQuery')
-                 ->willReturn('true');
+                 ->willReturn($this->createMock(QueryObjectModelInterface::class));
 
         $qb->getQuery();
     }
@@ -385,7 +386,10 @@ class QueryBuilderTest extends TestCase
         $value2 = 'value2';
 
         $qb = new QueryBuilder($this->qf);
-        $qb->setParameters([$key1, $value1], [$key2, $value2]);
+        $qb->setParameters([
+            $key1 => $value1,
+            $key2 => $value2,
+        ]);
         $this->assertCount(2, $qb->getParameters());
     }
 
@@ -395,8 +399,11 @@ class QueryBuilderTest extends TestCase
         $constraint = $this->createConstraintMock();
         $query = $this->createQueryMock();
 
+        $result = $this->createMock(QueryResultInterface::class);
         $query->expects($this->once())
-              ->method('execute');
+              ->method('execute')
+            ->willReturn($result)
+        ;
         $query->expects($this->once())
               ->method('bindValue');
 
@@ -406,11 +413,13 @@ class QueryBuilderTest extends TestCase
                  ->willReturn($query);
 
         $qb = new QueryBuilder($this->qf);
-        $qb->from($source)
-           ->where($constraint)
-           ->setFirstResult(10)
-           ->setMaxResults(10)
-           ->setParameter('Key', 'value')
-           ->execute();
+        $this->assertSame($result,
+            $qb->from($source)
+               ->where($constraint)
+               ->setFirstResult(10)
+               ->setMaxResults(10)
+               ->setParameter('Key', 'value')
+               ->execute()
+        );
     }
 }

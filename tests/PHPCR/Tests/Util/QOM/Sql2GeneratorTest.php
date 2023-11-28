@@ -75,7 +75,7 @@ class Sql2GeneratorTest extends BaseSqlGeneratorTest
 
     public function testColumns()
     {
-        $literal = $this->generator->evalColumns(null);
+        $literal = $this->generator->evalColumns([]);
         $this->assertSame('*', $literal);
         $literal = $this->generator->evalColumns(['bar', 'foo']);
         $this->assertSame('bar, foo', $literal);

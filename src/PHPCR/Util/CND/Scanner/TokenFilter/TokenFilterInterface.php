@@ -11,10 +11,5 @@ use PHPCR\Util\CND\Scanner\Token;
  */
 interface TokenFilterInterface
 {
-    /**
-     * @abstract
-     *
-     * @return Token|null
-     */
-    public function filter(Token $token);
+    public function filter(Token $token): ?Token;
 }

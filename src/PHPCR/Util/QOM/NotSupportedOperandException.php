@@ -13,11 +13,12 @@ class NotSupportedOperandException extends \RuntimeException
     /**
      * Create the exception with an explaining message.
      *
-     * @param string $operand the constraint expression that is not supported
+     * @param object $operand the constraint expression that is not supported
      */
-    public function __construct($operand)
+    public static function fromOperand(object $operand): self
     {
         $class = get_class($operand);
-        parent::__construct("$class is not supported by this query language");
+
+        return new self("$class is not supported by this query language");
     }
 }

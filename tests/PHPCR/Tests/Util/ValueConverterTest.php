@@ -16,17 +16,14 @@ require_once __DIR__.'/../Stubs/MockNode.php';
  */
 class ValueConverterTest extends TestCase
 {
-    /**
-     * @var ValueConverter
-     */
-    private $valueConverter;
+    private ValueConverter $valueConverter;
 
     public function setUp(): void
     {
         $this->valueConverter = new ValueConverter();
     }
 
-    public function dataConversionMatrix()
+    public function dataConversionMatrix(): array
     {
         $stream = fopen('php://memory', '+rw');
         fwrite($stream, 'test string');
@@ -267,11 +264,9 @@ class ValueConverterTest extends TestCase
     /**
      * Skip binary target as its a special case.
      *
-     * @param int $srcType PropertyType constant to convert from
-     *
      * @dataProvider dataConversionMatrix
      */
-    public function testConvertType($value, $srcType, $expected, $targetType)
+    public function testConvertType(mixed $value, int $srcType, mixed $expected, int $targetType): void
     {
         if (null === $expected) {
             try {
@@ -292,7 +287,7 @@ class ValueConverterTest extends TestCase
         }
     }
 
-    public function testConvertTypeToBinary()
+    public function testConvertTypeToBinary(): void
     {
         $stream = $this->valueConverter->convertType('test string', PropertyType::BINARY);
         $this->assertIsResource($stream);
@@ -311,7 +306,7 @@ class ValueConverterTest extends TestCase
         $readDate = new \DateTime($string);
         $this->assertEquals($date->getTimestamp(), $readDate->getTimestamp());
 
-        $stream = fopen('php://memory', '+rw');
+        $stream = fopen('php://memory', '+rwb');
         fwrite($stream, 'test string');
         rewind($stream);
 
@@ -321,7 +316,7 @@ class ValueConverterTest extends TestCase
         // if conversion to string works, should be fine for all others
     }
 
-    public function testConvertTypeArray()
+    public function testConvertTypeArray(): void
     {
         $result = $this->valueConverter->convertType(
             ['2012-01-10', '2012-02-12'],
@@ -341,7 +336,7 @@ class ValueConverterTest extends TestCase
         $this->assertEquals([], $result);
     }
 
-    public function testConvertTypeAutodetect()
+    public function testConvertTypeAutodetect(): void
     {
         $date = new \DateTime('2012-10-10');
         $result = $this->valueConverter->convertType($date, PropertyType::STRING);
@@ -353,35 +348,35 @@ class ValueConverterTest extends TestCase
         $this->assertEquals(1331668855, $result->getTimestamp());
     }
 
-    public function testConvertTypeArrayInvalid()
+    public function testConvertTypeArrayInvalid(): void
     {
         $this->expectException(ValueFormatException::class);
 
         $this->valueConverter->convertType(['a', 'b', 'c'], PropertyType::NAME, PropertyType::REFERENCE);
     }
 
-    public function testConvertInvalidString()
+    public function testConvertInvalidString(): void
     {
         $this->expectException(ValueFormatException::class);
 
         $this->valueConverter->convertType($this, PropertyType::STRING);
     }
 
-    public function testConvertInvalidBinary()
+    public function testConvertInvalidBinary(): void
     {
         $this->expectException(ValueFormatException::class);
 
         $this->valueConverter->convertType($this, PropertyType::BINARY);
     }
 
-    public function testConvertInvalidDate()
+    public function testConvertInvalidDate(): void
     {
         $this->expectException(ValueFormatException::class);
 
         $this->valueConverter->convertType($this, PropertyType::DATE);
     }
 
-    public function testConvertNewNode()
+    public function testConvertNewNode(): void
     {
         $this->expectException(ValueFormatException::class);
 
@@ -393,7 +388,7 @@ class ValueConverterTest extends TestCase
         $this->valueConverter->convertType($nodeMock, PropertyType::STRING);
     }
 
-    public function testConvertNonRefNode()
+    public function testConvertNonRefNode(): void
     {
         $this->expectException(ValueFormatException::class);
 
@@ -410,7 +405,10 @@ class ValueConverterTest extends TestCase
         $this->valueConverter->convertType($nodeMock, PropertyType::STRING);
     }
 
-    public function dataDateTargetType()
+    /**
+     * @return array<array<int>>
+     */
+    public function dataDateTargetType(): array
     {
         return [
             [PropertyType::STRING],
@@ -424,14 +422,14 @@ class ValueConverterTest extends TestCase
      *
      * @dataProvider dataDateTargetType
      */
-    public function testConvertInvalidDateValue($targettype)
+    public function testConvertInvalidDateValue(int $targettype): void
     {
         $this->expectException(RepositoryException::class);
 
         $this->valueConverter->convertType('', $targettype, PropertyType::DATE);
     }
 
-    public function testConvertTypeInvalidTarget()
+    public function testConvertTypeInvalidTarget(): void
     {
         $this->expectException(ValueFormatException::class);
 

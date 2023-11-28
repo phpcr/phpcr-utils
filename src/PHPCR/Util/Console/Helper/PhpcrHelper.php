@@ -4,6 +4,7 @@ namespace PHPCR\Util\Console\Helper;
 
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
+use PHPCR\Query\QueryInterface;
 use PHPCR\SessionInterface;
 use Symfony\Component\Console\Helper\Helper;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -18,10 +19,8 @@ class PhpcrHelper extends Helper
 {
     /**
      * The session bound to this helper.
-     *
-     * @var SessionInterface
      */
-    protected $session;
+    protected SessionInterface $session;
 
     /**
      * Constructor.
@@ -35,10 +34,8 @@ class PhpcrHelper extends Helper
 
     /**
      * Get the session.
-     *
-     * @return SessionInterface
      */
-    public function getSession()
+    public function getSession(): SessionInterface
     {
         return $this->session;
     }
@@ -53,11 +50,11 @@ class PhpcrHelper extends Helper
      *
      * Provides common processing for both touch and update commands.
      *
-     * @param OutputInterface $output     used for status updates
-     * @param NodeInterface   $node       the node to manipulate
-     * @param array           $operations to execute on that node
+     * @param OutputInterface       $output     used for status updates
+     * @param NodeInterface         $node       the node to manipulate
+     * @param array<string, string> $operations to execute on that node
      */
-    public function processNode(OutputInterface $output, NodeInterface $node, array $operations)
+    public function processNode(OutputInterface $output, NodeInterface $node, array $operations): void
     {
         $operations = array_merge([
             'setProp' => [],
@@ -146,18 +143,15 @@ class PhpcrHelper extends Helper
      *
      * @param string $language Language type - SQL, SQL2
      * @param string $sql      JCR Query string
-     *
-     * @return \PHPCR\Query\QueryInterface
      */
-    public function createQuery($language, $sql)
+    public function createQuery(string $language, string $sql): QueryInterface
     {
         $language = $this->validateQueryLanguage($language);
 
         $session = $this->getSession();
         $qm = $session->getWorkspace()->getQueryManager();
-        $query = $qm->createQuery($sql, $language);
 
-        return $query;
+        return $qm->createQuery($sql, $language);
     }
 
     /**
@@ -167,12 +161,12 @@ class PhpcrHelper extends Helper
      *
      * @throws \Exception if the language is not supported
      */
-    protected function validateQueryLanguage($language)
+    protected function validateQueryLanguage(string $language)
     {
         $qm = $this->getSession()->getWorkspace()->getQueryManager();
         $langs = $qm->getSupportedQueryLanguages();
         foreach ($langs as $lang) {
-            if (strtoupper($lang) === strtoupper($language)) {
+            if (0 === strcasecmp($lang, $language)) {
                 return $lang;
             }
         }

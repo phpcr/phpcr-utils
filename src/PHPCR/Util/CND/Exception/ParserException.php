@@ -12,7 +12,7 @@ use PHPCR\Util\CND\Scanner\TokenQueue;
  */
 class ParserException extends \Exception
 {
-    public function __construct(TokenQueue $queue, $msg)
+    public function __construct(TokenQueue $queue, string $msg)
     {
         $token = $queue->peek();
         $msg = sprintf("PARSER ERROR: %s. Current token is [%s, '%s'] at line %s, column %s", $msg, GenericToken::getTypeName($token->getType()), $token->getData(), $token->getLine(), $token->getRow());

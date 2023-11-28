@@ -15,41 +15,28 @@ class Token
 {
     /**
      * The type of token.
-     *
-     * @var int
      */
-    public $type;
+    public int $type;
 
     /**
      * The token raw data.
-     *
-     * @var string
      */
-    public $data;
+    public string $data;
 
     /**
      * The line where the token appears.
-     *
-     * @var int
      */
-    protected $line;
+    protected int $line;
 
     /**
      * The column where the token appears.
-     *
-     * @var int
      */
-    protected $row;
+    protected int $row;
 
     /**
      * Constructor.
-     *
-     * @param int    $type
-     * @param string $data
-     * @param int    $line
-     * @param int    $row
      */
-    public function __construct($type = 0, $data = '', $line = 0, $row = 0)
+    public function __construct(int $type = 0, string $data = '', int $line = 0, int $row = 0)
     {
         $this->type = $type;
         $this->data = $data;
@@ -57,18 +44,12 @@ class Token
         $this->row = $row;
     }
 
-    /**
-     * @return string
-     */
-    public function getData()
+    public function getData(): string
     {
         return $this->data;
     }
 
-    /**
-     * @return int
-     */
-    public function getType()
+    public function getType(): int
     {
         return $this->type;
     }
@@ -78,34 +59,22 @@ class Token
         return sprintf("TOKEN(%s, '%s', %s, %s)", $this->type, trim($this->data), $this->line, $this->row);
     }
 
-    /**
-     * @param int $line
-     */
-    public function setLine($line)
+    public function setLine(int $line): void
     {
         $this->line = $line;
     }
 
-    /**
-     * @return int
-     */
-    public function getLine()
+    public function getLine(): int
     {
         return $this->line;
     }
 
-    /**
-     * @param int $row
-     */
-    public function setRow($row)
+    public function setRow(int $row): void
     {
         $this->row = $row;
     }
 
-    /**
-     * @return int
-     */
-    public function getRow()
+    public function getRow(): int
     {
         return $this->row;
     }

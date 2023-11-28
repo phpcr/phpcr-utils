@@ -10,31 +10,34 @@ namespace PHPCR\Util\CND\Scanner;
 class TokenQueue implements \IteratorAggregate
 {
     /**
-     * @var array
+     * @var Token[]
      */
-    protected $tokens;
+    protected mixed $tokens;
 
-    public function __construct($tokens = [])
+    /**
+     * @param Token[] $tokens
+     */
+    public function __construct(array $tokens = [])
     {
         $this->tokens = $tokens;
     }
 
-    public function add(Token $token)
+    public function add(Token $token): void
     {
         $this->tokens[] = $token;
     }
 
-    public function reset()
+    public function reset(): Token
     {
         return reset($this->tokens);
     }
 
-    public function isEof()
+    public function isEof(): bool
     {
         return false === current($this->tokens);
     }
 
-    public function peek($offset = 0)
+    public function peek($offset = 0): Token|false
     {
         if (!$offset) {
             return current($this->tokens);
@@ -49,7 +52,7 @@ class TokenQueue implements \IteratorAggregate
         return $this->tokens[key($this->tokens) + $offset];
     }
 
-    public function get($count = 1)
+    public function get($count = 1): Token|null
     {
         $item = null;
         for ($i = 1; $i <= $count; ++$i) {
@@ -57,16 +60,15 @@ class TokenQueue implements \IteratorAggregate
             $this->next();
         }
 
-        return $item;
+        return $item ?: null;
     }
 
-    public function next()
+    public function next(): Token|false
     {
         return next($this->tokens);
     }
 
-    #[\ReturnTypeWillChange]
-    public function getIterator()
+    public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->tokens);
     }

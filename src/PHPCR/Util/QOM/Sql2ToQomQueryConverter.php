@@ -36,44 +36,35 @@ class Sql2ToQomQueryConverter
 {
     /**
      * The factory to create QOM objects.
-     *
-     * @var QueryObjectModelFactoryInterface
      */
-    protected $factory;
+    protected QueryObjectModelFactoryInterface $factory;
 
     /**
      * Scanner to parse SQL2.
      *
      * @var Sql2Scanner;
      */
-    protected $scanner;
+    protected Sql2Scanner $scanner;
 
     /**
      * The SQL2 query (the converter is not reentrant).
-     *
-     * @var string
      */
-    protected $sql2;
+    protected string $sql2;
 
     /**
      * The selector is not required for SQL2 but for QOM.
      *
      * We keep all selectors we encounter. If there is exactly one, it is used
      * whenever we encounter non-qualified names.
-     *
-     * @var string|array
      */
-    protected $implicitSelectorName;
+    protected string|array|null $implicitSelectorName;
 
-    /**
-     * @var ValueConverter
-     */
-    private $valueConverter;
+    private ValueConverter $valueConverter;
 
     /**
      * Instantiate a converter.
      *
-     * @param ValueConverter $valueConverter to override default converter
+     * @param ValueConverter|null $valueConverter to override default converter
      */
     public function __construct(QueryObjectModelFactoryInterface $factory, ValueConverter $valueConverter = null)
     {
@@ -87,11 +78,9 @@ class Sql2ToQomQueryConverter
      *
      * @param string $sql2
      *
-     * @return QueryObjectModelInterface
-     *
      * @throws InvalidQueryException
      */
-    public function parse($sql2)
+    public function parse($sql2): QueryObjectModelInterface
     {
         $this->implicitSelectorName = null;
         $this->sql2 = $sql2;
@@ -140,7 +129,7 @@ class Sql2ToQomQueryConverter
      *
      * @return SourceInterface
      */
-    protected function parseSource()
+    protected function parseSource(): JoinInterface|SourceInterface|SelectorInterface
     {
         $selector = $this->parseSelector();
 
@@ -158,10 +147,8 @@ class Sql2ToQomQueryConverter
     /**
      * 6.7.3. Selector
      * Parse an SQL2 selector and return a QOM\SelectorInterface.
-     *
-     * @return SelectorInterface
      */
-    protected function parseSelector()
+    protected function parseSelector(): SelectorInterface
     {
         $nodetype = $this->fetchTokenWithoutBrackets();
 
@@ -179,10 +166,8 @@ class Sql2ToQomQueryConverter
 
     /**
      * 6.7.4. Name.
-     *
-     * @return string
      */
-    protected function parseName()
+    protected function parseName(): string
     {
         return $this->scanner->fetchNextToken();
     }
@@ -193,10 +178,8 @@ class Sql2ToQomQueryConverter
      * Parse an SQL2 join source and return a QOM\Join.
      *
      * @param SourceInterface $leftSelector the left selector as it has been read by parseSource
-     *
-     * @return JoinInterface
      */
-    protected function parseJoin(SourceInterface $leftSelector)
+    protected function parseJoin(SourceInterface $leftSelector): JoinInterface
     {
         $joinType = $this->parseJoinType();
         $right = $this->parseSelector();
@@ -208,11 +191,9 @@ class Sql2ToQomQueryConverter
     /**
      * 6.7.6. Join type.
      *
-     * @return string
-     *
      * @throws InvalidQueryException
      */
-    protected function parseJoinType()
+    protected function parseJoinType(): string
     {
         $joinType = Constants::JCR_JOIN_TYPE_INNER;
         $token = $this->scanner->fetchNextToken();
@@ -245,7 +226,7 @@ class Sql2ToQomQueryConverter
      *
      * @return JoinConditionInterface
      */
-    protected function parseJoinCondition()
+    protected function parseJoinCondition(): SameNodeJoinConditionInterface|EquiJoinConditionInterface|DescendantNodeJoinConditionInterface|ChildNodeJoinConditionInterface|JoinConditionInterface
     {
         $this->scanner->expectToken('ON');
 
@@ -268,10 +249,8 @@ class Sql2ToQomQueryConverter
     /**
      * 6.7.8. EquiJoinCondition
      * Parse an SQL2 equijoin condition and return a EquiJoinConditionInterface.
-     *
-     * @return EquiJoinConditionInterface
      */
-    protected function parseEquiJoin()
+    protected function parseEquiJoin(): EquiJoinConditionInterface
     {
         list($selectorName1, $prop1) = $this->parseIdentifier();
         $this->scanner->expectToken('=');
@@ -283,10 +262,8 @@ class Sql2ToQomQueryConverter
     /**
      * 6.7.9 SameNodeJoinCondition
      * Parse an SQL2 same node join condition and return a SameNodeJoinConditionInterface.
-     *
-     * @return SameNodeJoinConditionInterface
      */
-    protected function parseSameNodeJoinCondition()
+    protected function parseSameNodeJoinCondition(): SameNodeJoinConditionInterface
     {
         $this->scanner->expectTokens(['ISSAMENODE', '(']);
         $selectorName1 = $this->fetchTokenWithoutBrackets();
@@ -309,10 +286,8 @@ class Sql2ToQomQueryConverter
     /**
      * 6.7.10 ChildNodeJoinCondition
      * Parse an SQL2 child node join condition and return a ChildNodeJoinConditionInterface.
-     *
-     * @return ChildNodeJoinConditionInterface
      */
-    protected function parseChildNodeJoinCondition()
+    protected function parseChildNodeJoinCondition(): ChildNodeJoinConditionInterface
     {
         $this->scanner->expectTokens(['ISCHILDNODE', '(']);
         $child = $this->fetchTokenWithoutBrackets();
@@ -326,10 +301,8 @@ class Sql2ToQomQueryConverter
     /**
      * 6.7.11 DescendantNodeJoinCondition
      * Parse an SQL2 descendant node join condition and return a DescendantNodeJoinConditionInterface.
-     *
-     * @return DescendantNodeJoinConditionInterface
      */
-    protected function parseDescendantNodeJoinCondition()
+    protected function parseDescendantNodeJoinCondition(): DescendantNodeJoinConditionInterface
     {
         $this->scanner->expectTokens(['ISDESCENDANTNODE', '(']);
         $descendant = $this->fetchTokenWithoutBrackets();
@@ -344,14 +317,12 @@ class Sql2ToQomQueryConverter
      * 6.7.13 And
      * 6.7.14 Or.
      *
-     * @param ConstraintInterface $lhs     Left hand side
-     * @param int                 $minprec Precedence
-     *
-     * @return ConstraintInterface
+     * @param ConstraintInterface|null $lhs     Left hand side
+     * @param int                      $minprec Precedence
      *
      * @throws \Exception
      */
-    protected function parseConstraint($lhs = null, $minprec = 0)
+    protected function parseConstraint(ConstraintInterface $lhs = null, int $minprec = 0): FullTextSearchInterface|ComparisonInterface|NotInterface|ConstraintInterface|null
     {
         if (null === $lhs) {
             $lhs = $this->parsePrimaryConstraint();
@@ -453,10 +424,8 @@ class Sql2ToQomQueryConverter
 
     /**
      * 6.7.15 Not.
-     *
-     * @return NotInterface
      */
-    protected function parseNot()
+    protected function parseNot(): NotInterface
     {
         $this->scanner->expectToken('NOT');
 
@@ -466,11 +435,9 @@ class Sql2ToQomQueryConverter
     /**
      * 6.7.16 Comparison.
      *
-     * @return ComparisonInterface
-     *
      * @throws InvalidQueryException
      */
-    protected function parseComparison()
+    protected function parseComparison(): ComparisonInterface
     {
         $op1 = $this->parseDynamicOperand();
 
@@ -489,7 +456,7 @@ class Sql2ToQomQueryConverter
      *
      * @return string a constant from QueryObjectModelConstantsInterface
      */
-    protected function parseOperator()
+    protected function parseOperator(): string
     {
         $token = $this->scanner->fetchNextToken();
         switch (strtoupper($token)) {
@@ -514,10 +481,8 @@ class Sql2ToQomQueryConverter
 
     /**
      * 6.7.18 PropertyExistence.
-     *
-     * @return ConstraintInterface
      */
-    protected function parsePropertyExistence()
+    protected function parsePropertyExistence(): ConstraintInterface
     {
         list($selectorName, $prop) = $this->parseIdentifier();
 
@@ -536,10 +501,8 @@ class Sql2ToQomQueryConverter
 
     /**
      * 6.7.19 FullTextSearch.
-     *
-     * @return FullTextSearchInterface
      */
-    protected function parseFullTextSearch()
+    protected function parseFullTextSearch(): FullTextSearchInterface
     {
         $this->scanner->expectTokens(['CONTAINS', '(']);
 
@@ -573,7 +536,7 @@ class Sql2ToQomQueryConverter
     /**
      * 6.7.21 ChildNode.
      */
-    protected function parseChildNode()
+    protected function parseChildNode(): \PHPCR\Query\QOM\ChildNodeInterface
     {
         $this->scanner->expectTokens(['ISCHILDNODE', '(']);
         if ($this->scanner->tokenIs($this->scanner->lookupNextToken(1), ',')) {
@@ -592,7 +555,7 @@ class Sql2ToQomQueryConverter
     /**
      * 6.7.22 DescendantNode.
      */
-    protected function parseDescendantNode()
+    protected function parseDescendantNode(): \PHPCR\Query\QOM\DescendantNodeInterface
     {
         $this->scanner->expectTokens(['ISDESCENDANTNODE', '(']);
         if ($this->scanner->tokenIs($this->scanner->lookupNextToken(1), ',')) {
@@ -629,10 +592,8 @@ class Sql2ToQomQueryConverter
      * Parse an SQL2 static operand
      * 6.7.35 BindVariable
      * 6.7.36 Prefix.
-     *
-     * @return StaticOperandInterface
      */
-    protected function parseStaticOperand()
+    protected function parseStaticOperand(): StaticOperandInterface
     {
         $token = $this->scanner->lookupNextToken();
         if ('$' === substr($token, 0, 1)) {
@@ -654,7 +615,7 @@ class Sql2ToQomQueryConverter
      *
      * @return DynamicOperandInterface
      */
-    protected function parseDynamicOperand()
+    protected function parseDynamicOperand(): DynamicOperandInterface|PropertyValueInterface
     {
         $token = $this->scanner->lookupNextToken();
 
@@ -733,17 +694,15 @@ class Sql2ToQomQueryConverter
     /**
      * 6.7.27 PropertyValue
      * Parse an SQL2 property value.
-     *
-     * @return PropertyValueInterface
      */
-    protected function parsePropertyValue()
+    protected function parsePropertyValue(): PropertyValueInterface
     {
         list($selectorName, $prop) = $this->parseIdentifier();
 
         return $this->factory->propertyValue($selectorName, $prop);
     }
 
-    protected function parseCastLiteral($token)
+    protected function parseCastLiteral($token): mixed
     {
         if (!$this->scanner->tokenIs($token, 'CAST')) {
             throw new \LogicException('parseCastLiteral when not a CAST');
@@ -786,7 +745,7 @@ class Sql2ToQomQueryConverter
      * 6.7.34 Literal
      * Parse an SQL2 literal value.
      */
-    protected function parseLiteralValue()
+    protected function parseLiteralValue(): mixed
     {
         $token = $this->scanner->fetchNextToken();
         if ($this->scanner->tokenIs($token, 'CAST')) {
@@ -799,8 +758,7 @@ class Sql2ToQomQueryConverter
             $quotesUsed = $token[0];
             $token = substr($token, 1, -1);
             // Unescape quotes
-            $token = str_replace('\\'.$quotesUsed, $quotesUsed, $token);
-            $token = str_replace("''", "'", $token);
+            $token = str_replace(['\\'.$quotesUsed, "''"], [$quotesUsed, "'"], $token);
             if (preg_match('/^\d{4}-\d{2}-\d{2}( \d{2}:\d{2}:\d+)?$/', $token)) {
                 if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $token)) {
                     $token .= ' 00:00:00';
@@ -808,7 +766,7 @@ class Sql2ToQomQueryConverter
                 $token = \DateTime::createFromFormat('Y-m-d H:i:s', $token);
             }
         } elseif (is_numeric($token)) {
-            $token = false === strpos($token, '.') ? (int) $token : (float) $token;
+            $token = !str_contains($token, '.') ? (int) $token : (float) $token;
         } elseif ('true' === $token) {
             $token = true;
         } elseif ('false' === $token) {
@@ -821,7 +779,7 @@ class Sql2ToQomQueryConverter
     /**
      * 6.7.37 Ordering.
      */
-    protected function parseOrderings()
+    protected function parseOrderings(): array
     {
         $orderings = [];
         $continue = true;
@@ -840,10 +798,8 @@ class Sql2ToQomQueryConverter
 
     /**
      * 6.7.38 Order.
-     *
-     * @return OrderingInterface
      */
-    protected function parseOrdering()
+    protected function parseOrdering(): OrderingInterface
     {
         $operand = $this->parseDynamicOperand();
         $token = $this->scanner->lookupNextToken();
@@ -873,7 +829,7 @@ class Sql2ToQomQueryConverter
      *
      * @return array of array
      */
-    protected function scanColumns()
+    protected function scanColumns(): array
     {
         // Wildcard
         if ('*' === $this->scanner->lookupNextToken()) {
@@ -902,11 +858,9 @@ class Sql2ToQomQueryConverter
     /**
      * Build the columns from the scanned column data.
      *
-     * @param array $data
-     *
      * @return ColumnInterface[]
      */
-    protected function buildColumns($data)
+    protected function buildColumns(array $data): array
     {
         $columns = [];
         foreach ($data as $col) {
@@ -919,14 +873,12 @@ class Sql2ToQomQueryConverter
     /**
      * Get the next token and make sure to remove the brackets if the token is
      * in the [ns:name] notation.
-     *
-     * @return string
      */
-    private function fetchTokenWithoutBrackets()
+    private function fetchTokenWithoutBrackets(): string
     {
         $token = $this->scanner->fetchNextToken();
 
-        if ('[' === substr($token, 0, 1) && ']' === substr($token, -1)) {
+        if (str_starts_with($token, '[') && str_ends_with($token, ']')) {
             // Remove brackets around the selector name
             $token = substr($token, 1, -1);
         }
@@ -942,7 +894,7 @@ class Sql2ToQomQueryConverter
      * @return array with selectorName and propertyName. If no selectorName is
      *               specified, defaults to $this->defaultSelectorName
      */
-    private function parseIdentifier($checkSelector = true)
+    private function parseIdentifier(bool $checkSelector = true): array
     {
         $token = $this->fetchTokenWithoutBrackets();
 
@@ -966,11 +918,9 @@ class Sql2ToQomQueryConverter
     /**
      * Add a selector name to the known selector names.
      *
-     * @param string $selectorName
-     *
      * @throws InvalidQueryException
      */
-    protected function updateImplicitSelectorName($selectorName)
+    protected function updateImplicitSelectorName(string $selectorName): void
     {
         if (null === $this->implicitSelectorName) {
             $this->implicitSelectorName = $selectorName;
@@ -989,18 +939,16 @@ class Sql2ToQomQueryConverter
      * Ensure that the parsedName is a valid selector, or return the implicit
      * selector if its non-ambigous.
      *
-     * @param string|null $parsedName
-     *
      * @return string the selector to use
      *
      * @throws InvalidQueryException if there was no explicit selector and
      *                               there is more than one selector available
      */
-    protected function ensureSelectorName($parsedName)
+    protected function ensureSelectorName(?string $parsedName): array|string|null
     {
         if (null !== $parsedName) {
-            if (is_array($this->implicitSelectorName) && !isset($this->implicitSelectorName[$parsedName])
-                || !is_array($this->implicitSelectorName) && $this->implicitSelectorName !== $parsedName
+            if ((is_array($this->implicitSelectorName) && !isset($this->implicitSelectorName[$parsedName]))
+                || (!is_array($this->implicitSelectorName) && $this->implicitSelectorName !== $parsedName)
             ) {
                 throw new InvalidQueryException("Unknown selector $parsedName in '{$this->sql2}'");
             }
@@ -1016,10 +964,8 @@ class Sql2ToQomQueryConverter
 
     /**
      * Scan a single SQL2 column definition and return an array of information.
-     *
-     * @return array
      */
-    protected function scanColumn()
+    protected function scanColumn(): array
     {
         list($selectorName, $propertyName) = $this->parseIdentifier(false);
 
@@ -1038,10 +984,8 @@ class Sql2ToQomQueryConverter
      * Build a single SQL2 column definition.
      *
      * @param array $data with selector name, property name and column name
-     *
-     * @return ColumnInterface
      */
-    protected function buildColumn(array $data)
+    protected function buildColumn(array $data): ColumnInterface
     {
         list($selectorName, $propertyName, $columnName) = $data;
         $selectorName = $this->ensureSelectorName($selectorName);

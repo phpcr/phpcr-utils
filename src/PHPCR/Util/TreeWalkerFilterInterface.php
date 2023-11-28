@@ -14,5 +14,5 @@ interface TreeWalkerFilterInterface
     /**
      * Whether to visit the passed item.
      */
-    public function mustVisit(ItemInterface $item);
+    public function mustVisit(ItemInterface $item): mixed;
 }

@@ -48,7 +48,7 @@ class ValueConverter
      *
      * @throws ValueFormatException if the type can not be determined
      */
-    public function determineType($value, $weak = false)
+    public function determineType(mixed $value, bool $weak = false): int
     {
         if (is_array($value)) {
             if (0 === count($value)) {
@@ -108,13 +108,13 @@ class ValueConverter
      *
      * @return mixed the value casted into the proper format (throws an exception if conversion is not possible)
      *
-     * @throws ValueFormatException      is thrown if the specified value cannot be converted to the specified type
      * @throws RepositoryException       if the specified Node is not referenceable, the current Session is no longer active, or another error occurs
      * @throws \InvalidArgumentException if the specified DateTime value cannot be expressed in the ISO 8601-based format defined in the JCR 2.0 specification and the implementation does not support dates incompatible with that format.
+     * @throws ValueFormatException      is thrown if the specified value cannot be converted to the specified type
      *
      * @see http://www.day.com/specs/jcr/2.0/3_Repository_Model.html#3.6.4%20Property%20Type%20Conversion
      */
-    public function convertType($value, $type, $srcType = PropertyType::UNDEFINED)
+    public function convertType(mixed $value, int $type, int $srcType = PropertyType::UNDEFINED): mixed
     {
         if (is_array($value)) {
             $ret = [];
@@ -142,7 +142,6 @@ class ValueConverter
         } elseif ((PropertyType::REFERENCE === $srcType || PropertyType::WEAKREFERENCE === $srcType)
             && $value instanceof NodeInterface
         ) {
-            /** @var $value NodeInterface */
             if (!$value->isNodeType('mix:referenceable')) {
                 throw new ValueFormatException('Node '.$value->getPath().' is not referenceable');
             }
@@ -341,9 +340,9 @@ class ValueConverter
                     case PropertyType::NAME:
                         return '../'.rawurlencode($value);
                     case PropertyType::PATH:
-                        if (strlen($value) > 0
-                            && '/' != $value[0]
-                            && '.' != $value[0]
+                        if ('' !== $value
+                            && '/' !== $value[0]
+                            && '.' !== $value[0]
                         ) {
                             $value = './'.$value;
                         }

@@ -15,7 +15,7 @@ abstract class BaseNodeManipulationCommand extends BaseCommand
     /**
      * Set up the options to manipulate nodes.
      */
-    protected function configureNodeManipulationInput()
+    protected function configureNodeManipulationInput(): void
     {
         $this->addOption(
             'set-prop',
