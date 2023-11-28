@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace PHPCR\Util\Console\Command;
 
-use PHPCR\NodeInterface;
 use Symfony\Component\Console\Exception\InvalidArgumentException as CliInvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -97,7 +96,6 @@ class NodeRemoveCommand extends BaseCommand
         if ($onlyChildren) {
             $baseNode = $session->getNode($path, 0);
 
-            /** @var NodeInterface $childNode */
             foreach ($baseNode->getNodes() as $childNode) {
                 $childNodePath = $childNode->getPath();
                 $childNode->remove();

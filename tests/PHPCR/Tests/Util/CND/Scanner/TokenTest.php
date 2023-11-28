@@ -21,8 +21,8 @@ class TokenTest extends TestCase
 
     public function testConstruct(): void
     {
-        $this->assertSame(123, $this->token->type);
-        $this->assertSame('foobar', $this->token->data);
+        $this->assertSame(123, $this->token->getType());
+        $this->assertSame('foobar', $this->token->getData());
     }
 
     public function testGetData(): void

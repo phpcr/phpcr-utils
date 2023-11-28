@@ -31,9 +31,6 @@ class Sql2Scanner
      */
     protected int $curpos = 0;
 
-    /**
-     * Construct a scanner with the given SQL2 statement.
-     */
     public function __construct(string $sql2)
     {
         $this->sql2 = $sql2;

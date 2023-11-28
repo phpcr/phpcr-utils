@@ -17,9 +17,6 @@ abstract class BaseQomToSqlQueryConverter
 {
     protected BaseSqlGenerator $generator;
 
-    /**
-     * Instantiate the converter.
-     */
     public function __construct(BaseSqlGenerator $generator)
     {
         $this->generator = $generator;

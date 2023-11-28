@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace PHPCR\Util\Console\Helper;
 
 use PHPCR\NodeInterface;
-use PHPCR\PropertyInterface;
 use PHPCR\Query\QueryInterface;
 use PHPCR\SessionInterface;
 use Symfony\Component\Console\Helper\Helper;
@@ -19,24 +18,13 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class PhpcrHelper extends Helper
 {
-    /**
-     * The session bound to this helper.
-     */
-    protected SessionInterface $session;
+    private SessionInterface $session;
 
-    /**
-     * Constructor.
-     *
-     * @param SessionInterface $session the session to use in commands
-     */
     public function __construct(SessionInterface $session)
     {
         $this->session = $session;
     }
 
-    /**
-     * Get the session.
-     */
     public function getSession(): SessionInterface
     {
         return $this->session;
@@ -124,7 +112,6 @@ class PhpcrHelper extends Helper
 
         if ($operations['dump']) {
             $output->writeln('<info>Node dump: </info>');
-            /** @var PropertyInterface $property */
             foreach ($node->getProperties() as $property) {
                 $value = $property->getValue();
                 if (!is_string($value)) {
@@ -159,11 +146,9 @@ class PhpcrHelper extends Helper
     /**
      * Check if this is a supported query language.
      *
-     * @param string $language language name
-     *
      * @throws \Exception if the language is not supported
      */
-    protected function validateQueryLanguage(string $language)
+    protected function validateQueryLanguage(string $language): string
     {
         $qm = $this->getSession()->getWorkspace()->getQueryManager();
         $langs = $qm->getSupportedQueryLanguages();

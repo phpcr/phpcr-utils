@@ -27,14 +27,14 @@ use PHPCR\Version\OnParentVersionAction;
  */
 class CndWriter
 {
-    private NamespaceRegistryInterface $ns;
-
-    /** @var array<string, string> hashmap of prefix => namespace uri */
+    /**
+     * @var array<string, string> hashmap of prefix => namespace uri
+     */
     private array $namespaces = [];
 
-    public function __construct(NamespaceRegistryInterface $ns)
-    {
-        $this->ns = $ns;
+    public function __construct(
+        private NamespaceRegistryInterface $ns
+    ) {
     }
 
     /**
@@ -232,7 +232,7 @@ class CndWriter
             if ($child->isProtected()) {
                 $attributes .= 'protected ';
             }
-            if (OnParentVersionAction::COPY != $child->getOnParentVersion()) {
+            if (OnParentVersionAction::COPY !== $child->getOnParentVersion()) {
                 $attributes .= OnParentVersionAction::nameFromValue($child->getOnParentVersion()).' ';
             }
             if ($child->allowsSameNameSiblings()) {

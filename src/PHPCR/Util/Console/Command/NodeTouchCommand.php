@@ -15,7 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Command to create a PHPCR node of a specified type from
- * the command line..
+ * the command line.
  *
  * @license http://www.apache.org/licenses Apache License Version 2.0, January 2004
  * @license http://opensource.org/licenses/MIT MIT License

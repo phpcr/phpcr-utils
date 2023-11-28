@@ -68,12 +68,12 @@ final class CndParser extends AbstractParser
     /**
      * @var string[]
      */
-    protected array $namespaces = [];
+    private array $namespaces = [];
 
     /**
      * @var string[]
      */
-    protected array $nodeTypes = [];
+    private array $nodeTypes = [];
 
     public function __construct(NodeTypeManagerInterface $ntm)
     {
@@ -142,7 +142,7 @@ final class CndParser extends AbstractParser
      * Prefix ::= String
      * Uri ::= String
      */
-    protected function parseNamespaceMapping(): void
+    private function parseNamespaceMapping(): void
     {
         $this->expectToken(Token::TK_SYMBOL, '<');
         $prefix = $this->parseCndString();
@@ -162,7 +162,7 @@ final class CndParser extends AbstractParser
      *          [NodeTypeAttribute {NodeTypeAttribute}]
      *          {PropertyDef | ChildNodeDef}
      */
-    protected function parseNodeType(): void
+    private function parseNodeType(): void
     {
         $nodeType = $this->ntm->createNodeTypeTemplate();
         $this->parseNodeTypeName($nodeType);
@@ -183,7 +183,7 @@ final class CndParser extends AbstractParser
      *
      *      NodeTypeName ::= '[' String ']'
      */
-    protected function parseNodeTypeName(NodeTypeTemplateInterface $nodeType): void
+    private function parseNodeTypeName(NodeTypeTemplateInterface $nodeType): void
     {
         $this->expectToken(Token::TK_SYMBOL, '[');
         $name = $this->parseCndString();
@@ -200,7 +200,7 @@ final class CndParser extends AbstractParser
      *
      *      Supertypes ::= '>' (StringList | '?')
      */
-    protected function parseSupertypes(NodeTypeTemplateInterface $nodeType): void
+    private function parseSupertypes(NodeTypeTemplateInterface $nodeType): void
     {
         $this->expectToken(Token::TK_SYMBOL, '>');
 
@@ -243,7 +243,7 @@ final class CndParser extends AbstractParser
      *      Query ::= ('noquery' | 'nq') | ('query' | 'q' )
      *      PrimaryItem ::= ('primaryitem'| '!')(String | '?')
      */
-    protected function parseNodeTypeAttributes(NodeTypeTemplateInterface $nodeType): void
+    private function parseNodeTypeAttributes(NodeTypeTemplateInterface $nodeType): void
     {
         while (true) {
             if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->ORDERABLE)) {
@@ -284,7 +284,7 @@ final class CndParser extends AbstractParser
      *
      *      {PropertyDef | ChildNodeDef}
      */
-    protected function parseChildrenAndAttributes(NodeTypeTemplateInterface $nodeType): void
+    private function parseChildrenAndAttributes(NodeTypeTemplateInterface $nodeType): void
     {
         while (true) {
             if ($this->checkToken(Token::TK_SYMBOL, '-')) {
@@ -310,7 +310,7 @@ final class CndParser extends AbstractParser
      *          [ValueConstraints]
      *      PropertyName ::= '-' String
      */
-    protected function parsePropDef(NodeTypeTemplateInterface $nodeType): void
+    private function parsePropDef(NodeTypeTemplateInterface $nodeType): void
     {
         $this->expectToken(Token::TK_SYMBOL, '-');
 
@@ -364,7 +364,7 @@ final class CndParser extends AbstractParser
      *          'DECIMAL' | 'URI' | 'UNDEFINED' | '*' |
      *          '?') ')'
      */
-    protected function parsePropertyType(PropertyDefinitionTemplateInterface $property): void
+    private function parsePropertyType(PropertyDefinitionTemplateInterface $property): void
     {
         $types = ['STRING', 'BINARY', 'LONG', 'DOUBLE', 'BOOLEAN',  'DATE', 'NAME', 'PATH',
             'REFERENCE', 'WEAKREFERENCE', 'DECIMAL', 'URI', 'UNDEFINED', '*', '?', ];
@@ -388,7 +388,7 @@ final class CndParser extends AbstractParser
      *
      *      DefaultValues ::= '=' (StringList | '?')
      */
-    protected function parseDefaultValue(PropertyDefinitionTemplateInterface $property): void
+    private function parseDefaultValue(PropertyDefinitionTemplateInterface $property): void
     {
         if ($this->checkAndExpectToken(Token::TK_SYMBOL, '?')) {
             $list = ['?'];
@@ -406,7 +406,7 @@ final class CndParser extends AbstractParser
      *
      *      ValueConstraints ::= '<' (StringList | '?')
      */
-    protected function parseValueConstraints(PropertyDefinitionTemplateInterface $property): void
+    private function parseValueConstraints(PropertyDefinitionTemplateInterface $property): void
     {
         $this->expectToken(Token::TK_SYMBOL, '<');
 
@@ -473,7 +473,7 @@ final class CndParser extends AbstractParser
      *      NoFullText ::= ('nofulltext' | 'nof') ['?']
      *      NoQueryOrder ::= ('noqueryorder' | 'nqord') ['?']
      */
-    protected function parsePropertyAttributes(NodeTypeTemplateInterface $parentType, PropertyDefinitionTemplateInterface $property): void
+    private function parsePropertyAttributes(NodeTypeTemplateInterface $parentType, PropertyDefinitionTemplateInterface $property): void
     {
         $opvSeen = false;
         while (true) {
@@ -527,7 +527,7 @@ final class CndParser extends AbstractParser
      *      RequiredTypes ::= '(' (StringList | '?') ')'
      *      DefaultType ::= '=' (String | '?')
      */
-    protected function parseChildNodeDef(NodeTypeTemplateInterface $nodeType): void
+    private function parseChildNodeDef(NodeTypeTemplateInterface $nodeType): void
     {
         $this->expectToken(Token::TK_SYMBOL, '+');
         $childType = $this->ntm->createNodeDefinitionTemplate();
@@ -593,7 +593,7 @@ final class CndParser extends AbstractParser
      *          'IGNORE' | 'ABORT' | ('OPV' '?')
      *      Sns ::= ('sns' | '*') ['?']
      */
-    protected function parseChildNodeAttributes(
+    private function parseChildNodeAttributes(
         NodeTypeTemplateInterface $parentType,
         NodeDefinitionTemplateInterface $childType
     ): void {
@@ -627,7 +627,7 @@ final class CndParser extends AbstractParser
      *
      * @return string[]
      */
-    protected function parseCndStringList(): array
+    private function parseCndStringList(): array
     {
         $strings = [];
 
@@ -658,7 +658,7 @@ final class CndParser extends AbstractParser
      *
      * TODO: check \n, \r, \t are valid in CND strings!
      */
-    protected function parseCndString(): string
+    private function parseCndString(): string
     {
         $string = '';
         $lastType = null;
@@ -714,9 +714,9 @@ final class CndParser extends AbstractParser
      *          (('''Operator {','Operator}''') | '?')
      *      Operator ::= '=' | '<>' | '<' | '<=' | '>' | '>=' | 'LIKE'
      *
-     * @return array
+     * @return array<bool|string>
      */
-    protected function parseQueryOpsAttribute()
+    private function parseQueryOpsAttribute(): array
     {
         if ($this->checkAndExpectToken(Token::TK_SYMBOL, '?')) {
             // this denotes a variant, whatever that is
@@ -732,10 +732,7 @@ final class CndParser extends AbstractParser
         return $ops;
     }
 
-    /**
-     * Parse a query operator.
-     */
-    protected function parseQueryOperator(): bool|string
+    private function parseQueryOperator(): bool|string
     {
         $token = $this->tokenQueue->peek();
         $data = $token->getData();

@@ -15,35 +15,15 @@ namespace PHPCR\Util\CND\Scanner;
  */
 class Token
 {
-    /**
-     * The type of token.
-     */
-    public int $type;
-
-    /**
-     * The token raw data.
-     */
-    public string $data;
-
-    /**
-     * The line where the token appears.
-     */
-    protected int $line;
-
-    /**
-     * The column where the token appears.
-     */
-    protected int $row;
-
-    /**
-     * Constructor.
-     */
-    public function __construct(int $type = 0, string $data = '', int $line = 0, int $row = 0)
-    {
-        $this->type = $type;
-        $this->data = $data;
-        $this->line = $line;
-        $this->row = $row;
+    public function __construct(
+        private int $type = 0,
+        /**
+         * The token raw data.
+         */
+        private string $data = '',
+        private int $line = 0,
+        private int $row = 0
+    ) {
     }
 
     public function getData(): string

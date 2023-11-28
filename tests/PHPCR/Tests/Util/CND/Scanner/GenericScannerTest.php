@@ -14,7 +14,10 @@ use PHPUnit\Framework\TestCase;
 
 class GenericScannerTest extends TestCase
 {
-    protected $expectedTokens = [
+    /**
+     * @var array<Token[]>
+     */
+    private array $expectedTokens = [
         // <opening php tag>
         [Token::TK_SYMBOL, '<'],
         [Token::TK_SYMBOL, '?'],
@@ -104,7 +107,10 @@ class GenericScannerTest extends TestCase
         [Token::TK_NEWLINE, ''],
     ];
 
-    protected $expectedTokensNoEmptyToken;
+    /**
+     * @var Token[]
+     */
+    protected array $expectedTokensNoEmptyToken;
 
     public function setUp(): void
     {

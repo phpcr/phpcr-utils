@@ -18,19 +18,12 @@ class ConsoleDumperPropertyVisitor extends ConsoleDumperItemVisitor
 {
     /**
      * Limit to cap lines at to avoid garbled output on long property values.
-     *
-     * @var int
      */
-    protected mixed $maxLineLength;
+    protected int $maxLineLength;
+
+    private string $refFormat;
 
     /**
-     * @var string
-     */
-    private mixed $refFormat;
-
-    /**
-     * Instantiate property visitor.
-     *
      * @param array<string, mixed> $options
      */
     public function __construct(OutputInterface $output, array $options = [])
@@ -42,14 +35,12 @@ class ConsoleDumperPropertyVisitor extends ConsoleDumperItemVisitor
 
         parent::__construct($output);
 
-        $this->maxLineLength = $options['max_line_length'];
-        $this->refFormat = $options['ref_format'];
+        $this->maxLineLength = (int) $options['max_line_length'];
+        $this->refFormat = (string) $options['ref_format'];
     }
 
     /**
      * Print information about this property.
-     *
-     * @param ItemInterface $item the property to visit
      *
      * @throws \Exception
      */
