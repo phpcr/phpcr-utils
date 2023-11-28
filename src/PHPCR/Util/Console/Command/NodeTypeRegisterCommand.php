@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Util\Console\Command;
 
 use PHPCR\NodeType\NodeTypeExistsException;
@@ -34,26 +36,26 @@ class NodeTypeRegisterCommand extends BaseCommand
             ->addOption('allow-update', null, InputOption::VALUE_NONE, 'Overwrite existig node type')
             ->setHelp(
                 <<<'EOT'
-Register node types in the PHPCR repository.
+                    Register node types in the PHPCR repository.
 
-This command allows to register node types in the repository that are defined
-in a CND (Compact Namespace and Node Type Definition) file as defined in the JCR-283
-specification.
+                    This command allows to register node types in the repository that are defined
+                    in a CND (Compact Namespace and Node Type Definition) file as defined in the JCR-283
+                    specification.
 
-Custom node types can be used to define the structure of content repository
-nodes, like allowed properties and child nodes together with the namespaces
-and their prefix used for the names of node types and properties.
+                    Custom node types can be used to define the structure of content repository
+                    nodes, like allowed properties and child nodes together with the namespaces
+                    and their prefix used for the names of node types and properties.
 
-This command allows you to specify multiple files and/or folders:
+                    This command allows you to specify multiple files and/or folders:
 
-    $ php app/console phpcr:node-type:register /path/to/nodetype1.cnd /path/to/a/folder
+                        $ php app/console phpcr:node-type:register /path/to/nodetype1.cnd /path/to/a/folder
 
-When a folder is specified all files within the folder that have the <comment>.cnd</comment>
-extension will be treated as node definition files.
+                    When a folder is specified all files within the folder that have the <comment>.cnd</comment>
+                    extension will be treated as node definition files.
 
-If you use <info>--allow-update</info> existing node type definitions will be overwritten
-in the repository.
-EOT
+                    If you use <info>--allow-update</info> existing node type definitions will be overwritten
+                    in the repository.
+                    EOT
             );
     }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Tests\Util\QOM;
 
 use PHPCR\Util\QOM\BaseSqlGenerator;
@@ -12,7 +14,7 @@ abstract class BaseSqlGeneratorTest extends TestCase
      */
     protected $generator;
 
-    public function testNot()
+    public function testNot(): void
     {
         $string = $this->generator->evalNot('foo = bar');
         $this->assertSame('(NOT foo = bar)', $string);

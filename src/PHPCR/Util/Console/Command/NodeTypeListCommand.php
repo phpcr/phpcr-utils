@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Util\Console\Command;
 
 use Symfony\Component\Console\Command\Command;
@@ -22,9 +24,9 @@ class NodeTypeListCommand extends BaseCommand
             ->setDescription('List all available node types in the repository')
             ->setHelp(
                 <<<'EOT'
-This command lists all of the available node types and their subtypes
-in the PHPCR repository.
-EOT
+                    This command lists all of the available node types and their subtypes
+                    in the PHPCR repository.
+                    EOT
             );
     }
 

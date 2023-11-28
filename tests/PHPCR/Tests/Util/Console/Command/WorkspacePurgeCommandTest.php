@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Tests\Util\Console\Command;
 
 use PHPCR\Util\Console\Command\WorkspacePurgeCommand;
@@ -13,7 +15,7 @@ class WorkspacePurgeCommandTest extends BaseCommandTest
         $this->application->add(new WorkspacePurgeCommand());
     }
 
-    public function testNodeTypePurge()
+    public function testNodeTypePurge(): void
     {
         $this->session->expects($this->once())
             ->method('getRootNode')

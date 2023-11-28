@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Util\QOM;
 
 use PHPCR\PropertyType;
@@ -252,9 +254,9 @@ class Sql2ToQomQueryConverter
      */
     protected function parseEquiJoin(): EquiJoinConditionInterface
     {
-        list($selectorName1, $prop1) = $this->parseIdentifier();
+        [$selectorName1, $prop1] = $this->parseIdentifier();
         $this->scanner->expectToken('=');
-        list($selectorName2, $prop2) = $this->parseIdentifier();
+        [$selectorName2, $prop2] = $this->parseIdentifier();
 
         return $this->factory->equiJoinCondition($selectorName1, $prop1, $selectorName2, $prop2);
     }
@@ -484,7 +486,7 @@ class Sql2ToQomQueryConverter
      */
     protected function parsePropertyExistence(): ConstraintInterface
     {
-        list($selectorName, $prop) = $this->parseIdentifier();
+        [$selectorName, $prop] = $this->parseIdentifier();
 
         $this->scanner->expectToken('IS');
         $token = $this->scanner->lookupNextToken();
@@ -506,7 +508,7 @@ class Sql2ToQomQueryConverter
     {
         $this->scanner->expectTokens(['CONTAINS', '(']);
 
-        list($selectorName, $propertyName) = $this->parseIdentifier();
+        [$selectorName, $propertyName] = $this->parseIdentifier();
         $this->scanner->expectToken(',');
         $expression = $this->parseLiteralValue();
         $this->scanner->expectToken(')');
@@ -697,7 +699,7 @@ class Sql2ToQomQueryConverter
      */
     protected function parsePropertyValue(): PropertyValueInterface
     {
-        list($selectorName, $prop) = $this->parseIdentifier();
+        [$selectorName, $prop] = $this->parseIdentifier();
 
         return $this->factory->propertyValue($selectorName, $prop);
     }
@@ -967,7 +969,7 @@ class Sql2ToQomQueryConverter
      */
     protected function scanColumn(): array
     {
-        list($selectorName, $propertyName) = $this->parseIdentifier(false);
+        [$selectorName, $propertyName] = $this->parseIdentifier(false);
 
         // AS name
         if ($this->scanner->tokenIs($this->scanner->lookupNextToken(), 'AS')) {
@@ -987,7 +989,7 @@ class Sql2ToQomQueryConverter
      */
     protected function buildColumn(array $data): ColumnInterface
     {
-        list($selectorName, $propertyName, $columnName) = $data;
+        [$selectorName, $propertyName, $columnName] = $data;
         $selectorName = $this->ensureSelectorName($selectorName);
 
         return $this->factory->column($selectorName, $propertyName, $columnName);

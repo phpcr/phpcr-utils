@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Tests\Util\Console\Command;
 
 use PHPCR\NodeType\NodeTypeInterface;
@@ -42,7 +44,7 @@ class NodeTouchCommandTest extends BaseCommandTest
         $this->helperSet->set($this->phpcrHelper);
     }
 
-    public function testTouch()
+    public function testTouch(): void
     {
         $node = $this->node1;
         $child = $this->createMock(MockNode::class);
@@ -71,7 +73,7 @@ class NodeTouchCommandTest extends BaseCommandTest
         $this->executeCommand('phpcr:node:touch', ['path' => '/cms']);
     }
 
-    public function testUpdate()
+    public function testUpdate(): void
     {
         $nodeType = $this->createMock(NodeTypeInterface::class);
         $nodeType->expects($this->once())
@@ -91,7 +93,7 @@ class NodeTouchCommandTest extends BaseCommandTest
 
         $this->phpcrHelper->expects($this->once())
             ->method('processNode')
-            ->willReturnCallback(function ($output, $node, $options) use ($me) {
+            ->willReturnCallback(function ($output, $node, $options) use ($me): void {
                 $me->assertEquals($me->node1, $node);
                 $me->assertEquals([
                     'setProp' => ['foo=bar'],

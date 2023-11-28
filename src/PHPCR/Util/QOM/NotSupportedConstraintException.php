@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Util\QOM;
 
 /**
@@ -17,7 +19,7 @@ class NotSupportedConstraintException extends \RuntimeException
      */
     public static function fromConstraint(object $constraint): self
     {
-        $class = get_class($constraint);
+        $class = $constraint::class;
 
         return new self("$class is not supported by this query language");
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Tests\Util\Console\Command;
 
 use PHPCR\Query\QueryInterface;
@@ -39,7 +41,7 @@ class NodesUpdateCommandTest extends BaseCommandTest
         ];
     }
 
-    protected function setupQueryManager($options)
+    protected function setupQueryManager($options): void
     {
         $options = array_merge(['query' => ''], $options);
 
@@ -68,7 +70,7 @@ class NodesUpdateCommandTest extends BaseCommandTest
     /**
      * @dataProvider provideNodeUpdate
      */
-    public function testNodeUpdate($options)
+    public function testNodeUpdate($options): void
     {
         $options = array_merge([
             'query' => null,
@@ -96,7 +98,7 @@ class NodesUpdateCommandTest extends BaseCommandTest
 
         $setPropertyArguments = [];
         foreach ($options['setProp'] as $setProp) {
-            list($prop, $value) = $setProp;
+            [$prop, $value] = $setProp;
             $setPropertyArguments[] = [$prop, $value, null];
             $args['--set-prop'][] = $prop.'='.$value;
         }
@@ -129,14 +131,14 @@ class NodesUpdateCommandTest extends BaseCommandTest
         $this->executeCommand('phpcr:nodes:update', $args);
     }
 
-    public function testApplyClosure()
+    public function testApplyClosure(): void
     {
         $args = [
             '--query' => 'SELECT foo FROM bar',
             '--no-interaction' => true,
             '--apply-closure' => [
                 '$session->getNodeByIdentifier("/foo"); $node->setProperty("foo", "bar");',
-                function ($session, $node) {
+                function ($session, $node): void {
                     $node->setProperty('foo', 'bar');
                 },
             ],

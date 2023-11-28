@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Util\Console\Helper;
 
 use PHPCR\Util\Console\Helper\TreeDumper\ConsoleDumperNodeVisitor;

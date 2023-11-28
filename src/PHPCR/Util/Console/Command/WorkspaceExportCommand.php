@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Util\Console\Command;
 
 use PHPCR\RepositoryInterface;
@@ -30,12 +32,12 @@ class WorkspaceExportCommand extends BaseCommand
             ->setDescription('Export nodes from the repository, either to the JCR system view format or the document view format')
             ->setHelp(
                 <<<'EOF'
-The <info>export</info> command uses the PHPCR SessionInterface::exportSystemView
-method to export parts of the repository into an XML document.
+                    The <info>export</info> command uses the PHPCR SessionInterface::exportSystemView
+                    method to export parts of the repository into an XML document.
 
-If the <info>path</info> option is set, given path is exported.
-Otherwise the entire repository is exported.
-EOF
+                    If the <info>path</info> option is set, given path is exported.
+                    Otherwise the entire repository is exported.
+                    EOF
             );
     }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Util\Console\Command;
 
 use PHPCR\ItemNotFoundException;
@@ -36,16 +38,16 @@ class NodeDumpCommand extends BaseCommand
             ->setDescription('Dump subtrees of the content repository')
             ->setHelp(
                 <<<'HERE'
-The <info>dump</info> command recursively outputs the name of the node specified
-by the <info>identifier</info> argument and its subnodes in a yaml-like style.
+                    The <info>dump</info> command recursively outputs the name of the node specified
+                    by the <info>identifier</info> argument and its subnodes in a yaml-like style.
 
-If the <info>props</info> option is used the nodes properties are
-displayed as yaml arrays.
+                    If the <info>props</info> option is used the nodes properties are
+                    displayed as yaml arrays.
 
-By default the command filters out system nodes and properties (i.e. nodes and
-properties with names starting with 'jcr:'), the <info>--sys-nodes</info> option
-allows to turn this filter off.
-HERE
+                    By default the command filters out system nodes and properties (i.e. nodes and
+                    properties with names starting with 'jcr:'), the <info>--sys-nodes</info> option
+                    allows to turn this filter off.
+                    HERE
             );
     }
 
@@ -83,7 +85,7 @@ HERE
                 $node = $session->getNode($identifier);
             }
 
-            $walker->traverse($node, $input->getOption('depth'));
+            $walker->traverse($node, (int) $input->getOption('depth'));
         } catch (RepositoryException $e) {
             if ($e instanceof PathNotFoundException || $e instanceof ItemNotFoundException) {
                 $output->writeln("<error>Path '$identifier' does not exist</error>");

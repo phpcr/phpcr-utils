@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Tests\Util\CND\Scanner;
 
 use PHPCR\Util\CND\Scanner\Token;
@@ -47,7 +49,7 @@ class TokenQueueTest extends TestCase
         $this->queue->add($this->token3);
     }
 
-    public function testAdd()
+    public function testAdd(): void
     {
         $queue = new TokenQueue();
         $reflection = new \ReflectionClass($queue);
@@ -62,13 +64,13 @@ class TokenQueueTest extends TestCase
         $this->assertSame([$this->token0, $this->token1], $tokens->getValue($queue));
     }
 
-    public function testResetAndPeek()
+    public function testResetAndPeek(): void
     {
         $this->assertEquals($this->token0, $this->queue->reset());
         $this->assertEquals($this->token0, $this->queue->peek());
     }
 
-    public function testIsEofAndNext()
+    public function testIsEofAndNext(): void
     {
         // Token0
         $this->assertFalse($this->queue->isEof());
@@ -90,7 +92,7 @@ class TokenQueueTest extends TestCase
         $this->assertTrue($this->queue->isEof());
     }
 
-    public function testIsEofEmptyQueue()
+    public function testIsEofEmptyQueue(): void
     {
         $queue = new TokenQueue();
         $this->assertTrue($queue->isEof());
@@ -98,7 +100,7 @@ class TokenQueueTest extends TestCase
         $this->assertFalse($queue->isEof());
     }
 
-    public function testGet()
+    public function testGet(): void
     {
         $this->queue->reset();
         $this->assertEquals($this->token0, $this->queue->get());
@@ -108,7 +110,7 @@ class TokenQueueTest extends TestCase
         $this->assertEquals(false, $this->queue->get());
     }
 
-    public function testGetIterator()
+    public function testGetIterator(): void
     {
         $this->assertEquals(
             [$this->token0, $this->token1, $this->token2, $this->token3],

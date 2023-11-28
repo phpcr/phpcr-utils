@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Util\Console\Command;
 
 use PHPCR\Util\NodeHelper;
@@ -28,9 +30,9 @@ class WorkspacePurgeCommand extends BaseCommand
             ->addOption('force', null, InputOption::VALUE_NONE, 'Use to bypass the confirmation dialog')
             ->setHelp(
                 <<<'EOF'
-The <info>phpcr:workspace:purge</info> command removes all nodes except the
-system nodes and all non-system properties of the root node from the workspace.
-EOF
+                    The <info>phpcr:workspace:purge</info> command removes all nodes except the
+                    system nodes and all non-system properties of the root node from the workspace.
+                    EOF
             );
     }
 

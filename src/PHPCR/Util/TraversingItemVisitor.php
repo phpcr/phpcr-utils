@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Util;
 
 use PHPCR\ItemInterface;
@@ -151,7 +153,7 @@ abstract class TraversingItemVisitor implements ItemVisitorInterface
                     'Internal error in TraversingItemVisitor: item %s at %s is not a node but %s',
                     $item->getName(),
                     $item->getPath(),
-                    get_class($item)
+                    $item::class
                 ));
             }
 

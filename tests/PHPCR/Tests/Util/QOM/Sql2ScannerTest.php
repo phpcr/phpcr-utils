@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Tests\Util\QOM;
 
 use PHPCR\Query\InvalidQueryException;
@@ -8,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 class Sql2ScannerTest extends TestCase
 {
-    public function testToken()
+    public function testToken(): void
     {
         $scanner = new Sql2Scanner('SELECT page.* FROM [nt:unstructured] AS page');
         $expected = [
@@ -28,7 +30,7 @@ class Sql2ScannerTest extends TestCase
     /**
      * @dataProvider dataTestStringTokenization
      */
-    public function testStringTokenization(string $query)
+    public function testStringTokenization(string $query): void
     {
         $scanner = new Sql2Scanner($query);
         $expected = [
@@ -52,10 +54,10 @@ class Sql2ScannerTest extends TestCase
     public function dataTestStringTokenization(): array
     {
         $multilineQuery = <<<'SQL'
-SELECT page.* 
-FROM [nt:unstructured] AS page 
-WHERE name ="Hello world"
-SQL;
+            SELECT page.* 
+            FROM [nt:unstructured] AS page 
+            WHERE name ="Hello world"
+            SQL;
 
         return [
             'single line query' => ['SELECT page.* FROM [nt:unstructured] AS page WHERE name ="Hello world"'],
@@ -63,11 +65,11 @@ SQL;
         ];
     }
 
-    public function testEscapingStrings()
+    public function testEscapingStrings(): void
     {
         $sql = <<<SQL
-SELECT page.* FROM [nt:unstructured] AS page WHERE page.quotes = "\"'"
-SQL;
+            SELECT page.* FROM [nt:unstructured] AS page WHERE page.quotes = "\"'"
+            SQL;
         $scanner = new Sql2Scanner($sql);
         $expected = [
             'SELECT',
@@ -89,7 +91,7 @@ SQL;
         $this->expectTokensFromScanner($scanner, $expected);
     }
 
-    public function testSQLEscapedStrings()
+    public function testSQLEscapedStrings(): void
     {
         $sql = "WHERE page.name = 'Hello, it''s me.'";
 
@@ -106,7 +108,7 @@ SQL;
         $this->expectTokensFromScanner($scanner, $expected);
     }
 
-    public function testSQLEscapedStrings2()
+    public function testSQLEscapedStrings2(): void
     {
         $sql = "WHERE page.name = 'Hello, it''' AND";
 
@@ -124,7 +126,7 @@ SQL;
         $this->expectTokensFromScanner($scanner, $expected);
     }
 
-    public function testSquareBrackets()
+    public function testSquareBrackets(): void
     {
         $sql = 'WHERE ISSAMENODE(file, ["/home node"])';
 
@@ -142,7 +144,7 @@ SQL;
         $this->expectTokensFromScanner($scanner, $expected);
     }
 
-    public function testSquareBracketsWithoutQuotes()
+    public function testSquareBracketsWithoutQuotes(): void
     {
         $sql = 'WHERE ISSAMENODE(file, [/home node])';
 
@@ -160,7 +162,7 @@ SQL;
         $this->expectTokensFromScanner($scanner, $expected);
     }
 
-    public function testTokenizingWithMissingSpaces()
+    public function testTokenizingWithMissingSpaces(): void
     {
         $sql = 'SELECT * AS"all"';
 
@@ -175,7 +177,7 @@ SQL;
         $this->expectTokensFromScanner($scanner, $expected);
     }
 
-    public function testThrowingErrorOnUnclosedString()
+    public function testThrowingErrorOnUnclosedString(): void
     {
         $this->expectException(InvalidQueryException::class);
         new Sql2Scanner('SELECT page.* FROM [nt:unstructured] AS page WHERE name ="Hello ');
@@ -187,7 +189,7 @@ SQL;
      *
      * @param array<string> $expected
      */
-    private function expectTokensFromScanner(Sql2Scanner $scanner, array $expected)
+    private function expectTokensFromScanner(Sql2Scanner $scanner, array $expected): void
     {
         $actualTokens = [];
         while ($token = $scanner->fetchNextToken()) {

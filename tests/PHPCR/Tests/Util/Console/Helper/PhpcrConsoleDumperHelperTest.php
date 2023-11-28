@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use PHPCR\Util\Console\Helper\PhpcrConsoleDumperHelper;
 use PHPCR\Util\Console\Helper\TreeDumper\ConsoleDumperPropertyVisitor;
 use PHPCR\Util\TreeWalker;
@@ -28,7 +30,7 @@ class PhpcrConsoleDumperHelperTest extends TestCase
     /**
      * @dataProvider provideHelper
      */
-    public function testGetTreeWalker($options)
+    public function testGetTreeWalker($options): void
     {
         $options = array_merge([
             'dump_uuids' => false,

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Util\Console\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
@@ -21,8 +23,8 @@ class WorkspaceListCommand extends BaseCommand
             ->setDescription('List all available workspaces in the configured repository')
             ->setHelp(
                 <<<'EOT'
-The <info>workspace:list</info> command lists all avaialable workspaces.
-EOT
+                    The <info>workspace:list</info> command lists all avaialable workspaces.
+                    EOT
             );
     }
 

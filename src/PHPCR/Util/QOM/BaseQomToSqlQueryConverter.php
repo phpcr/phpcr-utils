@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Util\QOM;
 
 use PHPCR\Query\QOM;
@@ -145,7 +147,7 @@ abstract class BaseQomToSqlQueryConverter
             // however, without type checks, jackalope 1.0 got this wrong and returned a string.
             $literal = $expr;
         } else {
-            throw new \InvalidArgumentException('Unknown full text search expression type '.get_class($expr));
+            throw new \InvalidArgumentException('Unknown full text search expression type '.$expr::class);
         }
 
         $literal = $this->generator->evalFullText($literal);

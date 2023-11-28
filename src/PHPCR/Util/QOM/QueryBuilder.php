@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Util\QOM;
 
 use PHPCR\Query\QOM\ColumnInterface;
@@ -469,7 +471,7 @@ class QueryBuilder
      */
     public function getParameter(string $key): mixed
     {
-        return isset($this->params[$key]) ? $this->params[$key] : null;
+        return $this->params[$key] ?? null;
     }
 
     /**

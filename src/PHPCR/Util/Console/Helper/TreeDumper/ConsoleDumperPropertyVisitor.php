@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Util\Console\Helper\TreeDumper;
 
 use PHPCR\ItemInterface;
@@ -54,7 +56,7 @@ class ConsoleDumperPropertyVisitor extends ConsoleDumperItemVisitor
     public function visit(ItemInterface $item): void
     {
         if (!$item instanceof PropertyInterface) {
-            throw new \Exception(sprintf('Internal error: did not expect to visit a non-property object: %s', is_object($item) ? get_class($item) : $item));
+            throw new \Exception(sprintf('Internal error: did not expect to visit a non-property object: %s', is_object($item) ? $item::class : $item));
         }
 
         $value = $item->getString();

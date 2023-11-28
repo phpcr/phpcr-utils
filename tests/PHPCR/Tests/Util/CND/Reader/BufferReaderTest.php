@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Tests\Util\CND\Reader;
 
 use PHPCR\Util\CND\Reader\BufferReader;
@@ -92,7 +94,7 @@ class BufferReaderTest extends TestCase
         $this->assertEquals($reader->getEofMarker(), $reader->forward());
     }
 
-    public function testConstructEmptyString()
+    public function testConstructEmptyString(): void
     {
         $reader = new BufferReader('');
 

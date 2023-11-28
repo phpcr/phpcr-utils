@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Tests\Util;
 
 use PHPCR\RepositoryException;
@@ -55,7 +57,7 @@ class NodeHelperTest extends TestCase
         ];
     }
 
-    public function testGenerateAutoNodeNameNoHint()
+    public function testGenerateAutoNodeNameNoHint(): void
     {
         $result = NodeHelper::generateAutoNodeName($this->usedNames, $this->namespaces, 'a');
         $this->assertEquals('a:', substr($result, 0, 2));
@@ -64,7 +66,7 @@ class NodeHelperTest extends TestCase
     /**
      * @dataProvider hints
      */
-    public function testGenerateAutoNodeName($hint, $expect)
+    public function testGenerateAutoNodeName($hint, $expect): void
     {
         $result = NodeHelper::generateAutoNodeName($this->usedNames, $this->namespaces, 'a', $hint);
         if (true === $expect) {
@@ -77,13 +79,13 @@ class NodeHelperTest extends TestCase
     /**
      * @dataProvider invalidHints
      */
-    public function testGenerateAutoNodeNameInvalid($hint)
+    public function testGenerateAutoNodeNameInvalid($hint): void
     {
         $this->expectException(RepositoryException::class);
         NodeHelper::generateAutoNodeName($this->usedNames, $this->namespaces, 'a', $hint);
     }
 
-    public function testIsSystemItem()
+    public function testIsSystemItem(): void
     {
         /** @var MockNode|MockObject $sys */
         $sys = $this->createMock(MockNode::class);
@@ -130,7 +132,7 @@ class NodeHelperTest extends TestCase
         $this->assertFalse(NodeHelper::isSystemItem($deep));
     }
 
-    public function testCalculateOrderBeforeSwapLast()
+    public function testCalculateOrderBeforeSwapLast(): void
     {
         $old = ['one', 'two', 'three', 'four'];
         $new = ['one', 'two', 'four', 'three'];
@@ -145,7 +147,7 @@ class NodeHelperTest extends TestCase
         $this->assertEquals($expected, $reorders);
     }
 
-    public function testCalculateOrderBeforeSwap()
+    public function testCalculateOrderBeforeSwap(): void
     {
         $old = ['one', 'two', 'three', 'four'];
         $new = ['one', 'four', 'three', 'two'];
@@ -160,7 +162,7 @@ class NodeHelperTest extends TestCase
         $this->assertEquals($expected, $reorders);
     }
 
-    public function testCalculateOrderBeforeReverse()
+    public function testCalculateOrderBeforeReverse(): void
     {
         $old = ['one', 'two', 'three', 'four'];
         $new = ['four', 'three', 'two', 'one'];
@@ -175,7 +177,7 @@ class NodeHelperTest extends TestCase
         $this->assertEquals($expected, $reorders);
     }
 
-    public function testCalculateOrderBeforeDeleted()
+    public function testCalculateOrderBeforeDeleted(): void
     {
         $old = ['one', 'two', 'three', 'four'];
         $new = ['one', 'three', 'two'];
@@ -193,7 +195,7 @@ class NodeHelperTest extends TestCase
     /**
      * @group benchmark
      */
-    public function testBenchmarkOrderBeforeArray()
+    public function testBenchmarkOrderBeforeArray(): void
     {
         $nodes = [];
 

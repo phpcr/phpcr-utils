@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Util\QOM;
 
 use PHPCR\Query\QOM;
@@ -240,7 +242,7 @@ class QomToSql2QueryConverter extends BaseQomToSqlQueryConverter
         }
 
         // This should not happen, but who knows...
-        throw new \InvalidArgumentException('Invalid operand: '.get_class($constraint));
+        throw new \InvalidArgumentException('Invalid operand: '.$constraint::class);
     }
 
     /**

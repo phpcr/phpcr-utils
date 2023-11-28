@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Tests\Util\Console\Command;
 
 use PHPCR\RepositoryInterface;
@@ -14,7 +16,7 @@ class WorkspaceDeleteCommandTest extends BaseCommandTest
         $this->application->add(new WorkspaceDeleteCommand());
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $this->session->expects($this->once())
             ->method('getWorkspace')
@@ -45,7 +47,7 @@ class WorkspaceDeleteCommandTest extends BaseCommandTest
         $this->assertStringContainsString("Deleted workspace 'test_workspace'.", $ct->getDisplay());
     }
 
-    public function testDeleteNonexistent()
+    public function testDeleteNonexistent(): void
     {
         $this->session->expects($this->once())
             ->method('getWorkspace')

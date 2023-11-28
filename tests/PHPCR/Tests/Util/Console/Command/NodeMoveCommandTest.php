@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Tests\Util\Console\Command;
 
 use PHPCR\Util\Console\Command\NodeMoveCommand;
@@ -14,7 +16,7 @@ class NodeMoveCommandTest extends BaseCommandTest
     /**
      * @dataProvider provideCommand
      */
-    public function testCommand($args)
+    public function testCommand($args): void
     {
         $this->session->expects($this->once())
             ->method('move')

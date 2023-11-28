@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Util\Console\Command;
 
 use PHPCR\ImportUUIDBehaviorInterface;
@@ -36,26 +38,26 @@ class WorkspaceImportCommand extends BaseCommand
             ->setDescription('Import xml data into the repository, either in JCR system view format or arbitrary xml')
             ->setHelp(
                 <<<'EOF'
-The <info>import</info> command uses the PHPCR SessionInterface::importXml method
-to import an XML document into the repository. If the document is in the JCR
-system view format, it is interpreted according to the spec, otherwise it is
-treated as document view format, meaning XML elements are translated to nodes
-and XML attributes into properties.
+                    The <info>import</info> command uses the PHPCR SessionInterface::importXml method
+                    to import an XML document into the repository. If the document is in the JCR
+                    system view format, it is interpreted according to the spec, otherwise it is
+                    treated as document view format, meaning XML elements are translated to nodes
+                    and XML attributes into properties.
 
-If the <info>parentpath</info> option is set, the document is imported to that
-path. Otherwise the document is imported at the repository root.
+                    If the <info>parentpath</info> option is set, the document is imported to that
+                    path. Otherwise the document is imported at the repository root.
 
-The optional <info>uuid-behavior</info> option describes how UUIDs should be
-handled. The following options are available:
+                    The optional <info>uuid-behavior</info> option describes how UUIDs should be
+                    handled. The following options are available:
 
-* <info>new</info> recreate a new uuid for each imported node;
-* <info>remove</info> on collision, remove the old node from the repository and
-  put the imported data in the tree;
-* <info>replace</info> on collision, replace the existing node with the one being
-  imported. All children of the imported node also go to the new path;
-* <info>throw</info> throw an exception on uuid collision.
+                    * <info>new</info> recreate a new uuid for each imported node;
+                    * <info>remove</info> on collision, remove the old node from the repository and
+                      put the imported data in the tree;
+                    * <info>replace</info> on collision, replace the existing node with the one being
+                      imported. All children of the imported node also go to the new path;
+                    * <info>throw</info> throw an exception on uuid collision.
 
-EOF
+                    EOF
             );
     }
 

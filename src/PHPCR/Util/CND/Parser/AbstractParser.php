@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Util\CND\Parser;
 
 use PHPCR\Util\CND\Exception\ParserException;

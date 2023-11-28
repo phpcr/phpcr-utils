@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Util\QOM;
 
 /**
@@ -17,7 +19,7 @@ class NotSupportedOperandException extends \RuntimeException
      */
     public static function fromOperand(object $operand): self
     {
-        $class = get_class($operand);
+        $class = $operand::class;
 
         return new self("$class is not supported by this query language");
     }

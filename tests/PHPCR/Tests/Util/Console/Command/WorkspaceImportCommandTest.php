@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Tests\Util\Console\Command;
 
 use PHPCR\ImportUUIDBehaviorInterface;
@@ -15,7 +17,7 @@ class WorkspaceImportCommandTest extends BaseCommandTest
         $this->application->add(new WorkspaceImportCommand());
     }
 
-    public function testImport()
+    public function testImport(): void
     {
         $this->session->expects($this->once())
             ->method('getRepository')
@@ -37,7 +39,7 @@ class WorkspaceImportCommandTest extends BaseCommandTest
         $this->assertStringContainsString('Successfully imported', $ct->getDisplay());
     }
 
-    public function testImportUuidBehaviorThrow()
+    public function testImportUuidBehaviorThrow(): void
     {
         $this->session->expects($this->once())
             ->method('getRepository')

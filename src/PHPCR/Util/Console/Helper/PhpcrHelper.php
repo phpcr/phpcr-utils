@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Util\Console\Helper;
 
 use PHPCR\NodeInterface;
@@ -108,7 +110,7 @@ class PhpcrHelper extends Helper
                 );
             } else {
                 $closureString = $closure;
-                $closure = function (SessionInterface $session, NodeInterface $node) use ($closureString) {
+                $closure = function (SessionInterface $session, NodeInterface $node) use ($closureString): void {
                     eval($closureString);
                 };
                 $output->writeln(sprintf(

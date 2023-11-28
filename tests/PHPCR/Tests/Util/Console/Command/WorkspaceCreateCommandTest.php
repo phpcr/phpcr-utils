@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Tests\Util\Console\Command;
 
 use PHPCR\RepositoryInterface;
@@ -14,7 +16,7 @@ class WorkspaceCreateCommandTest extends BaseCommandTest
         $this->application->add(new WorkspaceCreateCommand());
     }
 
-    public function testCreate()
+    public function testCreate(): void
     {
         $this->session->expects($this->once())
             ->method('getWorkspace')
@@ -45,7 +47,7 @@ class WorkspaceCreateCommandTest extends BaseCommandTest
     /**
      * Handle trying to create existing workspace.
      */
-    public function testCreateExisting()
+    public function testCreateExisting(): void
     {
         $this->session->expects($this->exactly(2))
             ->method('getWorkspace')

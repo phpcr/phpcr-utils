@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Util\CND\Scanner\TokenFilter;
 
 use PHPCR\Util\CND\Scanner\Token;

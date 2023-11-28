@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Util\Console\Command;
 
 use PHPCR\Query\QueryResultInterface;
@@ -50,32 +52,32 @@ class NodesUpdateCommand extends BaseNodeManipulationCommand
             ->setDescription('Command to manipulate the nodes in the workspace.')
             ->setHelp(
                 <<<HERE
-The <info>phpcr:nodes:update</info> can manipulate the properties of nodes
-found using the given query.
+                    The <info>phpcr:nodes:update</info> can manipulate the properties of nodes
+                    found using the given query.
 
-For example, to set the property <comment>foo</comment> to <comment>bar</comment> on all unstructured nodes:
+                    For example, to set the property <comment>foo</comment> to <comment>bar</comment> on all unstructured nodes:
 
-    <info>php bin/phpcr phpcr:nodes:update --query="SELECT * FROM [nt:unstructured]" --set-prop=foo=bar</info>
+                        <info>php bin/phpcr phpcr:nodes:update --query="SELECT * FROM [nt:unstructured]" --set-prop=foo=bar</info>
 
-Or to update only nodes matching a certain criteria:
+                    Or to update only nodes matching a certain criteria:
 
-    <info>php bin/phpcr phpcr:nodes:update \
-        --query="SELECT * FROM [nt:unstructured] WHERE [phpcr:class]=\"Some\\Class\\Here\"" \
-        --add-mixin=mix:mimetype</info>
+                        <info>php bin/phpcr phpcr:nodes:update \
+                            --query="SELECT * FROM [nt:unstructured] WHERE [phpcr:class]=\"Some\\Class\\Here\"" \
+                            --add-mixin=mix:mimetype</info>
 
-The options for manipulating nodes are the same as with the
-<info>node:touch</info> command and
-can be repeated to update multiple properties.
+                    The options for manipulating nodes are the same as with the
+                    <info>node:touch</info> command and
+                    can be repeated to update multiple properties.
 
-If you have an advanced use case you can use the <comment>--apply-closure</comment> option:
+                    If you have an advanced use case you can use the <comment>--apply-closure</comment> option:
 
-    <info>php bin/phpcr phpcr:nodes:update \
-        --query="SELECT * FROM [nt:unstructured] WHERE [phpcr:class]=\"Some\\Class\\Here\"" \
-        --apply-closure="\\\$session->doSomething(); \\\$node->setProperty('foo', 'bar');"</info>
+                        <info>php bin/phpcr phpcr:nodes:update \
+                            --query="SELECT * FROM [nt:unstructured] WHERE [phpcr:class]=\"Some\\Class\\Here\"" \
+                            --apply-closure="\\\$session->doSomething(); \\\$node->setProperty('foo', 'bar');"</info>
 
-For each node in the result set, the closure will be passed the current
-<comment>PHPCR\SessionInterface</comment> implementation and the node (<comment>PHPCR\NodeInterface</comment>) as <comment>\$session</comment> and <comment>\$node</comment>.
-HERE
+                    For each node in the result set, the closure will be passed the current
+                    <comment>PHPCR\SessionInterface</comment> implementation and the node (<comment>PHPCR\NodeInterface</comment>) as <comment>\$session</comment> and <comment>\$node</comment>.
+                    HERE
             );
     }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Tests\Util\Console\Command;
 
 use PHPCR\Util\Console\Command\WorkspaceListCommand;
@@ -13,7 +15,7 @@ class WorkspaceListCommandTest extends BaseCommandTest
         $this->application->add(new WorkspaceListCommand());
     }
 
-    public function testNodeTypeList()
+    public function testNodeTypeList(): void
     {
         $this->session->expects($this->once())
             ->method('getWorkspace')
@@ -27,11 +29,11 @@ class WorkspaceListCommandTest extends BaseCommandTest
         ]);
 
         $expected = <<<'HERE'
-The following 2 workspaces are available:
-foo
-bar
+            The following 2 workspaces are available:
+            foo
+            bar
 
-HERE;
+            HERE;
 
         $this->assertEquals($expected, $ct->getDisplay());
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Util\QOM;
 
 use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants;

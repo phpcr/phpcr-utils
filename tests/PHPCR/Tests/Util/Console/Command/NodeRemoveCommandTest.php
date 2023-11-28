@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Tests\Util\Console\Command;
 
 use PHPCR\Util\Console\Command\NodeRemoveCommand;
@@ -13,7 +15,7 @@ class NodeRemoveCommandTest extends BaseCommandTest
         $this->application->add(new NodeRemoveCommand());
     }
 
-    public function testRemove()
+    public function testRemove(): void
     {
         $this->session->expects($this->once())
             ->method('removeItem')
@@ -25,7 +27,7 @@ class NodeRemoveCommandTest extends BaseCommandTest
         ]);
     }
 
-    public function testRemoveRoot()
+    public function testRemoveRoot(): void
     {
         $this->expectException(\LogicException::class);
 

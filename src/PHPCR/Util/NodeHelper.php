@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Util;
 
 use PHPCR\ItemExistsException;
@@ -201,7 +203,7 @@ class NodeHelper
          * constructed from the hint may vary across implementations.
          */
         if (1 === substr_count($nameHint, ':')) {
-            list($prefix, $name) = explode(':', $nameHint);
+            [$prefix, $name] = explode(':', $nameHint);
             if (preg_match('#^[a-zA-Z][a-zA-Z0-9]*$#', $prefix)
                 && preg_match('#^[a-zA-Z][a-zA-Z0-9]*$#', $name)
             ) {
