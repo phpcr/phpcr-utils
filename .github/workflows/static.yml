@@ -40,3 +40,16 @@ jobs:
         uses: docker://oskarstark/phpstan-ga:1.8.0
         with:
           args: analyze --no-progress -c phpstan.tests.neon.dist
+
+  php-cs-fixer:
+    name: PHP-CS-Fixer
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: PHP-CS-Fixer
+        uses: docker://oskarstark/php-cs-fixer-ga
+        with:
+          args: --dry-run --diff

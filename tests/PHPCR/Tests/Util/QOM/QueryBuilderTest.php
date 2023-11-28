@@ -2,7 +2,6 @@
 
 namespace PHPCR\Tests\Util\QOM;
 
-use InvalidArgumentException;
 use PHPCR\Query\QOM\ConstraintInterface;
 use PHPCR\Query\QOM\DynamicOperandInterface;
 use PHPCR\Query\QOM\QueryObjectModelConstantsInterface;
@@ -13,7 +12,6 @@ use PHPCR\Query\QOM\SourceInterface;
 use PHPCR\Util\QOM\QueryBuilder;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
 
 class QueryBuilderTest extends TestCase
 {
@@ -82,7 +80,7 @@ class QueryBuilderTest extends TestCase
 
     public function testAddOrderByInvalid()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
 
         $dynamicOperand = $this->createDynamicOperandMock();
 
@@ -244,7 +242,7 @@ class QueryBuilderTest extends TestCase
 
     public function testInvalidJoin()
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
 
         $source = $this->createSourceMock();
         $joinCondition = $this->createSameNodeJoinConditionMock();

@@ -17,11 +17,9 @@ class SystemNodeFilter implements TreeWalkerFilterInterface
     /**
      * Checks whether this item is a system item.
      *
-     * @param ItemInterface $item
+     * @return bool
      *
      * @throws RepositoryException
-     *
-     * @return bool
      */
     public function mustVisit(ItemInterface $item)
     {

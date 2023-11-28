@@ -22,9 +22,7 @@ class TokenFilterChain implements TokenFilterInterface
     }
 
     /**
-     * @param Token $token
-     *
-     * @return Token | null
+     * @return Token|null
      */
     public function filter(Token $token)
     {

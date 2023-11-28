@@ -143,9 +143,6 @@ class ScannerContext
         return $this->whitespaces;
     }
 
-    /**
-     * @param TokenFilterInterface $filter
-     */
     public function addTokenFilter(TokenFilterInterface $filter)
     {
         $this->tokenFilters[] = $filter;

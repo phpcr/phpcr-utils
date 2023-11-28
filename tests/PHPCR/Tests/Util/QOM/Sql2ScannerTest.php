@@ -185,7 +185,6 @@ SQL;
      * Function to assert that the tokens the scanner finds match the expected output
      * and the entire expected output is consumed.
      *
-     * @param Sql2Scanner   $scanner
      * @param array<string> $expected
      */
     private function expectTokensFromScanner(Sql2Scanner $scanner, array $expected)

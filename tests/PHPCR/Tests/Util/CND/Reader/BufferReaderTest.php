@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 class BufferReaderTest extends TestCase
 {
-    public function test__construct(): void
+    public function testConstruct(): void
     {
         $buffer = "Some random\nor\r\nstring";
         $reader = new BufferReader($buffer);
@@ -92,7 +92,7 @@ class BufferReaderTest extends TestCase
         $this->assertEquals($reader->getEofMarker(), $reader->forward());
     }
 
-    public function test__constructEmptyString()
+    public function testConstructEmptyString()
     {
         $reader = new BufferReader('');
 

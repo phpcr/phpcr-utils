@@ -17,7 +17,7 @@ class TokenTest extends TestCase
         $this->token = new Token(123, 'foobar');
     }
 
-    public function test__construct()
+    public function testConstruct()
     {
         $this->assertSame(123, $this->token->type);
         $this->assertSame('foobar', $this->token->data);
@@ -33,7 +33,7 @@ class TokenTest extends TestCase
         $this->assertEquals(123, $this->token->getType());
     }
 
-    public function test__toString()
+    public function testToString()
     {
         $this->assertEquals('TOKEN(123, \'foobar\', 0, 0)', $this->token->__toString());
     }

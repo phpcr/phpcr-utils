@@ -19,7 +19,7 @@ class ParserException extends \Exception
 
         // construct a lookup of the next tokens
         $lookup = '';
-        for ($i = 1; $i <= 5; $i++) {
+        for ($i = 1; $i <= 5; ++$i) {
             if ($queue->isEof()) {
                 break;
             }

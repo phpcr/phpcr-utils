@@ -7,7 +7,6 @@ use PHPCR\ItemVisitorInterface;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 use PHPCR\RepositoryException;
-use SplQueue;
 
 /**
  * An implementation of ItemVisitor.
@@ -51,14 +50,14 @@ abstract class TraversingItemVisitor implements ItemVisitorInterface
     /**
      * Queue used to implement breadth-first traversal.
      *
-     * @var SplQueue
+     * @var \SplQueue
      */
     protected $currentQueue;
 
     /**
      * Queue used to implement breadth-first traversal.
      *
-     * @var SplQueue
+     * @var \SplQueue
      */
     protected $nextQueue;
 
@@ -74,11 +73,11 @@ abstract class TraversingItemVisitor implements ItemVisitorInterface
      *
      * @param bool $breadthFirst if $breadthFirst is true then traversal is
      *                           done in a breadth-first manner; otherwise it is done in a
-     *                           depth-first manner (which is the default behavior).
+     *                           depth-first manner (which is the default behavior)
      * @param int  $maxDepth     the 0-based depth relative to the root node up
      *                           to which the hierarchy should be traversed (if it's -1, the
      *                           hierarchy will be traversed until there are no more children of the
-     *                           current item).
+     *                           current item)
      *
      * @api
      */
@@ -87,9 +86,9 @@ abstract class TraversingItemVisitor implements ItemVisitorInterface
         $this->breadthFirst = $breadthFirst;
         $this->maxDepth = $maxDepth;
 
-        if ($this->breadthFirst === true) {
-            $this->currentQueue = new SplQueue();
-            $this->nextQueue = new SplQueue();
+        if (true === $this->breadthFirst) {
+            $this->currentQueue = new \SplQueue();
+            $this->nextQueue = new \SplQueue();
         }
         $this->currentDepth = 0;
     }
@@ -109,11 +108,11 @@ abstract class TraversingItemVisitor implements ItemVisitorInterface
      * visited.
      *
      * @param ItemInterface $item  the Item that is accepting this
-     *                             visitor.
+     *                             visitor
      * @param int           $depth hierarchy level of this node (the root node starts
-     *                             at depth 0).
+     *                             at depth 0)
      *
-     * @throws RepositoryException if an error occurs.
+     * @throws RepositoryException if an error occurs
      *
      * @api
      */
@@ -124,11 +123,11 @@ abstract class TraversingItemVisitor implements ItemVisitorInterface
      * visited.
      *
      * @param ItemInterface $item  the Item that is accepting this
-     *                             visitor.
+     *                             visitor
      * @param int           $depth hierarchy level of this property (the root node
-     *                             starts at depth 0).
+     *                             starts at depth 0)
      *
-     * @throws RepositoryException if an error occurs.
+     * @throws RepositoryException if an error occurs
      *
      * @api
      */
@@ -144,15 +143,15 @@ abstract class TraversingItemVisitor implements ItemVisitorInterface
      * If this method throws, the visiting process is aborted.
      *
      * @param ItemInterface $item the Node or Property that is accepting
-     *                            this visitor.
+     *                            this visitor
      *
-     * @throws RepositoryException if an error occurs.
+     * @throws RepositoryException if an error occurs
      *
      * @api
      */
     public function visit(ItemInterface $item)
     {
-        if ($this->currentDepth === 0) {
+        if (0 === $this->currentDepth) {
             $this->currentDepth = $item->getDepth();
         }
         if ($item instanceof PropertyInterface) {
@@ -169,10 +168,10 @@ abstract class TraversingItemVisitor implements ItemVisitorInterface
             }
 
             try {
-                if ($this->breadthFirst === false) {
+                if (false === $this->breadthFirst) {
                     $this->entering($item, $this->currentDepth);
-                    if ($this->maxDepth === -1 || $this->currentDepth < $this->maxDepth) {
-                        $this->currentDepth++;
+                    if (-1 === $this->maxDepth || $this->currentDepth < $this->maxDepth) {
+                        ++$this->currentDepth;
                         foreach ($item->getProperties() as $property) {
                             /* @var $property PropertyInterface */
                             $property->accept($this);
@@ -181,14 +180,14 @@ abstract class TraversingItemVisitor implements ItemVisitorInterface
                             /* @var $node NodeInterface */
                             $node->accept($this);
                         }
-                        $this->currentDepth--;
+                        --$this->currentDepth;
                     }
                     $this->leaving($item, $this->currentDepth);
                 } else {
                     $this->entering($item, $this->currentDepth);
                     $this->leaving($item, $this->currentDepth);
 
-                    if ($this->maxDepth === -1 || $this->currentDepth < $this->maxDepth) {
+                    if (-1 === $this->maxDepth || $this->currentDepth < $this->maxDepth) {
                         foreach ($item->getProperties() as $property) {
                             /* @var $property PropertyInterface */
                             $property->accept($this);
@@ -201,9 +200,9 @@ abstract class TraversingItemVisitor implements ItemVisitorInterface
 
                     while (!$this->currentQueue->isEmpty() || !$this->nextQueue->isEmpty()) {
                         if ($this->currentQueue->isEmpty()) {
-                            $this->currentDepth++;
+                            ++$this->currentDepth;
                             $this->currentQueue = $this->nextQueue;
-                            $this->nextQueue = new SplQueue();
+                            $this->nextQueue = new \SplQueue();
                         }
                         $item = $this->currentQueue->dequeue();
                         $item->accept($this);

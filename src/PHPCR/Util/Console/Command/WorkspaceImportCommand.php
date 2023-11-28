@@ -17,11 +17,11 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class WorkspaceImportCommand extends BaseCommand
 {
-    const UUID_BEHAVIOR = [
-        'new'     => ImportUUIDBehaviorInterface::IMPORT_UUID_CREATE_NEW,
-        'remove'  => ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_REMOVE_EXISTING,
+    public const UUID_BEHAVIOR = [
+        'new' => ImportUUIDBehaviorInterface::IMPORT_UUID_CREATE_NEW,
+        'remove' => ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_REMOVE_EXISTING,
         'replace' => ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_REPLACE_EXISTING,
-        'throw'   => ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW,
+        'throw' => ImportUUIDBehaviorInterface::IMPORT_UUID_COLLISION_THROW,
     ];
 
     protected function configure(): void

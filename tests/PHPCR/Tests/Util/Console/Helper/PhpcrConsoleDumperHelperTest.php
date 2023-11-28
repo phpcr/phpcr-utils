@@ -31,9 +31,9 @@ class PhpcrConsoleDumperHelperTest extends TestCase
     public function testGetTreeWalker($options)
     {
         $options = array_merge([
-            'dump_uuids'     => false,
-            'ref_format'     => 'uuid',
-            'show_props'     => false,
+            'dump_uuids' => false,
+            'ref_format' => 'uuid',
+            'show_props' => false,
             'show_sys_nodes' => false,
         ], $options);
 
@@ -45,7 +45,7 @@ class PhpcrConsoleDumperHelperTest extends TestCase
         $propVisitorProp->setAccessible(true);
         $propVisitor = $propVisitorProp->getValue($tw);
 
-        if ($options['show_props'] === true) {
+        if (true === $options['show_props']) {
             $this->assertInstanceOf(ConsoleDumperPropertyVisitor::class, $propVisitor);
         } else {
             $this->assertNull($propVisitor);

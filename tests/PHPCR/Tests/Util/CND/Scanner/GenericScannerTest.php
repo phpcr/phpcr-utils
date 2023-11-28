@@ -2,7 +2,6 @@
 
 namespace PHPCR\Tests\Util\CND\Scanner;
 
-use ArrayIterator;
 use PHPCR\Util\CND\Reader\FileReader;
 use PHPCR\Util\CND\Scanner\Context\DefaultScannerContext;
 use PHPCR\Util\CND\Scanner\GenericScanner;
@@ -14,7 +13,6 @@ use PHPUnit\Framework\TestCase;
 class GenericScannerTest extends TestCase
 {
     protected $expectedTokens = [
-
         // <opening php tag>
         [Token::TK_SYMBOL, '<'],
         [Token::TK_SYMBOL, '?'],
@@ -110,7 +108,7 @@ class GenericScannerTest extends TestCase
     {
         $this->expectedTokensNoEmptyToken = [];
         foreach ($this->expectedTokens as $token) {
-            if ($token[0] !== Token::TK_NEWLINE && $token[0] !== Token::TK_WHITESPACE) {
+            if (Token::TK_NEWLINE !== $token[0] && Token::TK_WHITESPACE !== $token[0]) {
                 $this->expectedTokensNoEmptyToken[] = $token;
             }
         }
@@ -144,7 +142,7 @@ class GenericScannerTest extends TestCase
     {
         $queue->reset();
 
-        $it = new ArrayIterator($tokens);
+        $it = new \ArrayIterator($tokens);
 
         $token = $queue->peek();
 

@@ -220,9 +220,6 @@ class Sql2Generator extends BaseSqlGenerator
      *                                 selector exists in
      *                                 this query.
      *
-     * @param $selectorName
-     * @param $propertyName
-     *
      * @return string
      */
     public function evalPropertyExistence($selectorName, $propertyName)
@@ -313,7 +310,7 @@ class Sql2Generator extends BaseSqlGenerator
     public function evalPropertyValue($propertyName, $selectorName = null)
     {
         $sql2 = null !== $selectorName ? $this->addBracketsIfNeeded($selectorName).'.' : '';
-        if ('*' !== $propertyName && substr($propertyName, 0, 1) !== '[') {
+        if ('*' !== $propertyName && '[' !== substr($propertyName, 0, 1)) {
             $propertyName = "[$propertyName]";
         }
         $sql2 .= $propertyName;
@@ -324,21 +321,19 @@ class Sql2Generator extends BaseSqlGenerator
     /**
      * columns ::= (Column ',' {Column}) | '*'.
      *
-     * @param $columns
-     *
      * @return string
      */
     public function evalColumns($columns)
     {
         if ((!is_array($columns) && !$columns instanceof \Countable)
-            || count($columns) === 0
+            || 0 === count($columns)
         ) {
             return '*';
         }
 
         $sql2 = '';
         foreach ($columns as $column) {
-            if ($sql2 !== '') {
+            if ('' !== $sql2) {
                 $sql2 .= ', ';
             }
 
@@ -394,7 +389,7 @@ class Sql2Generator extends BaseSqlGenerator
         }
         $sql2 = $path;
         // only ensure proper quoting if the user did not quote himself, we trust him to get it right if he did.
-        if (strpos($path, '[') !== 0 && substr($path, -1) !== ']') {
+        if (0 !== strpos($path, '[') && ']' !== substr($path, -1)) {
             if (false !== strpos($sql2, ' ') || false !== strpos($sql2, '.')) {
                 $sql2 = '"'.$sql2.'"';
             }
@@ -423,8 +418,8 @@ class Sql2Generator extends BaseSqlGenerator
      */
     private function addBracketsIfNeeded($selector)
     {
-        if (substr($selector, 0, 1) !== '['
-            && substr($selector, -1) !== ']'
+        if ('[' !== substr($selector, 0, 1)
+            && ']' !== substr($selector, -1)
             && false !== strpos($selector, ':')
         ) {
             return "[$selector]";

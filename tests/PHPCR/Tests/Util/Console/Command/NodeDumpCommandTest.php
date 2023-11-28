@@ -2,7 +2,6 @@
 
 namespace PHPCR\Tests\Util\Console\Command;
 
-use Exception;
 use PHPCR\ItemNotFoundException;
 use PHPCR\Util\Console\Command\NodeDumpCommand;
 use PHPCR\Util\TreeWalker;
@@ -71,7 +70,7 @@ class NodeDumpCommandTest extends BaseCommandTest
 
     public function testInvalidRefFormat()
     {
-        $this->expectException(Exception::class);
+        $this->expectException(\Exception::class);
 
         $this->executeCommand('phpcr:node:dump', ['--ref-format' => 'xy']);
         $this->fail('invalid ref-format did not produce exception');

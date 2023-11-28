@@ -35,30 +35,30 @@ use PHPCR\Version\OnParentVersionAction;
 class CndParser extends AbstractParser
 {
     // node type attributes
-    private $ORDERABLE = ['o', 'ord', 'orderable']; //, 'variant' => true);
-    private $MIXIN = ['m', 'mix', 'mixin']; //, 'variant' => true);
-    private $ABSTRACT = ['a', 'abs', 'abstract']; //, 'variant' => true);
-    private $NOQUERY = ['noquery', 'nq']; //, 'variant' => false);
-    private $QUERY = ['query', 'q']; //, 'variant' => false);
-    private $PRIMARYITEM = ['primaryitem', '!']; //, 'variant' => false);
+    private $ORDERABLE = ['o', 'ord', 'orderable']; // , 'variant' => true);
+    private $MIXIN = ['m', 'mix', 'mixin']; // , 'variant' => true);
+    private $ABSTRACT = ['a', 'abs', 'abstract']; // , 'variant' => true);
+    private $NOQUERY = ['noquery', 'nq']; // , 'variant' => false);
+    private $QUERY = ['query', 'q']; // , 'variant' => false);
+    private $PRIMARYITEM = ['primaryitem', '!']; // , 'variant' => false);
 
     // common for properties and child definitions
-    private $PRIMARY = ['!', 'pri', 'primary']; //, 'variant' => true),
-    private $AUTOCREATED = ['a', 'aut', 'autocreated']; //, 'variant' => true),
-    private $MANDATORY = ['m', 'man', 'mandatory']; //, 'variant' => true),
-    private $PROTECTED = ['p', 'pro', 'protected']; //, 'variant' => true),
+    private $PRIMARY = ['!', 'pri', 'primary']; // , 'variant' => true),
+    private $AUTOCREATED = ['a', 'aut', 'autocreated']; // , 'variant' => true),
+    private $MANDATORY = ['m', 'man', 'mandatory']; // , 'variant' => true),
+    private $PROTECTED = ['p', 'pro', 'protected']; // , 'variant' => true),
     private $OPV = ['COPY', 'VERSION', 'INITIALIZE', 'COMPUTE', 'IGNORE', 'ABORT'];
 
     // property type attributes
-    private $MULTIPLE = ['*', 'mul', 'multiple']; //, 'variant' => true),
-    private $QUERYOPS = ['qop', 'queryops']; //, 'variant' => true), // Needs special handling !
-    private $NOFULLTEXT = ['nof', 'nofulltext']; //, 'variant' => true),
-    private $NOQUERYORDER = ['nqord', 'noqueryorder']; //, 'variant' => true),
+    private $MULTIPLE = ['*', 'mul', 'multiple']; // , 'variant' => true),
+    private $QUERYOPS = ['qop', 'queryops']; // , 'variant' => true), // Needs special handling !
+    private $NOFULLTEXT = ['nof', 'nofulltext']; // , 'variant' => true),
+    private $NOQUERYORDER = ['nqord', 'noqueryorder']; // , 'variant' => true),
 
     // child node attributes
     // multiple is actually a jackrabbit specific synonym for sns
     // http://www.mail-archive.com/users@jackrabbit.apache.org/msg19268.html
-    private $SNS = ['*', 'sns', 'multiple']; //, 'variant' => true),
+    private $SNS = ['*', 'sns', 'multiple']; // , 'variant' => true),
 
     /**
      * @var NodeTypeManagerInterface
@@ -75,9 +75,6 @@ class CndParser extends AbstractParser
      */
     protected $nodeTypes = [];
 
-    /**
-     * @param NodeTypeManagerInterface $ntm
-     */
     public function __construct(NodeTypeManagerInterface $ntm)
     {
         $this->ntm = $ntm;
@@ -130,7 +127,7 @@ class CndParser extends AbstractParser
 
         return [
             'namespaces' => $this->namespaces,
-            'nodeTypes'  => $this->nodeTypes,
+            'nodeTypes' => $this->nodeTypes,
         ];
     }
 
@@ -350,7 +347,7 @@ class CndParser extends AbstractParser
         // Next token is '<' and two token later it's not '=', i.e. not '<ident='
         $next1 = $this->tokenQueue->peek();
         $next2 = $this->tokenQueue->peek(2);
-        if ($next1 && $next1->getData() === '<' && (!$next2 || $next2->getData() !== '=')) {
+        if ($next1 && '<' === $next1->getData() && (!$next2 || '=' !== $next2->getData())) {
             $this->parseValueConstraints($property);
         }
     }
@@ -678,7 +675,7 @@ class CndParser extends AbstractParser
             $type = $token->getType();
             $data = $token->getData();
 
-            if ($type === Token::TK_STRING) {
+            if (Token::TK_STRING === $type) {
                 $string = substr($data, 1, -1);
                 $this->tokenQueue->next();
 
@@ -686,13 +683,13 @@ class CndParser extends AbstractParser
             }
 
             // If it's not an identifier or a symbol allowed in a string, break
-            if ($type !== Token::TK_IDENTIFIER && $type !== Token::TK_SYMBOL
-            || ($type === Token::TK_SYMBOL && $data !== '_' && $data !== ':')) {
+            if (Token::TK_IDENTIFIER !== $type && Token::TK_SYMBOL !== $type
+            || (Token::TK_SYMBOL === $type && '_' !== $data && ':' !== $data)) {
                 break;
             }
 
             // Detect spaces (an identifier cannot be followed by an identifier as it would have been read as a single token)
-            if ($type === Token::TK_IDENTIFIER && $lastType === Token::TK_IDENTIFIER) {
+            if (Token::TK_IDENTIFIER === $type && Token::TK_IDENTIFIER === $lastType) {
                 break;
             }
 
@@ -702,7 +699,7 @@ class CndParser extends AbstractParser
             $lastType = $type;
         }
 
-        if ($string === '') {
+        if ('' === $string) {
             throw new ParserException($this->tokenQueue, sprintf("Expected CND string, found '%s': ", $this->tokenQueue->peek()->getData()));
         }
 
@@ -752,10 +749,10 @@ class CndParser extends AbstractParser
 
         switch ($data) {
             case '<':
-                $op = ($nextData === '>' ? '>=' : ($nextData === '=' ? '<=' : '<'));
+                $op = ('>' === $nextData ? '>=' : ('=' === $nextData ? '<=' : '<'));
                 break;
             case '>':
-                $op = ($nextData === '=' ? '>=' : '>');
+                $op = ('=' === $nextData ? '>=' : '>');
                 break;
             case '=':
                 $op = '=';
@@ -766,9 +763,9 @@ class CndParser extends AbstractParser
         }
 
         // Consume the correct number of tokens
-        if ($op === 'LIKE' || strlen($op) === 1) {
+        if ('LIKE' === $op || 1 === strlen($op)) {
             $this->tokenQueue->next();
-        } elseif (strlen($op) === 2) {
+        } elseif (2 === strlen($op)) {
             $this->tokenQueue->next();
             $this->tokenQueue->next();
         }

@@ -57,8 +57,6 @@ class TreeWalker
 
     /**
      * Add a filter to select the nodes that will be traversed.
-     *
-     * @param TreeWalkerFilterInterface $filter
      */
     public function addNodeFilter(TreeWalkerFilterInterface $filter)
     {
@@ -69,8 +67,6 @@ class TreeWalker
 
     /**
      * Add a filter to select the properties that will be traversed.
-     *
-     * @param TreeWalkerFilterInterface $filter
      */
     public function addPropertyFilter(TreeWalkerFilterInterface $filter)
     {
@@ -81,8 +77,6 @@ class TreeWalker
 
     /**
      * Return whether a node must be traversed or not.
-     *
-     * @param NodeInterface $node
      *
      * @return bool
      */
@@ -100,8 +94,6 @@ class TreeWalker
     /**
      * Return whether a node property must be traversed or not.
      *
-     * @param PropertyInterface $property
-     *
      * @return bool
      */
     protected function mustVisitProperty(PropertyInterface $property)
@@ -118,9 +110,8 @@ class TreeWalker
     /**
      * Traverse a node.
      *
-     * @param NodeInterface $node
-     * @param int           $recurse Max recursion level
-     * @param int           $level   Recursion level
+     * @param int $recurse Max recursion level
+     * @param int $level   Recursion level
      */
     public function traverse(NodeInterface $node, $recurse = -1, $level = 0): void
     {
@@ -135,7 +126,7 @@ class TreeWalker
             $node->accept($this->nodeVisitor);
 
             // Visit properties
-            if ($this->propertyVisitor !== null) {
+            if (null !== $this->propertyVisitor) {
                 foreach ($node->getProperties() as $prop) {
                     if ($this->mustVisitProperty($prop)) {
                         if (method_exists($this->propertyVisitor, 'setLevel')) {

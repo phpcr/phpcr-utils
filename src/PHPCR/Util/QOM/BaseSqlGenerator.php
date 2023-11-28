@@ -2,7 +2,6 @@
 
 namespace PHPCR\Util\QOM;
 
-use DateTime;
 use PHPCR\PropertyType;
 use PHPCR\Query\QOM\QueryObjectModelConstantsInterface as Constants;
 use PHPCR\Util\ValueConverter;
@@ -163,8 +162,6 @@ abstract class BaseSqlGenerator
     /**
      * orderings ::= Ordering {',' Ordering}.
      *
-     * @param $orderings
-     *
      * @return string
      */
     public function evalOrderings($orderings)
@@ -172,7 +169,7 @@ abstract class BaseSqlGenerator
         $sql = '';
 
         foreach ($orderings as $ordering) {
-            if ($sql !== '') {
+            if ('' !== $sql) {
                 $sql .= ', ';
             }
 
@@ -185,9 +182,6 @@ abstract class BaseSqlGenerator
     /**
      * Ordering ::= DynamicOperand [Order].
      *
-     * @param $operand
-     * @param $order
-     *
      * @return string
      */
     public function evalOrdering($operand, $order)
@@ -199,8 +193,6 @@ abstract class BaseSqlGenerator
      * Order ::= Ascending | Descending
      * Ascending ::= 'ASC'
      * Descending ::= 'DESC'.
-     *
-     * @param $order
      *
      * @return string
      */
@@ -219,8 +211,6 @@ abstract class BaseSqlGenerator
     /**
      * BindVariableValue ::= '$'bindVariableName
      * bindVariableName ::= Prefix.
-     *
-     * @param $var
      *
      * @return string
      */
@@ -241,8 +231,8 @@ abstract class BaseSqlGenerator
     public function evalFullText($string)
     {
         $illegalCharacters = [
-            '!'  => '\\!', '(' => '\\(', ':' => '\\:', '^' => '\\^',
-            '['  => '\\[', ']' => '\\]', '{' => '\\{', '}' => '\\}',
+            '!' => '\\!', '(' => '\\(', ':' => '\\:', '^' => '\\^',
+            '[' => '\\[', ']' => '\\]', '{' => '\\{', '}' => '\\}',
             '\"' => '\\\"', '?' => '\\?', "'" => "''",
         ];
 
@@ -252,13 +242,11 @@ abstract class BaseSqlGenerator
     /**
      * Literal ::= CastLiteral | UncastLiteral.
      *
-     * @param mixed $literal
-     *
      * @return string
      */
     public function evalLiteral($literal)
     {
-        if ($literal instanceof DateTime) {
+        if ($literal instanceof \DateTime) {
             $string = $this->valueConverter->convertType($literal, PropertyType::STRING);
 
             return $this->evalCastLiteral($string, 'DATE');
@@ -316,8 +304,6 @@ abstract class BaseSqlGenerator
      *
      * With empty columns, SQL1 is different from SQL2
      *
-     * @param $columns
-     *
      * @return string
      */
     abstract public function evalColumns($columns);
@@ -332,9 +318,6 @@ abstract class BaseSqlGenerator
     abstract public function evalColumn($selectorName, $propertyName = null, $colname = null);
 
     /**
-     * @param $selectorName
-     * @param $propertyName
-     *
      * @return string
      */
     abstract public function evalPropertyExistence($selectorName, $propertyName);

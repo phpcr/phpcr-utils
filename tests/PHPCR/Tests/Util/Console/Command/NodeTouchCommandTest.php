@@ -2,7 +2,6 @@
 
 namespace PHPCR\Tests\Util\Console\Command;
 
-use Exception;
 use PHPCR\NodeType\NodeTypeInterface;
 use PHPCR\PathNotFoundException;
 use PHPCR\Tests\Stubs\MockNode;
@@ -58,7 +57,7 @@ class NodeTouchCommandTest extends BaseCommandTest
                         throw new PathNotFoundException();
                 }
 
-                throw new Exception('Unexpected '.$path);
+                throw new \Exception('Unexpected '.$path);
             });
 
         $this->node1->expects($this->once())
@@ -104,12 +103,12 @@ class NodeTouchCommandTest extends BaseCommandTest
             });
 
         $this->executeCommand('phpcr:node:touch', [
-            'path'           => '/cms',
-            '--set-prop'     => ['foo=bar'],
-            '--remove-prop'  => ['bar'],
-            '--add-mixin'    => ['foo:bar'],
+            'path' => '/cms',
+            '--set-prop' => ['foo=bar'],
+            '--remove-prop' => ['bar'],
+            '--add-mixin' => ['foo:bar'],
             '--remove-mixin' => ['bar:foo'],
-            '--dump'         => true,
+            '--dump' => true,
         ]);
     }
 }

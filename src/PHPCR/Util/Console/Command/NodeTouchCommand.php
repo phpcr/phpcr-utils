@@ -132,11 +132,11 @@ HERE
         }
 
         $helper->processNode($output, $node, [
-            'setProp'      => $setProp,
-            'removeProp'   => $removeProp,
-            'addMixins'    => $addMixins,
+            'setProp' => $setProp,
+            'removeProp' => $removeProp,
+            'addMixins' => $addMixins,
             'removeMixins' => $removeMixins,
-            'dump'         => $dump,
+            'dump' => $dump,
         ]);
 
         $session->save();

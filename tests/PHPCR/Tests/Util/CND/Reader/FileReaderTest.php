@@ -2,7 +2,6 @@
 
 namespace PHPCR\Tests\Util\CND\Reader;
 
-use InvalidArgumentException;
 use PHPCR\Util\CND\Reader\FileReader;
 use PHPUnit\Framework\TestCase;
 
@@ -48,9 +47,9 @@ class FileReaderTest extends TestCase
         );
     }
 
-    public function test__construct_fileNotFound()
+    public function testConstructFileNotFound()
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
 
         new FileReader('unexisting_file');
     }
@@ -65,7 +64,7 @@ class FileReaderTest extends TestCase
         $curLine = 1;
         $curCol = 1;
 
-        for ($i = 0; $i < count($this->chars); $i++) {
+        for ($i = 0; $i < count($this->chars); ++$i) {
             $peek = $this->reader->currentChar();
 
             if ($peek === $this->reader->getEofMarker()) {
@@ -80,11 +79,11 @@ class FileReaderTest extends TestCase
             $this->assertFalse($this->reader->isEof());
 
             // Assert isEol is true at end of the lines
-            if ($peek === "\n") {
-                $curLine++;
+            if ("\n" === $peek) {
+                ++$curLine;
                 $curCol = 1;
             } else {
-                $curCol++;
+                ++$curCol;
             }
 
             // Assert the next character is the expected one

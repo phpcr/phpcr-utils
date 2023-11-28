@@ -4,7 +4,6 @@ namespace PHPCR\Util;
 
 use DateTime;
 use Exception;
-use InvalidArgumentException;
 use PHPCR\NodeInterface;
 use PHPCR\PropertyInterface;
 use PHPCR\PropertyType;
@@ -42,12 +41,12 @@ class ValueConverter
      * http://www.day.com/specs/jcr/2.0/3_Repository_Model.html#3.6.4.3%20From%20DATE%20To
      *
      * @param mixed $value The variable we need to know the type of
-     * @param bool  $weak  When a Node is given as $value this can be given
-     *                     as true to create a WEAKREFERENCE.
-     *
-     * @throws ValueFormatException if the type can not be determined
+     * @param bool  $weak  when a Node is given as $value this can be given
+     *                     as true to create a WEAKREFERENCE
      *
      * @return int One of the type constants
+     *
+     * @throws ValueFormatException if the type can not be determined
      */
     public function determineType($value, $weak = false)
     {
@@ -107,11 +106,11 @@ class ValueConverter
      * @param int   $type    Target type to convert into. One of the type constants in PropertyType
      * @param int   $srcType Source type to convert from, if not specified this is automatically determined, which will miss the string based types that are not strings (DECIMAL, NAME, PATH, URI)
      *
-     * @throws ValueFormatException     is thrown if the specified value cannot be converted to the specified type
-     * @throws RepositoryException      if the specified Node is not referenceable, the current Session is no longer active, or another error occurs.
-     * @throws InvalidArgumentException if the specified DateTime value cannot be expressed in the ISO 8601-based format defined in the JCR 2.0 specification and the implementation does not support dates incompatible with that format.
-     *
      * @return mixed the value casted into the proper format (throws an exception if conversion is not possible)
+     *
+     * @throws ValueFormatException      is thrown if the specified value cannot be converted to the specified type
+     * @throws RepositoryException       if the specified Node is not referenceable, the current Session is no longer active, or another error occurs
+     * @throws \InvalidArgumentException if the specified DateTime value cannot be expressed in the ISO 8601-based format defined in the JCR 2.0 specification and the implementation does not support dates incompatible with that format.
      *
      * @see http://www.day.com/specs/jcr/2.0/3_Repository_Model.html#3.6.4%20Property%20Type%20Conversion
      */
@@ -154,9 +153,10 @@ class ValueConverter
             case PropertyType::STRING:
                 switch ($srcType) {
                     case PropertyType::DATE:
-                        if (!$value instanceof DateTime) {
+                        if (!$value instanceof \DateTime) {
                             throw new RepositoryException('Cannot convert a date that is not a \DateTime instance to string');
                         }
+
                         /* @var $value DateTime */
                         // Milliseconds formatting is not possible in PHP so we
                         // construct it by cutting microseconds to 3 positions.
@@ -175,10 +175,12 @@ class ValueConverter
                         if (is_resource($value)) {
                             throw new ValueFormatException('Inconsistency: Non-binary property should not have resource stream value');
                         }
+
                         // TODO: how can we provide ValueFormatException on failure? invalid casting leads to 'catchable fatal error' instead of exception
                         return (string) $value;
                 }
 
+                // no break
             case PropertyType::BINARY:
                 if (is_resource($value)) {
                     return $value;
@@ -201,7 +203,7 @@ class ValueConverter
                     case PropertyType::DECIMAL:
                         return (int) $value;
                     case PropertyType::DATE:
-                        if (!$value instanceof DateTime) {
+                        if (!$value instanceof \DateTime) {
                             throw new RepositoryException('something weird');
                         }
                         /* @var $value DateTime */
@@ -222,7 +224,7 @@ class ValueConverter
                     case PropertyType::DECIMAL:
                         return (float) $value;
                     case PropertyType::DATE:
-                        if (!$value instanceof DateTime) {
+                        if (!$value instanceof \DateTime) {
                             throw new RepositoryException('something weird');
                         }
 
@@ -239,19 +241,19 @@ class ValueConverter
                 switch ($srcType) {
                     case PropertyType::STRING:
                     case PropertyType::DATE:
-                        if ($value instanceof DateTime) {
+                        if ($value instanceof \DateTime) {
                             return $value;
                         }
 
                         try {
-                            return new DateTime($value);
-                        } catch (Exception $e) {
+                            return new \DateTime($value);
+                        } catch (\Exception $e) {
                             throw new ValueFormatException("String '$value' is not a valid date", 0, $e);
                         }
                     case PropertyType::LONG:
                     case PropertyType::DOUBLE:
                     case PropertyType::DECIMAL:
-                        $datetime = new DateTime();
+                        $datetime = new \DateTime();
                         $datetime = $datetime->setTimestamp(round($value));
 
                         return $datetime;
@@ -320,7 +322,7 @@ class ValueConverter
                     case PropertyType::REFERENCE:
                     case PropertyType::WEAKREFERENCE:
                         if (empty($value)) {
-                            //TODO check if string is valid uuid
+                            // TODO check if string is valid uuid
                             throw new ValueFormatException('Value "'.var_export($value, true).'" is not a valid unique id');
                         }
 

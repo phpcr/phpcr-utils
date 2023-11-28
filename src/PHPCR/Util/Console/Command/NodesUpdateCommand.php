@@ -2,7 +2,6 @@
 
 namespace PHPCR\Util\Console\Command;
 
-use InvalidArgumentException;
 use PHPCR\Query\QueryResultInterface;
 use PHPCR\Query\RowInterface;
 use Symfony\Component\Console\Exception\InvalidArgumentException as CliInvalidArgumentException;
@@ -81,7 +80,7 @@ HERE
 
     /**
      * @throws CliInvalidArgumentException
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -98,13 +97,13 @@ HERE
         $session = $this->getPhpcrSession();
 
         if (!$query) {
-            throw new InvalidArgumentException(
+            throw new \InvalidArgumentException(
                 'You must provide a SELECT query, e.g. --query="SELECT * FROM [nt:unstructured]"'
             );
         }
 
-        if (strtoupper(substr($query, 0, 6)) !== 'SELECT') {
-            throw new InvalidArgumentException("Query doesn't look like a SELECT query: '$query'");
+        if ('SELECT' !== strtoupper(substr($query, 0, 6))) {
+            throw new \InvalidArgumentException("Query doesn't look like a SELECT query: '$query'");
         }
 
         $query = $helper->createQuery($queryLanguage, $query);
@@ -129,14 +128,14 @@ HERE
             $node = $row->getNode();
 
             $helper->processNode($output, $node, [
-                'setProp'       => $setProp,
-                'removeProp'    => $removeProp,
-                'addMixins'     => $addMixins,
-                'removeMixins'  => $removeMixins,
+                'setProp' => $setProp,
+                'removeProp' => $removeProp,
+                'addMixins' => $addMixins,
+                'removeMixins' => $removeMixins,
                 'applyClosures' => $applyClosures,
             ]);
 
-            $persistIn--;
+            --$persistIn;
             if (0 === $persistIn) {
                 $output->writeln('<info>Saving nodes processed so far...</info>');
                 $session->save();
@@ -152,7 +151,7 @@ HERE
     }
 
     /**
-     * @return bool Whether to execute the action or not.
+     * @return bool whether to execute the action or not
      */
     private function shouldExecute(InputInterface $input, OutputInterface $output, QueryResultInterface $result)
     {
@@ -161,7 +160,7 @@ HERE
             count($result->getRows())
         )));
 
-        if ($response === 'L') {
+        if ('L' === $response) {
             /** @var RowInterface $row */
             foreach ($result as $i => $row) {
                 $output->writeln(sprintf(' - [%d] %s', $i, $row->getPath()));
@@ -170,11 +169,11 @@ HERE
             return $this->shouldExecute($input, $output, $result);
         }
 
-        if ($response === 'N') {
+        if ('N' === $response) {
             return false;
         }
 
-        if ($response === 'Y') {
+        if ('Y' === $response) {
             return true;
         }
 

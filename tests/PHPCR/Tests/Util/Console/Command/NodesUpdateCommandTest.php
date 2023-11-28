@@ -2,7 +2,6 @@
 
 namespace PHPCR\Tests\Util\Console\Command;
 
-use InvalidArgumentException;
 use PHPCR\Query\QueryInterface;
 use PHPCR\Util\Console\Command\NodesUpdateCommand;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -26,16 +25,16 @@ class NodesUpdateCommandTest extends BaseCommandTest
     {
         return [
             // No query specified
-            [['exception' => InvalidArgumentException::class]],
+            [['exception' => \InvalidArgumentException::class]],
             // Specify query
             [['query' => 'SELECT * FROM nt:unstructured WHERE foo="bar"']],
             // Set, remote properties and mixins
             [[
-                'setProp'     => [['foo', 'bar']],
-                'removeProp'  => ['bar'],
-                'addMixin'    => ['mixin1'],
+                'setProp' => [['foo', 'bar']],
+                'removeProp' => ['bar'],
+                'addMixin' => ['mixin1'],
                 'removeMixin' => ['mixin1'],
-                'query'       => 'SELECT * FROM nt:unstructured',
+                'query' => 'SELECT * FROM nt:unstructured',
             ]],
         ];
     }
@@ -72,12 +71,12 @@ class NodesUpdateCommandTest extends BaseCommandTest
     public function testNodeUpdate($options)
     {
         $options = array_merge([
-            'query'       => null,
-            'setProp'     => [],
-            'removeProp'  => [],
-            'addMixin'    => [],
+            'query' => null,
+            'setProp' => [],
+            'removeProp' => [],
+            'addMixin' => [],
             'removeMixin' => [],
-            'exception'   => null,
+            'exception' => null,
         ], $options);
 
         if ($options['exception']) {
@@ -87,12 +86,12 @@ class NodesUpdateCommandTest extends BaseCommandTest
         $this->setupQueryManager($options);
 
         $args = [
-            '--query'          => $options['query'],
+            '--query' => $options['query'],
             '--no-interaction' => true,
-            '--set-prop'       => [],
-            '--remove-prop'    => [],
-            '--add-mixin'      => [],
-            '--remove-mixin'   => [],
+            '--set-prop' => [],
+            '--remove-prop' => [],
+            '--add-mixin' => [],
+            '--remove-mixin' => [],
         ];
 
         $setPropertyArguments = [];
@@ -133,9 +132,9 @@ class NodesUpdateCommandTest extends BaseCommandTest
     public function testApplyClosure()
     {
         $args = [
-            '--query'          => 'SELECT foo FROM bar',
+            '--query' => 'SELECT foo FROM bar',
             '--no-interaction' => true,
-            '--apply-closure'  => [
+            '--apply-closure' => [
                 '$session->getNodeByIdentifier("/foo"); $node->setProperty("foo", "bar");',
                 function ($session, $node) {
                     $node->setProperty('foo', 'bar');
