@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Util;
 
 use PHPCR\ItemInterface;
@@ -14,5 +16,5 @@ interface TreeWalkerFilterInterface
     /**
      * Whether to visit the passed item.
      */
-    public function mustVisit(ItemInterface $item);
+    public function mustVisit(ItemInterface $item): mixed;
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Util\Console\Command;
 
 use PHPCR\NodeInterface;
@@ -8,6 +10,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 /**
  * Command to remove all nodes from a path in the workspace of the configured
@@ -32,17 +35,17 @@ class NodeRemoveCommand extends BaseCommand
             ->addOption('only-children', null, InputOption::VALUE_NONE, 'Use to only purge children of specified path')
             ->setHelp(
                 <<<'EOF'
-The <info>phpcr:node:remove</info> command will remove the given node or the
-children of the given node according to the options given.
+                    The <info>phpcr:node:remove</info> command will remove the given node or the
+                    children of the given node according to the options given.
 
-Remove specified node and its children:
+                    Remove specified node and its children:
 
-    $ php bin/phpcr phpcr:node:remove /cms/content/blog
+                        $ php bin/phpcr phpcr:node:remove /cms/content/blog
 
-Remove only the children of the specified node
+                    Remove only the children of the specified node
 
-    $ php bin/phpcr phpcr:node:remove /cms/content/blog --only-children
-EOF
+                        $ php bin/phpcr phpcr:node:remove /cms/content/blog --only-children
+                    EOF
             );
     }
 
@@ -79,13 +82,8 @@ EOF
                     'Are you sure you want to recursively delete the path "%s" '.
                     'from workspace "%s"';
             }
-
-            $force = $this->askConfirmation(
-                $input,
-                $output,
-                sprintf('<question>'.$question.' Y/N ?</question>', $path, $workspaceName),
-                false
-            );
+            $confirmationQuestion = new ConfirmationQuestion(sprintf('<question>'.$question.' Y/N ?</question>', $path, $workspaceName), false);
+            $force = $this->getQuestionHelper()->ask($input, $output, $confirmationQuestion);
         }
 
         if (!$force) {

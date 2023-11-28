@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Tests\Util;
 
 use PHPCR\NamespaceException;
@@ -14,7 +16,7 @@ class PathHelperTest extends TestCase
     /**
      * @dataProvider dataproviderValidAbsolutePaths
      */
-    public function testAssertValidAbsolutePath($path, $destination = false)
+    public function testAssertValidAbsolutePath($path, $destination = false): void
     {
         $this->assertTrue(PathHelper::assertValidAbsolutePath($path, $destination));
     }
@@ -34,7 +36,7 @@ class PathHelperTest extends TestCase
     /**
      * @dataProvider dataproviderInvalidAbsolutePaths
      */
-    public function testAssertInvalidAbsolutePath($path, $destination = false)
+    public function testAssertInvalidAbsolutePath($path, $destination = false): void
     {
         $this->expectException(RepositoryException::class);
 
@@ -44,7 +46,7 @@ class PathHelperTest extends TestCase
     /**
      * @dataProvider dataproviderValidAbsolutePathsWithNamespaces
      */
-    public function testAssertAbsolutePathNamespace($path)
+    public function testAssertAbsolutePathNamespace($path): void
     {
         $this->assertTrue(PathHelper::assertValidAbsolutePath($path, false, true, ['jcr', 'nt']));
     }
@@ -64,7 +66,7 @@ class PathHelperTest extends TestCase
         ];
     }
 
-    public function testAssertInvalidNamespaceAbsolutePath()
+    public function testAssertInvalidNamespaceAbsolutePath(): void
     {
         $this->expectException(NamespaceException::class);
         $this->expectExceptionMessage('invalidprefix and other-ns');
@@ -75,7 +77,7 @@ class PathHelperTest extends TestCase
     /**
      * @dataProvider dataproviderInvalidAbsolutePaths
      */
-    public function testAssertInvalidAbsolutePathNoThrow($path, $destination = false)
+    public function testAssertInvalidAbsolutePathNoThrow($path, $destination = false): void
     {
         $this->assertFalse(PathHelper::assertValidAbsolutePath($path, $destination, false));
     }
@@ -95,12 +97,12 @@ class PathHelperTest extends TestCase
 
     // assertValidLocalName tests
 
-    public function testAssertValidLocalName()
+    public function testAssertValidLocalName(): void
     {
         $this->assertTrue(PathHelper::assertValidLocalName('nodename'));
     }
 
-    public function testAssertValidLocalNameRootnode()
+    public function testAssertValidLocalNameRootnode(): void
     {
         $this->assertTrue(PathHelper::assertValidLocalName(''));
     }
@@ -108,7 +110,7 @@ class PathHelperTest extends TestCase
     /**
      * @dataProvider dataproviderInvalidLocalNames
      */
-    public function testAssertInvalidLocalName($name)
+    public function testAssertInvalidLocalName($name): void
     {
         $this->expectException(RepositoryException::class);
 
@@ -130,7 +132,7 @@ class PathHelperTest extends TestCase
     /**
      * @dataProvider dataproviderNormalizePath
      */
-    public function testNormalizePath($inputPath, $outputPath)
+    public function testNormalizePath($inputPath, $outputPath): void
     {
         $this->assertSame($outputPath, PathHelper::normalizePath($inputPath));
     }
@@ -149,7 +151,7 @@ class PathHelperTest extends TestCase
     /**
      * @dataProvider dataproviderNormalizePathInvalid
      */
-    public function testNormalizePathInvalidThrow($input)
+    public function testNormalizePathInvalidThrow($input): void
     {
         $this->expectException(RepositoryException::class);
 
@@ -159,7 +161,7 @@ class PathHelperTest extends TestCase
     /**
      * @dataProvider dataproviderNormalizePathInvalid
      */
-    public function testNormalizePathInvalidNoThrow($input)
+    public function testNormalizePathInvalidNoThrow($input): void
     {
         $this->assertFalse(PathHelper::normalizePath($input, true, false));
     }
@@ -171,7 +173,7 @@ class PathHelperTest extends TestCase
             ['bar'],
             ['/foo/bar/'],
             [''],
-            [new \stdClass()],
+            ['//'],
         ];
     }
 
@@ -180,12 +182,12 @@ class PathHelperTest extends TestCase
     /**
      * @dataProvider dataproviderAbsolutizePath
      */
-    public function testAbsolutizePath($inputPath, $context, $outputPath)
+    public function testAbsolutizePath(string $inputPath, string $context, string $outputPath): void
     {
         $this->assertSame($outputPath, PathHelper::absolutizePath($inputPath, $context));
     }
 
-    public static function dataproviderAbsolutizePath()
+    public static function dataproviderAbsolutizePath(): array
     {
         return [
             ['/../foo',    '/',    '/foo'],
@@ -198,7 +200,7 @@ class PathHelperTest extends TestCase
     /**
      * @dataProvider dataproviderAbsolutizePathInvalid
      */
-    public function testAbsolutizePathInvalidThrow($inputPath, $context, $target)
+    public function testAbsolutizePathInvalidThrow($inputPath, $context, $target): void
     {
         $this->expectException(RepositoryException::class);
         PathHelper::absolutizePath($inputPath, $context, $target);
@@ -207,7 +209,7 @@ class PathHelperTest extends TestCase
     /**
      * @dataProvider dataproviderAbsolutizePathInvalid
      */
-    public function testAbsolutizePathInvalidNoThrow($inputPath, $context, $target)
+    public function testAbsolutizePathInvalidNoThrow($inputPath, $context, $target): void
     {
         $this->assertFalse(PathHelper::absolutizePath($inputPath, $context, $target, false));
     }
@@ -216,9 +218,8 @@ class PathHelperTest extends TestCase
     {
         return [
             ['', '/context', false],
-            [null,    '/context',    false],
-            ['foo',        null,    false],
-            [new \stdClass(), '/context', false],
+            ['//',    '/context',    false],
+            ['foo',        '//',    false],
             ['foo[2]',  '/bar', true],
         ];
     }
@@ -228,7 +229,7 @@ class PathHelperTest extends TestCase
     /**
      * @dataProvider dataproviderRelativizePath
      */
-    public function testRelativizePath($inputPath, $context, $outputPath)
+    public function testRelativizePath($inputPath, $context, $outputPath): void
     {
         $this->assertSame($outputPath, PathHelper::relativizePath($inputPath, $context));
     }
@@ -244,7 +245,7 @@ class PathHelperTest extends TestCase
     /**
      * @dataProvider dataproviderRelativizePathInvalid
      */
-    public function testRelativizePathInvalidThrow($inputPath, $context)
+    public function testRelativizePathInvalidThrow($inputPath, $context): void
     {
         $this->expectException(RepositoryException::class);
 
@@ -254,7 +255,7 @@ class PathHelperTest extends TestCase
     /**
      * @dataProvider dataproviderRelativizePathInvalid
      */
-    public function testRelativizePathInvalidNoThrow($inputPath, $context)
+    public function testRelativizePathInvalidNoThrow($inputPath, $context): void
     {
         $this->assertFalse(PathHelper::relativizePath($inputPath, $context, false));
     }
@@ -272,7 +273,7 @@ class PathHelperTest extends TestCase
     /**
      * @dataProvider dataproviderParentPath
      */
-    public function testGetParentPath($path, $parent)
+    public function testGetParentPath($path, $parent): void
     {
         $this->assertEquals($parent, PathHelper::getParentPath($path));
     }
@@ -292,7 +293,7 @@ class PathHelperTest extends TestCase
     /**
      * @dataProvider dataproviderGetNodeName
      */
-    public function testGetNodeName($path, $expected = null)
+    public function testGetNodeName($path, $expected = null): void
     {
         $this->assertEquals($expected, PathHelper::getNodeName($path));
     }
@@ -309,7 +310,7 @@ class PathHelperTest extends TestCase
     /**
      * @dataProvider dataproviderGetLocalNodeName
      */
-    public function testGetLocalNodeName($path, $expected = null)
+    public function testGetLocalNodeName($path, $expected = null): void
     {
         $this->assertEquals($expected, PathHelper::getLocalNodeName($path));
     }
@@ -325,7 +326,7 @@ class PathHelperTest extends TestCase
         ];
     }
 
-    public function testGetNodeNameMustBeAbsolute()
+    public function testGetNodeNameMustBeAbsolute(): void
     {
         $this->expectException(RepositoryException::class);
         $this->expectExceptionMessage('must be an absolute path');
@@ -338,7 +339,7 @@ class PathHelperTest extends TestCase
     /**
      * @dataProvider dataproviderPathDepth
      */
-    public function testGetPathDepth($path, $depth)
+    public function testGetPathDepth($path, $depth): void
     {
         $this->assertEquals($depth, PathHelper::getPathDepth($path));
     }

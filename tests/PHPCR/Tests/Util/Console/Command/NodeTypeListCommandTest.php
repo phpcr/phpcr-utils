@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Tests\Util\Console\Command;
 
 use PHPCR\Tests\Stubs\MockNodeTypeManager;
@@ -23,7 +25,7 @@ class NodeTypeListCommandTest extends BaseCommandTest
             ->getMock();
     }
 
-    public function testNodeTypeList()
+    public function testNodeTypeList(): void
     {
         $this->session->expects($this->once())
             ->method('getWorkspace')

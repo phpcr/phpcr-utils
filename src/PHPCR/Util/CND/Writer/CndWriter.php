@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Util\CND\Writer;
 
 use PHPCR\NamespaceRegistryInterface;
@@ -25,13 +27,10 @@ use PHPCR\Version\OnParentVersionAction;
  */
 class CndWriter
 {
-    /**
-     * @var NamespaceRegistryInterface
-     */
-    private $ns;
+    private NamespaceRegistryInterface $ns;
 
-    /** @var array hashmap of prefix => namespace uri */
-    private $namespaces = [];
+    /** @var array<string, string> hashmap of prefix => namespace uri */
+    private array $namespaces = [];
 
     public function __construct(NamespaceRegistryInterface $ns)
     {
@@ -46,7 +45,7 @@ class CndWriter
      * @return string with declarations for all non-system namespaces and for
      *                all node types in that array
      */
-    public function writeString(array $nodeTypes)
+    public function writeString(array $nodeTypes): string
     {
         $cnd = '';
         foreach ($nodeTypes as $nodeType) {
@@ -63,7 +62,7 @@ class CndWriter
      * Prefix ::= String
      * Uri ::= String
      */
-    protected function writeNamespaces()
+    protected function writeNamespaces(): string
     {
         $ns = '';
         foreach ($this->namespaces as $prefix => $uri) {
@@ -73,12 +72,12 @@ class CndWriter
         return $ns;
     }
 
-    private function checkNamespace($name)
+    private function checkNamespace($name): void
     {
-        if (false === strpos($name, ':')) {
+        if (!str_contains($name, ':')) {
             return;
         }
-        list($prefix) = explode(':', $name);
+        [$prefix] = explode(':', $name);
 
         // namespace registry will throw exception if namespace prefix not found
         $this->namespaces[$prefix] = "'".$this->ns->getURI($prefix)."'";
@@ -93,7 +92,7 @@ class CndWriter
      *          [NodeTypeAttribute {NodeTypeAttribute}]
      *          {PropertyDef | ChildNodeDef}
      */
-    protected function writeNodeType(NodeTypeDefinitionInterface $nodeType)
+    protected function writeNodeType(NodeTypeDefinitionInterface $nodeType): string
     {
         $this->checkNamespace($nodeType->getName());
         $s = '['.$nodeType->getName().']';
@@ -132,11 +131,9 @@ class CndWriter
     }
 
     /**
-     * @param PropertyDefinitionInterface[] $properties
-     *
-     * @return string
+     * @param PropertyDefinitionInterface[]|null $properties
      */
-    private function writeProperties($properties)
+    private function writeProperties(?array $properties): string
     {
         if (null === $properties) {
             // getDeclaredPropertyDefinitions is allowed to return null on
@@ -197,11 +194,9 @@ class CndWriter
     }
 
     /**
-     * @param NodeDefinitionInterface[] $children
-     *
-     * @return string
+     * @param NodeDefinitionInterface[]|null $children
      */
-    private function writeChildren($children)
+    private function writeChildren(?array $children): string
     {
         if (null === $children) {
             // getDeclaredChildNodeDefinitions is allowed to return null on

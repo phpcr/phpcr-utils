@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Util\Console\Command;
 
 use Symfony\Component\Console\Command\Command;
@@ -26,14 +28,14 @@ class NodeMoveCommand extends BaseCommand
             ->setDescription('Moves a node from one path to another')
             ->setHelp(
                 <<<'EOF'
-This command simply moves a node from one path (the source path)
-to another (the destination path), it can also be considered
-as a rename command.
+                    This command simply moves a node from one path (the source path)
+                    to another (the destination path), it can also be considered
+                    as a rename command.
 
-    $ php bin/phpcr phpcr:move /foobar /barfoo
+                        $ php bin/phpcr phpcr:move /foobar /barfoo
 
-Note that the parent node of the destination path must already exist.
-EOF
+                    Note that the parent node of the destination path must already exist.
+                    EOF
             );
     }
 

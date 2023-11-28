@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Tests\Util\Console\Command;
 
 use PHPCR\Query\QueryInterface;
@@ -21,7 +23,7 @@ class WorkspaceQueryCommandTest extends BaseCommandTest
         $this->query = $this->createMock(QueryInterface::class);
     }
 
-    public function testQuery()
+    public function testQuery(): void
     {
         $this->queryManager
             ->method('getSupportedQueryLanguages')

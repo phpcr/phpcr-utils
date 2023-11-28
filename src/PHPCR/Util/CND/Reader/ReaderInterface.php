@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Util\CND\Reader;
 
 /**
@@ -9,57 +11,39 @@ namespace PHPCR\Util\CND\Reader;
  */
 interface ReaderInterface
 {
-    /**
-     * @return string
-     */
-    public function getEofMarker();
+    public function getEofMarker(): string;
 
-    /**
-     * @return string with just one character
-     */
-    public function currentChar();
+    public function currentChar(): string;
 
-    /**
-     * @return bool
-     */
-    public function isEof();
+    public function isEof(): bool;
 
-    /**
-     * @return int
-     */
-    public function getCurrentLine();
+    public function getCurrentLine(): int;
 
-    /**
-     * @return int
-     */
-    public function getCurrentColumn();
+    public function getCurrentColumn(): int;
 
     /**
      * Return the literal delimited by start and end position.
-     *
-     * @return string
      */
-    public function current();
+    public function current(): string;
 
     /**
      * Advance the forward position and return the literal delimited by start and end position.
-     *
-     * @return string
      */
-    public function forward();
+    public function forward(): string;
 
-    public function forwardChar();
+    /**
+     * Forward one character and return the character at the new position.
+     */
+    public function forwardChar(): string;
 
     /**
      * Rewind the forward position to the start position.
      */
-    public function rewind();
+    public function rewind(): void;
 
     /**
      * Return the literal delimited by start and end position, then set the
      * start position to the end position.
-     *
-     * @return string
      */
-    public function consume();
+    public function consume(): string;
 }

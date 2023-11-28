@@ -8,7 +8,9 @@ Changelog
 ------------------
 
 * Support Symfony 7
-* Test with PHP 8.3
+* Drop support for Symfony 2
+* Remove deprecated code, clean up workarounds for Symfony 2.
+* Drop support for PHP 7, test with PHP 8.3
 * Adjusted commands to have the return type declarations.
 
 1.x

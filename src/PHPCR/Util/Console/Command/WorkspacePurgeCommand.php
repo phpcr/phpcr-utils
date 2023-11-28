@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Util\Console\Command;
 
 use PHPCR\Util\NodeHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 /**
  * Command to remove all non-system nodes and properties in the workspace of
@@ -27,9 +30,9 @@ class WorkspacePurgeCommand extends BaseCommand
             ->addOption('force', null, InputOption::VALUE_NONE, 'Use to bypass the confirmation dialog')
             ->setHelp(
                 <<<'EOF'
-The <info>phpcr:workspace:purge</info> command removes all nodes except the
-system nodes and all non-system properties of the root node from the workspace.
-EOF
+                    The <info>phpcr:workspace:purge</info> command removes all nodes except the
+                    system nodes and all non-system properties of the root node from the workspace.
+                    EOF
             );
     }
 
@@ -40,10 +43,11 @@ EOF
 
         $workspaceName = $session->getWorkspace()->getName();
         if (!$force) {
-            $force = $this->askConfirmation($input, $output, sprintf(
+            $confirmationQuestion = new ConfirmationQuestion(sprintf(
                 '<question>Are you sure you want to purge workspace "%s" Y/N ?</question>',
                 $workspaceName
             ), false);
+            $force = $this->getQuestionHelper()->ask($input, $output, $confirmationQuestion);
         }
 
         if (!$force) {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Tests\Util\QOM;
 
 use PHPCR\Query\InvalidQueryException;
@@ -32,7 +34,7 @@ class Sql2ToQomQueryConverterTest extends TestCase
         $this->converter = new Sql2ToQomQueryConverter($this->qomFactory, $this->valueConverter);
     }
 
-    public function testInvalid()
+    public function testInvalid(): void
     {
         $this->expectException(InvalidQueryException::class);
         $this->expectExceptionMessage('Error parsing query');

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Tests\Util\CND\Reader;
 
 use PHPCR\Util\CND\Reader\FileReader;
@@ -47,19 +49,19 @@ class FileReaderTest extends TestCase
         );
     }
 
-    public function testConstructFileNotFound()
+    public function testConstructFileNotFound(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
         new FileReader('unexisting_file');
     }
 
-    public function testGetPath()
+    public function testGetPath(): void
     {
         $this->assertEquals($this->filepath, $this->reader->getPath());
     }
 
-    public function testGetNextChar()
+    public function testGetNextChar(): void
     {
         $curLine = 1;
         $curCol = 1;

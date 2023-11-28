@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Util\CND\Scanner;
 
 /**
@@ -18,19 +20,18 @@ class GenericToken extends Token
     public const TK_SYMBOL = 6;
     public const TK_UNKNOWN = 99;
 
-    public static function getTypeName($type)
+    public static function getTypeName(int $type): string
     {
-        switch ($type) {
-            case self::TK_WHITESPACE: return 'Whitespace';
-            case self::TK_NEWLINE: return 'Newline';
-            case self::TK_STRING: return 'String';
-            case self::TK_COMMENT: return 'Comment';
-            case self::TK_IDENTIFIER: return 'Identifier';
-            case self::TK_KEYWORD: return 'Keyword';
-            case self::TK_SYMBOL: return 'Symbol';
-        }
-
-        return 'Unknown';
+        return match ($type) {
+            self::TK_WHITESPACE => 'Whitespace',
+            self::TK_NEWLINE => 'Newline',
+            self::TK_STRING => 'String',
+            self::TK_COMMENT => 'Comment',
+            self::TK_IDENTIFIER => 'Identifier',
+            self::TK_KEYWORD => 'Keyword',
+            self::TK_SYMBOL => 'Symbol',
+            default => 'Unknown',
+        };
     }
 
     public function __toString()

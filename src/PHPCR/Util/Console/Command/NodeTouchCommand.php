@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Util\Console\Command;
 
 use PHPCR\PathNotFoundException;
@@ -49,21 +51,21 @@ class NodeTouchCommand extends BaseNodeManipulationCommand
             ->setDescription('Create or modify a node')
             ->setHelp(
                 <<<'HERE'
-This command allows you to create or modify a node at the specified path.
+                    This command allows you to create or modify a node at the specified path.
 
-For example::
+                    For example::
 
-  $ ./bin/phpcr phpcr:touch /foobar --type=my:nodetype --set-prop=foo=bar
+                      $ ./bin/phpcr phpcr:touch /foobar --type=my:nodetype --set-prop=foo=bar
 
-Will create the node "/foobar" and set (or create) the "foo" property
-with a value of "bar".
+                    Will create the node "/foobar" and set (or create) the "foo" property
+                    with a value of "bar".
 
-You can execute the command again to further modify the node. Here we add
-the property "bar" and remove the property "foo". We also add the dump option
-to output a string reperesentation of the node.
+                    You can execute the command again to further modify the node. Here we add
+                    the property "bar" and remove the property "foo". We also add the dump option
+                    to output a string reperesentation of the node.
 
-  $ ./bin/phpcr phpcr:touch /foobar --type=my:nodetype --set-prop=bar=myvalue --remove-prop=foo --dump
-HERE
+                      $ ./bin/phpcr phpcr:touch /foobar --type=my:nodetype --set-prop=bar=myvalue --remove-prop=foo --dump
+                    HERE
             );
     }
 
@@ -98,7 +100,7 @@ HERE
                 $nodeType
             ));
 
-            if ($nodeType != $type) {
+            if ($nodeType !== $type) {
                 $output->writeln(sprintf(
                     '<error>You have specified node type "%s" but the existing node is of type "%s"</error>',
                     $type,

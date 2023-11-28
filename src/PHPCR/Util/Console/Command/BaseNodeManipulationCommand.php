@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Util\Console\Command;
 
 use Symfony\Component\Console\Input\InputOption;
@@ -15,7 +17,7 @@ abstract class BaseNodeManipulationCommand extends BaseCommand
     /**
      * Set up the options to manipulate nodes.
      */
-    protected function configureNodeManipulationInput()
+    protected function configureNodeManipulationInput(): void
     {
         $this->addOption(
             'set-prop',

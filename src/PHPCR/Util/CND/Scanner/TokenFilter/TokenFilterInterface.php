@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Util\CND\Scanner\TokenFilter;
 
 use PHPCR\Util\CND\Scanner\Token;
@@ -11,10 +13,5 @@ use PHPCR\Util\CND\Scanner\Token;
  */
 interface TokenFilterInterface
 {
-    /**
-     * @abstract
-     *
-     * @return Token|null
-     */
-    public function filter(Token $token);
+    public function filter(Token $token): ?Token;
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Util\Console\Helper\TreeDumper;
 
 use PHPCR\ItemInterface;
@@ -17,11 +19,9 @@ class SystemNodeFilter implements TreeWalkerFilterInterface
     /**
      * Checks whether this item is a system item.
      *
-     * @return bool
-     *
      * @throws RepositoryException
      */
-    public function mustVisit(ItemInterface $item)
+    public function mustVisit(ItemInterface $item): bool
     {
         return !NodeHelper::isSystemItem($item);
     }

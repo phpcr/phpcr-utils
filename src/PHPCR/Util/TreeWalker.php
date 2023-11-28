@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Util;
 
 use PHPCR\ItemVisitorInterface;
@@ -17,37 +19,33 @@ class TreeWalker
 {
     /**
      * Visitor for nodes.
-     *
-     * @var ItemVisitorInterface
      */
-    protected $nodeVisitor;
+    protected ItemVisitorInterface $nodeVisitor;
 
     /**
      * Visitor for properties.
-     *
-     * @var ItemVisitorInterface
      */
-    protected $propertyVisitor;
+    protected ?ItemVisitorInterface $propertyVisitor;
 
     /**
      * Filters to apply to decide whether a node needs to be visited.
      *
      * @var TreeWalkerFilterInterface[]
      */
-    protected $nodeFilters = [];
+    protected array $nodeFilters = [];
 
     /**
      * Filters to apply to decide whether a property needs to be visited.
      *
      * @var TreeWalkerFilterInterface[]
      */
-    protected $propertyFilters = [];
+    protected array $propertyFilters = [];
 
     /**
      * Instantiate a tree walker.
      *
-     * @param ItemVisitorInterface $nodeVisitor     The visitor for the nodes
-     * @param ItemVisitorInterface $propertyVisitor The visitor for the nodes properties
+     * @param ItemVisitorInterface      $nodeVisitor     The visitor for the nodes
+     * @param ItemVisitorInterface|null $propertyVisitor The visitor for the nodes properties
      */
     public function __construct(ItemVisitorInterface $nodeVisitor, ItemVisitorInterface $propertyVisitor = null)
     {
@@ -58,9 +56,9 @@ class TreeWalker
     /**
      * Add a filter to select the nodes that will be traversed.
      */
-    public function addNodeFilter(TreeWalkerFilterInterface $filter)
+    public function addNodeFilter(TreeWalkerFilterInterface $filter): void
     {
-        if (!in_array($filter, $this->nodeFilters)) {
+        if (!in_array($filter, $this->nodeFilters, true)) {
             $this->nodeFilters[] = $filter;
         }
     }
@@ -68,7 +66,7 @@ class TreeWalker
     /**
      * Add a filter to select the properties that will be traversed.
      */
-    public function addPropertyFilter(TreeWalkerFilterInterface $filter)
+    public function addPropertyFilter(TreeWalkerFilterInterface $filter): void
     {
         if (!in_array($filter, $this->propertyFilters)) {
             $this->propertyFilters[] = $filter;
@@ -77,10 +75,8 @@ class TreeWalker
 
     /**
      * Return whether a node must be traversed or not.
-     *
-     * @return bool
      */
-    protected function mustVisitNode(NodeInterface $node)
+    protected function mustVisitNode(NodeInterface $node): bool
     {
         foreach ($this->nodeFilters as $filter) {
             if (!$filter->mustVisit($node)) {
@@ -93,10 +89,8 @@ class TreeWalker
 
     /**
      * Return whether a node property must be traversed or not.
-     *
-     * @return bool
      */
-    protected function mustVisitProperty(PropertyInterface $property)
+    protected function mustVisitProperty(PropertyInterface $property): bool
     {
         foreach ($this->propertyFilters as $filter) {
             if (!$filter->mustVisit($property)) {
@@ -113,7 +107,7 @@ class TreeWalker
      * @param int $recurse Max recursion level
      * @param int $level   Recursion level
      */
-    public function traverse(NodeInterface $node, $recurse = -1, $level = 0): void
+    public function traverse(NodeInterface $node, int $recurse = -1, int $level = 0): void
     {
         if ($this->mustVisitNode($node)) {
             // Visit node

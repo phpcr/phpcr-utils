@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Util\Console\Command;
 
 use PHPCR\RepositoryInterface;
@@ -32,10 +34,10 @@ class WorkspaceCreateCommand extends BaseCommand
             ->setDescription('Create a workspace in the configured repository')
             ->setHelp(
                 <<<'EOT'
-The <info>workspace:create</info> command creates a workspace with the specified name.
-It will fail if a workspace with that name already exists or if the repository implementation
-does not support the workspace creation operation.
-EOT
+                    The <info>workspace:create</info> command creates a workspace with the specified name.
+                    It will fail if a workspace with that name already exists or if the repository implementation
+                    does not support the workspace creation operation.
+                    EOT
             );
     }
 
@@ -58,7 +60,7 @@ EOT
             return 1;
         }
 
-        if (in_array($workspaceName, $workspace->getAccessibleWorkspaceNames())) {
+        if (in_array($workspaceName, $workspace->getAccessibleWorkspaceNames(), true)) {
             $output->writeln(
                 sprintf('<comment>This repository already has a workspace called "%s"</comment>', $workspaceName)
             );

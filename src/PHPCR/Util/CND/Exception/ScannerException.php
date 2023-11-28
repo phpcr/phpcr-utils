@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Util\CND\Exception;
 
 use PHPCR\Util\CND\Reader\ReaderInterface;
@@ -11,7 +13,7 @@ use PHPCR\Util\CND\Reader\ReaderInterface;
  */
 class ScannerException extends \Exception
 {
-    public function __construct(ReaderInterface $reader, $msg)
+    public function __construct(ReaderInterface $reader, string $msg)
     {
         $msg = sprintf(
             "SCANNER ERROR: %s at line %s, column %s.\nCurrent buffer \"%s\"",

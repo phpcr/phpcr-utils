@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Util\QOM;
 
 use PHPCR\Query\InvalidQueryException;
@@ -14,31 +16,25 @@ class Sql2Scanner
 {
     /**
      * The SQL2 query currently being parsed.
-     *
-     * @var string
      */
-    protected $sql2;
+    protected string $sql2;
 
     /**
      * Token scanning result of the SQL2 string.
      *
-     * @var array
+     * @var string[]
      */
-    protected $tokens;
+    protected array $tokens;
 
     /**
      * Parsing position in the SQL string.
-     *
-     * @var int
      */
-    protected $curpos = 0;
+    protected int $curpos = 0;
 
     /**
      * Construct a scanner with the given SQL2 statement.
-     *
-     * @param string $sql2
      */
-    public function __construct($sql2)
+    public function __construct(string $sql2)
     {
         $this->sql2 = $sql2;
         $this->tokens = $this->scan($this->sql2);
@@ -49,10 +45,8 @@ class Sql2Scanner
      * Return an empty string when there are no more tokens.
      *
      * @param int $offset number of tokens to look ahead - defaults to 0, the current token
-     *
-     * @return string
      */
-    public function lookupNextToken($offset = 0)
+    public function lookupNextToken(int $offset = 0): string
     {
         if ($this->curpos + $offset < count($this->tokens)) {
             return trim($this->tokens[$this->curpos + $offset]);
@@ -64,10 +58,8 @@ class Sql2Scanner
     /**
      * Get the next token and remove it from the queue.
      * Return an empty string when there are no more tokens.
-     *
-     * @return string
      */
-    public function fetchNextToken()
+    public function fetchNextToken(): string
     {
         $token = $this->lookupNextToken();
         if ('' !== $token) {
@@ -82,12 +74,11 @@ class Sql2Scanner
      * not the case. The equality test is done case sensitively/insensitively
      * depending on the second parameter.
      *
-     * @param string $token            The expected token
-     * @param bool   $case_insensitive
+     * @param string $token The expected token
      *
      * @throws InvalidQueryException
      */
-    public function expectToken($token, $case_insensitive = true)
+    public function expectToken(string $token, bool $case_insensitive = true): void
     {
         $nextToken = $this->fetchNextToken();
         if (!$this->tokenIs($nextToken, $token, $case_insensitive)) {
@@ -99,14 +90,11 @@ class Sql2Scanner
      * Expect the next tokens to be the one given in the array of tokens and
      * throws an exception if it's not the case.
      *
-     * @param array $tokens
-     * @param bool  $case_insensitive
-     *
      * @throws InvalidQueryException
      *
      * @see expectToken
      */
-    public function expectTokens($tokens, $case_insensitive = true)
+    public function expectTokens(array $tokens, bool $case_insensitive = true): void
     {
         foreach ($tokens as $token) {
             $this->expectToken($token, $case_insensitive);
@@ -115,14 +103,8 @@ class Sql2Scanner
 
     /**
      * Test the equality of two tokens.
-     *
-     * @param string $token
-     * @param string $value
-     * @param bool   $case_insensitive
-     *
-     * @return bool
      */
-    public function tokenIs($token, $value, $case_insensitive = true)
+    public function tokenIs(string $token, string $value, bool $case_insensitive = true): bool
     {
         if ($case_insensitive) {
             $test = strtoupper($token) === strtoupper($value);
@@ -150,7 +132,8 @@ class Sql2Scanner
         $isEscaped = false;
         $escapedQuotesCount = 0;
         $splitString = \str_split($sql2);
-        for ($index = 0; $index < count($splitString); ++$index) {
+        $splitStringCount = count($splitString);
+        for ($index = 0; $index < $splitStringCount; ++$index) {
             $character = $splitString[$index];
             if (!$stringStartCharacter && in_array($character, [' ', "\t", "\n", "\r"], true)) {
                 if ('' !== $currentToken) {
@@ -194,7 +177,7 @@ class Sql2Scanner
                     continue;
                 }
                 // If the escaped quotes are not paired up. eg. "I'''m cool" would be a parsing error
-                if (1 == $escapedQuotesCount % 2 && "'" !== $stringStartCharacter) {
+                if (1 === $escapedQuotesCount % 2 && "'" !== $stringStartCharacter) {
                     throw new InvalidQueryException("Syntax error: Number of single quotes to be even: $currentToken");
                 }
                 if ($character === $stringStartCharacter) {
@@ -208,7 +191,7 @@ class Sql2Scanner
 
                     // When tokenizing `AS"abc"` add the current token (AS) as token already
                     if (strlen($currentToken) > 1) {
-                        $tokens[] = substr($currentToken, 0, strlen($currentToken) - 1);
+                        $tokens[] = substr($currentToken, 0, -1);
                         $currentToken = $character;
                     }
                 }

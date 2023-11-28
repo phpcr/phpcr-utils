@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Util;
 
 use PHPCR\ItemExistsException;
@@ -48,7 +50,7 @@ class NodeHelper
      * @throws ConstraintViolationException
      * @throws VersionException
      */
-    public static function createPath(SessionInterface $session, $path)
+    public static function createPath(SessionInterface $session, string $path): NodeInterface
     {
         $current = $session->getRootNode();
 
@@ -81,7 +83,7 @@ class NodeHelper
      *
      * @see isSystemItem
      */
-    public static function purgeWorkspace(SessionInterface $session)
+    public static function purgeWorkspace(SessionInterface $session): void
     {
         $root = $session->getRootNode();
 
@@ -101,18 +103,6 @@ class NodeHelper
     }
 
     /**
-     * Kept as alias of purgeWorkspace for BC compatibility.
-     *
-     * @throws RepositoryException
-     *
-     * @deprecated
-     */
-    public static function deleteAllNodes(SessionInterface $session)
-    {
-        self::purgeWorkspace($session);
-    }
-
-    /**
      * Determine whether this item is to be considered a system item that you
      * usually want to hide and that should not be removed when purging the
      * repository.
@@ -121,14 +111,14 @@ class NodeHelper
      *
      * @throws RepositoryException
      */
-    public static function isSystemItem(ItemInterface $item)
+    public static function isSystemItem(ItemInterface $item): bool
     {
         if ($item->getDepth() > 1) {
             return false;
         }
         $name = $item->getName();
 
-        return 0 === strpos($name, 'jcr:') || 0 === strpos($name, 'rep:');
+        return str_starts_with($name, 'jcr:') || str_starts_with($name, 'rep:');
     }
 
     /**
@@ -137,19 +127,20 @@ class NodeHelper
      * This method only checks for valid namespaces. All other exceptions must
      * be thrown by the addNodeAutoNamed implementation.
      *
-     * @param string[] $usedNames        list of child names that is currently used and may not be chosen
-     * @param string[] $namespaces       namespace prefix to uri map of all currently known namespaces
-     * @param string   $defaultNamespace namespace prefix to use if the hint does not specify
-     * @param string   $nameHint         the name hint according to the API definition
+     * @param string[]    $usedNames        list of child names that is currently used and may not be chosen
+     * @param string[]    $namespaces       namespace prefix to uri map of all currently known namespaces
+     * @param string      $defaultNamespace namespace prefix to use if the hint does not specify
+     * @param string|null $nameHint         the name hint according to the API definition
      *
      * @return string A valid node name for this node
+     * @return string A valid node name for this node
      *
+     * @throws RepositoryException
      * @throws NamespaceException  if a namespace prefix is provided in the
      *                             $nameHint which does not exist and this implementation performs
      *                             this validation immediately
-     * @throws RepositoryException
      */
-    public static function generateAutoNodeName($usedNames, $namespaces, $defaultNamespace, $nameHint = null)
+    public static function generateAutoNodeName(array $usedNames, array $namespaces, string $defaultNamespace, string $nameHint = null): string
     {
         $usedNames = array_flip($usedNames);
 
@@ -212,7 +203,7 @@ class NodeHelper
          * constructed from the hint may vary across implementations.
          */
         if (1 === substr_count($nameHint, ':')) {
-            list($prefix, $name) = explode(':', $nameHint);
+            [$prefix, $name] = explode(':', $nameHint);
             if (preg_match('#^[a-zA-Z][a-zA-Z0-9]*$#', $prefix)
                 && preg_match('#^[a-zA-Z][a-zA-Z0-9]*$#', $name)
             ) {
@@ -238,7 +229,7 @@ class NodeHelper
             $ns = $matches[1];
             $name = $matches[2];
 
-            $prefix = array_search($ns, $namespaces);
+            $prefix = array_search($ns, $namespaces, true);
             if (!$prefix) {
                 throw new NamespaceException("Invalid nameHint '$nameHint'");
             }
@@ -256,10 +247,8 @@ class NodeHelper
      * @param string[] $usedNames names that are forbidden
      * @param string   $prefix    the prefix including the colon at the end
      * @param string   $namepart  start for the localname
-     *
-     * @return string
      */
-    private static function generateWithPrefix($usedNames, $prefix, $namepart = '')
+    private static function generateWithPrefix(array $usedNames, string $prefix, string $namepart = ''): string
     {
         do {
             $name = $prefix.$namepart.mt_rand();
@@ -285,7 +274,7 @@ class NodeHelper
      * @return array the keys are elements to move, values the destination to
      *               move before or null to move to the end
      */
-    public static function calculateOrderBefore(array $old, array $new)
+    public static function calculateOrderBefore(array $old, array $new): array
     {
         $reorders = [];
 
@@ -314,14 +303,14 @@ class NodeHelper
                 // get the name of the next node
                 $next = $new[$i + 1];
                 // if in the old order $c and next are not neighbors already, do the reorder command
-                if ($oldIndex[$current] + 1 != $oldIndex[$next]) {
+                if ($oldIndex[$current] + 1 !== $oldIndex[$next]) {
                     $reorders[$current] = $next;
                     $old = self::orderBeforeArray($current, $next, $old);
                     $oldIndex = array_flip($old);
                 }
             } else {
                 // check if it's not already at the end of the nodes
-                if ($oldIndex[$current] != $len) {
+                if ($oldIndex[$current] !== $len) {
                     $reorders[$current] = null;
                     $old = self::orderBeforeArray($current, null, $old);
                     $oldIndex = array_flip($old);
@@ -336,32 +325,32 @@ class NodeHelper
      * Move the element $name of $list to right before $destination,
      * validating existence of all elements.
      *
-     * @param string $name        name of the element to move
-     * @param string $destination name of the element $srcChildRelPath has
-     *                            to be ordered before, null to move to the end
-     * @param array  $list        the array of names
+     * @param string      $name        name of the element to move
+     * @param string|null $destination name of the element $srcChildRelPath has
+     *                                 to be ordered before, null to move to the end
+     * @param array       $list        the array of names
      *
      * @return array The updated $nodes array with new order
      *
      * @throws ItemNotFoundException if $srcChildRelPath or $destChildRelPath are not found in $nodes
      */
-    public static function orderBeforeArray($name, $destination, $list)
+    public static function orderBeforeArray(string $name, ?string $destination, array $list): array
     {
         // reindex the array so there are no gaps
         $list = array_values($list);
-        $oldpos = array_search($name, $list);
+        $oldpos = array_search($name, $list, true);
 
         if (false === $oldpos) {
             throw new ItemNotFoundException("$name is not a child of this node");
         }
 
-        if (null == $destination) {
+        if (null === $destination) {
             // null means move to end
             unset($list[$oldpos]);
             $list[] = $name;
         } else {
             // insert before element $destination
-            $newpos = array_search($destination, $list);
+            $newpos = array_search($destination, $list, true);
             if (false === $newpos) {
                 throw new ItemNotFoundException("$destination is not a child of this node");
             }

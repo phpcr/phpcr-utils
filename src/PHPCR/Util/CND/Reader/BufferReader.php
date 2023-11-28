@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Util\CND\Reader;
 
 /**
@@ -10,50 +12,23 @@ namespace PHPCR\Util\CND\Reader;
  */
 class BufferReader implements ReaderInterface
 {
-    /**
-     * @var string
-     */
-    protected $eofMarker;
+    private string $eofMarker;
 
-    /**
-     * @var string
-     */
-    protected $buffer;
+    protected string $buffer;
 
-    /**
-     * @var int
-     */
-    protected $startPos;
+    protected int $startPos;
 
-    /**
-     * @var int
-     */
-    protected $forwardPos;
+    protected int $forwardPos;
 
-    /**
-     * @var int
-     */
-    protected $curLine;
+    protected int $curLine;
 
-    /**
-     * @var int
-     */
-    protected $curCol;
+    protected int $curCol;
 
-    /**
-     * @var int
-     */
-    protected $nextCurLine;
+    protected int $nextCurLine;
 
-    /**
-     * @var int
-     */
-    protected $nextCurCol;
+    protected int $nextCurCol;
 
-    /**
-     * @param string $buffer
-     */
-    public function __construct($buffer)
+    public function __construct(string $buffer)
     {
         $this->eofMarker = chr(1);
         $this->buffer = str_replace("\r\n", "\n", $buffer).$this->eofMarker;
@@ -61,7 +36,7 @@ class BufferReader implements ReaderInterface
         $this->reset();
     }
 
-    public function reset()
+    public function reset(): void
     {
         $this->startPos = 0;
 
@@ -70,49 +45,35 @@ class BufferReader implements ReaderInterface
         $this->nextCurLine = $this->nextCurCol = 1;
     }
 
-    /**
-     * @return string
-     */
-    public function getEofMarker()
+    public function getEofMarker(): string
     {
         return $this->eofMarker;
     }
 
-    /**
-     * @return int
-     */
-    public function getCurrentLine()
+    public function getCurrentLine(): int
     {
         return $this->curLine;
     }
 
-    /**
-     * @return int
-     */
-    public function getCurrentColumn()
+    public function getCurrentColumn(): int
     {
         return $this->curCol;
     }
 
     /**
      * Return the literal delimited by start and end position.
-     *
-     * @return string
      */
-    public function current()
+    public function current(): string
     {
         return substr($this->buffer, $this->startPos, $this->forwardPos - $this->startPos);
     }
 
-    public function currentChar()
+    public function currentChar(): string
     {
         return substr($this->buffer, $this->forwardPos, 1);
     }
 
-    /**
-     * @return bool
-     */
-    public function isEof()
+    public function isEof(): bool
     {
         $currentChar = $this->currentChar();
 
@@ -124,10 +85,8 @@ class BufferReader implements ReaderInterface
 
     /**
      * Advance the forward position and return the literal delimited by start and end position.
-     *
-     * @return string
      */
-    public function forward()
+    public function forward(): string
     {
         if ($this->forwardPos < strlen($this->buffer)) {
             ++$this->forwardPos;
@@ -142,21 +101,21 @@ class BufferReader implements ReaderInterface
         return $this->current();
     }
 
-    public function forwardChar()
+    public function forwardChar(): string
     {
         $this->forward();
 
         return $this->currentChar();
     }
 
-    public function rewind()
+    public function rewind(): void
     {
         $this->forwardPos = $this->startPos;
         $this->nextCurLine = $this->curLine;
         $this->nextCurCol = $this->curCol;
     }
 
-    public function consume()
+    public function consume(): string
     {
         $current = $this->current();
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Tests\Util\QOM;
 
 use PHPCR\Query\QOM\ConstraintInterface;
@@ -9,6 +11,7 @@ use PHPCR\Query\QOM\QueryObjectModelFactoryInterface;
 use PHPCR\Query\QOM\QueryObjectModelInterface;
 use PHPCR\Query\QOM\SameNodeJoinConditionInterface;
 use PHPCR\Query\QOM\SourceInterface;
+use PHPCR\Query\QueryResultInterface;
 use PHPCR\Util\QOM\QueryBuilder;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -28,14 +31,14 @@ class QueryBuilderTest extends TestCase
             ->getMock();
     }
 
-    public function testSetFirstResult()
+    public function testSetFirstResult(): void
     {
         $qb = new QueryBuilder($this->qf);
         $qb->setFirstResult(15);
         $this->assertEquals(15, $qb->getFirstResult());
     }
 
-    public function testSetMaxResults()
+    public function testSetMaxResults(): void
     {
         $qb = new QueryBuilder($this->qf);
         $qb->setMaxResults(15);
@@ -56,7 +59,7 @@ class QueryBuilderTest extends TestCase
         return $dynamicOperand;
     }
 
-    public function testAddOrderBy()
+    public function testAddOrderBy(): void
     {
         $dynamicOperand = $this->createDynamicOperandMock();
 
@@ -67,7 +70,7 @@ class QueryBuilderTest extends TestCase
         $orderings = $qb->getOrderings();
     }
 
-    public function testAddOrderByLowercase()
+    public function testAddOrderByLowercase(): void
     {
         $dynamicOperand = $this->createDynamicOperandMock();
 
@@ -78,7 +81,7 @@ class QueryBuilderTest extends TestCase
         $orderings = $qb->getOrderings();
     }
 
-    public function testAddOrderByInvalid()
+    public function testAddOrderByInvalid(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
@@ -88,7 +91,7 @@ class QueryBuilderTest extends TestCase
         $qb->addOrderBy($dynamicOperand, 'FOO');
     }
 
-    public function testOrderBy()
+    public function testOrderBy(): void
     {
         $dynamicOperand = $this->createDynamicOperandMock();
 
@@ -98,7 +101,7 @@ class QueryBuilderTest extends TestCase
         $this->assertCount(1, $qb->getOrderings());
     }
 
-    public function testOrderAscending()
+    public function testOrderAscending(): void
     {
         $dynamicOperand = $this->createDynamicOperandMock();
 
@@ -110,7 +113,7 @@ class QueryBuilderTest extends TestCase
         $qb->addOrderBy($dynamicOperand, 'ASC');
     }
 
-    public function testOrderDescending()
+    public function testOrderDescending(): void
     {
         $dynamicOperand = $this->createDynamicOperandMock();
 
@@ -122,7 +125,7 @@ class QueryBuilderTest extends TestCase
         $qb->addOrderBy($dynamicOperand, 'DESC');
     }
 
-    public function testOrderAscendingIsDefault()
+    public function testOrderAscendingIsDefault(): void
     {
         $dynamicOperand = $this->createDynamicOperandMock();
 
@@ -148,7 +151,7 @@ class QueryBuilderTest extends TestCase
         return $constraint;
     }
 
-    public function testWhere()
+    public function testWhere(): void
     {
         $constraint = $this->createConstraintMock();
 
@@ -157,7 +160,7 @@ class QueryBuilderTest extends TestCase
         $this->assertEquals($constraint, $qb->getConstraint());
     }
 
-    public function testAndWhere()
+    public function testAndWhere(): void
     {
         $this->qf->expects($this->once())
                  ->method('andConstraint');
@@ -170,7 +173,7 @@ class QueryBuilderTest extends TestCase
         $qb->andWhere($constraint2);
     }
 
-    public function testOrWhere()
+    public function testOrWhere(): void
     {
         $this->qf->expects($this->once())
                  ->method('orConstraint');
@@ -183,7 +186,7 @@ class QueryBuilderTest extends TestCase
         $qb->orWhere($constraint2);
     }
 
-    public function testSelect()
+    public function testSelect(): void
     {
         $qb = new QueryBuilder($this->qf);
         $this->assertCount(0, $qb->getColumns());
@@ -193,7 +196,7 @@ class QueryBuilderTest extends TestCase
         $this->assertCount(1, $qb->getColumns());
     }
 
-    public function testAddSelect()
+    public function testAddSelect(): void
     {
         $qb = new QueryBuilder($this->qf);
         $this->assertCount(0, $qb->getColumns());
@@ -217,7 +220,7 @@ class QueryBuilderTest extends TestCase
         return $source;
     }
 
-    public function testFrom()
+    public function testFrom(): void
     {
         $source = $this->createSourceMock();
 
@@ -240,7 +243,7 @@ class QueryBuilderTest extends TestCase
         return $joinCondition;
     }
 
-    public function testInvalidJoin()
+    public function testInvalidJoin(): void
     {
         $this->expectException(\RuntimeException::class);
 
@@ -251,7 +254,7 @@ class QueryBuilderTest extends TestCase
         $qb->join($source, $joinCondition);
     }
 
-    public function testJoin()
+    public function testJoin(): void
     {
         $source1 = $this->createSourceMock();
         $source2 = $this->createSourceMock();
@@ -271,7 +274,7 @@ class QueryBuilderTest extends TestCase
         $qb->join($source2, $joinCondition);
     }
 
-    public function testRightJoin()
+    public function testRightJoin(): void
     {
         $source1 = $this->createSourceMock();
         $source2 = $this->createSourceMock();
@@ -291,7 +294,7 @@ class QueryBuilderTest extends TestCase
         $qb->rightJoin($source2, $joinCondition);
     }
 
-    public function testLeftJoin()
+    public function testLeftJoin(): void
     {
         $source1 = $this->createSourceMock();
         $source2 = $this->createSourceMock();
@@ -311,7 +314,7 @@ class QueryBuilderTest extends TestCase
         $qb->leftJoin($source2, $joinCondition);
     }
 
-    public function testGetQuery()
+    public function testGetQuery(): void
     {
         $source = $this->createSourceMock();
         $constraint = $this->createConstraintMock();
@@ -322,7 +325,7 @@ class QueryBuilderTest extends TestCase
 
         $this->qf->expects($this->once())
                  ->method('createQuery')
-                 ->willReturn('true');
+                 ->willReturn($this->createMock(QueryObjectModelInterface::class));
 
         $qb->getQuery();
     }
@@ -341,7 +344,7 @@ class QueryBuilderTest extends TestCase
         return $query;
     }
 
-    public function testGetQueryWithOffsetAndLimit()
+    public function testGetQueryWithOffsetAndLimit(): void
     {
         $source = $this->createSourceMock();
         $constraint = $this->createConstraintMock();
@@ -366,7 +369,7 @@ class QueryBuilderTest extends TestCase
         $qb->getQuery();
     }
 
-    public function testSetParameter()
+    public function testSetParameter(): void
     {
         $key = 'key';
         $value = 'value';
@@ -377,7 +380,7 @@ class QueryBuilderTest extends TestCase
         $this->assertEquals($value, $qb->getParameter($key));
     }
 
-    public function testSetParameters()
+    public function testSetParameters(): void
     {
         $key1 = 'key1';
         $value1 = 'value1';
@@ -385,18 +388,24 @@ class QueryBuilderTest extends TestCase
         $value2 = 'value2';
 
         $qb = new QueryBuilder($this->qf);
-        $qb->setParameters([$key1, $value1], [$key2, $value2]);
+        $qb->setParameters([
+            $key1 => $value1,
+            $key2 => $value2,
+        ]);
         $this->assertCount(2, $qb->getParameters());
     }
 
-    public function testExecute()
+    public function testExecute(): void
     {
         $source = $this->createSourceMock();
         $constraint = $this->createConstraintMock();
         $query = $this->createQueryMock();
 
+        $result = $this->createMock(QueryResultInterface::class);
         $query->expects($this->once())
-              ->method('execute');
+              ->method('execute')
+            ->willReturn($result)
+        ;
         $query->expects($this->once())
               ->method('bindValue');
 
@@ -406,11 +415,14 @@ class QueryBuilderTest extends TestCase
                  ->willReturn($query);
 
         $qb = new QueryBuilder($this->qf);
-        $qb->from($source)
-           ->where($constraint)
-           ->setFirstResult(10)
-           ->setMaxResults(10)
-           ->setParameter('Key', 'value')
-           ->execute();
+        $this->assertSame(
+            $result,
+            $qb->from($source)
+               ->where($constraint)
+               ->setFirstResult(10)
+               ->setMaxResults(10)
+               ->setParameter('Key', 'value')
+               ->execute()
+        );
     }
 }

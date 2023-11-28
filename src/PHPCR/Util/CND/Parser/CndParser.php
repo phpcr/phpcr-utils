@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Util\CND\Parser;
 
 use PHPCR\NodeType\NodeDefinitionTemplateInterface;
+use PHPCR\NodeType\NodeTypeDefinitionInterface;
 use PHPCR\NodeType\NodeTypeManagerInterface;
 use PHPCR\NodeType\NodeTypeTemplateInterface;
 use PHPCR\NodeType\PropertyDefinitionTemplateInterface;
@@ -32,48 +35,45 @@ use PHPCR\Version\OnParentVersionAction;
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  * @author David Buchmann <mail@davidbu.ch>
  */
-class CndParser extends AbstractParser
+final class CndParser extends AbstractParser
 {
     // node type attributes
-    private $ORDERABLE = ['o', 'ord', 'orderable']; // , 'variant' => true);
-    private $MIXIN = ['m', 'mix', 'mixin']; // , 'variant' => true);
-    private $ABSTRACT = ['a', 'abs', 'abstract']; // , 'variant' => true);
-    private $NOQUERY = ['noquery', 'nq']; // , 'variant' => false);
-    private $QUERY = ['query', 'q']; // , 'variant' => false);
-    private $PRIMARYITEM = ['primaryitem', '!']; // , 'variant' => false);
+    private array $ORDERABLE = ['o', 'ord', 'orderable']; // , 'variant' => true);
+    private array $MIXIN = ['m', 'mix', 'mixin']; // , 'variant' => true);
+    private array $ABSTRACT = ['a', 'abs', 'abstract']; // , 'variant' => true);
+    private array $NOQUERY = ['noquery', 'nq']; // , 'variant' => false);
+    private array $QUERY = ['query', 'q']; // , 'variant' => false);
+    private array $PRIMARYITEM = ['primaryitem', '!']; // , 'variant' => false);
 
     // common for properties and child definitions
-    private $PRIMARY = ['!', 'pri', 'primary']; // , 'variant' => true),
-    private $AUTOCREATED = ['a', 'aut', 'autocreated']; // , 'variant' => true),
-    private $MANDATORY = ['m', 'man', 'mandatory']; // , 'variant' => true),
-    private $PROTECTED = ['p', 'pro', 'protected']; // , 'variant' => true),
-    private $OPV = ['COPY', 'VERSION', 'INITIALIZE', 'COMPUTE', 'IGNORE', 'ABORT'];
+    private array $PRIMARY = ['!', 'pri', 'primary']; // , 'variant' => true),
+    private array $AUTOCREATED = ['a', 'aut', 'autocreated']; // , 'variant' => true),
+    private array $MANDATORY = ['m', 'man', 'mandatory']; // , 'variant' => true),
+    private array $PROTECTED = ['p', 'pro', 'protected']; // , 'variant' => true),
+    private array $OPV = ['COPY', 'VERSION', 'INITIALIZE', 'COMPUTE', 'IGNORE', 'ABORT'];
 
     // property type attributes
-    private $MULTIPLE = ['*', 'mul', 'multiple']; // , 'variant' => true),
-    private $QUERYOPS = ['qop', 'queryops']; // , 'variant' => true), // Needs special handling !
-    private $NOFULLTEXT = ['nof', 'nofulltext']; // , 'variant' => true),
-    private $NOQUERYORDER = ['nqord', 'noqueryorder']; // , 'variant' => true),
+    private array $MULTIPLE = ['*', 'mul', 'multiple']; // , 'variant' => true),
+    private array $QUERYOPS = ['qop', 'queryops']; // , 'variant' => true), // Needs special handling !
+    private array $NOFULLTEXT = ['nof', 'nofulltext']; // , 'variant' => true),
+    private array $NOQUERYORDER = ['nqord', 'noqueryorder']; // , 'variant' => true),
 
     // child node attributes
     // multiple is actually a jackrabbit specific synonym for sns
     // http://www.mail-archive.com/users@jackrabbit.apache.org/msg19268.html
-    private $SNS = ['*', 'sns', 'multiple']; // , 'variant' => true),
+    private array $SNS = ['*', 'sns', 'multiple']; // , 'variant' => true),
+
+    private NodeTypeManagerInterface $ntm;
 
     /**
-     * @var NodeTypeManagerInterface
+     * @var string[]
      */
-    private $ntm;
+    protected array $namespaces = [];
 
     /**
-     * @var array
+     * @var string[]
      */
-    protected $namespaces = [];
-
-    /**
-     * @var array
-     */
-    protected $nodeTypes = [];
+    protected array $nodeTypes = [];
 
     public function __construct(NodeTypeManagerInterface $ntm)
     {
@@ -85,10 +85,9 @@ class CndParser extends AbstractParser
      *
      * @param string $filename absolute path to the CND file to read
      *
-     * @return array with the namespaces map and the nodeTypes which is a
-     *               hashmap of typename = > NodeTypeDefinitionInterface
+     * @return array{namespaces: string[], nodeTypes: array<string, NodeTypeDefinitionInterface>}
      */
-    public function parseFile($filename)
+    public function parseFile(string $filename): array
     {
         $reader = new FileReader($filename);
 
@@ -100,17 +99,19 @@ class CndParser extends AbstractParser
      *
      * @param string $cnd string with CND content
      *
-     * @return array with the namespaces map and the nodeTypes which is a
-     *               hashmap of typename = > NodeTypeDefinitionInterface
+     * @return array{namespaces: string[], nodeTypes: array<string, NodeTypeDefinitionInterface>}
      */
-    public function parseString($cnd)
+    public function parseString(string $cnd): array
     {
         $reader = new BufferReader($cnd);
 
         return $this->parse($reader);
     }
 
-    private function parse(ReaderInterface $reader)
+    /**
+     * @return array{namespaces: string[], nodeTypes: array<string, NodeTypeDefinitionInterface>}
+     */
+    private function parse(ReaderInterface $reader): array
     {
         $scanner = new GenericScanner(new DefaultScannerContextWithoutSpacesAndComments());
         $this->tokenQueue = $scanner->scan($reader);
@@ -141,7 +142,7 @@ class CndParser extends AbstractParser
      * Prefix ::= String
      * Uri ::= String
      */
-    protected function parseNamespaceMapping()
+    protected function parseNamespaceMapping(): void
     {
         $this->expectToken(Token::TK_SYMBOL, '<');
         $prefix = $this->parseCndString();
@@ -161,7 +162,7 @@ class CndParser extends AbstractParser
      *          [NodeTypeAttribute {NodeTypeAttribute}]
      *          {PropertyDef | ChildNodeDef}
      */
-    protected function parseNodeType()
+    protected function parseNodeType(): void
     {
         $nodeType = $this->ntm->createNodeTypeTemplate();
         $this->parseNodeTypeName($nodeType);
@@ -182,7 +183,7 @@ class CndParser extends AbstractParser
      *
      *      NodeTypeName ::= '[' String ']'
      */
-    protected function parseNodeTypeName(NodeTypeTemplateInterface $nodeType)
+    protected function parseNodeTypeName(NodeTypeTemplateInterface $nodeType): void
     {
         $this->expectToken(Token::TK_SYMBOL, '[');
         $name = $this->parseCndString();
@@ -199,7 +200,7 @@ class CndParser extends AbstractParser
      *
      *      Supertypes ::= '>' (StringList | '?')
      */
-    protected function parseSupertypes(NodeTypeTemplateInterface $nodeType)
+    protected function parseSupertypes(NodeTypeTemplateInterface $nodeType): void
     {
         $this->expectToken(Token::TK_SYMBOL, '>');
 
@@ -242,7 +243,7 @@ class CndParser extends AbstractParser
      *      Query ::= ('noquery' | 'nq') | ('query' | 'q' )
      *      PrimaryItem ::= ('primaryitem'| '!')(String | '?')
      */
-    protected function parseNodeTypeAttributes(NodeTypeTemplateInterface $nodeType)
+    protected function parseNodeTypeAttributes(NodeTypeTemplateInterface $nodeType): void
     {
         while (true) {
             if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->ORDERABLE)) {
@@ -283,7 +284,7 @@ class CndParser extends AbstractParser
      *
      *      {PropertyDef | ChildNodeDef}
      */
-    protected function parseChildrenAndAttributes(NodeTypeTemplateInterface $nodeType)
+    protected function parseChildrenAndAttributes(NodeTypeTemplateInterface $nodeType): void
     {
         while (true) {
             if ($this->checkToken(Token::TK_SYMBOL, '-')) {
@@ -309,7 +310,7 @@ class CndParser extends AbstractParser
      *          [ValueConstraints]
      *      PropertyName ::= '-' String
      */
-    protected function parsePropDef(NodeTypeTemplateInterface $nodeType)
+    protected function parsePropDef(NodeTypeTemplateInterface $nodeType): void
     {
         $this->expectToken(Token::TK_SYMBOL, '-');
 
@@ -363,7 +364,7 @@ class CndParser extends AbstractParser
      *          'DECIMAL' | 'URI' | 'UNDEFINED' | '*' |
      *          '?') ')'
      */
-    protected function parsePropertyType(PropertyDefinitionTemplateInterface $property)
+    protected function parsePropertyType(PropertyDefinitionTemplateInterface $property): void
     {
         $types = ['STRING', 'BINARY', 'LONG', 'DOUBLE', 'BOOLEAN',  'DATE', 'NAME', 'PATH',
             'REFERENCE', 'WEAKREFERENCE', 'DECIMAL', 'URI', 'UNDEFINED', '*', '?', ];
@@ -387,7 +388,7 @@ class CndParser extends AbstractParser
      *
      *      DefaultValues ::= '=' (StringList | '?')
      */
-    protected function parseDefaultValue(PropertyDefinitionTemplateInterface $property)
+    protected function parseDefaultValue(PropertyDefinitionTemplateInterface $property): void
     {
         if ($this->checkAndExpectToken(Token::TK_SYMBOL, '?')) {
             $list = ['?'];
@@ -405,7 +406,7 @@ class CndParser extends AbstractParser
      *
      *      ValueConstraints ::= '<' (StringList | '?')
      */
-    protected function parseValueConstraints(PropertyDefinitionTemplateInterface $property)
+    protected function parseValueConstraints(PropertyDefinitionTemplateInterface $property): void
     {
         $this->expectToken(Token::TK_SYMBOL, '<');
 
@@ -472,7 +473,7 @@ class CndParser extends AbstractParser
      *      NoFullText ::= ('nofulltext' | 'nof') ['?']
      *      NoQueryOrder ::= ('noqueryorder' | 'nqord') ['?']
      */
-    protected function parsePropertyAttributes(NodeTypeTemplateInterface $parentType, PropertyDefinitionTemplateInterface $property)
+    protected function parsePropertyAttributes(NodeTypeTemplateInterface $parentType, PropertyDefinitionTemplateInterface $property): void
     {
         $opvSeen = false;
         while (true) {
@@ -526,7 +527,7 @@ class CndParser extends AbstractParser
      *      RequiredTypes ::= '(' (StringList | '?') ')'
      *      DefaultType ::= '=' (String | '?')
      */
-    protected function parseChildNodeDef(NodeTypeTemplateInterface $nodeType)
+    protected function parseChildNodeDef(NodeTypeTemplateInterface $nodeType): void
     {
         $this->expectToken(Token::TK_SYMBOL, '+');
         $childType = $this->ntm->createNodeDefinitionTemplate();
@@ -595,7 +596,7 @@ class CndParser extends AbstractParser
     protected function parseChildNodeAttributes(
         NodeTypeTemplateInterface $parentType,
         NodeDefinitionTemplateInterface $childType
-    ) {
+    ): void {
         while (true) {
             if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->PRIMARY)) {
                 $parentType->setPrimaryItemName($childType->getName());
@@ -624,9 +625,9 @@ class CndParser extends AbstractParser
      *
      *      StringList ::= String {',' String}
      *
-     * @return array
+     * @return string[]
      */
-    protected function parseCndStringList()
+    protected function parseCndStringList(): array
     {
         $strings = [];
 
@@ -656,10 +657,8 @@ class CndParser extends AbstractParser
      *      Char ::= "\t" | "\r" | "\n" | [#x20-#xD7FF] | [#xE000-#xFFFD] | [#x10000-#x10FFFF]
      *
      * TODO: check \n, \r, \t are valid in CND strings!
-     *
-     * @return string
      */
-    protected function parseCndString()
+    protected function parseCndString(): string
     {
         $string = '';
         $lastType = null;
@@ -735,10 +734,8 @@ class CndParser extends AbstractParser
 
     /**
      * Parse a query operator.
-     *
-     * @return bool|string
      */
-    protected function parseQueryOperator()
+    protected function parseQueryOperator(): bool|string
     {
         $token = $this->tokenQueue->peek();
         $data = $token->getData();

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Util\Console\Helper;
 
 use PHPCR\Util\Console\Helper\TreeDumper\ConsoleDumperNodeVisitor;
@@ -17,7 +19,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class PhpcrConsoleDumperHelper extends Helper
 {
-    public function getTreeWalker(OutputInterface $output, $options)
+    public function getTreeWalker(OutputInterface $output, $options): TreeWalker
     {
         $options = array_merge([
             'dump_uuids' => false,

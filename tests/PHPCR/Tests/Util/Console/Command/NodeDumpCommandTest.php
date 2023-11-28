@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Tests\Util\Console\Command;
 
 use PHPCR\ItemNotFoundException;
@@ -24,7 +26,7 @@ class NodeDumpCommandTest extends BaseCommandTest
         $this->application->add($ndCommand);
     }
 
-    public function testCommand()
+    public function testCommand(): void
     {
         $this->dumperHelper
             ->expects($this->once())
@@ -45,7 +47,7 @@ class NodeDumpCommandTest extends BaseCommandTest
         $this->executeCommand('phpcr:node:dump', []);
     }
 
-    public function testCommandIdentifier()
+    public function testCommandIdentifier(): void
     {
         $uuid = UUIDHelper::generateUUID();
 
@@ -68,7 +70,7 @@ class NodeDumpCommandTest extends BaseCommandTest
         $this->executeCommand('phpcr:node:dump', ['identifier' => $uuid]);
     }
 
-    public function testInvalidRefFormat()
+    public function testInvalidRefFormat(): void
     {
         $this->expectException(\Exception::class);
 
@@ -76,7 +78,7 @@ class NodeDumpCommandTest extends BaseCommandTest
         $this->fail('invalid ref-format did not produce exception');
     }
 
-    public function testNotFound()
+    public function testNotFound(): void
     {
         $this->session
             ->expects($this->once())

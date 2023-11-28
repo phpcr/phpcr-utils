@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Util\Console\Command;
 
 use PHPCR\RepositoryInterface;
@@ -7,6 +9,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 /**
  * A command to delete a workspace in the PHPCR repository.
@@ -26,11 +29,11 @@ class WorkspaceDeleteCommand extends BaseCommand
             ->setDescription('Delete a workspace from the configured repository')
             ->setHelp(
                 <<<'EOT'
-The <info>workspace:delete</info> command deletes the workspace with the specified name if it
-exists. If the workspace with that name does not yet exist, the command will not fail.
-However, if the workspace does exist but the repository implementation does not support
-the delete operation, the command will fail.
-EOT
+                    The <info>workspace:delete</info> command deletes the workspace with the specified name if it
+                    exists. If the workspace with that name does not yet exist, the command will not fail.
+                    However, if the workspace does exist but the repository implementation does not support
+                    the delete operation, the command will fail.
+                    EOT
             );
     }
 
@@ -61,10 +64,11 @@ EOT
 
         $force = $input->getOption('force');
         if (!$force) {
-            $force = $this->askConfirmation($input, $output, sprintf(
+            $confirmationQuestion = new ConfirmationQuestion(sprintf(
                 '<question>Are you sure you want to delete workspace "%s" Y/N ?</question>',
                 $workspaceName
             ), false);
+            $force = $this->getQuestionHelper()->ask($input, $output, $confirmationQuestion);
         }
         if (!$force) {
             $output->writeln('<error>Aborted</error>');

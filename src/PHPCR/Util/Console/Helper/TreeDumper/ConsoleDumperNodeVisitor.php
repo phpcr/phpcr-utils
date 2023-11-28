@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Util\Console\Helper\TreeDumper;
 
 use PHPCR\ItemInterface;
@@ -15,22 +17,20 @@ class ConsoleDumperNodeVisitor extends ConsoleDumperItemVisitor
 {
     /**
      * Whether to print the UUIDs or not.
-     *
-     * @var bool
      */
-    protected $identifiers;
+    protected bool $identifiers;
 
     /**
      * Show the full path for the node.
      */
-    protected $showFullPath;
+    protected bool $showFullPath = false;
 
     /**
      * Instantiate the console dumper visitor.
      *
      * @param bool $identifiers whether to output the node UUID
      */
-    public function __construct(OutputInterface $output, $identifiers = false)
+    public function __construct(OutputInterface $output, bool $identifiers = false)
     {
         parent::__construct($output);
         $this->identifiers = $identifiers;
@@ -38,10 +38,8 @@ class ConsoleDumperNodeVisitor extends ConsoleDumperItemVisitor
 
     /**
      * If to show the full path or not.
-     *
-     * @param bool $showFullPath
      */
-    public function setShowFullPath($showFullPath)
+    public function setShowFullPath(bool $showFullPath): void
     {
         $this->showFullPath = $showFullPath;
     }
@@ -53,10 +51,10 @@ class ConsoleDumperNodeVisitor extends ConsoleDumperItemVisitor
      *
      * @throws \Exception
      */
-    public function visit(ItemInterface $item)
+    public function visit(ItemInterface $item): void
     {
         if (!$item instanceof NodeInterface) {
-            throw new \Exception('Internal error: did not expect to visit a non-node object: '.get_class($item));
+            throw new \Exception('Internal error: did not expect to visit a non-node object: '.$item::class);
         }
 
         if (0 === $item->getDepth()) {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace PHPCR\Tests\Util\CND\Scanner;
 
 use PHPCR\Util\CND\Reader\FileReader;
@@ -114,7 +116,7 @@ class GenericScannerTest extends TestCase
         }
     }
 
-    public function testScan()
+    public function testScan(): void
     {
         $reader = new FileReader(__DIR__.'/../Fixtures/files/TestFile.php');
 
@@ -124,7 +126,7 @@ class GenericScannerTest extends TestCase
         $this->assertTokens($this->expectedTokens, $queue);
     }
 
-    public function testFilteredScan()
+    public function testFilteredScan(): void
     {
         $reader = new FileReader(__DIR__.'/../Fixtures/files/TestFile.php');
 
@@ -138,7 +140,7 @@ class GenericScannerTest extends TestCase
         $this->assertTokens($this->expectedTokensNoEmptyToken, $queue);
     }
 
-    protected function assertTokens($tokens, TokenQueue $queue)
+    protected function assertTokens($tokens, TokenQueue $queue): void
     {
         $queue->reset();
 
@@ -160,7 +162,7 @@ class GenericScannerTest extends TestCase
         $this->assertTrue($queue->isEof(), 'There are more unexpected tokens.');
     }
 
-    protected function assertToken($type, $data, Token $token)
+    protected function assertToken($type, $data, Token|false $token): void
     {
         $this->assertEquals(
             $type,
