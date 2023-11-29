@@ -46,7 +46,7 @@ class PhpcrConsoleDumperHelper extends Helper
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'phpcr_console_dumper';
     }
