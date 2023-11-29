@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: PHPStan
-        uses: docker://oskarstark/phpstan-ga:1.8.0
+        uses: docker://oskarstark/phpstan-ga
         with:
           args: analyze --no-progress
 
@@ -37,6 +37,6 @@ jobs:
           composer update --no-progress
 
       - name: PHPStan
-        uses: docker://oskarstark/phpstan-ga:1.8.0
+        uses: docker://oskarstark/phpstan-ga
         with:
           args: analyze --no-progress -c phpstan.tests.neon.dist
