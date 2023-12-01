@@ -11,7 +11,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 class NodesUpdateCommandTest extends BaseCommandTest
 {
     /**
-     * @var QueryInterface|MockObject
+     * @var QueryInterface&MockObject
      */
     private $query;
 
@@ -23,13 +23,20 @@ class NodesUpdateCommandTest extends BaseCommandTest
         $this->query = $this->createMock(QueryInterface::class);
     }
 
-    public function provideNodeUpdate()
+    /**
+     * @return array<array<array<string, mixed>>>
+     */
+    public function provideNodeUpdate(): array
     {
         return [
             // No query specified
-            [['exception' => \InvalidArgumentException::class]],
+            [[
+                'exception' => \InvalidArgumentException::class,
+            ]],
             // Specify query
-            [['query' => 'SELECT * FROM nt:unstructured WHERE foo="bar"']],
+            [[
+                'query' => 'SELECT * FROM nt:unstructured WHERE foo="bar"',
+            ]],
             // Set, remote properties and mixins
             [[
                 'setProp' => [['foo', 'bar']],
@@ -41,7 +48,10 @@ class NodesUpdateCommandTest extends BaseCommandTest
         ];
     }
 
-    protected function setupQueryManager($options): void
+    /**
+     * @param array<string, string> $options
+     */
+    protected function setupQueryManager(array $options): void
     {
         $options = array_merge(['query' => ''], $options);
 
@@ -69,8 +79,10 @@ class NodesUpdateCommandTest extends BaseCommandTest
 
     /**
      * @dataProvider provideNodeUpdate
+     *
+     * @param array<string, mixed> $options
      */
-    public function testNodeUpdate($options): void
+    public function testNodeUpdate(array $options): void
     {
         $options = array_merge([
             'query' => null,

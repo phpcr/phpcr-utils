@@ -7,7 +7,6 @@ namespace PHPCR\Tests\Util;
 use PHPCR\RepositoryException;
 use PHPCR\Tests\Stubs\MockNode;
 use PHPCR\Util\NodeHelper;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 require_once __DIR__.'/../Stubs/MockNode.php';
@@ -15,19 +14,19 @@ require_once __DIR__.'/../Stubs/MockNode.php';
 class NodeHelperTest extends TestCase
 {
     /**
-     * @var array
+     * @var array<string, string>
      */
-    private $namespaces = ['a' => 'http://phpcr', 'b' => 'http://jcr'];
+    private array $namespaces = ['a' => 'http://phpcr', 'b' => 'http://jcr'];
 
     /**
-     * @var array
+     * @var string[]
      */
-    private $usedNames = ['a:x', 'b:y', 'c'];
+    private array $usedNames = ['a:x', 'b:y', 'c'];
 
     /**
-     * @return array
+     * @return array<array{0: string, 1: bool|string}>
      */
-    public static function hints()
+    public static function hints(): array
     {
         return [
             ['', true],
@@ -41,9 +40,9 @@ class NodeHelperTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array<array<string>>
      */
-    public static function invalidHints()
+    public static function invalidHints(): array
     {
         return [
             ['::'],
@@ -66,12 +65,13 @@ class NodeHelperTest extends TestCase
     /**
      * @dataProvider hints
      */
-    public function testGenerateAutoNodeName($hint, $expect): void
+    public function testGenerateAutoNodeName(string $hint, bool|string $expect): void
     {
         $result = NodeHelper::generateAutoNodeName($this->usedNames, $this->namespaces, 'a', $hint);
         if (true === $expect) {
             $this->assertStringNotContainsString(':', $result);
         } else {
+            $this->assertIsString($expect);
             $this->assertEquals($expect, substr($result, 0, strlen($expect)));
         }
     }
@@ -79,7 +79,7 @@ class NodeHelperTest extends TestCase
     /**
      * @dataProvider invalidHints
      */
-    public function testGenerateAutoNodeNameInvalid($hint): void
+    public function testGenerateAutoNodeNameInvalid(string $hint): void
     {
         $this->expectException(RepositoryException::class);
         NodeHelper::generateAutoNodeName($this->usedNames, $this->namespaces, 'a', $hint);
@@ -87,7 +87,6 @@ class NodeHelperTest extends TestCase
 
     public function testIsSystemItem(): void
     {
-        /** @var MockNode|MockObject $sys */
         $sys = $this->createMock(MockNode::class);
 
         $sys->expects($this->once())
@@ -111,7 +110,6 @@ class NodeHelperTest extends TestCase
 
         $this->assertTrue(NodeHelper::isSystemItem($sys));
 
-        /** @var MockNode|MockObject $top */
         $top = $this->createMock(MockNode::class);
         $top->expects($this->once())
             ->method('getDepth')
@@ -123,7 +121,6 @@ class NodeHelperTest extends TestCase
 
         $this->assertFalse(NodeHelper::isSystemItem($top));
 
-        /** @var MockNode|MockObject $deep */
         $deep = $this->createMock(MockNode::class);
         $deep->expects($this->once())
             ->method('getDepth')

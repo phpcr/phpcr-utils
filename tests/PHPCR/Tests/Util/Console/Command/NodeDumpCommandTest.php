@@ -12,7 +12,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 
 class NodeDumpCommandTest extends BaseCommandTest
 {
-    /** @var TreeWalker|MockObject */
+    /** @var TreeWalker&MockObject */
     protected $treeWalker;
 
     public function setUp(): void

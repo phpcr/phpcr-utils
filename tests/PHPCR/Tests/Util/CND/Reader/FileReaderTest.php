@@ -20,7 +20,7 @@ class FileReaderTest extends TestCase
     private $reader;
 
     /**
-     * @var array
+     * @var string[]
      */
     private $lines;
 

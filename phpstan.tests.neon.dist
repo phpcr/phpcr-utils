@@ -1,4 +1,31 @@
 parameters:
-    level: 1
+    level: 7
     paths:
-        - tests
+        - tests/
+
+    excludePaths:
+        analyse:
+            - tests/*/Fixtures/*
+
+    ignoreErrors:
+        # not sure what is going on here
+        -
+            message: "#^Interface Iterator specifies template type TKey of interface Traversable as string but it's already specified as mixed\\.$#"
+            count: 1
+            path: tests/PHPCR/Tests/Stubs/MockNodeTypeManager.php
+
+        -
+            message: "#^Interface Iterator specifies template type TValue of interface Traversable as PHPCR\\\\NodeType\\\\NodeTypeInterface but it's already specified as mixed\\.$#"
+            count: 1
+            path: tests/PHPCR/Tests/Stubs/MockNodeTypeManager.php
+
+        # too pedantic for tests
+        -
+            message: "#^Parameter \\#1 \\.\\.\\.\\$arrays of function array_merge expects array, array\\<int, string\\>\\|false given\\.$#"
+            count: 1
+            path: tests/PHPCR/Tests/Util/CND/Reader/FileReaderTest.php
+
+        -
+            message: "#^Parameter \\#3 \\.\\.\\.\\$arrays of function array_merge expects array, array\\<int, string\\>\\|false given\\.$#"
+            count: 1
+            path: tests/PHPCR/Tests/Util/CND/Reader/FileReaderTest.php

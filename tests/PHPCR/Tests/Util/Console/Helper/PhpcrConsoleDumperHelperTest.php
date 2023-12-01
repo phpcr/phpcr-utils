@@ -2,14 +2,19 @@
 
 declare(strict_types=1);
 
+namespace PHPCR\Tests\Util\Console\Helper;
+
 use PHPCR\Util\Console\Helper\PhpcrConsoleDumperHelper;
 use PHPCR\Util\Console\Helper\TreeDumper\ConsoleDumperPropertyVisitor;
-use PHPCR\Util\TreeWalker;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class PhpcrConsoleDumperHelperTest extends TestCase
 {
+    /**
+     * @var MockObject&OutputInterface
+     */
     private $outputMock;
     /**
      * @var PhpcrConsoleDumperHelper
@@ -22,15 +27,23 @@ class PhpcrConsoleDumperHelperTest extends TestCase
         $this->helper = new PhpcrConsoleDumperHelper();
     }
 
-    public function provideHelper()
+    /**
+     * @return array<array<array<string, bool>>>
+     */
+    public function provideHelper(): array
     {
-        return [[[]], [['show_props' => true]]];
+        return [
+            [[]],
+            [['show_props' => true]],
+        ];
     }
 
     /**
      * @dataProvider provideHelper
+     *
+     * @param array<string, bool> $options
      */
-    public function testGetTreeWalker($options): void
+    public function testGetTreeWalker(array $options): void
     {
         $options = array_merge([
             'dump_uuids' => false,
@@ -40,9 +53,8 @@ class PhpcrConsoleDumperHelperTest extends TestCase
         ], $options);
 
         $tw = $this->helper->getTreeWalker($this->outputMock, $options);
-        $this->assertInstanceOf(TreeWalker::class, $tw);
 
-        $reflection = new ReflectionClass($tw);
+        $reflection = new \ReflectionClass($tw);
         $propVisitorProp = $reflection->getProperty('propertyVisitor');
         $propVisitorProp->setAccessible(true);
         $propVisitor = $propVisitorProp->getValue($tw);

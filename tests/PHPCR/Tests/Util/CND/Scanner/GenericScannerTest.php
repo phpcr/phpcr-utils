@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
 class GenericScannerTest extends TestCase
 {
     /**
-     * @var array<Token[]>
+     * @var array<array{0: int, 1: string}>
      */
     private array $expectedTokens = [
         // <opening php tag>
@@ -108,7 +108,7 @@ class GenericScannerTest extends TestCase
     ];
 
     /**
-     * @var Token[]
+     * @var array<array{0: int, 1: string}>
      */
     protected array $expectedTokensNoEmptyToken;
 
@@ -146,7 +146,10 @@ class GenericScannerTest extends TestCase
         $this->assertTokens($this->expectedTokensNoEmptyToken, $queue);
     }
 
-    protected function assertTokens($tokens, TokenQueue $queue): void
+    /**
+     * @param array<array{0: int, 1: string}> $tokens
+     */
+    protected function assertTokens(array $tokens, TokenQueue $queue): void
     {
         $queue->reset();
 
@@ -155,6 +158,8 @@ class GenericScannerTest extends TestCase
         $token = $queue->peek();
 
         while ($it->valid()) {
+            $this->assertInstanceOf(Token::class, $token);
+
             $expectedToken = $it->current();
 
             $this->assertFalse($queue->isEof(), 'There is no more tokens, expected = '.$expectedToken[1]);
@@ -168,7 +173,7 @@ class GenericScannerTest extends TestCase
         $this->assertTrue($queue->isEof(), 'There are more unexpected tokens.');
     }
 
-    protected function assertToken($type, $data, Token|false $token): void
+    protected function assertToken(int $type, string $data, Token $token): void
     {
         $this->assertEquals(
             $type,

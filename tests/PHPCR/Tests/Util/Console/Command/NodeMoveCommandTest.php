@@ -8,15 +8,27 @@ use PHPCR\Util\Console\Command\NodeMoveCommand;
 
 class NodeMoveCommandTest extends BaseCommandTest
 {
-    public function provideCommand()
+    /**
+     * @return array<array<mixed[]>>
+     */
+    public function provideCommand(): array
     {
-        return [[['source' => '/foo', 'destination' => '/bar']]];
+        return [
+            [
+                [
+                    'source' => '/foo',
+                    'destination' => '/bar',
+                ],
+            ],
+        ];
     }
 
     /**
      * @dataProvider provideCommand
+     *
+     * @param array<mixed[]> $args
      */
-    public function testCommand($args): void
+    public function testCommand(array $args): void
     {
         $this->session->expects($this->once())
             ->method('move')

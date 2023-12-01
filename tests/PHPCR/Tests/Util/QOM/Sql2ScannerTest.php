@@ -51,6 +51,9 @@ class Sql2ScannerTest extends TestCase
         $this->expectTokensFromScanner($scanner, $expected);
     }
 
+    /**
+     * @return array<string, string[]>
+     */
     public function dataTestStringTokenization(): array
     {
         $multilineQuery = <<<'SQL'

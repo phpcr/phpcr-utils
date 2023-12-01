@@ -71,7 +71,7 @@ final class CndParser extends AbstractParser
     private array $namespaces = [];
 
     /**
-     * @var string[]
+     * @var NodeTypeDefinitionInterface[]
      */
     private array $nodeTypes = [];
 

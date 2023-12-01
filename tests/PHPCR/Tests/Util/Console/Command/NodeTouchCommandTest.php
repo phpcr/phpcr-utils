@@ -17,7 +17,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 class NodeTouchCommandTest extends BaseCommandTest
 {
     /**
-     * @var PhpcrHelper|MockObject
+     * @var PhpcrHelper&MockObject
      */
     public $phpcrHelper;
 

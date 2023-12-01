@@ -25,25 +25,33 @@ class ValueConverterTest extends TestCase
         $this->valueConverter = new ValueConverter();
     }
 
+    /**
+     * @return array<array{0: string, 1: int, 2: mixed, 3: mixed}>
+     */
     public function dataConversionMatrix(): array
     {
         $stream = fopen('php://memory', '+rw');
+        $this->assertIsResource($stream);
         fwrite($stream, 'test string');
         rewind($stream);
 
         $dateStream = fopen('php://memory', '+rw');
+        $this->assertIsResource($dateStream);
         fwrite($dateStream, '17.12.2010  GMT');
         rewind($dateStream);
 
         $numberStream = fopen('php://memory', '+rw');
+        $this->assertIsResource($numberStream);
         fwrite($numberStream, '123.456');
         rewind($numberStream);
 
         $nameStream = fopen('php://memory', '+rw');
+        $this->assertIsResource($nameStream);
         fwrite($nameStream, 'test');
         rewind($nameStream);
 
         $uuidStream = fopen('php://memory', '+rw');
+        $this->assertIsResource($uuidStream);
         fwrite($uuidStream, '38b7cf18-c417-477a-af0b-c1e92a290c9a');
         rewind($uuidStream);
 
@@ -305,10 +313,12 @@ class ValueConverterTest extends TestCase
         $stream = $this->valueConverter->convertType($date, PropertyType::BINARY);
         $this->assertIsResource($stream);
         $string = stream_get_contents($stream);
+        $this->assertIsString($string);
         $readDate = new \DateTime($string);
         $this->assertEquals($date->getTimestamp(), $readDate->getTimestamp());
 
         $stream = fopen('php://memory', '+rwb');
+        $this->assertIsResource($stream);
         fwrite($stream, 'test string');
         rewind($stream);
 

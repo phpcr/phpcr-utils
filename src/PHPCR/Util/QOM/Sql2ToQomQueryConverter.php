@@ -429,11 +429,6 @@ class Sql2ToQomQueryConverter
     protected function parseComparison(): ComparisonInterface
     {
         $op1 = $this->parseDynamicOperand();
-
-        if (null === $op1) {
-            throw new InvalidQueryException("Syntax error: dynamic operator expected in '{$this->sql2}'");
-        }
-
         $operator = $this->parseOperator();
         $op2 = $this->parseStaticOperand();
 

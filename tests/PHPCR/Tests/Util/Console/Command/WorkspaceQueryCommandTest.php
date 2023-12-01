@@ -11,7 +11,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 class WorkspaceQueryCommandTest extends BaseCommandTest
 {
     /**
-     * @var QueryInterface|MockObject
+     * @var QueryInterface&MockObject
      */
     protected $query;
 

@@ -11,7 +11,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 class NodeTypeListCommandTest extends BaseCommandTest
 {
     /**
-     * @var MockNodeTypeManager|MockObject
+     * @var MockNodeTypeManager&MockObject
      */
     private $nodeTypeManager;
 
