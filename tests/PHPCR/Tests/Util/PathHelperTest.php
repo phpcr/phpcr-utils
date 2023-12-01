@@ -16,12 +16,15 @@ class PathHelperTest extends TestCase
     /**
      * @dataProvider dataproviderValidAbsolutePaths
      */
-    public function testAssertValidAbsolutePath($path, $destination = false): void
+    public function testAssertValidAbsolutePath(string $path, bool $destination = false): void
     {
         $this->assertTrue(PathHelper::assertValidAbsolutePath($path, $destination));
     }
 
-    public function dataproviderValidAbsolutePaths()
+    /**
+     * @return array<array{0: string, 1?: true}>
+     */
+    public static function dataproviderValidAbsolutePaths(): array
     {
         return [
             ['/parent/child'],
@@ -36,7 +39,7 @@ class PathHelperTest extends TestCase
     /**
      * @dataProvider dataproviderInvalidAbsolutePaths
      */
-    public function testAssertInvalidAbsolutePath($path, $destination = false): void
+    public function testAssertInvalidAbsolutePath(string $path, bool $destination = false): void
     {
         $this->expectException(RepositoryException::class);
 
@@ -46,12 +49,15 @@ class PathHelperTest extends TestCase
     /**
      * @dataProvider dataproviderValidAbsolutePathsWithNamespaces
      */
-    public function testAssertAbsolutePathNamespace($path): void
+    public function testAssertAbsolutePathNamespace(string $path): void
     {
         $this->assertTrue(PathHelper::assertValidAbsolutePath($path, false, true, ['jcr', 'nt']));
     }
 
-    public function dataproviderValidAbsolutePathsWithNamespaces()
+    /**
+     * @return array<array{0: string}>
+     */
+    public function dataproviderValidAbsolutePathsWithNamespaces(): array
     {
         return [
             ['/parent/child'],
@@ -77,12 +83,15 @@ class PathHelperTest extends TestCase
     /**
      * @dataProvider dataproviderInvalidAbsolutePaths
      */
-    public function testAssertInvalidAbsolutePathNoThrow($path, $destination = false): void
+    public function testAssertInvalidAbsolutePathNoThrow(string $path, bool $destination = false): void
     {
         $this->assertFalse(PathHelper::assertValidAbsolutePath($path, $destination, false));
     }
 
-    public function dataproviderInvalidAbsolutePaths()
+    /**
+     * @return array<array{0: string, 1?: true}>
+     */
+    public function dataproviderInvalidAbsolutePaths(): array
     {
         return [
             ['/parent/child[7]', true], // destination last element with index
@@ -110,14 +119,17 @@ class PathHelperTest extends TestCase
     /**
      * @dataProvider dataproviderInvalidLocalNames
      */
-    public function testAssertInvalidLocalName($name): void
+    public function testAssertInvalidLocalName(string $name): void
     {
         $this->expectException(RepositoryException::class);
 
         PathHelper::assertValidLocalName($name);
     }
 
-    public function dataproviderInvalidLocalNames()
+    /**
+     * @return array<array{0: string}>
+     */
+    public static function dataproviderInvalidLocalNames(): array
     {
         return [
             ['jcr:nodename'],
@@ -132,12 +144,15 @@ class PathHelperTest extends TestCase
     /**
      * @dataProvider dataproviderNormalizePath
      */
-    public function testNormalizePath($inputPath, $outputPath): void
+    public function testNormalizePath(string $inputPath, string $outputPath): void
     {
         $this->assertSame($outputPath, PathHelper::normalizePath($inputPath));
     }
 
-    public static function dataproviderNormalizePath()
+    /**
+     * @return array<array{0: string, 1: string}>
+     */
+    public static function dataproviderNormalizePath(): array
     {
         return [
             ['/',           '/'],
@@ -151,7 +166,7 @@ class PathHelperTest extends TestCase
     /**
      * @dataProvider dataproviderNormalizePathInvalid
      */
-    public function testNormalizePathInvalidThrow($input): void
+    public function testNormalizePathInvalidThrow(string $input): void
     {
         $this->expectException(RepositoryException::class);
 
@@ -161,12 +176,15 @@ class PathHelperTest extends TestCase
     /**
      * @dataProvider dataproviderNormalizePathInvalid
      */
-    public function testNormalizePathInvalidNoThrow($input): void
+    public function testNormalizePathInvalidNoThrow(string $input): void
     {
         $this->assertFalse(PathHelper::normalizePath($input, true, false));
     }
 
-    public static function dataproviderNormalizePathInvalid()
+    /**
+     * @return array<array{0: string}>
+     */
+    public static function dataproviderNormalizePathInvalid(): array
     {
         return [
             ['foo/bar'],
@@ -187,6 +205,9 @@ class PathHelperTest extends TestCase
         $this->assertSame($outputPath, PathHelper::absolutizePath($inputPath, $context));
     }
 
+    /**
+     * @return array<array{0: string, 1: string, 2: string}>
+     */
     public static function dataproviderAbsolutizePath(): array
     {
         return [
@@ -200,7 +221,7 @@ class PathHelperTest extends TestCase
     /**
      * @dataProvider dataproviderAbsolutizePathInvalid
      */
-    public function testAbsolutizePathInvalidThrow($inputPath, $context, $target): void
+    public function testAbsolutizePathInvalidThrow(string $inputPath, string $context, bool $target): void
     {
         $this->expectException(RepositoryException::class);
         PathHelper::absolutizePath($inputPath, $context, $target);
@@ -209,12 +230,15 @@ class PathHelperTest extends TestCase
     /**
      * @dataProvider dataproviderAbsolutizePathInvalid
      */
-    public function testAbsolutizePathInvalidNoThrow($inputPath, $context, $target): void
+    public function testAbsolutizePathInvalidNoThrow(string $inputPath, string $context, bool $target): void
     {
         $this->assertFalse(PathHelper::absolutizePath($inputPath, $context, $target, false));
     }
 
-    public static function dataproviderAbsolutizePathInvalid()
+    /**
+     * @return array<array{0: string, 1: string, 2: bool}>
+     */
+    public static function dataproviderAbsolutizePathInvalid(): array
     {
         return [
             ['', '/context', false],
@@ -229,12 +253,15 @@ class PathHelperTest extends TestCase
     /**
      * @dataProvider dataproviderRelativizePath
      */
-    public function testRelativizePath($inputPath, $context, $outputPath): void
+    public function testRelativizePath(string $inputPath, string $context, string $outputPath): void
     {
         $this->assertSame($outputPath, PathHelper::relativizePath($inputPath, $context));
     }
 
-    public static function dataproviderRelativizePath()
+    /**
+     * @return array<array{0: string, 1: string, 2: string}>
+     */
+    public static function dataproviderRelativizePath(): array
     {
         return [
             ['/parent/path/child', '/parent', 'path/child'],
@@ -245,7 +272,7 @@ class PathHelperTest extends TestCase
     /**
      * @dataProvider dataproviderRelativizePathInvalid
      */
-    public function testRelativizePathInvalidThrow($inputPath, $context): void
+    public function testRelativizePathInvalidThrow(string $inputPath, string $context): void
     {
         $this->expectException(RepositoryException::class);
 
@@ -255,12 +282,15 @@ class PathHelperTest extends TestCase
     /**
      * @dataProvider dataproviderRelativizePathInvalid
      */
-    public function testRelativizePathInvalidNoThrow($inputPath, $context): void
+    public function testRelativizePathInvalidNoThrow(string $inputPath, string $context): void
     {
         $this->assertFalse(PathHelper::relativizePath($inputPath, $context, false));
     }
 
-    public static function dataproviderRelativizePathInvalid()
+    /**
+     * @return array<array{0: string, 1: string}>
+     */
+    public static function dataproviderRelativizePathInvalid(): array
     {
         return [
             ['/path', '/context'],
@@ -273,12 +303,15 @@ class PathHelperTest extends TestCase
     /**
      * @dataProvider dataproviderParentPath
      */
-    public function testGetParentPath($path, $parent): void
+    public function testGetParentPath(string $path, string $parent): void
     {
         $this->assertEquals($parent, PathHelper::getParentPath($path));
     }
 
-    public function dataproviderParentPath()
+    /**
+     * @return array<array{0: string, 1: string}>
+     */
+    public function dataproviderParentPath(): array
     {
         return [
             ['/parent/child', '/parent'],
@@ -293,12 +326,15 @@ class PathHelperTest extends TestCase
     /**
      * @dataProvider dataproviderGetNodeName
      */
-    public function testGetNodeName($path, $expected = null): void
+    public function testGetNodeName(string $path, string $expected): void
     {
         $this->assertEquals($expected, PathHelper::getNodeName($path));
     }
 
-    public function dataproviderGetNodeName()
+    /**
+     * @return array<array{0: string, 1: string}>
+     */
+    public function dataproviderGetNodeName(): array
     {
         return [
             ['/parent/child', 'child'],
@@ -310,12 +346,15 @@ class PathHelperTest extends TestCase
     /**
      * @dataProvider dataproviderGetLocalNodeName
      */
-    public function testGetLocalNodeName($path, $expected = null): void
+    public function testGetLocalNodeName(string $path, string $expected): void
     {
         $this->assertEquals($expected, PathHelper::getLocalNodeName($path));
     }
 
-    public function dataproviderGetLocalNodeName()
+    /**
+     * @return array<array{0: string, 1: string}>
+     */
+    public function dataproviderGetLocalNodeName(): array
     {
         return [
             ['/parent/child', 'child'],
@@ -339,12 +378,15 @@ class PathHelperTest extends TestCase
     /**
      * @dataProvider dataproviderPathDepth
      */
-    public function testGetPathDepth($path, $depth): void
+    public function testGetPathDepth(string $path, int $depth): void
     {
         $this->assertEquals($depth, PathHelper::getPathDepth($path));
     }
 
-    public function dataproviderPathDepth()
+    /**
+     * @return array<array{0: string, 1: int}>
+     */
+    public function dataproviderPathDepth(): array
     {
         return [
             ['/', 0],

@@ -25,16 +25,31 @@ abstract class BaseCommand extends Command
 
     protected function getPhpcrHelper(): PhpcrHelper
     {
-        return $this->getHelper('phpcr');
+        $helper = $this->getHelper('phpcr');
+        if (!$helper instanceof PhpcrHelper) {
+            throw new \RuntimeException('phpcr must be the PhpcrHelper');
+        }
+
+        return $helper;
     }
 
     protected function getPhpcrConsoleDumperHelper(): PhpcrConsoleDumperHelper
     {
-        return $this->getHelper('phpcr_console_dumper');
+        $helper = $this->getHelper('phpcr_console_dumper');
+        if (!$helper instanceof PhpcrConsoleDumperHelper) {
+            throw new \RuntimeException('phpcr_console_dumper must be the PhpcrConsoleDumperHelper');
+        }
+
+        return $helper;
     }
 
     protected function getQuestionHelper(): QuestionHelper
     {
-        return $this->getHelper('question');
+        $helper = $this->getHelper('question');
+        if (!$helper instanceof QuestionHelper) {
+            throw new \RuntimeException('question must be the QuestionHelper');
+        }
+
+        return $helper;
     }
 }

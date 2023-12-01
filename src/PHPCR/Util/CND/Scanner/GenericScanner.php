@@ -28,8 +28,7 @@ class GenericScanner extends AbstractScanner
         $this->resetQueue();
 
         while (!$reader->isEof()) {
-            $tokenFound = false;
-            $tokenFound = $tokenFound || $this->consumeComments($reader);
+            $tokenFound = $this->consumeComments($reader);
             $tokenFound = $tokenFound || $this->consumeNewLine($reader);
             $tokenFound = $tokenFound || $this->consumeSpaces($reader);
             $tokenFound = $tokenFound || $this->consumeString($reader);

@@ -19,7 +19,7 @@ use PHPUnit\Framework\TestCase;
 class QueryBuilderTest extends TestCase
 {
     /**
-     * @var MockObject|QueryObjectModelFactoryInterface
+     * @var QueryObjectModelFactoryInterface&MockObject
      */
     protected $qf;
 
@@ -331,11 +331,10 @@ class QueryBuilderTest extends TestCase
     }
 
     /**
-     * @return QueryObjectModelInterface|MockObject
+     * @return QueryObjectModelInterface&MockObject
      */
     private function createQueryMock()
     {
-        /** @var QueryObjectModelInterface $query */
         $query = $this->getMockBuilder(QueryObjectModelInterface::class)
             ->setMethods([])
             ->setConstructorArgs([])

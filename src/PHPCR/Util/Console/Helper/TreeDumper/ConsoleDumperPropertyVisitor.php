@@ -47,7 +47,7 @@ class ConsoleDumperPropertyVisitor extends ConsoleDumperItemVisitor
     public function visit(ItemInterface $item): void
     {
         if (!$item instanceof PropertyInterface) {
-            throw new \Exception(sprintf('Internal error: did not expect to visit a non-property object: %s', is_object($item) ? $item::class : $item));
+            throw new \Exception(sprintf('Internal error: did not expect to visit a non-property object: %s', $item::class));
         }
 
         $value = $item->getString();

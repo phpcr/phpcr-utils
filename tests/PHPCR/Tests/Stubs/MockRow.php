@@ -6,6 +6,9 @@ namespace PHPCR\Tests\Stubs;
 
 use PHPCR\Query\RowInterface;
 
+/**
+ * @implements \Iterator<string, mixed>
+ */
 abstract class MockRow implements \Iterator, RowInterface
 {
 }

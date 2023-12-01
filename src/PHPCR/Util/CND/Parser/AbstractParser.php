@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace PHPCR\Util\CND\Parser;
 
 use PHPCR\Util\CND\Exception\ParserException;
+use PHPCR\Util\CND\Scanner\GenericToken;
 use PHPCR\Util\CND\Scanner\GenericToken as Token;
 use PHPCR\Util\CND\Scanner\TokenQueue;
 
@@ -29,12 +30,8 @@ abstract class AbstractParser
      * Check the next token without consuming it and return true if it matches the given type and data.
      * If the data is not provided (equal to null) then only the token type is checked.
      * Return false otherwise.
-     *
-     * @param int         $type       The expected token type
-     * @param string|null $data       The expected data or null
-     * @param bool        $ignoreCase whether to do string comparisons case insensitive or sensitive
      */
-    protected function checkToken($type, string $data = null, bool $ignoreCase = false): bool
+    protected function checkToken(int $type, string $data = null, bool $ignoreCase = false): bool
     {
         if ($this->tokenQueue->isEof()) {
             return false;
@@ -48,7 +45,7 @@ abstract class AbstractParser
 
         if ($data && $token->getData() !== $data) {
             if ($ignoreCase && is_string($data) && is_string($token->getData())) {
-                return strcasecmp($data, $token->getData());
+                return 0 !== strcasecmp($data, $token->getData());
             }
 
             return false;
@@ -89,7 +86,7 @@ abstract class AbstractParser
         if (!$this->checkToken($type, $data)) {
             throw new ParserException($this->tokenQueue, sprintf("Expected token [%s, '%s']", Token::getTypeName($type), $data));
         }
-
+        \assert($token instanceof GenericToken);
         $this->tokenQueue->next();
 
         return $token;

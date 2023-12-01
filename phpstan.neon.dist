@@ -1,4 +1,16 @@
 parameters:
-    level: 2
+    level: 5
     paths:
-        - src
+        - src/
+
+    ignoreErrors:
+        # phpstan does not understand that the empty arrays are only the default
+        -
+            message: "#^Empty array passed to foreach\\.$#"
+            count: 5
+            path: src/PHPCR/Util/Console/Helper/PhpcrHelper.php
+        # only formulated in phpdoc that the return value must be countable
+        -
+            message: "#expects array|Countable, Iterator<mixed, PHPCR\\Query\\RowInterface> given\\.$#"
+            count: 1
+            path: src/PHPCR/Util/Console/Command/NodesUpdateCommand.php

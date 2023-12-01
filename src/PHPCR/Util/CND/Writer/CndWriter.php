@@ -119,9 +119,7 @@ class CndWriter
         if ($nodeType->getPrimaryItemName()) {
             $attributes .= 'primaryitem '.$nodeType->getPrimaryItemName().' ';
         }
-        if ($attributes) {
-            $s .= trim($attributes)."\n";
-        }
+        $s .= trim($attributes)."\n";
 
         $s .= $this->writeProperties($nodeType->getDeclaredPropertyDefinitions());
 

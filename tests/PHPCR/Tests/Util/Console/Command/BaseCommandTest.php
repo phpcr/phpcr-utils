@@ -27,37 +27,37 @@ require_once __DIR__.'/../../../Stubs/MockRow.php';
 abstract class BaseCommandTest extends TestCase
 {
     /**
-     * @var SessionInterface|MockObject
+     * @var SessionInterface&MockObject
      * */
     public $session;
 
     /**
-     * @var WorkspaceInterface|MockObject
+     * @var WorkspaceInterface&MockObject
      */
     public $workspace;
 
     /**
-     * @var RepositoryInterface|MockObject
+     * @var RepositoryInterface&MockObject
      */
     public $repository;
 
     /**
-     * @var PhpcrConsoleDumperHelper|MockObject
+     * @var PhpcrConsoleDumperHelper&MockObject
      */
     public $dumperHelper;
 
     /**
-     * @var NodeInterface|MockObject
+     * @var NodeInterface&MockObject
      */
     public $node1;
 
     /**
-     * @var RowInterface|MockObject
+     * @var RowInterface&MockObject
      */
     public $row1;
 
     /**
-     * @var QueryManagerInterface|MockObject
+     * @var QueryManagerInterface&MockObject
      */
     public $queryManager;
 
@@ -113,18 +113,14 @@ abstract class BaseCommandTest extends TestCase
     /**
      * Build and execute the command tester.
      *
-     * @param string $name   command name
-     * @param array  $args   command arguments
-     * @param int    $status expected return status
-     *
-     * @return CommandTester
+     * @param mixed[] $arguments
      */
-    public function executeCommand($name, $args, $status = 0)
+    public function executeCommand(string $commandName, array $arguments, int $expectedReturnStatus = 0): CommandTester
     {
-        $command = $this->application->find($name);
+        $command = $this->application->find($commandName);
         $commandTester = new CommandTester($command);
-        $args = array_merge(['command' => $command->getName()], $args);
-        $this->assertEquals($status, $commandTester->execute($args));
+        $arguments = array_merge(['command' => $command->getName()], $arguments);
+        $this->assertEquals($expectedReturnStatus, $commandTester->execute($arguments));
 
         return $commandTester;
     }
