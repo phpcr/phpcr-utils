@@ -8,7 +8,7 @@ use PHPCR\NodeType\NodeTypeInterface;
 use PHPCR\NodeType\NodeTypeManagerInterface;
 
 /**
- * @implements \Iterator<string, NodeTypeInterface>
+ * @implements \Iterator<mixed, NodeTypeInterface>
  */
 abstract class MockNodeTypeManager implements \Iterator, NodeTypeManagerInterface
 {
