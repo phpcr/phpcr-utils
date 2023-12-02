@@ -4,8 +4,8 @@ Changelog
 2.x
 ---
 
-2.0.0 (unreleased)
-------------------
+2.0.0
+-----
 
 * Support Symfony 7
 * Drop support for Symfony 2
