@@ -214,7 +214,7 @@ abstract class BaseSqlGenerator
             return $this->evalCastLiteral($string, 'DOUBLE');
         }
 
-        return "'$literal'";
+        return sprintf("'%s'", str_replace("'", "''", $literal));
     }
 
     /**
