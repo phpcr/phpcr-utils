@@ -4,6 +4,13 @@ Changelog
 2.x
 ---
 
+2.0.1
+-----
+
+* The SQL generator now escapes single quotes `'`. This avoids SQL injection risks. If you escaped
+  strings manually (by duplicating the `'`) you will need to stop doing that as otherwise the query
+  will be run with duplicated single quotes.
+
 2.0.0
 -----
 
