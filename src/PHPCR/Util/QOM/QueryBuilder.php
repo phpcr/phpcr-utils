@@ -399,6 +399,8 @@ class QueryBuilder
 
     /**
      * Gets the query built.
+     *
+     * @return QueryObjectModelInterface
      */
     public function getQuery(): ?QueryObjectModelInterface
     {
