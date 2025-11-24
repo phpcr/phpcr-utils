@@ -19,11 +19,17 @@ jobs:
                 include:
                     - php-version: '8.0'
                       dependencies: 'lowest'
+                      symfony-version: '*'
                     - php-version: '8.1'
+                      symfony-version: '7.*'
                     - php-version: '8.2'
+                      symfony-version: '7.*'
                     - php-version: '8.3'
+                      symfony-version: '7.*'
                     - php-version: '8.4'
+                      symfony-version: '8.*'
                     - php-version: '8.5'
+                      symfony-version: '8.*'
 
         steps:
             - name: Checkout project
@@ -33,7 +39,11 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: ${{ matrix.php-version }}
-                  tools: 'composer:v2'
+                  tools: 'composer:v2, flex'
+
+            - name: Symfony version
+              if: matrix.symfony-version != '*'
+              run: composer config extra.symfony.require ${{ matrix.symfony-version }}
 
             - name: Allow unstable dependencies
               if: matrix.dev-dependencies == true
