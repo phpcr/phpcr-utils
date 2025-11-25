@@ -270,7 +270,7 @@ class Sql2Generator extends BaseSqlGenerator
     public function evalColumn(string $selectorName, ?string $propertyName = null, ?string $colname = null): string
     {
         $sql2 = '';
-        if (null !== $selectorName && null === $propertyName && null === $colname) {
+        if (null === $propertyName && null === $colname) {
             $sql2 .= $this->addBracketsIfNeeded($selectorName).'.*';
         } else {
             $sql2 .= $this->evalPropertyValue($propertyName, $selectorName);

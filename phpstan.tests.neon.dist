@@ -6,15 +6,3 @@ parameters:
     excludePaths:
         analyse:
             - tests/*/Fixtures/*
-
-    ignoreErrors:
-        # too pedantic for tests
-        -
-            message: "#^Parameter \\#1 \\.\\.\\.\\$arrays of function array_merge expects array, array\\<int, string\\>\\|false given\\.$#"
-            count: 1
-            path: tests/PHPCR/Tests/Util/CND/Reader/FileReaderTest.php
-
-        -
-            message: "#^Parameter \\#3 \\.\\.\\.\\$arrays of function array_merge expects array, array\\<int, string\\>\\|false given\\.$#"
-            count: 1
-            path: tests/PHPCR/Tests/Util/CND/Reader/FileReaderTest.php

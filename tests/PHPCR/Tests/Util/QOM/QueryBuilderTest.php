@@ -26,8 +26,6 @@ class QueryBuilderTest extends TestCase
     public function setUp(): void
     {
         $this->qf = $this->getMockBuilder(QueryObjectModelFactoryInterface::class)
-            ->setMethods([])
-            ->setConstructorArgs([])
             ->getMock();
     }
 
@@ -45,18 +43,10 @@ class QueryBuilderTest extends TestCase
         $this->assertEquals(15, $qb->getMaxResults());
     }
 
-    /**
-     * @return DynamicOperandInterface
-     */
-    private function createDynamicOperandMock()
+    private function createDynamicOperandMock(): DynamicOperandInterface
     {
-        /** @var DynamicOperandInterface $dynamicOperand */
-        $dynamicOperand = $this->getMockBuilder(DynamicOperandInterface::class)
-            ->setMethods([])
-            ->setConstructorArgs([])
+        return $this->getMockBuilder(DynamicOperandInterface::class)
             ->getMock();
-
-        return $dynamicOperand;
     }
 
     public function testAddOrderBy(): void
@@ -137,18 +127,10 @@ class QueryBuilderTest extends TestCase
         $qb->addOrderBy($dynamicOperand);
     }
 
-    /**
-     * @return ConstraintInterface
-     */
-    private function createConstraintMock()
+    private function createConstraintMock(): ConstraintInterface
     {
-        /** @var ConstraintInterface $constraint */
-        $constraint = $this->getMockBuilder(ConstraintInterface::class)
-            ->setMethods([])
-            ->setConstructorArgs([])
+        return $this->getMockBuilder(ConstraintInterface::class)
             ->getMock();
-
-        return $constraint;
     }
 
     public function testWhere(): void
@@ -206,18 +188,10 @@ class QueryBuilderTest extends TestCase
         $this->assertCount(2, $qb->getColumns());
     }
 
-    /**
-     * @return SourceInterface
-     */
-    private function createSourceMock()
+    private function createSourceMock(): SourceInterface
     {
-        /** @var SourceInterface $source */
-        $source = $this->getMockBuilder(SourceInterface::class)
-            ->setMethods([])
-            ->setConstructorArgs([])
+        return $this->getMockBuilder(SourceInterface::class)
             ->getMock();
-
-        return $source;
     }
 
     public function testFrom(): void
@@ -229,18 +203,10 @@ class QueryBuilderTest extends TestCase
         $this->assertEquals($source, $qb->getSource());
     }
 
-    /**
-     * @return SameNodeJoinConditionInterface
-     */
-    private function createSameNodeJoinConditionMock()
+    private function createSameNodeJoinConditionMock(): SameNodeJoinConditionInterface
     {
-        /** @var SameNodeJoinConditionInterface $joinCondition */
-        $joinCondition = $this->getMockBuilder(SameNodeJoinConditionInterface::class)
-            ->setMethods([])
-            ->setConstructorArgs([])
+        return $this->getMockBuilder(SameNodeJoinConditionInterface::class)
             ->getMock();
-
-        return $joinCondition;
     }
 
     public function testInvalidJoin(): void
@@ -335,12 +301,8 @@ class QueryBuilderTest extends TestCase
      */
     private function createQueryMock()
     {
-        $query = $this->getMockBuilder(QueryObjectModelInterface::class)
-            ->setMethods([])
-            ->setConstructorArgs([])
+        return $this->getMockBuilder(QueryObjectModelInterface::class)
             ->getMock();
-
-        return $query;
     }
 
     public function testGetQueryWithOffsetAndLimit(): void

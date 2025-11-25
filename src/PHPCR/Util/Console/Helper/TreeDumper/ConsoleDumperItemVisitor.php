@@ -20,7 +20,7 @@ abstract class ConsoleDumperItemVisitor implements ItemVisitorInterface
     protected int $level = 0;
 
     public function __construct(
-        protected OutputInterface $output
+        protected OutputInterface $output,
     ) {
     }
 

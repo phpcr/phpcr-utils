@@ -35,21 +35,12 @@ class WorkspaceExportCommandTest extends BaseCommandTest
         $this->session->expects($this->once())
             ->method('exportSystemView');
 
-        if (method_exists($this, 'assertFileDoesNotExist')) {
-            $this->assertFileDoesNotExist('test', 'test export file must not exist, it will be overwritten');
-        } else {
-            // support phpunit 8 and older, can be removed when we only support php 9 or newer
-            $this->assertFileNotExists('test', 'test export file must not exist, it will be overwritten');
-        }
+        $this->assertFileDoesNotExist('test', 'test export file must not exist, it will be overwritten');
 
         $ct = $this->executeCommand('phpcr:workspace:export', [
             'filename' => 'test',
         ]);
 
-        if (method_exists($ct, 'getStatusCode')) {
-            // Only available since symfony 2.4
-            $this->assertEquals(0, $ct->getStatusCode());
-        }
-        $this->assertFileExists('test');
+        $this->assertEquals(0, $ct->getStatusCode());
     }
 }

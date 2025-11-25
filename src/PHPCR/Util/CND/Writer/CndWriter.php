@@ -33,7 +33,7 @@ class CndWriter
     private array $namespaces = [];
 
     public function __construct(
-        private NamespaceRegistryInterface $ns
+        private NamespaceRegistryInterface $ns,
     ) {
     }
 

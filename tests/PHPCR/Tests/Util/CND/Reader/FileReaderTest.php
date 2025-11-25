@@ -9,32 +9,21 @@ use PHPUnit\Framework\TestCase;
 
 class FileReaderTest extends TestCase
 {
-    /**
-     * @var string
-     */
-    private $filepath;
+    private string $filepath;
 
-    /**
-     * @var FileReader
-     */
-    private $reader;
+    private FileReader $reader;
 
     /**
      * @var string[]
      */
-    private $lines;
-
-    /**
-     * @var string[]
-     */
-    private $chars;
+    private array $chars;
 
     public function setUp(): void
     {
         $this->filepath = __DIR__.'/../Fixtures/files/TestFile.txt';
         $this->reader = new FileReader($this->filepath);
 
-        $this->lines = [
+        $lines = [
             'This is a test file...',
             '',
             '...containing dummy content.',
@@ -42,9 +31,11 @@ class FileReaderTest extends TestCase
         ];
 
         $this->chars = array_merge(
-            preg_split('//', $this->lines[0], -1, PREG_SPLIT_NO_EMPTY),
+            /* @phpstan-ignore argument.type */ // our fixtures are expected to be without error, no need to check if split worked
+            preg_split('//', $lines[0], -1, PREG_SPLIT_NO_EMPTY),
             ["\n", "\n"],
-            preg_split('//', $this->lines[2], -1, PREG_SPLIT_NO_EMPTY),
+            /* @phpstan-ignore argument.type */
+            preg_split('//', $lines[2], -1, PREG_SPLIT_NO_EMPTY),
             ["\n", "\n"]
         );
     }
