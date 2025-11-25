@@ -26,7 +26,7 @@ class ValueConverterTest extends TestCase
     }
 
     /**
-     * @return array<array{0: string, 1: int, 2: mixed, 3: mixed}>
+     * @return array<array{0: mixed, 1: int, 2: mixed, 3: mixed}>
      */
     public function dataConversionMatrix(): array
     {
@@ -284,7 +284,7 @@ class ValueConverterTest extends TestCase
                 $this->fail('Expected that this conversion would throw an exception');
             } catch (ValueFormatException $e) {
                 // expected
-                $this->assertTrue(true); // make it assert something
+                $this->addToAssertionCount(1);
             }
         } else {
             if ($expected instanceof \DateTime) {

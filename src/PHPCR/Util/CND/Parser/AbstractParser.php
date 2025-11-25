@@ -44,7 +44,7 @@ abstract class AbstractParser
         }
 
         if ($data && $token->getData() !== $data) {
-            if ($ignoreCase && is_string($data) && is_string($token->getData())) {
+            if ($ignoreCase) {
                 return 0 !== strcasecmp($data, $token->getData());
             }
 
