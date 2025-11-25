@@ -22,7 +22,7 @@ class Token
          */
         private string $data = '',
         private int $line = 0,
-        private int $row = 0
+        private int $row = 0,
     ) {
     }
 

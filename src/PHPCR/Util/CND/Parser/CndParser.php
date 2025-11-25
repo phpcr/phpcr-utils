@@ -595,7 +595,7 @@ final class CndParser extends AbstractParser
      */
     private function parseChildNodeAttributes(
         NodeTypeTemplateInterface $parentType,
-        NodeDefinitionTemplateInterface $childType
+        NodeDefinitionTemplateInterface $childType,
     ): void {
         while (true) {
             if ($this->checkTokenIn(Token::TK_IDENTIFIER, $this->PRIMARY)) {

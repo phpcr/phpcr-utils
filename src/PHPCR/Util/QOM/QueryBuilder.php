@@ -68,7 +68,7 @@ class QueryBuilder
     private array $params = [];
 
     public function __construct(
-        private QueryObjectModelFactoryInterface $qomFactory
+        private QueryObjectModelFactoryInterface $qomFactory,
     ) {
     }
 
