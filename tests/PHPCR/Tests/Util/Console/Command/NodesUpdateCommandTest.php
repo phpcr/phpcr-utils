@@ -19,7 +19,7 @@ class NodesUpdateCommandTest extends BaseCommandTest
     {
         parent::setUp();
 
-        $this->application->add(new NodesUpdateCommand());
+        $this->addCommand(new NodesUpdateCommand());
         $this->query = $this->createMock(QueryInterface::class);
     }
 

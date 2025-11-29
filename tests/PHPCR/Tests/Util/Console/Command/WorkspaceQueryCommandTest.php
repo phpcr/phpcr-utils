@@ -19,7 +19,7 @@ class WorkspaceQueryCommandTest extends BaseCommandTest
     {
         parent::setUp();
 
-        $this->application->add(new WorkspaceQueryCommand());
+        $this->addCommand(new WorkspaceQueryCommand());
         $this->query = $this->createMock(QueryInterface::class);
     }
 

@@ -23,7 +23,7 @@ class NodeDumpCommandTest extends BaseCommandTest
             ->getMock();
 
         $ndCommand = new NodeDumpCommand();
-        $this->application->add($ndCommand);
+        $this->addCommand($ndCommand);
     }
 
     public function testCommand(): void

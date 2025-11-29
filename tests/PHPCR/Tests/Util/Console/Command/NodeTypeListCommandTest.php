@@ -19,7 +19,7 @@ class NodeTypeListCommandTest extends BaseCommandTest
     {
         parent::setUp();
 
-        $this->application->add(new NodeTypeListCommand());
+        $this->addCommand(new NodeTypeListCommand());
         $this->nodeTypeManager = $this->getMockBuilder(MockNodeTypeManager::class)
             ->disableOriginalConstructor()
             ->getMock();

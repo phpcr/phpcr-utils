@@ -12,7 +12,7 @@ class WorkspacePurgeCommandTest extends BaseCommandTest
     {
         parent::setUp();
 
-        $this->application->add(new WorkspacePurgeCommand());
+        $this->addCommand(new WorkspacePurgeCommand());
     }
 
     public function testNodeTypePurge(): void

@@ -12,7 +12,7 @@ class NodeRemoveCommandTest extends BaseCommandTest
     {
         parent::setUp();
 
-        $this->application->add(new NodeRemoveCommand());
+        $this->addCommand(new NodeRemoveCommand());
     }
 
     public function testRemove(): void

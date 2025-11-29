@@ -12,7 +12,7 @@ class WorkspaceListCommandTest extends BaseCommandTest
     {
         parent::setUp();
 
-        $this->application->add(new WorkspaceListCommand());
+        $this->addCommand(new WorkspaceListCommand());
     }
 
     public function testNodeTypeList(): void
