@@ -13,7 +13,7 @@ namespace PHPCR\Util\CND\Scanner;
  * @license http://opensource.org/licenses/MIT MIT License
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  */
-class Token
+class Token implements \Stringable
 {
     public function __construct(
         private int $type = 0,

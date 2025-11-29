@@ -16,13 +16,22 @@ class BufferReaderTest extends TestCase
 
         $reflection = new \ReflectionClass($reader);
         $bufferProperty = $reflection->getProperty('buffer');
-        $bufferProperty->setAccessible(true);
+        // remove when we drop PHP 8.0 support
+        if (PHP_VERSION_ID < 80100) {
+            $bufferProperty->setAccessible(true);
+        }
         $this->assertSame(str_replace("\r\n", "\n", $buffer).$reader->getEofMarker(), $bufferProperty->getValue($reader));
         $startPos = $reflection->getProperty('startPos');
-        $startPos->setAccessible(true);
+        // remove when we drop PHP 8.0 support
+        if (PHP_VERSION_ID < 80100) {
+            $startPos->setAccessible(true);
+        }
         $this->assertSame(0, $startPos->getValue($reader));
         $forwardPos = $reflection->getProperty('forwardPos');
-        $forwardPos->setAccessible(true);
+        // remove when we drop PHP 8.0 support
+        if (PHP_VERSION_ID < 80100) {
+            $forwardPos->setAccessible(true);
+        }
         $this->assertSame(0, $forwardPos->getValue($reader));
 
         $this->assertEquals(1, $reader->getCurrentLine());
@@ -100,13 +109,22 @@ class BufferReaderTest extends TestCase
 
         $reflection = new \ReflectionClass($reader);
         $buffer = $reflection->getProperty('buffer');
-        $buffer->setAccessible(true);
+        // remove when we drop PHP 8.0 support
+        if (PHP_VERSION_ID < 80100) {
+            $buffer->setAccessible(true);
+        }
         $this->assertSame($reader->getEofMarker(), $buffer->getValue($reader));
         $startPos = $reflection->getProperty('startPos');
-        $startPos->setAccessible(true);
+        // remove when we drop PHP 8.0 support
+        if (PHP_VERSION_ID < 80100) {
+            $startPos->setAccessible(true);
+        }
         $this->assertSame(0, $startPos->getValue($reader));
         $forwardPos = $reflection->getProperty('forwardPos');
-        $forwardPos->setAccessible(true);
+        // remove when we drop PHP 8.0 support
+        if (PHP_VERSION_ID < 80100) {
+            $forwardPos->setAccessible(true);
+        }
         $this->assertSame(0, $forwardPos->getValue($reader));
 
         $this->assertEquals(1, $reader->getCurrentLine());

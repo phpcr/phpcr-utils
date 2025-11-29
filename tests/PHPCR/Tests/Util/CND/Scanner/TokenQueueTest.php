@@ -54,7 +54,10 @@ class TokenQueueTest extends TestCase
         $queue = new TokenQueue();
         $reflection = new \ReflectionClass($queue);
         $tokens = $reflection->getProperty('tokens');
-        $tokens->setAccessible(true);
+        // remove when we drop PHP 8.0 support
+        if (PHP_VERSION_ID < 80100) {
+            $tokens->setAccessible(true);
+        }
         $this->assertSame([], $tokens->getValue($queue));
 
         $queue->add($this->token0);

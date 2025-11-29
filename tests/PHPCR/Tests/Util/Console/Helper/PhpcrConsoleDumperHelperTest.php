@@ -56,7 +56,10 @@ class PhpcrConsoleDumperHelperTest extends TestCase
 
         $reflection = new \ReflectionClass($tw);
         $propVisitorProp = $reflection->getProperty('propertyVisitor');
-        $propVisitorProp->setAccessible(true);
+        // remove when we drop PHP 8.0 support
+        if (PHP_VERSION_ID < 80100) {
+            $propVisitorProp->setAccessible(true);
+        }
         $propVisitor = $propVisitorProp->getValue($tw);
 
         if (true === $options['show_props']) {

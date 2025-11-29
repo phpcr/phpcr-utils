@@ -9,7 +9,7 @@ namespace PHPCR\Util\CND\Scanner;
  * @license http://opensource.org/licenses/MIT MIT License
  * @author Daniel Barsotti <daniel.barsotti@liip.ch>
  */
-class GenericToken extends Token
+class GenericToken extends Token implements \Stringable
 {
     public const TK_WHITESPACE = 0;
     public const TK_NEWLINE = 1;
