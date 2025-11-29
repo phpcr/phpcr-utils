@@ -17,6 +17,7 @@ use PHPCR\WorkspaceInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -108,6 +109,22 @@ abstract class BaseCommandTest extends TestCase
 
         $this->application = new Application();
         $this->application->setHelperSet($this->helperSet);
+    }
+
+    protected function addCommand(callable|Command $command): void
+    {
+        /* @phpstan-ignore function.alreadyNarrowedType */
+        if (method_exists($this->application, 'addCommand')) {
+            $this->application->addCommand($command);
+
+            return;
+        }
+
+        if (!$command instanceof Command) {
+            throw new \InvalidArgumentException('Until we remove support for symfony console < 7.4, all commands must extend the base class');
+        }
+
+        $this->application->add($command);
     }
 
     /**

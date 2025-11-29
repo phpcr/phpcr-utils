@@ -4,6 +4,12 @@ Changelog
 2.x
 ---
 
+2.0.3
+-----
+
+* Allow installation with Symfony Console 8.x.
+* Test with PHP 8.5.
+
 2.0.2
 -----
 

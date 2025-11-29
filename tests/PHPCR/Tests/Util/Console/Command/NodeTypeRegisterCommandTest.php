@@ -19,7 +19,7 @@ class NodeTypeRegisterCommandTest extends BaseCommandTest
     {
         parent::setUp();
 
-        $this->application->add(new NodeTypeRegisterCommand());
+        $this->addCommand(new NodeTypeRegisterCommand());
         $this->nodeTypeManager = $this->getMockBuilder(MockNodeTypeManager::class)
             ->disableOriginalConstructor()
             ->getMock();

@@ -14,7 +14,7 @@ class WorkspaceImportCommandTest extends BaseCommandTest
     {
         parent::setUp();
 
-        $this->application->add(new WorkspaceImportCommand());
+        $this->addCommand(new WorkspaceImportCommand());
     }
 
     public function testImport(): void

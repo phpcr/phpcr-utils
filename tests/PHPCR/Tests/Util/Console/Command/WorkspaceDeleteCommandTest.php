@@ -13,7 +13,7 @@ class WorkspaceDeleteCommandTest extends BaseCommandTest
     {
         parent::setUp();
 
-        $this->application->add(new WorkspaceDeleteCommand());
+        $this->addCommand(new WorkspaceDeleteCommand());
     }
 
     public function testDelete(): void

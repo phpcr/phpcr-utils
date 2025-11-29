@@ -13,7 +13,7 @@ class WorkspaceCreateCommandTest extends BaseCommandTest
     {
         parent::setUp();
 
-        $this->application->add(new WorkspaceCreateCommand());
+        $this->addCommand(new WorkspaceCreateCommand());
     }
 
     public function testCreate(): void

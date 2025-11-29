@@ -26,7 +26,7 @@ class NodeTouchCommandTest extends BaseCommandTest
         parent::setUp();
 
         $command = new NodeTouchCommand();
-        $this->application->add($command);
+        $this->addCommand($command);
 
         // Override default concrete instance with mock
         $this->phpcrHelper = $this->getMockBuilder(PhpcrHelper::class)

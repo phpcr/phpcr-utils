@@ -13,7 +13,7 @@ class WorkspaceExportCommandTest extends BaseCommandTest
     {
         parent::setUp();
 
-        $this->application->add(new WorkspaceExportCommand());
+        $this->addCommand(new WorkspaceExportCommand());
     }
 
     public function tearDown(): void

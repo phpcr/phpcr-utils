@@ -21,7 +21,7 @@ jobs:
                       dependencies: 'lowest'
                       symfony-version: '*'
                     - php-version: '8.1'
-                      symfony-version: '7.*'
+                      symfony-version: '6.*'
                     - php-version: '8.2'
                       symfony-version: '7.*'
                     - php-version: '8.3'
